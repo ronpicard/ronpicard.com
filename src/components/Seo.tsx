@@ -37,6 +37,7 @@ export function Seo({ title, description, path, ogType = 'website', ogImage, jso
       <meta property="og:site_name" content="Ron Picard" />
       <meta property="og:locale" content="en_US" />
       {imageAbs ? <meta property="og:image" content={imageAbs} /> : null}
+      {imageAbs ? <meta property="og:image:secure_url" content={imageAbs} /> : null}
 
       <meta name="twitter:card" content={twitterCard} />
       <meta name="twitter:title" content={title} />

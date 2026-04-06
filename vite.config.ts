@@ -29,9 +29,9 @@ export default defineConfig(({ command }) => {
     plugins: [
       react(),
       {
-        name: 'favicon-base',
+        name: 'prod-csp',
         transformIndexHtml(html, ctx) {
-          let out = html.replace(/href="favicon\.svg"/, `href="${base}favicon.svg"`)
+          let out = html
         if (!ctx.server) {
           out = out.replace(
             '<meta charset="UTF-8" />',

@@ -89,6 +89,7 @@ function injectSeoHead(html, { title, description, url, imageAbs, ogType }) {
     `<meta property="og:site_name" content="Ron Picard" />`,
     `<meta property="og:locale" content="en_US" />`,
     imageAbs ? `<meta property="og:image" content="${escapeAttr(imageAbs)}" />` : '',
+    imageAbs ? `<meta property="og:image:secure_url" content="${escapeAttr(imageAbs)}" />` : '',
     `<meta name="twitter:card" content="${escapeAttr(twitterCard)}" />`,
     `<meta name="twitter:title" content="${escapeAttr(title)}" />`,
     `<meta name="twitter:description" content="${escapeAttr(description)}" />`,
