@@ -614,21 +614,6 @@
     ]
   },
   {
-    "slug": "ai-in-military-aviation-behind-the-wings-on-pbs",
-    "title": "AI in Military Aviation | Behind the Wings on PBS &mdash; Home",
-    "date": "2024-11-13",
-    "summary": null,
-    "bodyHtml": null,
-    "imageUrl": "resources/acfaa7decec949.jpg",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": "UuqJuBxqA-0",
-    "otherEmbed": null,
-    "extraLinks": []
-  },
-  {
     "slug": "build-a-chess-engine-as-fast-as-possible",
     "title": "Build an AI Chess Engine As Fast As Possible using ChatGPT &mdash; Home",
     "date": "2024-06-02",
@@ -640,36 +625,6 @@
     "demoUrl": null,
     "repoUrl": "https://github.com/ronpicard/chess",
     "youtubeId": null,
-    "otherEmbed": null,
-    "extraLinks": []
-  },
-  {
-    "slug": "ai-could-replace-some-pilots-flying-us-warplanes-in-the-future",
-    "title": "NBC: A.I. could replace some pilots flying U.S. warplanes in the future &mdash; Home",
-    "date": "2024-05-04",
-    "summary": null,
-    "bodyHtml": null,
-    "imageUrl": "resources/9c24440e35c404.png",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": "_vzz1ToClj4",
-    "otherEmbed": null,
-    "extraLinks": []
-  },
-  {
-    "slug": "darpa-ace-amp-usaf-x-62a-achieve-world-first-for-ai-in-aerospace",
-    "title": "DARPA ACE &amp; USAF X-62A Achieve World First for AI in Aerospace &mdash; Home",
-    "date": "2024-05-02",
-    "summary": null,
-    "bodyHtml": null,
-    "imageUrl": "resources/1e4a46fd3bd1b4.jpg",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": "C8yjtaZfNCw",
     "otherEmbed": null,
     "extraLinks": []
   },
@@ -742,21 +697,6 @@
         "href": "https://www.edwards.af.mil/News/Article/3297083/dod-artificial-intelligence-agents-successfully-pilot-fighter-jet/"
       }
     ]
-  },
-  {
-    "slug": "afrl-autonomous-aircraft-experimentation",
-    "title": "AFRL - Autonomous Aircraft Experimentation &mdash; Home",
-    "date": "2023-09-02",
-    "summary": null,
-    "bodyHtml": null,
-    "imageUrl": "resources/0eca36cd9f9400.png",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": "lneYH7ZAU78",
-    "otherEmbed": null,
-    "extraLinks": []
   },
   {
     "slug": "the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista",
