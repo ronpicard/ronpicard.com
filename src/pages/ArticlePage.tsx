@@ -6,6 +6,7 @@ import { SiteTopBar } from '../components/SiteTopBar'
 import {
   filterExtraLinks,
   getArticle,
+  isThirdPartyArticleLink,
   showCodeButton,
   showDemoButton,
   youtubeWatchUrl,
@@ -203,17 +204,25 @@ export default function ArticlePage() {
 
         {extras.length > 0 ? (
           <div className="article-actions article-actions--extra">
-            {extras.map((link) => (
-              <a
-                key={`${link.label}:${link.href}`}
-                className="article-btn article-btn--secondary"
-                href={resolveAssetUrl(link.href) ?? link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {displayExtraLinkLabel(link.label)}
-              </a>
-            ))}
+            {extras.map((link) => {
+              const href = resolveAssetUrl(link.href) ?? link.href
+              const articleStyle = isThirdPartyArticleLink(link)
+              return (
+                <a
+                  key={`${link.label}:${link.href}`}
+                  className={
+                    articleStyle
+                      ? 'project-card__btn project-card__btn--article'
+                      : 'article-btn article-btn--secondary'
+                  }
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {displayExtraLinkLabel(link.label)}
+                </a>
+              )
+            })}
           </div>
         ) : null}
       </main>

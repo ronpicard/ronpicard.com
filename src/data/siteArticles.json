@@ -718,8 +718,8 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Additional Winners",
-        "href": "https://laureates.aviationweek.com/en/winners/2024-winners.html"
+        "label": "View Article",
+        "href": "https://aviationweek.com/aerospace/manufacturing-supply-chain/aviation-week-presents-2024-grand-laureate-award-winners"
       }
     ]
   },
@@ -893,26 +893,6 @@
     "extraLinks": []
   },
   {
-    "slug": "a1j8uokq190a0spgq95ptmngnfelzq",
-    "title": "Test Flag Enterprise integrates autonomy into Orange Flag &mdash; Home",
-    "date": "2021-11-30",
-    "summary": "EDWARDS AIR FORCE BASE, Calif. -- &amp;nbsp; Orange Flag 21-2 brought in two new objectives to the large force test event: autonomy and Emerald Flag collaboration. The test event hosted by Air Force Test Center’s 412th Test Wing at Edwards AFB, California, occurred June 24, 2021.  In addition to tes",
-    "bodyHtml": "<div class=\"sqs-layout sqs-grid-12 columns-12\"><div class=\"row sqs-row\"><div class=\"col sqs-col-12 span-12\"><div class=\"sqs-block website-component-block sqs-block-website-component sqs-block-html html-block\"><div class=\"sqs-block-content\"><div class=\"sqs-text-block-container\">\n  \n  <div class=\"sqs-html-content\"><p class=\"\"><strong>EDWARDS AIR FORCE BASE, Calif. -- &nbsp;</strong>Orange Flag 21-2 brought in two new objectives to the large force test event: autonomy and Emerald Flag collaboration. The test event hosted by Air Force Test Center’s 412th Test Wing at Edwards AFB, California, occurred June 24, 2021.</p><p class=\"\">In addition to testing “kill web” integration and advanced survivability for aerial platforms against adversaries, Orange Flag 21-2 aimed to provide a large force, multi-domain test environment for autonomy participants.</p><p class=\"\">The autonomy participant included the Air Force Vanguard program Skyborg.</p><p class=\"\">“As the nation’s premier, large force, multi-domain test event, it is critical that we provide the opportunity to test emerging technologies, including autonomy,” said Maj. Brandon Burfeind, Orange Flag Director. &nbsp;</p><p class=\"\">As a part of Orange Flag, the team conducted a flight test of the Skyborg Autonomy Core System aboard a General Atomics MQ-20 Avenger unmanned vehicle.</p><p class=\"\">“Providing these programs opportunities to look at integration regardless of technical readiness level is incredibly important for future value to the warfighter,” said Burfeind, a U.S. Air Force F-22 Raptor Test Pilot.</p><p class=\"\">The goal of the Skyborg test was to demonstrate an open, modular architecture which can autonomously aviate, navigate and communicate safely in a manned-unmanned environment. Autonomous systems like Skyborg can significantly increase capability and be a force multiplier for the U.S. Air Force.</p></div>\n\n\n  \n\n\n\n</div>\n</div></div></div></div></div>",
-    "imageUrl": "resources/c0c57b682f6dda.jpg",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": null,
-    "otherEmbed": null,
-    "extraLinks": [
-      {
-        "label": "View Article",
-        "href": "https://www.aftc.af.mil/News/Article-Display/Article/2675938/test-flag-enterprise-integrates-autonomy-into-orange-flag/"
-      }
-    ]
-  },
-  {
     "slug": "iqi42ovhwvqv9optoofq9mf0123zp9",
     "title": "Officially a Private Pilot! &mdash; Home",
     "date": "2021-07-07",
@@ -926,26 +906,6 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": []
-  },
-  {
-    "slug": "autonomous-aircraft-brain-completes-first-flights",
-    "title": "Autonomous aircraft &#39;brain&#39; completes first flights &mdash; Home",
-    "date": "2021-05-11",
-    "summary": "The 96th Test Wing took part in a series of flight tests using a 19-foot unmanned aircraft launched from Tyndall Air Force Base from April 29 to May 5.  Inside the aircraft, the Autonomy Core System, the “brain” of the autonomous aircraft, made its first three flights for the Autonomous Attritable A",
-    "bodyHtml": "<div class=\"sqs-layout sqs-grid-12 columns-12\"><div class=\"row sqs-row\"><div class=\"col sqs-col-12 span-12\"><div class=\"sqs-block website-component-block sqs-block-website-component sqs-block-html html-block\"><div class=\"sqs-block-content\"><div class=\"sqs-text-block-container\">\n  \n  <div class=\"sqs-html-content\"><p class=\"\">The 96th Test Wing took part in a series of flight tests using a 19-foot unmanned aircraft launched from Tyndall Air Force Base from April 29 to May 5.</p><p class=\"\">Inside the aircraft, the Autonomy Core System, the “brain” of the autonomous aircraft, made its first three flights for the Autonomous Attritable Aircraft Experiment.</p><p class=\"\">The ACS is part of the AFRL Skyborg Vanguard program. Skyborg’s goal is to develop low cost, unmanned aircraft to provide increased combat capability by teaming those aircraft with traditional manned fighters</p></div>\n\n\n  \n\n\n\n</div>\n</div></div></div></div></div>",
-    "imageUrl": "resources/7ca47222ed5e74.jpg",
-    "articleHeroUrl": null,
-    "githubEmbed": null,
-    "demoUrl": null,
-    "repoUrl": null,
-    "youtubeId": null,
-    "otherEmbed": null,
-    "extraLinks": [
-      {
-        "label": "View Article",
-        "href": "https://www.eglin.af.mil/News/Article-Display/Article/2601178/autonomous-aircraft-brain-completes-first-flights/"
-      }
-    ]
   },
   {
     "slug": "4th-solo",

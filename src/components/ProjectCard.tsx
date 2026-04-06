@@ -9,6 +9,8 @@ export type ProjectListItem = {
   imageUrl: string | null
   showDemo: boolean
   showCode: boolean
+  /** External article URL from `extraLinks` (e.g. journal / news), if any. */
+  articleUrl: string | null
   demoUrl: string | null
   repoUrl: string | null
   videoUrl: string | null
@@ -45,6 +47,16 @@ export function ProjectCard({ item }: Props) {
         </div>
         <h2 className="project-card__title">{item.title}</h2>
         <div className="project-card__actions">
+          {item.articleUrl ? (
+            <a
+              className="project-card__btn project-card__btn--article"
+              href={item.articleUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Article
+            </a>
+          ) : null}
           {item.showDemo && item.demoUrl ? (
             <a
               className="project-card__btn project-card__btn--code"

@@ -529,6 +529,18 @@ body {
   border-color: rgba(0, 255, 200, 0.45);
 }
 
+.project-card__btn--article {
+  color: #ff7ae8;
+  background: rgba(255, 43, 214, 0.08);
+  border-color: rgba(255, 43, 214, 0.38);
+}
+
+.project-card__btn--article:hover {
+  color: #ffa0ec;
+  background: rgba(255, 43, 214, 0.14);
+  border-color: rgba(0, 255, 200, 0.4);
+}
+
 .project-card__btn__yt-icon {
   display: flex;
   flex-shrink: 0;

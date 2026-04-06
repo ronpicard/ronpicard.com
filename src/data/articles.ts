@@ -82,6 +82,50 @@ export function showCodeButton(a: Article): boolean {
   return !!a.repoUrl
 }
 
+export function isThirdPartyArticleLink(link: { label: string; href: string }): boolean {
+  const href = link.href.trim()
+  if (!/^https?:\/\//i.test(href)) return false
+
+  let u: URL
+  try {
+    u = new URL(href)
+  } catch {
+    return false
+  }
+
+  const host = u.hostname.toLowerCase()
+  const path = `${u.pathname}${u.search}`
+
+  if (/(^|\.)youtube\.com$|^youtu\.be$/i.test(host)) return false
+  if (host === 'github.com' || host === 'gist.github.com') return false
+  if (host.endsWith('.github.io')) return false
+
+  const label = link.label.trim().toLowerCase()
+  if (/\bvideo\b/.test(label) && !/\barticle\b/.test(label)) return false
+
+  if (/\b(paper|view article|publication|journal|proceedings|manuscript)\b/.test(label)) return true
+  if (/\barticle\b/.test(label)) return true
+
+  if (
+    /(^|\.)doi\.org$/i.test(host) ||
+    /^arxiv\.org$/i.test(host) ||
+    host.endsWith('.ieee.org') ||
+    host === 'ieee.org' ||
+    /(^|\.)nature\.com$/i.test(host) ||
+    /sciencedirect/i.test(host) ||
+    /springer/i.test(host) ||
+    /mdpi\.com$/i.test(host) ||
+    (/\.aiaa\.org$/i.test(host) && /\/doi\//i.test(path))
+  ) {
+    return true
+  }
+
+  if (/\.af\.mil$/i.test(host) && /\/article/i.test(path)) return true
+  if (/aviationweek\.com/i.test(host)) return true
+
+  return false
+}
+
 export function youtubeWatchUrl(youtubeId: string | null | undefined): string | null {
   if (!youtubeId?.trim()) return null
   return `https://www.youtube.com/watch?v=${encodeURIComponent(youtubeId.trim())}`
@@ -118,6 +162,15 @@ export function filterExtraLinks(a: Article) {
   })
 }
 
+/** First `extraLinks` URL that points at a third-party article (not on-site PDFs or demos). */
+export function thirdPartyArticleUrl(a: Article): string | null {
+  for (const l of filterExtraLinks(a)) {
+    if (!l?.href?.trim()) continue
+    if (isThirdPartyArticleLink(l)) return l.href.trim()
+  }
+  return null
+}
+
 export function getArticleTitleList() {
   return articles.map((a) => ({
     slug: a.slug,
@@ -127,6 +180,7 @@ export function getArticleTitleList() {
     imageUrl: a.imageUrl,
     showDemo: showDemoButton(a),
     showCode: showCodeButton(a),
+    articleUrl: thirdPartyArticleUrl(a),
     demoUrl: a.demoUrl,
     repoUrl: a.repoUrl,
     videoUrl: youtubeWatchUrl(a.youtubeId),
