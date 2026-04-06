@@ -1,4 +1,6 @@
+import { HelmetProvider } from 'react-helmet-async'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import { AmbientParticles } from './components/AmbientParticles'
 import ArticlePage from './pages/ArticlePage'
 import HomePage from './pages/HomePage'
 
@@ -8,5 +10,12 @@ const router = createHashRouter([
 ])
 
 export default function App() {
-  return <RouterProvider router={router} />
+  return (
+    <HelmetProvider>
+      <AmbientParticles />
+      <div className="app-content">
+        <RouterProvider router={router} />
+      </div>
+    </HelmetProvider>
+  )
 }

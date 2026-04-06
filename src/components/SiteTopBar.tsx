@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { SOCIAL } from '../config/site'
+import { SiteSearch } from './SiteSearch'
 
 export function SiteTopBar() {
   return (
@@ -7,7 +8,8 @@ export function SiteTopBar() {
       <Link className="site-top-bar__brand" to="/">
         Ron Picard
       </Link>
-      <nav className="site-top-bar__social" aria-label="Social profiles">
+      <nav className="site-top-bar__social" aria-label="Site and social">
+        <SiteSearch />
         <a
           className="site-top-bar__icon"
           href={SOCIAL.linkedin}

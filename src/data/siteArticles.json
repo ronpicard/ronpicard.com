@@ -758,7 +758,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "https://arc.aiaa.org/doi/10.2514/6.2023-1925"
       },
       {
@@ -980,7 +980,7 @@
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf",
     "title": "Formal Methods 101: Set Theory &mdash; Home",
-    "date": "2020-10-04",
+    "date": "2019-10-03",
     "summary": "Introduction:   Set Theory involves sets which are unordered lists.  Ex. Set:&amp;nbsp;  S  = (a, b, c) Note:  S  is the set and a, b, c are the elements of the set.    All members of a set must be of the same type. (Note: because set can have complex types (sets themselves); this can be circumvente",
     "bodyHtml": "<div class=\"sqs-layout sqs-grid-12 columns-12\"><div class=\"row sqs-row\"><div class=\"col sqs-col-12 span-12\"><div class=\"sqs-block website-component-block sqs-block-website-component sqs-block-html html-block\"><div class=\"sqs-block-content\"><div class=\"sqs-text-block-container\">\n  \n  <div class=\"sqs-html-content\"><p class=\"\"><strong>Introduction:</strong></p><p class=\"\">Set Theory involves sets which are unordered lists.</p><p class=\"\">Ex. Set:&nbsp; <strong>S </strong>= (a, b, c)<br>Note: <strong>S</strong> is the set and a, b, c are the elements of the set.</p><ul><li><p class=\"\">All members of a set must be of the same type. (Note: because set can have complex types (sets themselves); this can be circumvented by the properties of the complex types.)</p></li></ul><p class=\"\"><strong>Set Membership</strong>:</p><ul><li><p class=\"\"><strong>∅ element of&nbsp;</strong></p><ul><li><p class=\"\"><strong>∅ = {}</strong></p></li><li><p class=\"\"><strong>∅ </strong>denotes the empty set</p></li></ul></li><li><p class=\"\"><strong>∈ element of&nbsp;</strong></p><ul><li><p class=\"\">Set:&nbsp; <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">a ∈ <strong>S</strong></p></li></ul></li><li><p class=\"\"><strong>∉ not element of</strong></p><ul><li><p class=\"\">Set:&nbsp; <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">d ∉ <strong>S</strong></p></li></ul></li><li><p class=\"\"><strong>⊂ proper (strict)&nbsp; subset of</strong></p><ul><li><p class=\"\">Set: <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">Set:<strong> T </strong>= {a, b}</p></li><li><p class=\"\"><strong>T</strong> ⊂ <strong>S</strong></p></li></ul></li><li><p class=\"\"><strong>⊄ not proper (strict) subset of</strong></p><ul><li><p class=\"\">Set: <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">Set:<strong> Q </strong>= {a, b, c}</p></li><li><p class=\"\">Set: <strong>W</strong> = {b, c, d}</p></li><li><p class=\"\"><strong>Q</strong> ⊄ <strong>S</strong></p></li><li><p class=\"\"><strong>W</strong> ⊄ <strong>S</strong></p></li></ul></li><li><p class=\"\"><strong>⊆ subset of</strong></p><ul><li><p class=\"\">Set: <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">Set:<strong> Q </strong>= {a, b, c}</p></li><li><p class=\"\">Set:<strong> T </strong>= {a, b}</p></li><li><p class=\"\"><strong>Q</strong> ⊆<strong> S</strong></p></li><li><p class=\"\"><strong>T</strong> ⊆<strong> S</strong></p></li></ul></li><li><p class=\"\"><strong>⊈ not subset of</strong></p><ul><li><p class=\"\">Set: <strong>S </strong>= {a, b, c}</p></li><li><p class=\"\">Set: <strong>W</strong> = {b, c, d}</p></li><li><p class=\"\"><strong>W</strong> ⊄ <strong>S</strong></p></li></ul></li><li><p class=\"\"><strong>⊃ superset of (strict)</strong></p><ul><li><p class=\"\">Set: S = {a, b, c}</p></li><li><p class=\"\">Set: T = {a, b}</p></li><li><p class=\"\">S ⊃ T</p></li></ul></li><li><p class=\"\"><strong>⊅ not superset of (strict)</strong></p><ul><li><p class=\"\">Set: S = {a, b, c}</p></li><li><p class=\"\">Set: Q = {a, b, c}</p></li><li><p class=\"\">Set: W = {b, c, d}</p></li><li><p class=\"\">Q ⊅ S</p></li><li><p class=\"\">W ⊅ S</p></li></ul></li><li><p class=\"\"><strong>⊇ superset of (not strict)</strong></p><ul><li><p class=\"\">Set: S = {a, b, c}</p></li><li><p class=\"\">Set: Q = {a, b, c}</p></li><li><p class=\"\">Set: T = {a, b}</p></li><li><p class=\"\">Q⊇S</p></li><li><p class=\"\">T⊇S</p></li></ul></li><li><p class=\"\"><strong>⊉ not superset of (not strict)</strong></p><ul><li><p class=\"\">Set: S = {a, b, c}</p></li></ul><ul><li><p class=\"\">Set: W = {b, c, d}</p></li><li><p class=\"\">W⊉S</p></li></ul></li></ul><p class=\"\"><strong>Set Operators:</strong></p><ul><li><p class=\"\"><strong>∩ disjoint</strong></p><ul><li><p class=\"\">Set: S = (a, b, c, d)</p></li></ul><ul><li><p class=\"\">Set: T = (a, b, e, f)</p></li><li><p class=\"\">S ∩ T = (c, d, e, f)</p></li></ul></li><li><p class=\"\"><strong>∪ union</strong></p><ul><li><p class=\"\">Set: S = (a, b, c, d)</p></li></ul><ul><li><p class=\"\">Set: T = (a, b, e, f)</p></li><li><p class=\"\">S ∪ T = (a, b)</p></li></ul></li><li><p class=\"\"><strong>\\ difference (relative complement)</strong></p><ul><li><p class=\"\">S = (a, b, c, d)</p></li><li><p class=\"\">Set: T = (a, b, e, f)</p></li><li><p class=\"\">S \\ T = (c, d)</p></li><li><p class=\"\">Note: (c, d) is the relative complement</p></li><li><p class=\"\">T \\ S = (e, f)</p></li><li><p class=\"\">Note: (c, d) is the relative complement</p></li></ul></li><li><p class=\"\"><strong>absolute complement</strong></p><ul><li><p class=\"\">Set: S = (a, b, c, d, e, f)</p></li><li><p class=\"\">Set: T = (a, b)</p></li><li><p class=\"\">Set: W = (c, d)</p></li><li><p class=\"\">T ⊂ S</p></li><li><p class=\"\">T ⊂ W</p></li><li><p class=\"\">The absolute complement is S \\ (? ∪ W) = (e, f)</p></li></ul></li><li><p class=\"\"><strong>∆ symmetric difference</strong></p><ul><li><p class=\"\">Set: S = (a, b, c, d)</p></li><li><p class=\"\">Set: T = (a, b, e, f) “(S \\ ” ?)∪ (T \\ S) = (c, d, e, f</p></li></ul></li><li><p class=\"\"><strong>X Cartesian product</strong></p><ul><li><p class=\"\">Set: S = (a, b, c)</p></li><li><p class=\"\">Set: T = (d, e, f)</p></li><li><p class=\"\">S X T = ((a, d), (a, e), (a, f), (b, d), (b, e), (b, f), (c, d), (c, e), (c, f))</p></li><li><p class=\"\">T X S = ((d, a), (e, a), (f, a), (d, b), (b, e), (b, f), (c, d), (c, e), (c, f))</p></li><li><p class=\"\">Note: The Cartesian product operator produces a set of all possible ordered pairs between two sets.</p></li></ul></li><li><p class=\"\"><strong>P(S) Power set&nbsp;</strong></p><ul><li><p class=\"\">Set: S = (a, b)</p></li><li><p class=\"\">P(S) = ((a, b), (a), (b), ∅)</p></li><li><p class=\"\">Note: The Power set of S produces the set of all subsets sets including the empty subset.</p></li><li><p class=\"\">between two sets.</p></li></ul></li><li><p class=\"\"><strong>Cardinality&nbsp;</strong></p><ul><li><p class=\"\">Set: S = (a, b)</p></li><li><p class=\"\">The cardinality of set S is 2</p></li><li><p class=\"\">Note: The carnality of a set is the number of members in the set.</p></li></ul></li><li><p class=\"\"><strong>Insert</strong></p><ul><li><p class=\"\">Set S = (a, b, c)</p></li><li><p class=\"\">Insert(S, d) returns S = (a, b, c, d)</p></li><li><p class=\"\">The Insert operator (i.e. Insert(Set, element)) adds a member to a set.</p></li></ul></li><li><p class=\"\"><strong>Delete</strong></p><ul><li><p class=\"\">Set S = (a, b, c)</p></li><li><p class=\"\">Delete(S, a) returns S = (b, c)</p></li><li><p class=\"\">The Delete operator (i.e. Delete(Set, element)) removes a member from a set.</p></li></ul></li><li><p class=\"\"><strong>Lookup</strong></p><ul><li><p class=\"\">Set S = (a, b, c)</p></li><li><p class=\"\">Lookup(S, c) returns TRUE</p></li><li><p class=\"\">Lookup(S, d) returns FALSE</p></li><li><p class=\"\">The Lookup operator (i.e. Lookup(Set, element)) determines if a set contains a specific member.</p></li></ul></li></ul><p class=\"\"><strong>Common Sets:</strong></p><ul><li><p class=\"\"><strong>ℕ</strong></p><ul><li><p class=\"\">The set of all natural numbers (0, 1, 2, 3, 4, 5….)</p></li></ul></li><li><p class=\"\"><strong>ℤ</strong></p><ul><li><p class=\"\">The set of all integers (….-3, -2, -1, 0, 1, 2, 3…)</p></li></ul></li><li><p class=\"\"><strong>ℚ</strong></p><ul><li><p class=\"\">The set of all rational numbers</p></li></ul></li><li><p class=\"\"><strong>ℝ</strong></p><ul><li><p class=\"\">The set of all real numbers</p></li></ul></li></ul></div>\n\n\n  \n\n\n\n</div>\n</div></div></div></div></div>",
     "imageUrl": "resources/86649c12e80dfd.jpg",
@@ -1157,7 +1157,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/e55c259979a696.pdf"
       }
     ]
@@ -1197,7 +1197,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/dc044af5e4b9be.pdf"
       }
     ]
@@ -1217,7 +1217,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/b518b62378d858.pdf"
       }
     ]
@@ -1237,7 +1237,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/91f8dd54e4f41a.pdf"
       }
     ]
@@ -1457,7 +1457,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/a06374f2234703.pdf"
       }
     ]
@@ -1477,7 +1477,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/b03d107cb06876.pdf"
       }
     ]
@@ -1497,7 +1497,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/c148d6467a131a.pdf"
       }
     ]
@@ -1517,7 +1517,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "View Paper",
+        "label": "Paper",
         "href": "resources/294c29531067fd.pdf"
       }
     ]

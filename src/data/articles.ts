@@ -1,7 +1,5 @@
 import siteArticlesData from './siteArticles.json'
 
-const SITE = 'https://ronpicard.com/blog'
-
 type SiteArticleRow = {
   slug: string
   title: string
@@ -40,30 +38,6 @@ function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 
   return 'post'
 }
 
-/** Reading order for Formal Methods 101 (Squarespace dates do not match curriculum). */
-const FORMAL_METHODS_ORDER: readonly string[] = [
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf', // Set Theory
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8', // Binary Relations
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m', // Zero-Order Logic
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz', // First-Order Logic
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r', // Second-Order Logic
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-cj35h', // SAT
-  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b', // SMT
-  'formal-methods-101-formal-systems-lgnl3-2fbet', // Complexity Theory
-  'formal-methods-101-formal-systems-lgnl3', // Decidability
-  'formal-methods-101-formal-systems', // Formal Systems
-  'formal-methods-101-induction', // Induction
-]
-
-function isFormalMethodsSlug(slug: string): boolean {
-  return slug.startsWith('formal-methods')
-}
-
-function formalMethodsRank(slug: string): number {
-  const i = FORMAL_METHODS_ORDER.indexOf(slug)
-  return i === -1 ? FORMAL_METHODS_ORDER.length + 1 : i
-}
-
 const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).map((row) => ({
   ...row,
   title: decodeHtml(row.title),
@@ -73,24 +47,11 @@ const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).
   bodyHtml: row.bodyHtml ?? null,
 }))
 
-const formalRows = normalizedRows.filter((r) => isFormalMethodsSlug(r.slug))
-const otherRows = normalizedRows.filter((r) => !isFormalMethodsSlug(r.slug))
-
-const formalSorted = [...formalRows].sort((a, b) => {
-  const ra = formalMethodsRank(a.slug)
-  const rb = formalMethodsRank(b.slug)
-  if (ra !== rb) return ra - rb
-  return a.slug.localeCompare(b.slug)
-})
-
-const otherSorted = [...otherRows].sort((a, b) => {
+const sorted = [...normalizedRows].sort((a, b) => {
   const byDate = b.date.localeCompare(a.date)
   if (byDate !== 0) return byDate
   return a.slug.localeCompare(b.slug)
 })
-
-/** Everything else by date, then Formal Methods 101 in curriculum order (Set Theory first). */
-const sorted = [...otherSorted, ...formalSorted]
 
 export type ArticleKind = 'app' | 'lesson' | 'post'
 
@@ -98,7 +59,6 @@ export type Article = SiteArticleRow & {
   kind: ArticleKind
   prevSlug: string | null
   nextSlug: string | null
-  originalUrl: string
 }
 
 export const articles: Article[] = sorted.map((row, i) => ({
@@ -106,7 +66,6 @@ export const articles: Article[] = sorted.map((row, i) => ({
   kind: deriveKind(row),
   prevSlug: sorted[i - 1]?.slug ?? null,
   nextSlug: sorted[i + 1]?.slug ?? null,
-  originalUrl: `${SITE}/${row.slug}`,
 }))
 
 const bySlug = new Map(articles.map((a) => [a.slug, a]))
@@ -121,6 +80,20 @@ export function showDemoButton(a: Article): boolean {
 
 export function showCodeButton(a: Article): boolean {
   return !!a.repoUrl
+}
+
+export function youtubeWatchUrl(youtubeId: string | null | undefined): string | null {
+  if (!youtubeId?.trim()) return null
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(youtubeId.trim())}`
+}
+
+function isPdfHref(href: string): boolean {
+  return /\.pdf$/i.test(href.split('?')[0].split('#')[0])
+}
+
+/** PDF (and similar) links from `extraLinks` for home cards and nav. */
+export function pdfExtraLinks(a: Article): { label: string; href: string }[] {
+  return filterExtraLinks(a).filter((l) => l?.href && isPdfHref(l.href))
 }
 
 function hrefKey(href: string) {
@@ -156,5 +129,7 @@ export function getArticleTitleList() {
     showCode: showCodeButton(a),
     demoUrl: a.demoUrl,
     repoUrl: a.repoUrl,
+    videoUrl: youtubeWatchUrl(a.youtubeId),
+    pdfLinks: pdfExtraLinks(a),
   }))
 }

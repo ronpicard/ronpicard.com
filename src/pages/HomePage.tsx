@@ -1,12 +1,20 @@
+import { homeJsonLd, Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
 import { ProjectCard } from '../components/ProjectCard'
 import { getArticleTitleList } from '../data/articles'
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '../lib/siteMeta'
 
 const list = getArticleTitleList()
 
 export default function HomePage() {
   return (
     <div className="page page--home">
+      <Seo
+        title={DEFAULT_TITLE}
+        description={DEFAULT_DESCRIPTION}
+        path="/"
+        jsonLd={homeJsonLd()}
+      />
       <div className="page__glow page__glow--one" aria-hidden />
       <div className="page__glow page__glow--two" aria-hidden />
 
