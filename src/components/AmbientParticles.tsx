@@ -133,6 +133,8 @@ export function AmbientParticles() {
           kind: 'glyph',
           id: `g-${i}`,
           ...base,
+          /* No twinkle delay — random twDelay (was up to ~36s) kept glyphs invisible at first paint. */
+          twDelay: '0s',
           char: MATRIX_CHARS[ci]!,
           fontSize,
         }

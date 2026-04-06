@@ -125,7 +125,8 @@ body {
   line-height: 1;
   letter-spacing: 0;
   white-space: nowrap;
-  opacity: 0;
+  /* Match twinkle 0% so glyphs are visible on first paint (twDelay is 0 for glyphs in TS). */
+  opacity: 0.06;
   transform: translate(-50%, -50%);
   animation-name: ambient-star-drift, ambient-star-twinkle;
   animation-duration: var(--amb-drift-dur, 32s), var(--amb-tw-dur, 52s);
@@ -133,6 +134,7 @@ body {
   animation-timing-function: linear, ease-in-out;
   animation-direction: alternate, normal;
   animation-iteration-count: infinite, infinite;
+  animation-fill-mode: both, both;
   will-change: opacity, transform;
 }
 
