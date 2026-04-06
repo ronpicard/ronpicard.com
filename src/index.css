@@ -115,6 +115,37 @@ body {
   background-color: rgba(255, 43, 214, 0.74);
 }
 
+.ambient-particles__glyph {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  animation-name: ambient-star-drift, ambient-star-twinkle;
+  animation-duration: var(--amb-drift-dur, 32s), var(--amb-tw-dur, 52s);
+  animation-delay: var(--amb-drift-delay, 0s), var(--amb-tw-delay, 0s);
+  animation-timing-function: linear, ease-in-out;
+  animation-direction: alternate, normal;
+  animation-iteration-count: infinite, infinite;
+  will-change: opacity, transform;
+}
+
+.ambient-particles__glyph--cyan {
+  color: rgba(0, 255, 200, 0.72);
+  text-shadow: 0 0 6px rgba(0, 255, 200, 0.22);
+}
+
+.ambient-particles__glyph--magenta {
+  color: rgba(255, 43, 214, 0.68);
+  text-shadow: 0 0 6px rgba(255, 43, 214, 0.2);
+}
+
 /* Piecewise-linear path: origin → 4 corners → back home (straight segments). */
 @keyframes ambient-star-drift {
   0%,
@@ -976,6 +1007,12 @@ body {
   .ambient-particles__dot {
     animation: none;
     opacity: 0.38;
+  }
+
+  .ambient-particles__glyph {
+    animation: none;
+    opacity: 0.38;
+    text-shadow: none;
   }
 
   .project-card,
