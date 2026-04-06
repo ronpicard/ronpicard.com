@@ -1047,6 +1047,115 @@ body {
   line-height: 1.35;
 }
 
+/* Narrow screens: search popover anchored to viewport (not the tiny search control) */
+@media (max-width: 42rem) {
+  body {
+    overflow-x: hidden;
+  }
+
+  .site-search__panel {
+    position: fixed;
+    z-index: 100;
+    top: calc(env(safe-area-inset-top, 0px) + 4.5rem);
+    left: max(0.65rem, env(safe-area-inset-left, 0px));
+    right: max(0.65rem, env(safe-area-inset-right, 0px));
+    width: auto;
+    max-width: none;
+    max-height: min(58dvh, 21rem);
+    box-sizing: border-box;
+  }
+
+  .site-top-bar {
+    gap: 0.5rem;
+  }
+
+  .site-top-bar__brand {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: clamp(1rem, 5.2vw, 1.55rem);
+    letter-spacing: 0.07em;
+  }
+
+  .site-top-bar__social {
+    flex-shrink: 0;
+  }
+
+  .page {
+    padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
+    padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+  }
+
+  .page--article {
+    max-width: 100%;
+  }
+
+  .article-body {
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .article-header__title {
+    font-size: clamp(1.02rem, 5vw, 1.5rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .article-prose {
+    font-size: clamp(0.88rem, 3.7vw, 1rem);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    max-width: 100%;
+  }
+
+  .article-prose pre {
+    max-width: 100%;
+    font-size: 0.76rem;
+    padding: 0.65rem 0.75rem;
+  }
+
+  /* 32rem min height was taller than many phone screens */
+  .embed-frame--demo {
+    height: clamp(13rem, 46dvh, 28rem);
+  }
+
+  .embed-frame {
+    max-width: 100%;
+  }
+
+  .article-btn {
+    padding: 0.48rem 0.85rem;
+    font-size: 0.74rem;
+  }
+
+  .article-nav__half {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .article-nav__half--end {
+    text-align: left;
+  }
+
+  .article-nav__link--end {
+    text-align: left;
+  }
+
+  .lesson-outline {
+    font-size: 0.88rem;
+    padding-left: 1rem;
+  }
+
+  .article-summary-plain {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 0.9rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
