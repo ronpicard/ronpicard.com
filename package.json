@@ -1,0 +1,32 @@
+{
+  "name": "ronpicard-com",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "homepage": "https://ronpicard.github.io/ronpicard.com/",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build:full",
+    "deploy": "gh-pages -d dist",
+    "sync:articles": "node scripts/fetch-site-articles.mjs",
+    "mirror:resources": "node scripts/mirror-resources.mjs",
+    "build:full": "tsc --noEmit && node scripts/mirror-resources.mjs && vite build"
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.14.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "cheerio": "^1.2.0",
+    "gh-pages": "^6.3.0",
+    "isomorphic-dompurify": "^3.7.1",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.5"
+  }
+}
