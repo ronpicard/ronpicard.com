@@ -13,6 +13,7 @@ export default function HomePage() {
         title={DEFAULT_TITLE}
         description={DEFAULT_DESCRIPTION}
         path="/"
+        ogImage="resources/82f3c8eae802c3.jpg"
         jsonLd={homeJsonLd()}
       />
 

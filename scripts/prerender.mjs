@@ -132,7 +132,7 @@ async function main() {
     description:
       'Portfolio of Ron Picard: web apps, formal methods, software lessons, research papers, and engineering projects.',
     url: canonicalUrl('/'),
-    imageAbs: null,
+    imageAbs: absoluteAssetUrl('resources/82f3c8eae802c3.jpg'),
     ogType: 'website',
   })
   await writeOut('index.html', home)

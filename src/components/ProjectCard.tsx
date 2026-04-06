@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import {
   safeArticleLinkHref,
@@ -36,13 +36,32 @@ function formatDate(iso: string) {
 }
 
 export function ProjectCard({ item }: Props) {
+  const navigate = useNavigate()
   const thumbSrc = resolveAssetUrl(item.imageUrl)
   const articleHref = item.articleUrl ? safeHttpUrl(item.articleUrl) : null
   const demoHref = item.showDemo && item.demoUrl ? safeDemoUrl(item.demoUrl) : null
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
   const videoHref = item.videoUrl ? safeHttpUrl(item.videoUrl) : null
+  const to = `/blog/${item.slug}`
+
+  function onCardActivate(e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) {
+    const target = e.target as HTMLElement | null
+    if (target?.closest('a,button')) return
+    if ('key' in e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return
+      e.preventDefault()
+    }
+    navigate(to)
+  }
   return (
-    <article className="project-card">
+    <article
+      className="project-card project-card--clickable"
+      tabIndex={0}
+      role="link"
+      aria-label={`Open ${item.title}`}
+      onClick={onCardActivate}
+      onKeyDown={onCardActivate}
+    >
       <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
         {thumbSrc ? (
           <img src={thumbSrc} alt="" loading="lazy" decoding="async" />
@@ -122,7 +141,7 @@ export function ProjectCard({ item }: Props) {
             )
           })}
         </div>
-        <Link className="project-card__link" to={`/blog/${item.slug}`}>
+        <Link className="project-card__link" to={to}>
           Read more
           <span className="project-card__arrow" aria-hidden>
             →
