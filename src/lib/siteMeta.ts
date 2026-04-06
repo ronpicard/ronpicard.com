@@ -1,5 +1,5 @@
-/** Public site root (GitHub Pages). Override if you use a custom domain. */
-export const SITE_CANONICAL_ROOT = 'https://ronpicard.github.io/ronpicard.com'
+/** Public site root (custom domain). */
+export const SITE_CANONICAL_ROOT = 'https://ronpicard.com'
 
 const SITE_NAME = 'Ron Picard'
 

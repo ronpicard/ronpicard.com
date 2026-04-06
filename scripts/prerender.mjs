@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist')
-const SITE_CANONICAL_ROOT = 'https://ronpicard.github.io/ronpicard.com'
+const SITE_CANONICAL_ROOT = 'https://ronpicard.com'
 
 function decodeHtml(raw) {
   return String(raw || '')

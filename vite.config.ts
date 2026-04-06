@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// GitHub project page: https://ronpicard.github.io/ronpicard.com/
-// If you use a custom domain (e.g. ronpicard.com) with this repo, set prodBase to '/'.
-const prodBase = '/ronpicard.com/'
+// Custom domain (apex) production: https://ronpicard.com/
+// If you switch back to GitHub project pages (https://ronpicard.github.io/ronpicard.com/),
+// set prodBase to '/ronpicard.com/'.
+const prodBase = '/'
 
 /** Production-only CSP: keeps Vite dev (HMR, eval) working locally. */
 const PRODUCTION_CSP = [
