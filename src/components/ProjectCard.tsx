@@ -29,11 +29,11 @@ export function ProjectCard({ item }: Props) {
   const thumbSrc = resolveAssetUrl(item.imageUrl)
   return (
     <article className="project-card">
-      {thumbSrc ? (
-        <div className="project-card__media">
+      <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
+        {thumbSrc ? (
           <img src={thumbSrc} alt="" loading="lazy" decoding="async" />
-        </div>
-      ) : null}
+        ) : null}
+      </div>
       <div className="project-card__body">
         <div className="project-card__meta">
           <span className={`project-card__badge project-card__badge--${item.kind}`}>
@@ -42,30 +42,28 @@ export function ProjectCard({ item }: Props) {
           <time dateTime={item.date}>{formatDate(item.date)}</time>
         </div>
         <h2 className="project-card__title">{item.title}</h2>
-        {(item.showDemo || item.showCode) && (
-          <div className="project-card__actions">
-            {item.showDemo && item.demoUrl ? (
-              <a
-                className="project-card__btn project-card__btn--demo"
-                href={item.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Demo
-              </a>
-            ) : null}
-            {item.showCode && item.repoUrl ? (
-              <a
-                className="project-card__btn project-card__btn--code"
-                href={item.repoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Code
-              </a>
-            ) : null}
-          </div>
-        )}
+        <div className="project-card__actions">
+          {item.showDemo && item.demoUrl ? (
+            <a
+              className="project-card__btn project-card__btn--demo"
+              href={item.demoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Demo
+            </a>
+          ) : null}
+          {item.showCode && item.repoUrl ? (
+            <a
+              className="project-card__btn project-card__btn--code"
+              href={item.repoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Code
+            </a>
+          ) : null}
+        </div>
         <Link className="project-card__link" to={`/blog/${item.slug}`}>
           Read more
           <span className="project-card__arrow" aria-hidden>

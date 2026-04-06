@@ -113,6 +113,9 @@ function collectUrls(rows) {
     if (row.imageUrl && shouldMirrorAbsoluteUrl(row.imageUrl)) {
       set.add(row.imageUrl.trim())
     }
+    if (row.articleHeroUrl && shouldMirrorAbsoluteUrl(row.articleHeroUrl.trim())) {
+      set.add(row.articleHeroUrl.trim())
+    }
     if (row.bodyHtml) {
       const $ = cheerio.load(row.bodyHtml, null, false)
       $('img[src]').each((_, el) => {
@@ -241,6 +244,10 @@ async function main() {
     if (imageUrl && urlToLocal.has(imageUrl.trim())) {
       imageUrl = urlToLocal.get(imageUrl.trim())
     }
+    let articleHeroUrl = row.articleHeroUrl
+    if (articleHeroUrl && urlToLocal.has(articleHeroUrl.trim())) {
+      articleHeroUrl = urlToLocal.get(articleHeroUrl.trim())
+    }
     let bodyHtml = row.bodyHtml
     if (bodyHtml) {
       const $ = cheerio.load(bodyHtml, null, false)
@@ -272,7 +279,7 @@ async function main() {
         return l
       })
     }
-    return { ...row, imageUrl, bodyHtml, extraLinks }
+    return { ...row, imageUrl, articleHeroUrl, bodyHtml, extraLinks }
   })
 
   writeFileSync(ARTICLES_JSON, JSON.stringify(updated, null, 2))

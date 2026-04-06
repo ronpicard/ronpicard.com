@@ -2,6 +2,9 @@
 /**
  * Fetches https://www.ronpicard.com/sitemap.xml and each blog post once,
  * writes src/data/siteArticles.json (run manually when the site grows).
+ *
+ * `articleHeroUrl`: first image block before any embed (Squarespace banner). Omitted on posts
+ * that lead with a GitHub/demo iframe. Strips that image from `bodyHtml` so it is not duplicated.
  */
 import * as cheerio from 'cheerio'
 import { writeFileSync } from 'node:fs'
@@ -134,9 +137,61 @@ function stripDuplicateBlocks($, root) {
   root.find('[data-sqsp-block="embed"]').closest('.sqs-block').remove()
 }
 
+function isImageSqsBlock($el) {
+  const t = $el.attr('data-block-type')
+  return (
+    $el.hasClass('image-block') ||
+    $el.hasClass('sqs-block-image') ||
+    t === '5'
+  )
+}
+
+/** Embed / demo iframe blocks: if one appears before any image, the live site has no banner image. */
+function isEmbedLikeSqsBlock($el) {
+  const t = $el.attr('data-block-type')
+  return (
+    $el.hasClass('embed-block') ||
+    $el.hasClass('sqs-block-embed') ||
+    t === '22' ||
+    $el.find('iframe[data-embed="true"]').length > 0 ||
+    $el.find('> .sqs-block-content iframe').length > 0
+  )
+}
+
+/**
+ * First image block in reading order before any embed-like block (matches ronpicard.com banners:
+ * Formal Methods has HTML then diagram image; Slime Soccer leads with GitHub embed → no banner).
+ */
+function findHeroImageBlock($, root) {
+  const blocks = root.find('.sqs-block')
+  for (let i = 0; i < blocks.length; i++) {
+    const b = blocks.eq(i)
+    if (isEmbedLikeSqsBlock(b)) return null
+    if (isImageSqsBlock(b)) return b
+  }
+  return null
+}
+
+function extractLeadingArticleHeroUrl($) {
+  const root = $('.blog-item-content.e-content').first()
+  if (!root.length) return null
+  const block = findHeroImageBlock($, root)
+  if (!block?.length) return null
+  const img = block.find('img').first()
+  if (!img.length) return null
+  const raw = img.attr('data-src') || img.attr('src')
+  return raw ? normalizeHttps(raw) : null
+}
+
+function removeHeroImageBlockFromRoot($, root) {
+  const block = findHeroImageBlock($, root)
+  if (block?.length) block.remove()
+}
+
 function extractBlogBodyHtml($) {
   const root = $('.blog-item-content.e-content').first().clone()
   if (!root.length) return null
+  removeHeroImageBlockFromRoot($, root)
   stripDuplicateBlocks($, root)
   root.find('script, style, iframe, object, embed, form, input, button').remove()
   const raw = root.html()
@@ -211,6 +266,7 @@ function parsePost(url, html) {
   const imageUrl = extractOgImage(html)
 
   const $ = cheerio.load(html)
+  const articleHeroUrl = extractLeadingArticleHeroUrl($)
   const buttons = extractContentButtons($)
   const bodyHtml = extractBlogBodyHtml($)
 
@@ -263,6 +319,7 @@ function parsePost(url, html) {
     summary,
     bodyHtml,
     imageUrl,
+    articleHeroUrl,
     githubEmbed,
     demoUrl,
     repoUrl,

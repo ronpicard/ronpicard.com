@@ -9,6 +9,8 @@ type SiteArticleRow = {
   summary: string | null
   bodyHtml: string | null
   imageUrl: string | null
+  /** Leading Squarespace image block URL when live site shows a banner above body (null = no banner). */
+  articleHeroUrl: string | null
   githubEmbed: string | null
   demoUrl: string | null
   repoUrl: string | null
@@ -43,6 +45,7 @@ const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).
   title: decodeHtml(row.title),
   summary: row.summary ? decodeHtml(row.summary) : null,
   imageUrl: row.imageUrl ?? null,
+  articleHeroUrl: row.articleHeroUrl ?? null,
   bodyHtml: row.bodyHtml ?? null,
 }))
 

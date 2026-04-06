@@ -48,6 +48,7 @@ export default function ArticlePage() {
   const hasDemo = showDemoButton(article)
   const hasCode = showCodeButton(article)
   const proseHtml = resolveResourcePathsInHtml(article.bodyHtml)
+  const heroSrc = resolveAssetUrl(article.articleHeroUrl)
 
   return (
     <div className="page page--article">
@@ -67,6 +68,11 @@ export default function ArticlePage() {
           </span>
           <time dateTime={article.date}>{formatDate(article.date)}</time>
         </div>
+        {heroSrc ? (
+          <div className="article-hero">
+            <img src={heroSrc} alt="" loading="eager" decoding="async" />
+          </div>
+        ) : null}
       </header>
 
       <main className="article-body">
