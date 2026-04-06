@@ -1,7 +1,7 @@
 import { useMemo, type CSSProperties } from 'react'
 
 const TOTAL = 120
-/** Rough fraction of items that render as matrix glyphs instead of dots. */
+/** Rough fraction of items that render as matrix-style glyphs instead of dots. */
 const GLYPH_FRACTION = 0.36
 
 /** Half-range per leg (px); total path span scales with ~4 legs. */
