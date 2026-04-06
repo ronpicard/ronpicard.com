@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom'
 import { resolveAssetUrl } from '../lib/assetUrl'
+import {
+  safeArticleLinkHref,
+  safeDemoUrl,
+  safeGithubRepoUrl,
+  safeHttpUrl,
+} from '../lib/safeUrls'
 
 export type ProjectListItem = {
   slug: string
@@ -31,6 +37,10 @@ function formatDate(iso: string) {
 
 export function ProjectCard({ item }: Props) {
   const thumbSrc = resolveAssetUrl(item.imageUrl)
+  const articleHref = item.articleUrl ? safeHttpUrl(item.articleUrl) : null
+  const demoHref = item.showDemo && item.demoUrl ? safeDemoUrl(item.demoUrl) : null
+  const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
+  const videoHref = item.videoUrl ? safeHttpUrl(item.videoUrl) : null
   return (
     <article className="project-card">
       <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
@@ -47,40 +57,40 @@ export function ProjectCard({ item }: Props) {
         </div>
         <h2 className="project-card__title">{item.title}</h2>
         <div className="project-card__actions">
-          {item.articleUrl ? (
+          {articleHref ? (
             <a
               className="project-card__btn project-card__btn--article"
-              href={item.articleUrl}
+              href={articleHref}
               target="_blank"
               rel="noopener noreferrer"
             >
               Article
             </a>
           ) : null}
-          {item.showDemo && item.demoUrl ? (
+          {demoHref ? (
             <a
               className="project-card__btn project-card__btn--code"
-              href={item.demoUrl}
+              href={demoHref}
               target="_blank"
               rel="noopener noreferrer"
             >
               Demo
             </a>
           ) : null}
-          {item.showCode && item.repoUrl ? (
+          {repoHref ? (
             <a
               className="project-card__btn project-card__btn--code"
-              href={item.repoUrl}
+              href={repoHref}
               target="_blank"
               rel="noopener noreferrer"
             >
               Code
             </a>
           ) : null}
-          {item.videoUrl ? (
+          {videoHref ? (
             <a
               className="project-card__btn project-card__btn--youtube"
-              href={item.videoUrl}
+              href={videoHref}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -96,7 +106,8 @@ export function ProjectCard({ item }: Props) {
             </a>
           ) : null}
           {item.pdfLinks.map((p) => {
-            const href = resolveAssetUrl(p.href) ?? p.href
+            const href = safeArticleLinkHref(p.href, resolveAssetUrl)
+            if (!href) return null
             const label = p.label?.trim() || 'PDF'
             return (
               <a

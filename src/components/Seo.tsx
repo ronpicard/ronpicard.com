@@ -44,7 +44,9 @@ export function Seo({ title, description, path, ogType = 'website', ogImage, jso
       {imageAbs ? <meta name="twitter:image" content={imageAbs} /> : null}
 
       {jsonLd ? (
-        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
+        </script>
       ) : null}
     </Helmet>
   )

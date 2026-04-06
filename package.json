@@ -16,6 +16,7 @@
     "build:full": "tsc --noEmit && node scripts/mirror-resources.mjs && vite build"
   },
   "dependencies": {
+    "isomorphic-dompurify": "^3.7.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-helmet-async": "^3.0.0",
@@ -27,7 +28,6 @@
     "@vitejs/plugin-react": "^4.3.4",
     "cheerio": "^1.2.0",
     "gh-pages": "^6.3.0",
-    "isomorphic-dompurify": "^3.7.1",
     "typescript": "~5.7.2",
     "vite": "^6.0.5"
   }

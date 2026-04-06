@@ -11,7 +11,16 @@ import {
   showDemoButton,
   youtubeWatchUrl,
 } from '../data/articles'
-import { resolveAssetUrl, resolveResourcePathsInHtml } from '../lib/assetUrl'
+import { resolveAssetUrl } from '../lib/assetUrl'
+import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
+import {
+  safeArticleLinkHref,
+  safeDemoUrl,
+  safeGithubPagesUrl,
+  safeGithubRepoUrl,
+  safeHttpsEmbedUrl,
+  safeYoutubeId,
+} from '../lib/safeUrls'
 import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
 
 function formatDate(iso: string) {
@@ -52,18 +61,27 @@ export default function ArticlePage() {
     return <Navigate to="/" replace />
   }
 
+  if (slug !== article.slug) {
+    return <Navigate to={`/blog/${article.slug}`} replace />
+  }
+
   const cleanGithubEmbed = article.githubEmbed ? stripQuery(article.githubEmbed) : null
-  const iframeSrc = cleanGithubEmbed
-    ? cleanGithubEmbed.endsWith('/')
-      ? cleanGithubEmbed
-      : `${cleanGithubEmbed}/`
+  const approvedEmbed = cleanGithubEmbed ? safeGithubPagesUrl(cleanGithubEmbed) : null
+  const iframeSrc = approvedEmbed
+    ? approvedEmbed.endsWith('/')
+      ? approvedEmbed
+      : `${approvedEmbed}/`
     : null
 
   const extras = filterExtraLinks(article)
-  const hasDemo = showDemoButton(article)
-  const hasCode = showCodeButton(article)
+  const demoHref = safeDemoUrl(article.demoUrl)
+  const repoHref = safeGithubRepoUrl(article.repoUrl)
+  const hasDemo = showDemoButton(article) && !!demoHref
+  const hasCode = showCodeButton(article) && !!repoHref
+  const ytId = safeYoutubeId(article.youtubeId)
   const videoUrl = youtubeWatchUrl(article.youtubeId)
-  const proseHtml = resolveResourcePathsInHtml(article.bodyHtml)
+  const proseHtml = prepareArticleBodyHtml(article.bodyHtml)
+  const otherEmbedSrc = article.otherEmbed ? safeHttpsEmbedUrl(stripQuery(article.otherEmbed)) : null
   const heroSrc = resolveAssetUrl(article.articleHeroUrl)
   const path = `/blog/${article.slug}`
   const metaDesc =
@@ -122,20 +140,20 @@ export default function ArticlePage() {
 
         {(hasDemo || hasCode || videoUrl) && (
           <div className="article-actions article-actions--primary">
-            {hasDemo && article.demoUrl ? (
+            {hasDemo && demoHref ? (
               <a
                 className="article-btn article-btn--secondary"
-                href={article.demoUrl}
+                href={demoHref}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 Demo
               </a>
             ) : null}
-            {hasCode && article.repoUrl ? (
+            {hasCode && repoHref ? (
               <a
                 className="article-btn article-btn--secondary"
-                href={article.repoUrl}
+                href={repoHref}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -168,7 +186,7 @@ export default function ArticlePage() {
             <iframe
               title={`${article.title} demo`}
               src={iframeSrc}
-              sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups-to-escape-sandbox"
+              sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               allow="clipboard-write; fullscreen"
@@ -176,11 +194,11 @@ export default function ArticlePage() {
           </div>
         ) : null}
 
-        {article.youtubeId ? (
+        {ytId ? (
           <div className="embed-frame embed-frame--video">
             <iframe
               title={`${article.title} video`}
-              src={`https://www.youtube-nocookie.com/embed/${article.youtubeId}?rel=0`}
+              src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?rel=0`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               loading="lazy"
@@ -189,12 +207,12 @@ export default function ArticlePage() {
           </div>
         ) : null}
 
-        {article.otherEmbed ? (
+        {otherEmbedSrc ? (
           <div className="embed-frame embed-frame--demo">
             <iframe
               title={`${article.title} embed`}
-              src={article.otherEmbed}
-              sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups-to-escape-sandbox"
+              src={otherEmbedSrc}
+              sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
               loading="lazy"
               referrerPolicy="strict-origin-when-cross-origin"
               allow="fullscreen"
@@ -205,7 +223,8 @@ export default function ArticlePage() {
         {extras.length > 0 ? (
           <div className="article-actions article-actions--extra">
             {extras.map((link) => {
-              const href = resolveAssetUrl(link.href) ?? link.href
+              const href = safeArticleLinkHref(link.href, resolveAssetUrl)
+              if (!href) return null
               const articleStyle = isThirdPartyArticleLink(link)
               return (
                 <a

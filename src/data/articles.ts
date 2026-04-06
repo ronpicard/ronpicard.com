@@ -1,3 +1,4 @@
+import { safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
 
 type SiteArticleRow = {
@@ -32,6 +33,31 @@ function decodeHtml(raw: string): string {
     .trim()
 }
 
+/** URL segment derived from the post title (not Squarespace storage slugs). */
+function slugifyTitleForRoute(title: string): string {
+  let s = title
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+  s = s.replace(/[—–]/g, '-')
+  s = s.replace(/[^a-z0-9]+/g, '-')
+  s = s.replace(/^-+|-+$/g, '').replace(/-+/g, '-')
+  if (s.length > 96) {
+    s = s.slice(0, 96).replace(/-[^-]+$/, '')
+  }
+  return s || 'post'
+}
+
+function uniqueSlugsFromTitles(titles: string[]): string[] {
+  const counts = new Map<string, number>()
+  return titles.map((title) => {
+    const base = slugifyTitleForRoute(title)
+    const n = (counts.get(base) ?? 0) + 1
+    counts.set(base, n)
+    return n === 1 ? base : `${base}-${n}`
+  })
+}
+
 function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
   if (row.githubEmbed) return 'app'
   if (/software-lessons-session/i.test(row.slug)) return 'lesson'
@@ -55,20 +81,39 @@ const sorted = [...normalizedRows].sort((a, b) => {
 
 export type ArticleKind = 'app' | 'lesson' | 'post'
 
-export type Article = SiteArticleRow & {
+/** `slug` is the public URL segment (from title). `sourceSlug` is the id from `siteArticles.json`. */
+export type Article = Omit<SiteArticleRow, 'slug'> & {
+  slug: string
+  sourceSlug: string
   kind: ArticleKind
   prevSlug: string | null
   nextSlug: string | null
 }
 
-export const articles: Article[] = sorted.map((row, i) => ({
-  ...row,
-  kind: deriveKind(row),
-  prevSlug: sorted[i - 1]?.slug ?? null,
-  nextSlug: sorted[i + 1]?.slug ?? null,
-}))
+const routeSlugs = uniqueSlugsFromTitles(sorted.map((r) => r.title))
 
-const bySlug = new Map(articles.map((a) => [a.slug, a]))
+export const articles: Article[] = sorted.map((row, i) => {
+  const { slug: sourceSlug, ...rest } = row
+  const slug = routeSlugs[i]!
+  return {
+    ...rest,
+    sourceSlug,
+    slug,
+    kind: deriveKind(row),
+    prevSlug: i > 0 ? routeSlugs[i - 1]! : null,
+    nextSlug: i < sorted.length - 1 ? routeSlugs[i + 1]! : null,
+  }
+})
+
+const bySlug = new Map<string, Article>()
+for (const a of articles) {
+  bySlug.set(a.slug, a)
+}
+for (const a of articles) {
+  if (a.sourceSlug !== a.slug && !bySlug.has(a.sourceSlug)) {
+    bySlug.set(a.sourceSlug, a)
+  }
+}
 
 export function getArticle(slug: string): Article | undefined {
   return bySlug.get(slug)
@@ -127,8 +172,9 @@ export function isThirdPartyArticleLink(link: { label: string; href: string }): 
 }
 
 export function youtubeWatchUrl(youtubeId: string | null | undefined): string | null {
-  if (!youtubeId?.trim()) return null
-  return `https://www.youtube.com/watch?v=${encodeURIComponent(youtubeId.trim())}`
+  const id = safeYoutubeId(youtubeId)
+  if (!id) return null
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`
 }
 
 function isPdfHref(href: string): boolean {
