@@ -1,0 +1,18 @@
+Formal Methods 101 series — hero/list images
+License: Unsplash License (https://unsplash.com/license). Free to use; photographer credit is appreciated.
+
+Files in this folder:
+  fm-stock-set-theory.jpg       — Unsplash photo-1635070041078-e363dbe005cb (mathematics / geometry)
+  fm-stock-induction.jpg        — Unsplash photo-1503387762-592deb58ef4e (staircase / sequence)
+  fm-stock-formal-systems.jpg   — Unsplash photo-1486406146926-c627a92ad1ab (architecture / structure)
+  fm-stock-decidability.jpg     — Unsplash photo-1544551763-46a013bb70d5 (paths / decisions)
+  fm-stock-complexity.jpg       — Unsplash photo-1558494949-ef010cbdcc31 (server / infrastructure)
+  fm-stock-smt.jpg              — Unsplash photo-1518770660439-4636190af475 (circuit / technology)
+  fm-stock-sat.jpg              — Unsplash photo-1555949963-aa79dcee981c (code / development)
+  fm-stock-second-order.jpg     — Unsplash photo-1451187580459-43490279c0fa (Earth / systems)
+  fm-stock-fol.jpg              — Unsplash photo-1503676260728-1c00da094a0b (education / learning)
+  fm-stock-zero-order.jpg       — Unsplash photo-1516321318423-f06f85e504b3 (library / foundations)
+  fm-stock-binary-relations.jpg — Unsplash photo-1551288049-bebda4e38f71 (analytics / data visualization)
+
+Source URLs use the form:
+  https://images.unsplash.com/photo-<id>?auto=format&fit=crop&w=1600&q=85
