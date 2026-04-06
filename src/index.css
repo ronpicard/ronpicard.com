@@ -435,11 +435,9 @@ body {
   align-items: stretch;
 }
 
-/* Prefer container width over vw so GitHub Pages matches local for the same content column */
+/* Prefer container width over vw for gaps/typography; column count is fixed below so preview matches GitHub Pages */
 @supports (width: 1cqw) {
   .page.page--home .project-list {
-    /* Higher max (24rem) = larger cards before an extra column appears */
-    --home-card-min: clamp(17rem, 26cqw, 24rem);
     --home-grid-gap: clamp(0.75rem, 2cqw, 1.5rem);
   }
 
@@ -457,6 +455,22 @@ body {
 
   .page.page--home .site-top-bar__brand {
     font-size: clamp(1.65rem, calc(0.5rem + 4cqi), 2.35rem);
+  }
+}
+
+.page.page--home .project-list {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 40rem) {
+  .page.page--home .project-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 68rem) {
+  .page.page--home .project-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
