@@ -227,13 +227,29 @@ function hrefKey(href: string) {
   }
 }
 
+/** `owner/repo` for github.com URLs, else null (used to drop extraLinks that duplicate the Code button). */
+function githubRepoPair(href: string): string | null {
+  try {
+    const u = new URL(href.trim())
+    const h = u.hostname.toLowerCase()
+    if (h !== 'github.com' && h !== 'www.github.com') return null
+    const parts = u.pathname.split('/').filter(Boolean)
+    if (parts.length < 2) return null
+    return `${parts[0]}/${parts[1]}`.toLowerCase()
+  } catch {
+    return null
+  }
+}
+
 export function filterExtraLinks(a: Article) {
   const dk = a.demoUrl ? hrefKey(a.demoUrl) : null
   const rk = a.repoUrl ? hrefKey(a.repoUrl) : null
+  const repoPair = a.repoUrl ? githubRepoPair(a.repoUrl) : null
   return a.extraLinks.filter((l) => {
     const k = hrefKey(l.href)
     if (dk && k === dk) return false
     if (rk && k === rk) return false
+    if (repoPair && githubRepoPair(l.href) === repoPair) return false
     return true
   })
 }

@@ -134,9 +134,9 @@ async function main() {
 
   // Home (default)
   const home = injectSeoHead(template, {
-    title: 'Ron Picard — Software, projects & notes',
+    title: 'Ron Picard — My project involving AI, Software, Aviation, and more',
     description:
-      'Portfolio of Ron Picard: web apps, formal methods, software lessons, research papers, and engineering projects.',
+      'Ron Picard — My project involving AI, Software, Aviation, and more: portfolio, web apps, software lessons, research, and engineering work.',
     url: canonicalUrl('/'),
     imageAbs: absoluteAssetUrl('resources/82f3c8eae802c3.jpg'),
     ogType: 'website',

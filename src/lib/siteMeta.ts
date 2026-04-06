@@ -3,9 +3,9 @@ export const SITE_CANONICAL_ROOT = 'https://ronpicard.com'
 
 const SITE_NAME = 'Ron Picard'
 
-export const DEFAULT_TITLE = `${SITE_NAME} — Software, projects & notes`
+export const DEFAULT_TITLE = `${SITE_NAME} — My project involving AI, Software, Aviation, and more`
 export const DEFAULT_DESCRIPTION =
-  'Portfolio of Ron Picard: web apps, formal methods, software lessons, research papers, and engineering projects.'
+  'Ron Picard — My project involving AI, Software, Aviation, and more: portfolio, web apps, software lessons, research, and engineering work.'
 
 export function canonicalUrl(route: string): string {
   const p = route.startsWith('/') ? route : `/${route}`
