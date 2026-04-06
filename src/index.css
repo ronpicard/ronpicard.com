@@ -35,18 +35,12 @@ body {
   color: var(--text);
   background-color: var(--bg-deep);
   background-image:
-    linear-gradient(rgba(0, 255, 200, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 200, 0.04) 1px, transparent 1px),
-    radial-gradient(ellipse 120% 70% at 50% -25%, rgba(0, 255, 200, 0.09), transparent 55%),
-    radial-gradient(ellipse 80% 50% at 100% 80%, rgba(255, 43, 214, 0.06), transparent 50%),
-    radial-gradient(ellipse 60% 45% at 0% 60%, rgba(0, 212, 255, 0.05), transparent 45%),
-    linear-gradient(180deg, #010202 0%, #000 45%, #020305 100%);
+    linear-gradient(rgba(0, 255, 200, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 200, 0.065) 1px, transparent 1px),
+    linear-gradient(180deg, #010101 0%, #000 50%, #020202 100%);
   background-size:
     40px 40px,
     40px 40px,
-    100% 100%,
-    100% 100%,
-    100% 100%,
     100% 100%;
   background-attachment: fixed;
   line-height: 1.5;
@@ -78,53 +72,94 @@ body {
   overflow: hidden;
 }
 
+/* Anchor point; slides back and forth on one straight line so motion never rests. */
+.ambient-particles__carrier {
+  position: absolute;
+  width: 0;
+  height: 0;
+  animation: ambient-carrier-line linear infinite alternate;
+  animation-duration: var(--amb-carry-dur, 32s);
+  animation-delay: var(--amb-carry-delay, 0s);
+  will-change: transform;
+}
+
+@keyframes ambient-carrier-line {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(var(--amb-carry-x, 0), var(--amb-carry-y, 0));
+  }
+}
+
 .ambient-particles__dot {
   position: absolute;
-  margin-left: -6px;
-  margin-top: -6px;
+  left: 0;
+  top: 0;
   border-radius: 50%;
-  opacity: 0.25;
-  animation: ambient-particle ease-in-out infinite;
+  opacity: 0;
+  animation-name: ambient-star-drift, ambient-star-twinkle;
+  animation-duration: var(--amb-drift-dur, 32s), var(--amb-tw-dur, 52s);
+  animation-delay: var(--amb-drift-delay, 0s), var(--amb-tw-delay, 0s);
+  animation-timing-function: linear, ease-in-out;
+  animation-direction: alternate, normal;
+  animation-iteration-count: infinite, infinite;
   will-change: opacity, transform;
 }
 
 .ambient-particles__dot--cyan {
-  background: radial-gradient(
-    circle,
-    rgba(0, 255, 200, 0.9) 0%,
-    rgba(0, 212, 255, 0.35) 42%,
-    transparent 72%
-  );
-  box-shadow:
-    0 0 10px rgba(0, 255, 200, 0.5),
-    0 0 22px rgba(0, 255, 200, 0.2);
+  background-color: rgba(0, 255, 200, 0.78);
 }
 
 .ambient-particles__dot--magenta {
-  background: radial-gradient(
-    circle,
-    rgba(255, 43, 214, 0.85) 0%,
-    rgba(188, 19, 254, 0.3) 42%,
-    transparent 72%
-  );
-  box-shadow:
-    0 0 10px rgba(255, 43, 214, 0.45),
-    0 0 20px rgba(255, 43, 214, 0.18);
+  background-color: rgba(255, 43, 214, 0.74);
 }
 
-@keyframes ambient-particle {
+/* Piecewise-linear path: origin → 4 corners → back home (straight segments). */
+@keyframes ambient-star-drift {
   0%,
   100% {
+    transform: translate(-50%, -50%) translate(0, 0);
+  }
+  20% {
+    transform: translate(-50%, -50%) translate(var(--amb-x1, 0), var(--amb-y1, 0));
+  }
+  40% {
+    transform: translate(-50%, -50%) translate(var(--amb-x2, 0), var(--amb-y2, 0));
+  }
+  60% {
+    transform: translate(-50%, -50%) translate(var(--amb-x3, 0), var(--amb-y3, 0));
+  }
+  80% {
+    transform: translate(-50%, -50%) translate(var(--amb-x4, 0), var(--amb-y4, 0));
+  }
+}
+
+@keyframes ambient-star-twinkle {
+  0%,
+  100% {
+    opacity: 0.06;
+  }
+  14% {
+    opacity: 0.58;
+  }
+  26% {
     opacity: 0.12;
-    transform: translate(0, 0) scale(0.55);
   }
-  35% {
-    opacity: 0.95;
-    transform: translate(var(--amb-dx, 0), var(--amb-dy, 0)) scale(1);
+  41% {
+    opacity: 0.72;
   }
-  65% {
-    opacity: 0.35;
-    transform: translate(calc(var(--amb-dx, 0) * -0.4), calc(var(--amb-dy, 0) * -0.35)) scale(0.8);
+  54% {
+    opacity: 0.14;
+  }
+  68% {
+    opacity: 0.62;
+  }
+  81% {
+    opacity: 0.16;
+  }
+  93% {
+    opacity: 0.48;
   }
 }
 
@@ -140,31 +175,6 @@ body {
 
 .page.page--home {
   max-width: 1120px;
-}
-
-.page__glow {
-  position: fixed;
-  pointer-events: none;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.35;
-  z-index: -1;
-}
-
-.page__glow--one {
-  width: min(480px, 90vw);
-  height: min(480px, 90vw);
-  top: -120px;
-  right: -80px;
-  background: radial-gradient(circle, rgba(0, 255, 200, 0.22), transparent 68%);
-}
-
-.page__glow--two {
-  width: min(360px, 70vw);
-  height: min(360px, 70vw);
-  bottom: 10%;
-  left: -100px;
-  background: radial-gradient(circle, rgba(255, 43, 214, 0.14), transparent 70%);
 }
 
 .site-top-bar {
@@ -959,9 +969,13 @@ body {
     scroll-behavior: auto;
   }
 
+  .ambient-particles__carrier {
+    animation: none;
+  }
+
   .ambient-particles__dot {
     animation: none;
-    opacity: 0.4;
+    opacity: 0.38;
   }
 
   .project-card,

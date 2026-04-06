@@ -86,8 +86,6 @@ export default function ArticlePage() {
           path,
         })}
       />
-      <div className="page__glow page__glow--one" aria-hidden />
-      <div className="page__glow page__glow--two" aria-hidden />
 
       <SiteTopBar />
 

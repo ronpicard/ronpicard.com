@@ -15,8 +15,6 @@ export default function HomePage() {
         path="/"
         jsonLd={homeJsonLd()}
       />
-      <div className="page__glow page__glow--one" aria-hidden />
-      <div className="page__glow page__glow--two" aria-hidden />
 
       <SiteTopBar />
       <p className="header__tagline">My projects</p>
