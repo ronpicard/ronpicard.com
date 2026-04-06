@@ -64,6 +64,14 @@ function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 
   return 'post'
 }
 
+/** Same calendar day as other Mar 22 apps, but listed after Sorting Algorithms (original Squarespace order). */
+function isDataStructuresVisualizerArticle(
+  row: Pick<SiteArticleRow, 'githubEmbed' | 'demoUrl'>,
+): boolean {
+  const s = `${row.githubEmbed || ''}${row.demoUrl || ''}`
+  return s.includes('data-structures-visualizer-web-app')
+}
+
 const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).map((row) => ({
   ...row,
   title: decodeHtml(row.title),
@@ -73,10 +81,18 @@ const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).
   bodyHtml: row.bodyHtml ?? null,
 }))
 
-const sorted = [...normalizedRows].sort((a, b) => {
+const indexed = normalizedRows.map((row, sourceIndex) => ({ ...row, sourceIndex }))
+
+const sorted = [...indexed].sort((a, b) => {
   const byDate = b.date.localeCompare(a.date)
   if (byDate !== 0) return byDate
-  return a.slug.localeCompare(b.slug)
+  if (a.date === '2026-03-22' && b.date === '2026-03-22') {
+    const aData = isDataStructuresVisualizerArticle(a)
+    const bData = isDataStructuresVisualizerArticle(b)
+    if (aData !== bData) return aData ? 1 : -1
+  }
+  // Match original Squarespace ordering for same-day items (reverse within date).
+  return b.sourceIndex - a.sourceIndex
 })
 
 export type ArticleKind = 'app' | 'lesson' | 'post'

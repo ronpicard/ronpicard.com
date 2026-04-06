@@ -65,6 +65,11 @@ function canonicalUrl(route) {
   return `${SITE_CANONICAL_ROOT}${p}`
 }
 
+function isDataStructuresVisualizerRow(row) {
+  const s = `${row.githubEmbed || ''}${row.demoUrl || ''}`
+  return s.includes('data-structures-visualizer-web-app')
+}
+
 function stripExistingSeoHead(html) {
   return html
     .replace(/<title>[\s\S]*?<\/title>\s*/i, '')
@@ -139,7 +144,19 @@ async function main() {
   await writeOut('index.html', home)
 
   // Blog pages
-  const sorted = [...rows].sort((a, b) => String(b.date).localeCompare(String(a.date)) || String(a.slug).localeCompare(String(b.slug)))
+  const indexed = rows.map((row, sourceIndex) => ({ row, sourceIndex }))
+  const sorted = indexed
+    .sort((a, b) => {
+      const byDate = String(b.row.date).localeCompare(String(a.row.date))
+      if (byDate !== 0) return byDate
+      if (a.row.date === '2026-03-22' && b.row.date === '2026-03-22') {
+        const aData = isDataStructuresVisualizerRow(a.row)
+        const bData = isDataStructuresVisualizerRow(b.row)
+        if (aData !== bData) return aData ? 1 : -1
+      }
+      return b.sourceIndex - a.sourceIndex
+    })
+    .map((x) => x.row)
   const routeSlugs = uniqueSlugsFromTitles(sorted.map((r) => r.title))
 
   for (let i = 0; i < sorted.length; i++) {
