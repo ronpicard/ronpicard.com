@@ -25,6 +25,9 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  /* Avoid iOS/Safari inflating text and shifting the grid vs desktop browsers */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -208,6 +211,8 @@ body {
 
 .page.page--home {
   max-width: 1120px;
+  /* Grid min sizes use cqw below so columns track this column, not full viewport width */
+  container-type: inline-size;
 }
 
 .site-top-bar {
@@ -420,6 +425,26 @@ body {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--home-card-min)), 1fr));
   gap: var(--home-grid-gap);
   align-items: stretch;
+}
+
+/* Prefer container width over vw so GitHub Pages matches local for the same content column */
+@supports (width: 1cqw) {
+  .page.page--home .project-list {
+    --home-card-min: clamp(16.25rem, 30cqw, 21rem);
+    --home-grid-gap: clamp(0.75rem, 2.25cqw, 1.35rem);
+  }
+
+  .page.page--home .project-card__title {
+    font-size: clamp(0.98rem, 2.6cqi, 1.05rem);
+  }
+
+  .page.page--home .project-card__link {
+    font-size: clamp(0.76rem, 2.1cqi, 0.8rem);
+  }
+
+  .page.page--home .project-card__body {
+    padding: clamp(1rem, 2.8cqi, 1.35rem) clamp(1.05rem, 3cqi, 1.35rem);
+  }
 }
 
 .project-list__item {
