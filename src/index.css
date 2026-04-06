@@ -399,22 +399,6 @@ body {
   margin-top: 1.25rem;
 }
 
-.article-hero {
-  margin: 0 0 1.25rem;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--border);
-  aspect-ratio: 16 / 9;
-  background: #030508;
-}
-
-.article-hero img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
 .article-summary-plain {
   margin: 0 0 1.25rem;
   color: var(--text-muted);
@@ -598,8 +582,10 @@ body {
   aspect-ratio: 16 / 9;
 }
 
-.embed-frame--other {
-  aspect-ratio: 16 / 10;
+/* Full-page app embeds (GitHub Pages, etc.): tall viewport-based frame vs short 16:10 box that forces iframe scrolling */
+.embed-frame--demo {
+  aspect-ratio: unset;
+  height: clamp(32rem, 85dvh, 60rem);
 }
 
 .lesson-outline {

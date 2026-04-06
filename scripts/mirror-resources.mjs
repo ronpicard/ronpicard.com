@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Downloads static assets from siteArticles.json (hero images, <img> and PDF/ZIP
- * in bodyHtml) into public/resources/, rewrites JSON to resources/<hash>.ext.
+ * in bodyHtml, and PDF/ZIP in extraLinks) into public/resources/, rewrites JSON to resources/<hash>.ext.
  * Run after sync:articles. Skips YouTube, github.io, etc.
  */
 import * as cheerio from 'cheerio'
@@ -50,9 +50,11 @@ function extFromMime(ct) {
 
 function shouldMirrorAbsoluteUrl(href) {
   if (!href || typeof href !== 'string') return false
+  const t = href.trim()
+  if (t.startsWith('resources/')) return false
   let u
   try {
-    u = new URL(href.trim())
+    u = new URL(t)
   } catch {
     return false
   }
@@ -68,6 +70,18 @@ function absolutize(href, postBase) {
   if (h.startsWith('mailto:') || h.startsWith('#')) return null
   try {
     return new URL(h, postBase).href
+  } catch {
+    return null
+  }
+}
+
+/** Resolve post-relative or absolute href to a full URL for deduping / manifest keys. */
+function absoluteAssetUrl(href, postBase) {
+  if (!href || typeof href !== 'string') return null
+  const t = href.trim()
+  if (!t) return null
+  try {
+    return /^https?:/i.test(t) ? t : new URL(t, postBase).href
   } catch {
     return null
   }
@@ -103,17 +117,26 @@ function collectUrls(rows) {
       const $ = cheerio.load(row.bodyHtml, null, false)
       $('img[src]').each((_, el) => {
         const s = $(el).attr('src')
+        if (!s || s.startsWith('resources/')) return
         const abs = absolutize(s, postBase)
         if (abs && shouldMirrorAbsoluteUrl(abs)) set.add(abs)
       })
       $('a[href]').each((_, el) => {
         const h = $(el).attr('href')
-        if (!h) return
+        if (!h || h.startsWith('resources/')) return
         const path = h.split('?')[0] || ''
         if (!EXT_RE.test(path)) return
         const abs = absolutize(h, postBase)
         if (abs && shouldMirrorAbsoluteUrl(abs)) set.add(abs)
       })
+    }
+    if (Array.isArray(row.extraLinks)) {
+      for (const l of row.extraLinks) {
+        const h = l?.href
+        if (!h || typeof h !== 'string' || h.trim().startsWith('resources/')) continue
+        const abs = absoluteAssetUrl(h, postBase)
+        if (abs && shouldMirrorAbsoluteUrl(abs)) set.add(abs)
+      }
     }
   }
   return [...set]
@@ -237,7 +260,19 @@ async function main() {
       })
       bodyHtml = $.html()
     }
-    return { ...row, imageUrl, bodyHtml }
+    let extraLinks = row.extraLinks
+    if (Array.isArray(extraLinks)) {
+      extraLinks = extraLinks.map((l) => {
+        if (!l || typeof l.href !== 'string') return l
+        if (l.href.trim().startsWith('resources/')) return l
+        const abs = absoluteAssetUrl(l.href, postBase)
+        if (abs && urlToLocal.has(abs)) {
+          return { ...l, href: urlToLocal.get(abs) }
+        }
+        return l
+      })
+    }
+    return { ...row, imageUrl, bodyHtml, extraLinks }
   })
 
   writeFileSync(ARTICLES_JSON, JSON.stringify(updated, null, 2))

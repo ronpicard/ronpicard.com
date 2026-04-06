@@ -47,7 +47,6 @@ export default function ArticlePage() {
   const extras = filterExtraLinks(article)
   const hasDemo = showDemoButton(article)
   const hasCode = showCodeButton(article)
-  const heroSrc = resolveAssetUrl(article.imageUrl)
   const proseHtml = resolveResourcePathsInHtml(article.bodyHtml)
 
   return (
@@ -61,11 +60,6 @@ export default function ArticlePage() {
         <Link className="article-back" to="/">
           ← Home
         </Link>
-        {heroSrc ? (
-          <div className="article-hero">
-            <img src={heroSrc} alt="" loading="eager" decoding="async" />
-          </div>
-        ) : null}
         <h1 className="article-header__title">{article.title}</h1>
         <div className="article-header__meta">
           <span className={`project-card__badge ${badgeClass(article.kind)}`}>
@@ -113,7 +107,7 @@ export default function ArticlePage() {
         )}
 
         {iframeSrc ? (
-          <div className="embed-frame">
+          <div className="embed-frame embed-frame--demo">
             <iframe
               title={`${article.title} demo`}
               src={iframeSrc}
@@ -139,7 +133,7 @@ export default function ArticlePage() {
         ) : null}
 
         {article.otherEmbed ? (
-          <div className="embed-frame embed-frame--other">
+          <div className="embed-frame embed-frame--demo">
             <iframe
               title={`${article.title} embed`}
               src={article.otherEmbed}
@@ -155,9 +149,9 @@ export default function ArticlePage() {
           <div className="article-actions article-actions--extra">
             {extras.map((link) => (
               <a
-                key={link.href}
+                key={`${link.label}:${link.href}`}
                 className="article-btn article-btn--secondary"
-                href={link.href}
+                href={resolveAssetUrl(link.href) ?? link.href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
