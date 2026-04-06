@@ -18,7 +18,7 @@ export function AmbientParticles() {
           id: i,
           left: `${(r1 * 94 + 3).toFixed(2)}%`,
           top: `${(r2 * 88 + 6).toFixed(2)}%`,
-          size: `${2 + (i % 4) + r3 * 2}px`,
+          size: `${4 + (i % 5) + r3 * 3}px`,
           delay: `${(r1 * 6).toFixed(2)}s`,
           duration: `${5 + (i % 6) + r2 * 3}s`,
           dx: `${(r2 - 0.5) * 28}px`,

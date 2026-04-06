@@ -12,9 +12,11 @@ const router = createHashRouter([
 export default function App() {
   return (
     <HelmetProvider>
-      <AmbientParticles />
       <div className="app-content">
-        <RouterProvider router={router} />
+        <AmbientParticles />
+        <div className="app-content__surface">
+          <RouterProvider router={router} />
+        </div>
       </div>
     </HelmetProvider>
   )

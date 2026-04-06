@@ -19,7 +19,7 @@ export default function HomePage() {
       <div className="page__glow page__glow--two" aria-hidden />
 
       <SiteTopBar />
-      <p className="header__tagline">Projects I think are cool.</p>
+      <p className="header__tagline">My projects</p>
 
       <main className="main">
         <ul className="project-list" role="list">
