@@ -590,5 +590,33 @@
   "https://www.ronpicard.com/s/Paper-Title-use-style_-paper-title4.pdf": {
     "path": "resources/c148d6467a131a.pdf",
     "bytes": 853219
+  },
+  "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/164eb034-ba86-47c6-a4b7-e976f437c3cf/brain-8530786.jpg": {
+    "path": "resources/dae9fb63c631d2.jpg",
+    "bytes": 219742
+  },
+  "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/3aef00e5-ae3d-4b8b-a0fd-8a1f6e1b268a/ai-generated-7986803.jpg": {
+    "path": "resources/98d4a85c6f03d4.jpg",
+    "bytes": 194078
+  },
+  "https://static1.squarespace.com/static/66521122b7ba94372447d95e/66523a53d2a5c95ff3c123ba/683b357b35167f6a88cbb3c2/1775438094524/ai-generated-8891370.jpg?format=1500w": {
+    "path": "resources/3aa4fee121196b.jpg",
+    "bytes": 231388
+  },
+  "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/e6753ffd-f9db-4cf8-bcf8-db428757ff4d/ai-generated-9053253_1920.jpg": {
+    "path": "resources/9e72df1e987071.jpg",
+    "bytes": 680140
+  },
+  "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/000107e2-064b-4a61-ab7e-4a8d7000ff39/ai-generated-8891370.jpg": {
+    "path": "resources/82f3c8eae802c3.jpg",
+    "bytes": 414518
+  },
+  "https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf": {
+    "path": "resources/876e21001e7221.pdf",
+    "bytes": 569417
+  },
+  "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/11766298-a1bb-44c9-883a-4d5ee49634fd/ChatGPT+Image+May+31%2C+2025%2C+03_48_23+PM.png": {
+    "path": "resources/8238d83775aed9.png",
+    "bytes": 1684104
   }
 }

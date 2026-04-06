@@ -11,6 +11,7 @@
     "predeploy": "npm run build:full",
     "deploy": "gh-pages -d dist",
     "sync:articles": "node scripts/fetch-site-articles.mjs",
+    "merge:blog-post": "node scripts/merge-blog-post.mjs",
     "mirror:resources": "node scripts/mirror-resources.mjs",
     "build:full": "tsc --noEmit && node scripts/mirror-resources.mjs && vite build"
   },

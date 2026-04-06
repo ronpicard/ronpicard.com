@@ -8,7 +8,7 @@
  */
 import * as cheerio from 'cheerio'
 import { writeFileSync } from 'node:fs'
-import { dirname, join } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import DOMPurify from 'isomorphic-dompurify'
 
@@ -258,7 +258,7 @@ function normalizeHrefKey(href) {
   }
 }
 
-function parsePost(url, html) {
+export function parsePost(url, html) {
   const slug = url.replace(/^https:\/\/www\.ronpicard\.com\/blog\//, '').replace(/\/$/, '')
   const title = ogTitle(html)
   const date = itempropDate(html) || '1970-01-01'
@@ -353,7 +353,10 @@ async function main() {
   console.error('wrote', OUT)
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+const isMainModule = resolve(process.argv[1] || '') === fileURLToPath(import.meta.url)
+if (isMainModule) {
+  main().catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+}
