@@ -108,6 +108,12 @@ export type Article = Omit<SiteArticleRow, 'slug'> & {
 
 const routeSlugs = uniqueSlugsFromTitles(sorted.map((r) => r.title))
 
+/** Pre–Mar-2026 refresh URLs used “… Web App” in the title; keep old /blog/* paths working. */
+const titlesForLegacySlug = sorted.map((r) =>
+  r.date >= '2026-03-22' && r.githubEmbed ? `${r.title.trim()} Web App` : r.title,
+)
+const legacyRouteSlugs = uniqueSlugsFromTitles(titlesForLegacySlug)
+
 export const articles: Article[] = sorted.map((row, i) => {
   const { slug: sourceSlug, ...rest } = row
   const slug = routeSlugs[i]!
@@ -128,6 +134,14 @@ for (const a of articles) {
 for (const a of articles) {
   if (a.sourceSlug !== a.slug && !bySlug.has(a.sourceSlug)) {
     bySlug.set(a.sourceSlug, a)
+  }
+}
+
+for (let i = 0; i < articles.length; i++) {
+  const leg = legacyRouteSlugs[i]!
+  const a = articles[i]!
+  if (leg !== a.slug && !bySlug.has(leg)) {
+    bySlug.set(leg, a)
   }
 }
 

@@ -157,12 +157,18 @@ async function main() {
       return b.sourceIndex - a.sourceIndex
     })
     .map((x) => x.row)
-  const routeSlugs = uniqueSlugsFromTitles(sorted.map((r) => r.title))
+  const decodedTitles = sorted.map((r) => decodeHtml(r.title))
+  const routeSlugs = uniqueSlugsFromTitles(decodedTitles)
+  const titlesForLegacySlug = decodedTitles.map((t, i) => {
+    const row = sorted[i]
+    return row.date >= '2026-03-22' && row.githubEmbed ? `${t.trim()} Web App` : t
+  })
+  const legacyRouteSlugs = uniqueSlugsFromTitles(titlesForLegacySlug)
 
   for (let i = 0; i < sorted.length; i++) {
     const row = sorted[i]
     const slug = routeSlugs[i]
-    const title = decodeHtml(row.title)
+    const title = decodedTitles[i]
     const summary = truncate(stripTags(row.summary || ''), 158) || title
     const ogImage = row.articleHeroUrl || row.imageUrl || null
     const imageAbs = absoluteAssetUrl(ogImage)
@@ -177,6 +183,11 @@ async function main() {
     })
 
     await writeOut(path.join('blog', slug, 'index.html'), html)
+
+    const leg = legacyRouteSlugs[i]
+    if (leg !== slug) {
+      await writeOut(path.join('blog', leg, 'index.html'), html)
+    }
   }
 
   // GitHub Pages SPA fallback for non-prerendered routes.
