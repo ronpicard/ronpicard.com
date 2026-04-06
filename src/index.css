@@ -9,7 +9,7 @@
   --accent-blue: #00d4ff;
   --accent-magenta: #ff2bd6;
   --radius: 12px;
-  --home-card-min: clamp(16.25rem, 36vw, 21rem);
+  --home-card-min: clamp(16.25rem, 36vw, 24rem);
   --home-grid-gap: clamp(0.75rem, 2.5vw, 1.35rem);
   --font-sans: 'Rajdhani', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Orbitron', var(--font-sans);
@@ -210,9 +210,17 @@ body {
 }
 
 .page.page--home {
-  max-width: 1120px;
+  width: 100%;
+  /* Use more horizontal space on large / ultrawide displays (was 1120px — felt tiny vs viewport) */
+  max-width: min(92vw, 1560px);
   /* Grid min sizes use cqw below so columns track this column, not full viewport width */
   container-type: inline-size;
+}
+
+@media (min-width: 1920px) {
+  .page.page--home {
+    max-width: min(88vw, 1720px);
+  }
 }
 
 .site-top-bar {
@@ -430,20 +438,25 @@ body {
 /* Prefer container width over vw so GitHub Pages matches local for the same content column */
 @supports (width: 1cqw) {
   .page.page--home .project-list {
-    --home-card-min: clamp(16.25rem, 30cqw, 21rem);
-    --home-grid-gap: clamp(0.75rem, 2.25cqw, 1.35rem);
+    /* Higher max (24rem) = larger cards before an extra column appears */
+    --home-card-min: clamp(17rem, 26cqw, 24rem);
+    --home-grid-gap: clamp(0.75rem, 2cqw, 1.5rem);
   }
 
   .page.page--home .project-card__title {
-    font-size: clamp(0.98rem, 2.6cqi, 1.05rem);
+    font-size: clamp(1rem, 2.8cqi, 1.12rem);
   }
 
   .page.page--home .project-card__link {
-    font-size: clamp(0.76rem, 2.1cqi, 0.8rem);
+    font-size: clamp(0.78rem, 2.2cqi, 0.85rem);
   }
 
   .page.page--home .project-card__body {
-    padding: clamp(1rem, 2.8cqi, 1.35rem) clamp(1.05rem, 3cqi, 1.35rem);
+    padding: clamp(1.05rem, 3cqi, 1.45rem) clamp(1.1rem, 3.2cqi, 1.45rem);
+  }
+
+  .page.page--home .site-top-bar__brand {
+    font-size: clamp(1.65rem, calc(0.5rem + 4cqi), 2.35rem);
   }
 }
 
