@@ -39,3 +39,4 @@ When **ronpicard.com** uses this repo’s GitHub Pages custom domain, set `base`
 ## Security notes
 
 The app is **fully static** (HTML/CSS/JS only): no server, database, or API in this repo, which keeps the attack surface small. External links use `rel="noopener noreferrer"`. Keep dependencies updated (`npm audit`) before deploys.
+
