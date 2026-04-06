@@ -11,6 +11,8 @@ export function safeYoutubeId(raw: string | null | undefined): string | null {
   return id
 }
 
+const ALLOWED_GITHUB_PAGES_HOST = 'ronpicard.github.io'
+
 export function safeGithubPagesUrl(raw: string | null | undefined): string | null {
   if (!raw?.trim()) return null
   let u: URL
@@ -20,7 +22,7 @@ export function safeGithubPagesUrl(raw: string | null | undefined): string | nul
     return null
   }
   if (u.protocol !== 'https:') return null
-  if (!u.hostname.toLowerCase().endsWith('.github.io')) return null
+  if (u.hostname.toLowerCase() !== ALLOWED_GITHUB_PAGES_HOST) return null
   if (u.username || u.password) return null
   return u.toString()
 }

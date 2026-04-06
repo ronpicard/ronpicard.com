@@ -11,7 +11,7 @@ const PRODUCTION_CSP = [
   "base-uri 'self'",
   "form-action 'self'",
   "object-src 'none'",
-  "frame-src https://www.youtube-nocookie.com https://*.github.io",
+  "frame-src https://www.youtube-nocookie.com https://ronpicard.github.io",
   "img-src 'self' data: https:",
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",

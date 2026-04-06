@@ -97,7 +97,26 @@ export function prepareArticleBodyHtml(html: string | null | undefined): string 
       ALLOWED_ATTR: [...ALLOWED_ATTR],
       ALLOW_DATA_ATTR: false,
       FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'svg'],
-      FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur', 'onmouseenter'],
+      FORBID_ATTR: [
+        'onerror',
+        'onload',
+        'onclick',
+        'onmouseover',
+        'onmouseenter',
+        'onmouseleave',
+        'onfocus',
+        'onblur',
+        'onkeydown',
+        'onkeyup',
+        'onkeypress',
+        'oninput',
+        'onchange',
+        'onsubmit',
+        'onabort',
+        'onauxclick',
+        'onpointerdown',
+        'onpointerup',
+      ],
     })
   } finally {
     DOMPurify.removeHook('uponSanitizeAttribute', hook)
