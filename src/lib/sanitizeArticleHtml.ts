@@ -40,7 +40,11 @@ const ALLOWED_ATTR = ['href', 'src', 'alt', 'title', 'class', 'colspan', 'rowspa
 
 /** Allowed <img src> after base URL rewrite: only mirrored assets under /resources/. */
 function resourceImgSrcPattern(): RegExp {
-  const base = import.meta.env.BASE_URL.replace(/\/$/, '') || ''
+  const baseRaw =
+    (import.meta as unknown as { env?: { BASE_URL?: string } }).env?.BASE_URL ||
+    ((globalThis as unknown as { __VITE_BASE_URL__?: string }).__VITE_BASE_URL__ ?? '/') ||
+    '/'
+  const base = baseRaw.replace(/\/$/, '') || ''
   const seg = base.replace(/^\//, '')
   if (seg) {
     return new RegExp(

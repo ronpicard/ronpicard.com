@@ -7,9 +7,9 @@ export const DEFAULT_TITLE = `${SITE_NAME} — Software, projects & notes`
 export const DEFAULT_DESCRIPTION =
   'Portfolio of Ron Picard: web apps, formal methods, software lessons, research papers, and engineering projects.'
 
-export function canonicalHashUrl(route: string): string {
+export function canonicalUrl(route: string): string {
   const p = route.startsWith('/') ? route : `/${route}`
-  return `${SITE_CANONICAL_ROOT}/#${p}`
+  return `${SITE_CANONICAL_ROOT}${p}`
 }
 
 /** Absolute URL for mirrored assets (e.g. resources/*.png) — for Open Graph. */

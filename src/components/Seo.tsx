@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import {
   absoluteAssetUrl,
-  canonicalHashUrl,
+  canonicalUrl,
   DEFAULT_DESCRIPTION,
   truncateMetaDescription,
 } from '../lib/siteMeta'
@@ -17,7 +17,7 @@ type Props = {
 }
 
 export function Seo({ title, description, path, ogType = 'website', ogImage, jsonLd }: Props) {
-  const canonical = canonicalHashUrl(path === '/' ? '/' : path)
+  const canonical = canonicalUrl(path === '/' ? '/' : path)
   const desc = truncateMetaDescription(description || DEFAULT_DESCRIPTION)
   const imageAbs = absoluteAssetUrl(ogImage ?? undefined)
   const twitterCard = imageAbs ? 'summary_large_image' : 'summary'
@@ -57,7 +57,7 @@ export function homeJsonLd() {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Ron Picard',
-    url: canonicalHashUrl('/'),
+    url: canonicalUrl('/'),
     description: DEFAULT_DESCRIPTION,
   }
 }
@@ -74,7 +74,7 @@ export function articleJsonLd(input: {
     headline: input.title,
     datePublished: `${input.date}T12:00:00.000Z`,
     description: truncateMetaDescription(input.description),
-    url: canonicalHashUrl(input.path),
+    url: canonicalUrl(input.path),
     author: { '@type': 'Person', name: 'Ron Picard' },
   }
 }
