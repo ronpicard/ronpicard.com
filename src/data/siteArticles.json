@@ -1,5 +1,20 @@
 [
   {
+    "slug": "nasa-artemis-2-mission-tracker-web-app",
+    "title": "Artemis II Mission Tracker &mdash; Home",
+    "date": "2026-04-07",
+    "summary": null,
+    "bodyHtml": null,
+    "imageUrl": "resources/artemis-mission-tracker-2026-04-07.png",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/nasa-atemis-2-mission-tracker-web-app/",
+    "demoUrl": "https://ronpicard.github.io/nasa-atemis-2-mission-tracker-web-app/",
+    "repoUrl": "https://github.com/ronpicard/nasa-atemis-2-mission-tracker-web-app",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": []
+  },
+  {
     "slug": "the-quest-for-agi-why-the-future-of-intelligence-may-lie-in-the-human-brain",
     "title": "The Quest for Artificial General Intelligence: Why the Answer May Lie in the Human Brain &mdash; Home",
     "date": "2026-04-06",
