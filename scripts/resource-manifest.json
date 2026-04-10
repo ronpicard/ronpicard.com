@@ -590,5 +590,9 @@
   "https://images.squarespace-cdn.com/content/v1/66521122b7ba94372447d95e/11766298-a1bb-44c9-883a-4d5ee49634fd/ChatGPT+Image+May+31%2C+2025%2C+03_48_23+PM.png": {
     "path": "resources/8238d83775aed9.png",
     "bytes": 1684104
+  },
+  "local://artemis-mission-tracker-2026-04-10.png": {
+    "path": "resources/artemis-mission-tracker-2026-04-10.png",
+    "bytes": 86137
   }
 }
