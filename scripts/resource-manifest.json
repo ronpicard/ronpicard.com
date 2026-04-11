@@ -594,5 +594,9 @@
   "local://artemis-mission-tracker-2026-04-10.png": {
     "path": "resources/artemis-mission-tracker-2026-04-10.png",
     "bytes": 86137
+  },
+  "local://daily-tech-brief-web-app-2026-04-11.png": {
+    "path": "resources/daily-tech-brief-web-app-2026-04-11.png",
+    "bytes": 70565
   }
 }

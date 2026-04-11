@@ -1,5 +1,20 @@
 [
   {
+    "slug": "daily-tech-brief-web-app",
+    "title": "Daily Tech Brief &mdash; Home",
+    "date": "2026-04-11",
+    "summary": "Dark-mode news dashboard with multi-timezone clocks, category feeds (tech, economy, politics, and more), local weather, and outbound read links.",
+    "bodyHtml": null,
+    "imageUrl": "resources/daily-tech-brief-web-app-2026-04-11.png",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/daily-tech-brief-web-app/",
+    "demoUrl": "https://ronpicard.github.io/daily-tech-brief-web-app/",
+    "repoUrl": "https://github.com/ronpicard/daily-tech-brief-web-app",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": []
+  },
+  {
     "slug": "nasa-artemis-2-mission-tracker-web-app",
     "title": "Artemis II Mission Tracker &mdash; Home",
     "date": "2026-04-07",
