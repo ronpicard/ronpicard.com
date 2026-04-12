@@ -598,5 +598,9 @@
   "local://daily-tech-brief-web-app-2026-04-11.png": {
     "path": "resources/daily-tech-brief-web-app-2026-04-11.png",
     "bytes": 70565
+  },
+  "local://back-rooms-game-web-app-2026-04-11.png": {
+    "path": "resources/back-rooms-game-web-app-2026-04-11.png",
+    "bytes": 53868
   }
 }
