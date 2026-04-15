@@ -45,10 +45,27 @@ export function DynamicGithubReadme({ rawUrl, fallbackSummary, viewerUrl }: Prop
 
   if (phase === 'loading') {
     return (
-      <div className="article-readme-dynamic">
-        <p className="article-readme-dynamic__status" role="status">
-          Loading README from GitHub…
-        </p>
+      <div className="article-readme-dynamic" aria-busy="true" aria-live="polite">
+        <div className="article-readme-loading">
+          <div className="article-readme-loading__row">
+            <span className="article-readme-loading__spinner" aria-hidden />
+            <div className="article-readme-loading__text">
+              <span className="article-readme-loading__label">Loading README from GitHub…</span>
+              <span className="article-readme-loading__hint">
+                This section is loaded dynamically from the repository, so it usually takes about a second
+                to appear.
+              </span>
+            </div>
+          </div>
+          <div className="article-readme-skeleton" aria-hidden>
+            <div className="article-readme-skeleton__line article-readme-skeleton__line--title" />
+            <div className="article-readme-skeleton__line" />
+            <div className="article-readme-skeleton__line" />
+            <div className="article-readme-skeleton__line article-readme-skeleton__line--short" />
+            <div className="article-readme-skeleton__line article-readme-skeleton__line--mid" />
+            <div className="article-readme-skeleton__line" />
+          </div>
+        </div>
       </div>
     )
   }

@@ -814,7 +814,100 @@ body {
   margin: 0 0 1.5rem;
 }
 
-.article-readme-dynamic__status,
+.article-readme-loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.article-readme-loading__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.article-readme-loading__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.article-readme-loading__spinner {
+  flex-shrink: 0;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: 2px solid rgba(0, 255, 200, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: article-readme-spin 0.7s linear infinite;
+}
+
+.article-readme-loading__label {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.article-readme-loading__hint {
+  display: block;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  max-width: 36rem;
+}
+
+.article-readme-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.15rem 0 0.25rem;
+  max-width: 42rem;
+}
+
+.article-readme-skeleton__line {
+  height: 0.65rem;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 200, 0.06) 0%,
+    rgba(0, 212, 255, 0.12) 45%,
+    rgba(0, 255, 200, 0.06) 90%
+  );
+  background-size: 200% 100%;
+  animation: article-readme-shimmer 1.35s ease-in-out infinite;
+}
+
+.article-readme-skeleton__line--title {
+  height: 1.1rem;
+  width: 55%;
+  animation-delay: 0.05s;
+}
+
+.article-readme-skeleton__line--short {
+  width: 72%;
+}
+
+.article-readme-skeleton__line--mid {
+  width: 88%;
+}
+
+@keyframes article-readme-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes article-readme-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
 .article-readme-dynamic__error {
   margin: 0 0 1rem;
   color: var(--text-muted);
@@ -824,6 +917,18 @@ body {
 
 .article-readme-dynamic__error a {
   color: var(--accent-cyan, #5eead4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .article-readme-loading__spinner {
+    animation: none;
+    border-top-color: rgba(0, 255, 200, 0.45);
+  }
+
+  .article-readme-skeleton__line {
+    animation: none;
+    background: rgba(0, 255, 200, 0.08);
+  }
 }
 
 .article-prose {

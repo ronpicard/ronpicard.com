@@ -64,6 +64,6 @@ export function markdownReadmeToSafeHtml(markdown: string, rawReadmeUrl: string)
   html = html.replace(/^\s*<h1[^>]*>[\s\S]*?<\/h1>\s*/i, '')
   html = absolutizeRelativeLinks(html, blobDir)
 
-  const intro = `<p class="">Live README from <a href="${githubBlobViewerUrlFromRawUrl(rawReadmeUrl) ?? rawReadmeUrl}">GitHub</a>:</p>\n\n`
+  const intro = `<p class="">README below is loaded dynamically from <a href="${githubBlobViewerUrlFromRawUrl(rawReadmeUrl) ?? rawReadmeUrl}">GitHub</a> each time you open this page (you may see a short delay while it fetches).</p>\n\n`
   return prepareArticleBodyHtml(intro + html)
 }
