@@ -1,5 +1,21 @@
 [
   {
+    "slug": "clamav-antivirus-control-gui",
+    "title": "ClamAV Control &mdash; Home",
+    "date": "2026-04-14",
+    "summary": "Desktop Electron app with a local dashboard for ClamAV: virus definitions, daemon control, optional real-time folder monitoring, scans with live progress, quarantine, cron schedules on macOS/Linux, config editing, and DNS presets. Install ClamAV separately; the UI drives the tools on your machine.",
+    "bodyHtml": null,
+    "imageUrl": "resources/clamav-control-gui-2026-04-14.png",
+    "articleHeroUrl": null,
+    "githubEmbed": null,
+    "demoUrl": null,
+    "repoUrl": "https://github.com/ronpicard/clamav-antivirus-control-gui",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-control-gui/main/README.md"
+  },
+  {
     "slug": "daily-tech-brief-web-app",
     "title": "Daily Tech Brief &mdash; Home",
     "date": "2026-04-11",

@@ -27,6 +27,26 @@ export function safeGithubPagesUrl(raw: string | null | undefined): string | nul
   return u.toString()
 }
 
+/**
+ * Raw markdown on GitHub (browser fetch + CORS). Path must include branch and file, e.g.
+ * …/owner/repo/main/README.md
+ */
+export function safeGithubReadmeRawUrl(raw: string | null | undefined): string | null {
+  if (!raw?.trim()) return null
+  let u: URL
+  try {
+    u = new URL(raw.trim())
+  } catch {
+    return null
+  }
+  if (u.protocol !== 'https:') return null
+  if (u.hostname.toLowerCase() !== 'raw.githubusercontent.com') return null
+  if (u.username || u.password) return null
+  const parts = u.pathname.split('/').filter(Boolean)
+  if (parts.length < 4) return null
+  return u.toString()
+}
+
 export function safeGithubRepoUrl(raw: string | null | undefined): string | null {
   if (!raw?.trim()) return null
   let u: URL

@@ -2,6 +2,7 @@ import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArticleNav } from '../components/ArticleNav'
 import { LessonOutline } from '../components/LessonOutline'
 import { articleJsonLd, Seo } from '../components/Seo'
+import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
 import { SiteTopBar } from '../components/SiteTopBar'
 import {
   filterExtraLinks,
@@ -12,11 +13,13 @@ import {
   youtubeWatchUrl,
 } from '../data/articles'
 import { resolveAssetUrl } from '../lib/assetUrl'
+import { githubBlobViewerUrlFromRawUrl } from '../lib/githubReadme'
 import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
   safeGithubPagesUrl,
+  safeGithubReadmeRawUrl,
   safeGithubRepoUrl,
   safeHttpsEmbedUrl,
   safeYoutubeId,
@@ -80,7 +83,8 @@ export default function ArticlePage() {
   const hasCode = showCodeButton(article) && !!repoHref
   const ytId = safeYoutubeId(article.youtubeId)
   const videoUrl = youtubeWatchUrl(article.youtubeId)
-  const proseHtml = prepareArticleBodyHtml(article.bodyHtml)
+  const readmeRawUrl = safeGithubReadmeRawUrl(article.readmeRawUrl)
+  const proseHtml = prepareArticleBodyHtml(readmeRawUrl ? null : article.bodyHtml)
   const otherEmbedSrc = article.otherEmbed ? safeHttpsEmbedUrl(stripQuery(article.otherEmbed)) : null
   const path = `/blog/${article.slug}`
   const metaDesc =
@@ -89,8 +93,13 @@ export default function ArticlePage() {
   const seoTitle = `${article.title} | Ron Picard`
   const ogImage = article.articleHeroUrl ?? article.imageUrl
 
-  const textBlock =
-    proseHtml != null && proseHtml !== '' ? (
+  const textBlock = readmeRawUrl ? (
+    <DynamicGithubReadme
+      rawUrl={readmeRawUrl}
+      fallbackSummary={article.summary}
+      viewerUrl={githubBlobViewerUrlFromRawUrl(readmeRawUrl)}
+    />
+  ) : proseHtml != null && proseHtml !== '' ? (
       <div className="article-prose" dangerouslySetInnerHTML={{ __html: proseHtml }} />
     ) : article.kind === 'lesson' && article.summary ? (
       <LessonOutline text={article.summary} />

@@ -15,8 +15,13 @@ type SiteArticleRow = {
   repoUrl: string | null
   youtubeId: string | null
   otherEmbed: string | null
+  /** If set, article page fetches this raw GitHub URL at runtime and renders README markdown. */
+  readmeRawUrl: string | null
   extraLinks: { label: string; href: string }[]
 }
+
+/** Rows in `siteArticles.json` may omit `readmeRawUrl`. */
+type SiteArticleJsonRow = Omit<SiteArticleRow, 'readmeRawUrl'> & { readmeRawUrl?: string | null }
 
 function decodeHtml(raw: string): string {
   return raw
@@ -72,13 +77,14 @@ function isDataStructuresVisualizerArticle(
   return s.includes('data-structures-visualizer-web-app')
 }
 
-const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleRow[]).map((row) => ({
+const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleJsonRow[]).map((row) => ({
   ...row,
   title: decodeHtml(row.title),
   summary: row.summary ? decodeHtml(row.summary) : null,
   imageUrl: row.imageUrl ?? null,
   articleHeroUrl: row.articleHeroUrl ?? null,
   bodyHtml: row.bodyHtml ?? null,
+  readmeRawUrl: row.readmeRawUrl ?? null,
 }))
 
 const indexed = normalizedRows.map((row, sourceIndex) => ({ ...row, sourceIndex }))

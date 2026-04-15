@@ -602,5 +602,9 @@
   "local://back-rooms-game-web-app-2026-04-11.png": {
     "path": "resources/back-rooms-game-web-app-2026-04-11.png",
     "bytes": 53868
+  },
+  "local://clamav-control-gui-2026-04-14.png": {
+    "path": "resources/clamav-control-gui-2026-04-14.png",
+    "bytes": 44184
   }
 }

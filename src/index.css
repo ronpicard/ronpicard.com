@@ -810,6 +810,22 @@ body {
   white-space: pre-wrap;
 }
 
+.article-readme-dynamic {
+  margin: 0 0 1.5rem;
+}
+
+.article-readme-dynamic__status,
+.article-readme-dynamic__error {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.article-readme-dynamic__error a {
+  color: var(--accent-cyan, #5eead4);
+}
+
 .article-prose {
   color: rgba(210, 230, 225, 0.9);
   font-size: 1.02rem;
