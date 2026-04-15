@@ -17,7 +17,7 @@ const PRODUCTION_CSP = [
   "font-src 'self' https://fonts.gstatic.com data:",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "script-src 'self'",
-  "connect-src 'self'",
+  "connect-src 'self' https://raw.githubusercontent.com https://api.github.com",
   "upgrade-insecure-requests",
 ].join('; ')
 
