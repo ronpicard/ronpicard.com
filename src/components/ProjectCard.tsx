@@ -1,5 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'
+import {
+  articleKindBadgeClass,
+  articleKindLabel,
+  formatArticleDate,
+} from '../lib/articleDisplay'
 import { resolveAssetUrl } from '../lib/assetUrl'
+import { YoutubeIcon } from './YoutubeIcon'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -25,14 +31,6 @@ export type ProjectListItem = {
 
 type Props = {
   item: ProjectListItem
-}
-
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(iso + 'T12:00:00'))
 }
 
 export function ProjectCard({ item }: Props) {
@@ -69,10 +67,10 @@ export function ProjectCard({ item }: Props) {
       </div>
       <div className="project-card__body">
         <div className="project-card__meta">
-          <span className={`project-card__badge project-card__badge--${item.kind}`}>
-            {item.kind === 'app' ? 'Web app' : item.kind === 'lesson' ? 'Lesson' : 'Article'}
+          <span className={`project-card__badge ${articleKindBadgeClass(item.kind)}`}>
+            {articleKindLabel(item.kind)}
           </span>
-          <time dateTime={item.date}>{formatDate(item.date)}</time>
+          <time dateTime={item.date}>{formatArticleDate(item.date)}</time>
         </div>
         <h2 className="project-card__title">{item.title}</h2>
         <div className="project-card__actions">
@@ -114,12 +112,7 @@ export function ProjectCard({ item }: Props) {
               rel="noopener noreferrer"
             >
               <span className="project-card__btn__yt-icon" aria-hidden>
-                <svg viewBox="0 0 24 24" width="16" height="16" focusable="false">
-                  <path
-                    fill="currentColor"
-                    d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1 31.5 31.5 0 0 0 .5-5.8 31.5 31.5 0 0 0-.5-5.8zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"
-                  />
-                </svg>
+                <YoutubeIcon size={16} />
               </span>
               YouTube
             </a>

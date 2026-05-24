@@ -2,3 +2,5 @@ node_modules
 dist
 *.local
 .DS_Store
+# Accidental Vite dev-server log (not vite.config.ts)
+/vite

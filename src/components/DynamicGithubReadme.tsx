@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { fetchGithubReadmeText } from '../lib/fetchGithubReadme'
 import { markdownReadmeToSafeHtml } from '../lib/githubReadme'
 import { safeHttpUrl } from '../lib/safeUrls'
 
@@ -21,12 +22,7 @@ export function DynamicGithubReadme({ rawUrl, fallbackSummary, viewerUrl }: Prop
 
     ;(async () => {
       try {
-        const res = await fetch(rawUrl, {
-          signal: ac.signal,
-          headers: { Accept: 'text/plain' },
-        })
-        if (!res.ok) throw new Error(String(res.status))
-        const md = await res.text()
+        const md = await fetchGithubReadmeText(rawUrl, ac.signal)
         if (ac.signal.aborted) return
         const safe = markdownReadmeToSafeHtml(md, rawUrl)
         if (!safe) throw new Error('sanitize')

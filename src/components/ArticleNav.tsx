@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
-import type { Article } from '../data/articles'
-import { getArticle } from '../data/articles'
+import { getArticle, type Article } from '../data/articles'
 
 type Props = {
   article: Article

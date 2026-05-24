@@ -10,19 +10,16 @@ import * as cheerio from 'cheerio'
 import { writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import DOMPurify from 'isomorphic-dompurify'
+import { normalizeGithubRepoUrl } from '../shared/githubRepo.ts'
+import { normalizeHrefKey } from '../shared/hrefKey.ts'
+import { sanitizeArticleHtmlRaw } from '../shared/articleHtmlSanitize.ts'
+import { fetchText } from './lib/fetchText.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUT = join(__dirname, '../src/data/siteArticles.json')
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms))
-}
-
-async function fetchText(url) {
-  const res = await fetch(url, { headers: { 'user-agent': 'ronpicard.com-mirror/1.0' } })
-  if (!res.ok) throw new Error(`${url} ${res.status}`)
-  return res.text()
 }
 
 function metaContent(html, prop) {
@@ -77,17 +74,6 @@ function extractContentButtons($) {
   return out
 }
 
-function normalizeRepoUrl(href) {
-  try {
-    const u = new URL(href)
-    const segs = u.pathname.split('/').filter(Boolean)
-    if (segs.length >= 2) return `${u.origin}/${segs[0]}/${segs[1]}`
-    return href
-  } catch {
-    return href
-  }
-}
-
 function pickDemoUrl(buttons) {
   const hit = buttons.find((b) => /\bdemo\b/i.test(b.label))
   return hit?.href ?? null
@@ -96,7 +82,7 @@ function pickDemoUrl(buttons) {
 function pickRepoUrl(buttons) {
   const hit = buttons.find((b) => /\bcode\b/i.test(b.label))
   if (hit && /github\.com\/ronpicard\//i.test(hit.href) && !/gist\./i.test(hit.href)) {
-    return normalizeRepoUrl(hit.href)
+    return normalizeGithubRepoUrl(hit.href)
   }
   return null
 }
@@ -196,66 +182,13 @@ function extractBlogBodyHtml($) {
   root.find('script, style, iframe, object, embed, form, input, button').remove()
   const raw = root.html()
   if (!raw?.trim()) return null
-  let safe = DOMPurify.sanitize(raw, {
-    ALLOWED_TAGS: [
-      'p',
-      'br',
-      'h1',
-      'h2',
-      'h3',
-      'h4',
-      'h5',
-      'h6',
-      'ul',
-      'ol',
-      'li',
-      'a',
-      'strong',
-      'b',
-      'em',
-      'i',
-      'blockquote',
-      'pre',
-      'code',
-      'img',
-      'hr',
-      'div',
-      'span',
-      'figure',
-      'figcaption',
-      'table',
-      'thead',
-      'tbody',
-      'tr',
-      'th',
-      'td',
-    ],
-    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'colspan', 'rowspan'],
-    ALLOW_DATA_ATTR: false,
-  })
-  safe = safe.replace(/<a(\s+[^>]*?)>/gi, (full, inner) => {
-    if (/target\s*=/i.test(inner)) return full
-    if (!/href\s*=\s*["']https?:/i.test(inner)) return full
-    return `<a${inner} target="_blank" rel="noopener noreferrer">`
-  })
-  const trimmed = safe.trim()
+  const safe = sanitizeArticleHtmlRaw(raw)
+  const trimmed = safe?.trim()
   if (!trimmed) return null
   const $chk = cheerio.load(trimmed)
   const text = $chk.text().replace(/\s+/g, ' ').trim()
   if (text.length < 30) return null
   return trimmed
-}
-
-function normalizeHrefKey(href) {
-  if (!href) return ''
-  try {
-    const u = new URL(href)
-    u.hash = ''
-    let p = u.pathname.replace(/\/$/, '') || '/'
-    return `${u.origin}${p}`.toLowerCase()
-  } catch {
-    return href.replace(/\/$/, '').toLowerCase()
-  }
 }
 
 export function parsePost(url, html) {

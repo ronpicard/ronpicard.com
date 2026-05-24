@@ -2,8 +2,18 @@
  * Validates URLs used for navigation and embeds so tampered JSON cannot
  * inject javascript:, data:, or unexpected hosts into the DOM.
  */
+import { UNSAFE_HREF_SCHEME_RE } from '../../shared/urlSchemes'
 
 const YOUTUBE_ID = /^[a-zA-Z0-9_-]{6,32}$/
+
+function isProduction(): boolean {
+  return import.meta.env.PROD
+}
+
+function hasPathTraversal(pathname: string): boolean {
+  const parts = pathname.split('/').filter(Boolean)
+  return parts.some((p) => p === '..' || p === '.' || /%2e/i.test(p))
+}
 
 export function safeYoutubeId(raw: string | null | undefined): string | null {
   const id = raw?.trim()
@@ -42,8 +52,10 @@ export function safeGithubReadmeRawUrl(raw: string | null | undefined): string |
   if (u.protocol !== 'https:') return null
   if (u.hostname.toLowerCase() !== 'raw.githubusercontent.com') return null
   if (u.username || u.password) return null
+  if (hasPathTraversal(u.pathname)) return null
   const parts = u.pathname.split('/').filter(Boolean)
   if (parts.length < 4) return null
+  if (parts.some((p) => !/^[a-zA-Z0-9._-]+$/.test(p))) return null
   return u.toString()
 }
 
@@ -70,6 +82,12 @@ export function safeDemoUrl(raw: string | null | undefined): string | null {
 /**
  * Optional third-party iframe (e.g. future embeds). Only https and no embedded credentials.
  */
+const ALLOWED_EMBED_HOSTS = new Set([
+  'www.youtube-nocookie.com',
+  'youtube-nocookie.com',
+  'ronpicard.github.io',
+])
+
 export function safeHttpsEmbedUrl(raw: string | null | undefined): string | null {
   if (!raw?.trim()) return null
   let u: URL
@@ -80,6 +98,7 @@ export function safeHttpsEmbedUrl(raw: string | null | undefined): string | null
   }
   if (u.protocol !== 'https:') return null
   if (u.username || u.password) return null
+  if (!ALLOWED_EMBED_HOSTS.has(u.hostname.toLowerCase())) return null
   return u.toString()
 }
 
@@ -89,9 +108,12 @@ export function safeHttpsEmbedUrl(raw: string | null | undefined): string | null
 /** Any https/http URL for outbound links (articles, videos, etc.). */
 export function safeHttpUrl(raw: string | null | undefined): string | null {
   if (!raw?.trim()) return null
+  const t = raw.trim()
+  if (UNSAFE_HREF_SCHEME_RE.test(t)) return null
   try {
-    const u = new URL(raw.trim())
-    if (u.protocol !== 'https:' && u.protocol !== 'http:') return null
+    const u = new URL(t)
+    if (isProduction() && u.protocol !== 'https:') return null
+    if (!isProduction() && u.protocol !== 'https:' && u.protocol !== 'http:') return null
     if (u.username || u.password) return null
     return u.toString()
   } catch {
@@ -105,15 +127,9 @@ export function safeArticleLinkHref(
 ): string | null {
   const t = href.trim()
   if (!t) return null
+  if (UNSAFE_HREF_SCHEME_RE.test(t)) return null
   if (/^https?:\/\//i.test(t)) {
-    try {
-      const u = new URL(t)
-      if (u.protocol !== 'https:' && u.protocol !== 'http:') return null
-      if (u.username || u.password) return null
-      return u.toString()
-    } catch {
-      return null
-    }
+    return safeHttpUrl(t)
   }
   const local = resolveAsset(t)
   return local ?? null

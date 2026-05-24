@@ -13,7 +13,7 @@ import {
   youtubeWatchUrl,
 } from '../data/articles'
 import { resolveAssetUrl } from '../lib/assetUrl'
-import { githubBlobViewerUrlFromRawUrl } from '../lib/githubReadme'
+import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
 import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
 import {
   safeArticleLinkHref,
@@ -24,27 +24,14 @@ import {
   safeHttpsEmbedUrl,
   safeYoutubeId,
 } from '../lib/safeUrls'
+import { isSafePublicSlug } from '../config/security'
+import {
+  articleKindBadgeClass,
+  articleKindLabel,
+  formatArticleDate,
+} from '../lib/articleDisplay'
 import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
-
-function formatDate(iso: string) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(new Date(iso + 'T12:00:00'))
-}
-
-function badgeClass(kind: string) {
-  if (kind === 'app') return 'project-card__badge--app'
-  if (kind === 'lesson') return 'project-card__badge--lesson'
-  return 'project-card__badge--post'
-}
-
-function badgeLabel(kind: string) {
-  if (kind === 'app') return 'Web app'
-  if (kind === 'lesson') return 'Lesson'
-  return 'Article'
-}
+import { YoutubeIcon } from '../components/YoutubeIcon'
 
 function stripQuery(url: string) {
   return url.split('?')[0]
@@ -58,7 +45,10 @@ function displayExtraLinkLabel(label: string): string {
 
 export default function ArticlePage() {
   const { slug } = useParams<{ slug: string }>()
-  const article = slug ? getArticle(slug) : undefined
+  if (!isSafePublicSlug(slug)) {
+    return <Navigate to="/" replace />
+  }
+  const article = getArticle(slug)
 
   if (!article) {
     return <Navigate to="/" replace />
@@ -139,12 +129,7 @@ export default function ArticlePage() {
               rel="noopener noreferrer"
             >
               <span className="article-btn__yt-icon" aria-hidden>
-                <svg viewBox="0 0 24 24" width="18" height="18" focusable="false">
-                  <path
-                    fill="currentColor"
-                    d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1 31.5 31.5 0 0 0 .5-5.8 31.5 31.5 0 0 0-.5-5.8zM9.75 15.02V8.98L15.5 12l-5.75 3.02z"
-                  />
-                </svg>
+                <YoutubeIcon size={18} />
               </span>
               YouTube
             </a>
@@ -170,6 +155,7 @@ export default function ArticlePage() {
           <iframe
             title={`${article.title} video`}
             src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(ytId)}?rel=0`}
+            sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-presentation"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             loading="lazy"
@@ -217,10 +203,10 @@ export default function ArticlePage() {
         </Link>
         <h1 className="article-header__title">{article.title}</h1>
         <div className="article-header__meta">
-          <span className={`project-card__badge ${badgeClass(article.kind)}`}>
-            {badgeLabel(article.kind)}
+          <span className={`project-card__badge ${articleKindBadgeClass(article.kind)}`}>
+            {articleKindLabel(article.kind)}
           </span>
-          <time dateTime={article.date}>{formatDate(article.date)}</time>
+          <time dateTime={article.date}>{formatArticleDate(article.date)}</time>
         </div>
       </header>
 

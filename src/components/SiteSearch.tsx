@@ -1,9 +1,16 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { SEARCH_QUERY_MAX_LEN } from '../config/security'
 import { articles } from '../data/articles'
+import { articleKindShortLabel } from '../lib/articleDisplay'
 
 function normalize(s: string) {
-  return s.toLowerCase().replace(/\s+/g, ' ').trim()
+  return s
+    .replace(/[\u0000-\u001f\u007f]/g, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, SEARCH_QUERY_MAX_LEN)
 }
 
 function matches(query: string, title: string, summary: string | null) {
@@ -91,7 +98,7 @@ export function SiteSearch() {
             placeholder="Search articles…"
             autoComplete="off"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => setQuery(e.target.value.slice(0, SEARCH_QUERY_MAX_LEN))}
           />
           <ul className="site-search__results" aria-label="Matching posts">
             {results.length === 0 ? (
@@ -104,7 +111,7 @@ export function SiteSearch() {
                   <Link className="site-search__link" to={`/blog/${a.slug}`} onClick={close}>
                     <span className="site-search__link-title">{a.title}</span>
                     <span className="site-search__link-kind">
-                      {a.kind === 'app' ? 'App' : a.kind === 'lesson' ? 'Lesson' : 'Article'}
+                      {articleKindShortLabel(a.kind)}
                     </span>
                   </Link>
                 </li>

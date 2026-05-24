@@ -1,3 +1,10 @@
+import { githubRepoPairKey } from '../../shared/githubRepo'
+import { normalizeHrefKey } from '../../shared/hrefKey'
+import {
+  buildArticleRouteSlugs,
+  decodeHtml,
+  sortIndexedArticles,
+} from '../../shared/siteArticlesRouting'
 import { safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
 
@@ -23,58 +30,10 @@ type SiteArticleRow = {
 /** Rows in `siteArticles.json` may omit `readmeRawUrl`. */
 type SiteArticleJsonRow = Omit<SiteArticleRow, 'readmeRawUrl'> & { readmeRawUrl?: string | null }
 
-function decodeHtml(raw: string): string {
-  return raw
-    .replace(/&mdash;/gi, '—')
-    .replace(/&ndash;/gi, '–')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&#8211;/g, '–')
-    .replace(/&#8212;/g, '—')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/\s*[—–]\s*Home\s*$/i, '')
-    .trim()
-}
-
-/** URL segment derived from the post title (not Squarespace storage slugs). */
-function slugifyTitleForRoute(title: string): string {
-  let s = title
-    .toLowerCase()
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-  s = s.replace(/[—–]/g, '-')
-  s = s.replace(/[^a-z0-9]+/g, '-')
-  s = s.replace(/^-+|-+$/g, '').replace(/-+/g, '-')
-  if (s.length > 96) {
-    s = s.slice(0, 96).replace(/-[^-]+$/, '')
-  }
-  return s || 'post'
-}
-
-function uniqueSlugsFromTitles(titles: string[]): string[] {
-  const counts = new Map<string, number>()
-  return titles.map((title) => {
-    const base = slugifyTitleForRoute(title)
-    const n = (counts.get(base) ?? 0) + 1
-    counts.set(base, n)
-    return n === 1 ? base : `${base}-${n}`
-  })
-}
-
 function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
   if (row.githubEmbed) return 'app'
   if (/software-lessons-session/i.test(row.slug)) return 'lesson'
   return 'post'
-}
-
-/** Same calendar day as other Mar 22 apps, but listed after Sorting Algorithms (original Squarespace order). */
-function isDataStructuresVisualizerArticle(
-  row: Pick<SiteArticleRow, 'githubEmbed' | 'demoUrl'>,
-): boolean {
-  const s = `${row.githubEmbed || ''}${row.demoUrl || ''}`
-  return s.includes('data-structures-visualizer-web-app')
 }
 
 const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleJsonRow[]).map((row) => ({
@@ -87,19 +46,14 @@ const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleJsonRow
   readmeRawUrl: row.readmeRawUrl ?? null,
 }))
 
-const indexed = normalizedRows.map((row, sourceIndex) => ({ ...row, sourceIndex }))
+type IndexedArticle = SiteArticleRow & { sourceIndex: number }
 
-const sorted = [...indexed].sort((a, b) => {
-  const byDate = b.date.localeCompare(a.date)
-  if (byDate !== 0) return byDate
-  if (a.date === '2026-03-22' && b.date === '2026-03-22') {
-    const aData = isDataStructuresVisualizerArticle(a)
-    const bData = isDataStructuresVisualizerArticle(b)
-    if (aData !== bData) return aData ? 1 : -1
-  }
-  // Match original Squarespace ordering for same-day items (reverse within date).
-  return b.sourceIndex - a.sourceIndex
-})
+const indexed: IndexedArticle[] = normalizedRows.map((row, sourceIndex) => ({
+  ...row,
+  sourceIndex,
+}))
+
+const sorted = sortIndexedArticles(indexed)
 
 export type ArticleKind = 'app' | 'lesson' | 'post'
 
@@ -112,13 +66,7 @@ export type Article = Omit<SiteArticleRow, 'slug'> & {
   nextSlug: string | null
 }
 
-const routeSlugs = uniqueSlugsFromTitles(sorted.map((r) => r.title))
-
-/** Pre–Mar-2026 refresh URLs used “… Web App” in the title; keep old /blog/* paths working. */
-const titlesForLegacySlug = sorted.map((r) =>
-  r.date >= '2026-03-22' && r.githubEmbed ? `${r.title.trim()} Web App` : r.title,
-)
-const legacyRouteSlugs = uniqueSlugsFromTitles(titlesForLegacySlug)
+const { routeSlugs, legacyRouteSlugs } = buildArticleRouteSlugs(sorted, { titlesDecoded: true })
 
 export const articles: Article[] = sorted.map((row, i) => {
   const { slug: sourceSlug, ...rest } = row
@@ -222,40 +170,15 @@ export function pdfExtraLinks(a: Article): { label: string; href: string }[] {
   return filterExtraLinks(a).filter((l) => l?.href && isPdfHref(l.href))
 }
 
-function hrefKey(href: string) {
-  try {
-    const u = new URL(href.trim())
-    u.hash = ''
-    const p = u.pathname.replace(/\/$/, '') || '/'
-    return `${u.origin}${p}`.toLowerCase()
-  } catch {
-    return href.trim().replace(/\/$/, '').toLowerCase()
-  }
-}
-
-/** `owner/repo` for github.com URLs, else null (used to drop extraLinks that duplicate the Code button). */
-function githubRepoPair(href: string): string | null {
-  try {
-    const u = new URL(href.trim())
-    const h = u.hostname.toLowerCase()
-    if (h !== 'github.com' && h !== 'www.github.com') return null
-    const parts = u.pathname.split('/').filter(Boolean)
-    if (parts.length < 2) return null
-    return `${parts[0]}/${parts[1]}`.toLowerCase()
-  } catch {
-    return null
-  }
-}
-
 export function filterExtraLinks(a: Article) {
-  const dk = a.demoUrl ? hrefKey(a.demoUrl) : null
-  const rk = a.repoUrl ? hrefKey(a.repoUrl) : null
-  const repoPair = a.repoUrl ? githubRepoPair(a.repoUrl) : null
+  const dk = a.demoUrl ? normalizeHrefKey(a.demoUrl) : null
+  const rk = a.repoUrl ? normalizeHrefKey(a.repoUrl) : null
+  const repoPair = a.repoUrl ? githubRepoPairKey(a.repoUrl) : null
   return a.extraLinks.filter((l) => {
-    const k = hrefKey(l.href)
+    const k = normalizeHrefKey(l.href)
     if (dk && k === dk) return false
     if (rk && k === rk) return false
-    if (repoPair && githubRepoPair(l.href) === repoPair) return false
+    if (repoPair && githubRepoPairKey(l.href) === repoPair) return false
     return true
   })
 }

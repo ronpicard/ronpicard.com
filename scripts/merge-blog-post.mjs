@@ -6,16 +6,12 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { sortIndexedArticles } from '../shared/siteArticlesRouting.ts'
+import { fetchText } from './lib/fetchText.mjs'
 import { parsePost } from './fetch-site-articles.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUT = join(__dirname, '../src/data/siteArticles.json')
-
-async function fetchText(url) {
-  const res = await fetch(url, { headers: { 'user-agent': 'ronpicard.com-mirror/1.0' } })
-  if (!res.ok) throw new Error(`${url} ${res.status}`)
-  return res.text()
-}
 
 async function main() {
   const url = process.argv[2]?.replace(/\/$/, '')
@@ -29,12 +25,9 @@ async function main() {
   const i = arr.findIndex((r) => r.slug === row.slug)
   if (i >= 0) arr[i] = row
   else arr.push(row)
-  arr.sort((a, b) => {
-    const byDate = b.date.localeCompare(a.date)
-    if (byDate !== 0) return byDate
-    return a.slug.localeCompare(b.slug)
-  })
-  writeFileSync(OUT, JSON.stringify(arr, null, 2))
+  const indexed = arr.map((row, sourceIndex) => ({ row, sourceIndex }))
+  const sorted = sortIndexedArticles(indexed).map((x) => x.row)
+  writeFileSync(OUT, JSON.stringify(sorted, null, 2))
   console.error(i >= 0 ? 'updated' : 'added', row.slug, OUT)
 }
 
