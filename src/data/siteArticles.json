@@ -1,5 +1,20 @@
 [
   {
+    "slug": "periodic-table-element-visualizor",
+    "title": "Periodic Table Element Visualizer &mdash; Home",
+    "date": "2026-05-25",
+    "summary": "Interactive periodic table with 3D Bohr-style atom models: click any element to explore protons, neutrons, electrons, shell configuration, and element facts in the browser.",
+    "bodyHtml": null,
+    "imageUrl": "resources/periodic-table-element-visualizor-2026-05-25.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/periodic-table-element-visualizor/",
+    "demoUrl": "https://ronpicard.github.io/periodic-table-element-visualizor/",
+    "repoUrl": "https://github.com/ronpicard/periodic-table-element-visualizor",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": []
+  },
+  {
     "slug": "clamav-antivirus-control-gui",
     "title": "ClamAV Control &mdash; Home",
     "date": "2026-04-14",
