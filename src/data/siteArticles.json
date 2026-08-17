@@ -1,5 +1,20 @@
 [
   {
+    "slug": "infinite-library-game-web-app",
+    "title": "The Library of Babel &mdash; Home",
+    "date": "2026-08-17",
+    "summary": "Browser first-person exploration inspired by Borges' infinite library: procedural hexagonal galleries, marked clue books, a five-step compass quest to the Crimson Hexagon, wandering library cats, and live Tone.js audio. React and Three.js on GitHub Pages.",
+    "bodyHtml": null,
+    "imageUrl": "resources/infinite-library-game-web-app-2026-08-17.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/infinite-library-game-web-app/",
+    "demoUrl": "https://ronpicard.github.io/infinite-library-game-web-app/",
+    "repoUrl": "https://github.com/ronpicard/infinite-library-game-web-app",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": []
+  },
+  {
     "slug": "periodic-table-element-visualizor",
     "title": "Periodic Table Element Visualizer &mdash; Home",
     "date": "2026-05-25",
