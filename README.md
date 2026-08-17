@@ -59,7 +59,7 @@ In `src/data/siteArticles.json`, set `bodyHtml` to `null` and provide a validate
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
 | `npm run preview` | Serve production build locally |
-| `npm run deploy` | `build:full` then push `dist/` to `gh-pages` |
+| `npm run deploy` | `build:full` then push `dist/` to `gh-pages` (manual; CI deploys via GitHub Actions on push to `main`) |
 | `npm run sync:articles` | Scrape/update `siteArticles.json` from legacy Squarespace |
 | `npm run mirror:resources` | Fetch assets into `public/resources/` |
 | `npm run merge:blog-post` | Merge one post from Squarespace (see `scripts/merge-blog-post.mjs`) |
@@ -153,11 +153,25 @@ See `scripts/merge-blog-post.mjs` for usage.
 
 ## Deploy
 
+### Automatic (recommended)
+
+Pushes to **`main`** run [GitHub Actions](.github/workflows/deploy.yml):
+
+1. `npm test` (Vitest unit tests)
+2. `npm run build:full`
+3. Deploy `dist/` to GitHub Pages
+
+Pull requests to `main` run unit tests only (no deploy).
+
+**One-time setup** (repo owner): **Settings → Pages → Build and deployment → Source** → **GitHub Actions**. Custom domain `ronpicard.com` stays configured via `public/CNAME` (copied into `dist/` on build).
+
+### Manual
+
 ```bash
 npm run deploy
 ```
 
-This runs `predeploy` → `build:full`, then pushes `dist/` to the `gh-pages` branch via [gh-pages](https://github.com/tschaub/gh-pages).
+This runs `predeploy` → `build:full`, then pushes `dist/` to the `gh-pages` branch via [gh-pages](https://github.com/tschaub/gh-pages). Use this if Pages is still set to deploy from the `gh-pages` branch instead of GitHub Actions.
 
 **GitHub Pages**: Repository **Settings → Pages** — deploy from branch **gh-pages**, folder **/** (root). Set the custom domain to **ronpicard.com** and use the DNS settings GitHub documents.
 

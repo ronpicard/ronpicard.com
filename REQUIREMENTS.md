@@ -7,7 +7,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Site and deployment
 
 - The site MUST be a static SPA (HTML/CSS/JS only); this repo MUST NOT require an application server or database at runtime.
-- Production MUST be deployable to GitHub Pages with custom domain `ronpicard.com` (`public/CNAME`, `npm run deploy` → `gh-pages` branch).
+- Production MUST be deployable to GitHub Pages with custom domain `ronpicard.com` (`public/CNAME`, GitHub Actions workflow on push to `main`, or manual `npm run deploy` → `gh-pages` branch).
 - Production asset base URL MUST be `/` for the apex domain; project Pages hosting MUST be supported by changing `prodBase` in `vite.config.ts` and `homepage` in `package.json`.
 - Blog routes MUST use history URLs (`/blog/:slug`), not hash routing.
 
@@ -40,6 +40,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Unit coverage SHOULD be measured with `npm run test:coverage` (`@vitest/coverage-v8`, config in `vitest.config.ts`). Scope is `shared/`, `src/lib/`, `src/data/`, and `src/config/` — not React pages, components, or Node build scripts.
 - Browser smoke coverage for home, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
 - Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
+- Pushes to `main` MUST run unit tests in CI before deploy; pull requests to `main` MUST run unit tests without deploying.
 
 ### Shared code and tooling
 

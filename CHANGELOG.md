@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Expanded unit coverage for article catalog helpers, README fetch/render, search query normalization, asset URLs, and display labels.
 - Playwright e2e smoke tests for home navigation, search, slug redirects, demo links, and dynamic README success/error paths (`npm run test:e2e`).
 - Vitest coverage via `@vitest/coverage-v8` and `npm run test:coverage` (~84% statements / ~91% lines on tested logic modules).
+- GitHub Actions workflow (`.github/workflows/deploy.yml`) runs unit tests and deploys to GitHub Pages on push to `main`.
 - Dynamic README loading for blog posts that set `readmeRawUrl` in `siteArticles.json` (client fetch from `raw.githubusercontent.com` with loading UI).
 - Shared TypeScript modules under `shared/` used by the app and build scripts (`articleHtmlSanitize`, `siteArticlesRouting`, `githubRawContentUrls`, `htmlEscape`).
 - ClamAV Control project entry with dashboard image under `public/resources/`.
