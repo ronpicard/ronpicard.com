@@ -4,3 +4,8 @@ dist
 .DS_Store
 # Accidental Vite dev-server log (not vite.config.ts)
 /vite
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/coverage/

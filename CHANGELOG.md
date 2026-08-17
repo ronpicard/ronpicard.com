@@ -9,12 +9,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Vitest unit tests for routing, HTML sanitization, URL validation, CSP/slug guards, and GitHub raw URL helpers (`npm test`).
+- Expanded unit coverage for article catalog helpers, README fetch/render, search query normalization, asset URLs, and display labels.
+- Playwright e2e smoke tests for home navigation, search, slug redirects, demo links, and dynamic README success/error paths (`npm run test:e2e`).
+- Vitest coverage via `@vitest/coverage-v8` and `npm run test:coverage` (~84% statements / ~91% lines on tested logic modules).
 - Dynamic README loading for blog posts that set `readmeRawUrl` in `siteArticles.json` (client fetch from `raw.githubusercontent.com` with loading UI).
 - Shared TypeScript modules under `shared/` used by the app and build scripts (`articleHtmlSanitize`, `siteArticlesRouting`, `githubRawContentUrls`, `htmlEscape`).
 - ClamAV Control project entry with dashboard image under `public/resources/`.
 
 ### Changed
 
+- Search normalize/match helpers extracted to `src/lib/siteSearchQuery.ts` for unit testing.
+- README and REQUIREMENTS document test commands, coverage scope, and current coverage levels.
 - Production Content-Security-Policy `connect-src` allows GitHub raw content and API hosts so in-browser README fetch works on GitHub Pages.
 - Article HTML sanitization and slug/route logic consolidated into `shared/` to avoid duplication between `src/` and `scripts/`.
 - Further deduplication: `shared/hrefKey`, `shared/githubRepo`, `shared/siteMeta`, `shared/urlSchemes`, `buildArticleRouteSlugs`, `scripts/lib/fetchText.mjs`; UI helpers in `src/lib/articleDisplay.ts` and `YoutubeIcon`.

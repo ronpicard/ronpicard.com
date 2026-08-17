@@ -34,11 +34,17 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, Google Fonts, GitHub raw/API for README fetch).
 - YouTube embeds MUST use validated video IDs and the nocookie embed host where applicable.
 
+### Testing
+
+- Security-sensitive helpers (sanitization, slug rules, GitHub URL parsing, URL validation) MUST have unit tests in Vitest; run `npm test` before release-worthy changes.
+- Unit coverage SHOULD be measured with `npm run test:coverage` (`@vitest/coverage-v8`, config in `vitest.config.ts`). Scope is `shared/`, `src/lib/`, `src/data/`, and `src/config/` — not React pages, components, or Node build scripts.
+- Browser smoke coverage for home, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
+- Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
+
 ### Shared code and tooling
 
 - Logic shared between the app and Node scripts MUST live under `shared/` and be importable from both (`tsconfig.json` includes `shared/`).
 - Build and ingest scripts MUST reuse the same sanitization and routing rules as the app where they touch HTML or slugs.
-- Security-sensitive helpers (sanitization, slug rules, GitHub URL parsing) SHOULD have unit tests; run `npm test` before release-worthy changes.
 
 ### Content maintenance (optional workflows)
 

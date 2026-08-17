@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { escapeHtmlAttr } from './shared/htmlEscape'
-import { buildProductionCsp, PRODUCTION_SECURITY_METAS } from './src/config/security'
+import { escapeHtmlAttr } from './shared/htmlEscape.ts'
+import { buildProductionCsp, PRODUCTION_SECURITY_METAS } from './src/config/security.ts'
 
 // Custom domain (apex) production: https://ronpicard.com/
 // If you switch back to GitHub project pages (https://ronpicard.github.io/ronpicard.com/),

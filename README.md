@@ -51,8 +51,11 @@ In `src/data/siteArticles.json`, set `bodyHtml` to `null` and provide a validate
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once |
+| `npm test` | Run Vitest unit tests once (74 tests) |
 | `npm run test:watch` | Vitest in watch mode |
+| `npm run test:coverage` | Vitest with V8 coverage report (`shared/`, `src/lib/`, `src/data/`, `src/config/`) |
+| `npm run test:e2e` | Playwright browser smoke tests (8 tests; starts Vite dev server) |
+| `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
 | `npm run preview` | Serve production build locally |
@@ -65,21 +68,68 @@ In `src/data/siteArticles.json`, set `bodyHtml` to `null` and provide a validate
 
 ## Tests
 
-Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`). They cover security and routing logic that must stay consistent between the app and build scripts:
+### Unit (Vitest)
 
-- `shared/siteArticlesRouting.test.ts` — slugs, sort order, legacy titles
-- `shared/articleHtmlSanitize.test.ts` — DOMPurify rules and link hardening
-- `shared/githubRawContentUrls.test.ts` — raw GitHub URL → blob/viewer URLs
-- `shared/htmlEscape.test.ts` — CSP meta escaping
-- `shared/hrefKey.test.ts`, `shared/githubRepo.test.ts` — link dedup and repo URL parsing
-- `src/lib/safeUrls.test.ts` — outbound URL and embed validation
-- `src/config/security.test.ts` — CSP string and public slug guards
-- `src/lib/sanitizeArticleHtml.test.ts` — article body pipeline
+Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/coverage-v8`). They cover security and routing logic that must stay consistent between the app and build scripts:
 
-Run before deploy or when changing `shared/`, `safeUrls`, or security config:
+| Test file | Focus |
+|-----------|--------|
+| `shared/siteArticlesRouting.test.ts` | Slugs, sort order, legacy titles |
+| `shared/articleHtmlSanitize.test.ts` | DOMPurify rules and link hardening |
+| `shared/githubRawContentUrls.test.ts` | Raw GitHub URL → blob/viewer URLs |
+| `shared/htmlEscape.test.ts` | CSP meta escaping |
+| `shared/hrefKey.test.ts`, `shared/githubRepo.test.ts` | Link dedup and repo URL parsing |
+| `src/lib/safeUrls.test.ts` | Outbound URL and embed validation |
+| `src/config/security.test.ts` | CSP string and public slug guards |
+| `src/lib/sanitizeArticleHtml.test.ts` | Article body pipeline |
+| `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection |
+| `src/lib/githubReadme.test.ts`, `src/lib/fetchGithubReadme.test.ts` | README markdown render + fetch limits |
+| `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
+| `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
 
 ```bash
 npm test
+npm run test:coverage   # terminal summary + optional HTML under coverage/
+```
+
+**Coverage (unit, logic under test)** — run `npm run test:coverage` after changes to `shared/`, `src/lib/`, `src/data/`, or `src/config/`:
+
+| Metric | Coverage |
+|--------|----------|
+| Statements | ~84% |
+| Branches | ~77% |
+| Functions | ~98% |
+| Lines | ~91% |
+
+By area (statements): `shared/` ~89%, `src/data/` ~94%, `src/lib/` ~76%. Weakest spots: `fetchGithubReadme.ts`, `safeUrls.ts`, `articleDisplay.ts`.
+
+Coverage counts only modules in `shared/`, `src/lib/`, `src/data/`, and `src/config/` that unit tests import. React pages, components, and build scripts are **not** included; use Playwright for UI smoke coverage.
+
+### End-to-end (Playwright)
+
+Smoke tests use [Playwright](https://playwright.dev/) (`playwright.config.ts`, `e2e/site.spec.ts`):
+
+- Home project list and card → article navigation
+- Search filter and Escape to close
+- HTML article prose, invalid slug → home, legacy slug → canonical slug
+- Demo link host validation
+- Dynamic README success (mocked fetch) and error fallback
+
+```bash
+npm run test:e2e
+npm run test:e2e:ui   # interactive debugger
+```
+
+First-time Playwright setup (Chromium):
+
+```bash
+npx playwright install chromium
+```
+
+Run unit + e2e before deploy or when changing `shared/`, `safeUrls`, security config, or UI routing:
+
+```bash
+npm test && npm run test:e2e
 ```
 
 ## Refreshing content from the legacy Squarespace site

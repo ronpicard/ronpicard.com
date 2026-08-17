@@ -3,22 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { SEARCH_QUERY_MAX_LEN } from '../config/security'
 import { articles } from '../data/articles'
 import { articleKindShortLabel } from '../lib/articleDisplay'
-
-function normalize(s: string) {
-  return s
-    .replace(/[\u0000-\u001f\u007f]/g, '')
-    .toLowerCase()
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, SEARCH_QUERY_MAX_LEN)
-}
-
-function matches(query: string, title: string, summary: string | null) {
-  const q = normalize(query)
-  if (!q) return true
-  const hay = `${title} ${summary ?? ''}`.toLowerCase()
-  return hay.includes(q)
-}
+import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
 
 export function SiteSearch() {
   const id = useId()
@@ -31,7 +16,7 @@ export function SiteSearch() {
 
   const results = useMemo(() => {
     if (!open) return []
-    return articles.filter((a) => matches(query, a.title, a.summary)).slice(0, 24)
+    return articles.filter((a) => articleMatchesSearch(query, a.title, a.summary)).slice(0, 24)
   }, [open, query])
 
   const close = useCallback(() => {
@@ -103,7 +88,7 @@ export function SiteSearch() {
           <ul className="site-search__results" aria-label="Matching posts">
             {results.length === 0 ? (
               <li className="site-search__empty">
-                {normalize(query) ? 'No matches.' : 'Type to search.'}
+                {normalizeSearchQuery(query) ? 'No matches.' : 'Type to search.'}
               </li>
             ) : (
               results.map((a) => (

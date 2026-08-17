@@ -6,6 +6,21 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['**/*.{test,spec}.ts'],
-    exclude: ['dist/**', 'node_modules/**'],
+    exclude: ['dist/**', 'node_modules/**', 'e2e/**', 'playwright.config.ts'],
+    coverage: {
+      provider: 'v8',
+      exclude: [
+        '**/*.{test,spec}.ts',
+        'src/main.tsx',
+        'src/App.tsx',
+        'src/pages/**',
+        'src/components/**',
+        'src/config/site.ts',
+        'shared/siteMeta.ts',
+        'scripts/**',
+        'e2e/**',
+      ],
+      reporter: ['text', 'text-summary'],
+    },
   },
 })

@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  safeArticleLinkHref,
+  safeDemoUrl,
   safeGithubPagesUrl,
   safeGithubReadmeRawUrl,
   safeGithubRepoUrl,
@@ -80,5 +82,26 @@ describe('safeHttpUrl', () => {
     vi.stubEnv('PROD', true)
     expect(safeHttpUrl('http://example.com/')).toBeNull()
     expect(safeHttpUrl('https://example.com/')).toContain('https://example.com')
+  })
+})
+
+describe('safeDemoUrl', () => {
+  it('delegates to GitHub Pages allowlist', () => {
+    expect(safeDemoUrl('https://ronpicard.github.io/demo/')).toContain('ronpicard.github.io')
+    expect(safeDemoUrl('https://evil.example/demo/')).toBeNull()
+  })
+})
+
+describe('safeArticleLinkHref', () => {
+  const resolveAsset = (u: string) => (u.startsWith('resources/') ? `/${u}` : null)
+
+  it('allows https links and resolves local assets', () => {
+    expect(safeArticleLinkHref('https://example.com/a', resolveAsset)).toContain('https://example.com/a')
+    expect(safeArticleLinkHref('resources/x.pdf', resolveAsset)).toBe('/resources/x.pdf')
+  })
+
+  it('rejects dangerous schemes and unknown relative paths', () => {
+    expect(safeArticleLinkHref('javascript:alert(1)', resolveAsset)).toBeNull()
+    expect(safeArticleLinkHref('../etc/passwd', resolveAsset)).toBeNull()
   })
 })
