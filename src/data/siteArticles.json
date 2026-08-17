@@ -1,7 +1,7 @@
 [
   {
     "slug": "infinite-library-game-web-app",
-    "title": "The Library of Babel &mdash; Home",
+    "title": "The Infinite Library &mdash; Home",
     "date": "2026-08-17",
     "summary": "Browser first-person exploration inspired by Borges' infinite library: procedural hexagonal galleries, marked clue books, a five-step compass quest to the Crimson Hexagon, wandering library cats, and live Tone.js audio. React and Three.js on GitHub Pages.",
     "bodyHtml": null,
