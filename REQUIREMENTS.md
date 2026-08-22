@@ -45,7 +45,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Testing
 
 - Security-sensitive helpers (sanitization, slug rules, GitHub URL parsing, URL validation) MUST have unit tests in Vitest; run `npm test` before release-worthy changes.
-- Unit coverage SHOULD be measured with `npm run test:coverage` (`@vitest/coverage-v8`, config in `vitest.config.ts`). Scope is `shared/`, `src/lib/`, `src/data/`, and `src/config/` — not React pages, components, or Node build scripts.
+- Unit coverage MUST pass the thresholds in `vitest.config.ts` (94% statements, 85% branches, 98% functions, 97% lines) via `npm run test:coverage`. Scope is `shared/`, `src/lib/`, `src/data/`, and `src/config/` — not React pages, components, or Node build scripts.
 - Browser smoke coverage for home, keyboard navigation, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
 - Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
 - Pushes to `main` MUST run unit and Playwright tests in CI before deploy; pull requests to `main` MUST run both without deploying.

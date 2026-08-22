@@ -756,7 +756,8 @@ body {
 }
 
 .page--article {
-  max-width: 920px;
+  width: min(92vw, 1440px);
+  max-width: none;
 }
 
 .article-header {
@@ -829,10 +830,6 @@ body {
 
 .article-actions--primary {
   margin-bottom: 1.25rem;
-}
-
-.article-actions--extra {
-  margin-top: 1.25rem;
 }
 
 .article-summary-plain {

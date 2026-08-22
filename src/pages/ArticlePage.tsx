@@ -75,6 +75,10 @@ export default function ArticlePage() {
   const videoUrl = youtubeWatchUrl(article.youtubeId)
   const readmeRawUrl = safeGithubReadmeRawUrl(article.readmeRawUrl)
   const otherEmbedSrc = article.otherEmbed ? safeHttpsEmbedUrl(stripQuery(article.otherEmbed)) : null
+  const safeExtras = extras.flatMap((link) => {
+    const href = safeArticleLinkHref(link.href, resolveAssetUrl)
+    return href ? [{ link, href, articleStyle: isThirdPartyArticleLink(link) }] : []
+  })
   const path = `/blog/${article.slug}`
   const metaDesc =
     article.summary?.replace(/&nbsp;/gi, ' ').replace(/<[^>]+>/g, '') ||
@@ -90,15 +94,15 @@ export default function ArticlePage() {
     />
   ) : article.bodyPath ? (
     <DynamicArticleBody bodyPath={article.bodyPath} fallbackSummary={article.summary} />
-    ) : article.kind === 'lesson' && article.summary ? (
-      <LessonOutline text={article.summary} />
-    ) : article.summary ? (
-      <p className="article-summary-plain">{article.summary}</p>
-    ) : null
+  ) : article.kind === 'lesson' && article.summary ? (
+    <LessonOutline text={article.summary} />
+  ) : article.summary ? (
+    <p className="article-summary-plain">{article.summary}</p>
+  ) : null
 
   const embedBlock = (
     <>
-      {(hasDemo || hasCode || videoUrl) && (
+      {(hasDemo || hasCode || videoUrl || safeExtras.length > 0) && (
         <div className="article-actions article-actions--primary">
           {hasDemo && demoHref ? (
             <a
@@ -133,6 +137,21 @@ export default function ArticlePage() {
               YouTube
             </a>
           ) : null}
+          {safeExtras.map(({ link, href, articleStyle }) => (
+            <a
+              key={`${link.label}:${link.href}`}
+              className={
+                articleStyle
+                  ? 'project-card__btn project-card__btn--article'
+                  : 'article-btn article-btn--secondary'
+              }
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {displayExtraLinkLabel(link.label)}
+            </a>
+          ))}
         </div>
       )}
 
@@ -212,31 +231,6 @@ export default function ArticlePage() {
       <main id="main-content" className="article-body" tabIndex={-1}>
         {embedBlock}
         {textBlock}
-
-        {extras.length > 0 ? (
-          <div className="article-actions article-actions--extra">
-            {extras.map((link) => {
-              const href = safeArticleLinkHref(link.href, resolveAssetUrl)
-              if (!href) return null
-              const articleStyle = isThirdPartyArticleLink(link)
-              return (
-                <a
-                  key={`${link.label}:${link.href}`}
-                  className={
-                    articleStyle
-                      ? 'project-card__btn project-card__btn--article'
-                      : 'article-btn article-btn--secondary'
-                  }
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {displayExtraLinkLabel(link.label)}
-                </a>
-              )
-            })}
-          </div>
-        ) : null}
       </main>
 
       <ArticleNav article={article} />

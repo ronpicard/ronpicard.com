@@ -68,6 +68,82 @@ describe('fetchGithubReadmeText', () => {
     ).rejects.toThrow(/too-large/)
   })
 
+  it('combines streamed chunks and accepts an omitted content type', async () => {
+    const encoder = new TextEncoder()
+    const stream = new ReadableStream<Uint8Array>({
+      start(controller) {
+        controller.enqueue(encoder.encode('# Streamed'))
+        controller.enqueue(encoder.encode(' README'))
+        controller.close()
+      },
+    })
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(stream, { status: 200 })))
+
+    await expect(
+      fetchGithubReadmeText('https://raw.githubusercontent.com/o/r/main/README.md'),
+    ).resolves.toBe('# Streamed README')
+  })
+
+  it('rejects oversized responses without a stream body', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => textResponseWithoutBody('x'.repeat(README_MAX_BYTES + 1))),
+    )
+
+    await expect(
+      fetchGithubReadmeText('https://raw.githubusercontent.com/o/r/main/README.md'),
+    ).rejects.toThrow(/too-large/)
+  })
+
+  it('propagates parent cancellation when AbortSignal.any is unavailable', async () => {
+    const anyDescriptor = Object.getOwnPropertyDescriptor(AbortSignal, 'any')
+    Object.defineProperty(AbortSignal, 'any', { configurable: true, value: undefined })
+    const parent = new AbortController()
+    let combinedSignal: AbortSignal | undefined
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init) => {
+        combinedSignal = init?.signal ?? undefined
+        return textResponseWithoutBody('ok')
+      }),
+    )
+
+    try {
+      await fetchGithubReadmeText(
+        'https://raw.githubusercontent.com/o/r/main/README.md',
+        parent.signal,
+      )
+      expect(combinedSignal?.aborted).toBe(false)
+      parent.abort()
+      expect(combinedSignal?.aborted).toBe(true)
+    } finally {
+      if (anyDescriptor) Object.defineProperty(AbortSignal, 'any', anyDescriptor)
+    }
+  })
+
+  it('uses an already-aborted parent signal in the compatibility path', async () => {
+    const anyDescriptor = Object.getOwnPropertyDescriptor(AbortSignal, 'any')
+    Object.defineProperty(AbortSignal, 'any', { configurable: true, value: undefined })
+    const parent = new AbortController()
+    parent.abort()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init) => {
+        expect(init?.signal?.aborted).toBe(true)
+        return textResponseWithoutBody('ok')
+      }),
+    )
+
+    try {
+      await fetchGithubReadmeText(
+        'https://raw.githubusercontent.com/o/r/main/README.md',
+        parent.signal,
+      )
+    } finally {
+      if (anyDescriptor) Object.defineProperty(AbortSignal, 'any', anyDescriptor)
+    }
+  })
+
   it('passes credentials omit and no-referrer', async () => {
     vi.stubGlobal(
       'fetch',

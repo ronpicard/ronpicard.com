@@ -9,3 +9,5 @@ dist
 /blob-report/
 /playwright/.cache/
 /coverage/
+/.cursor/rules/ai-rules/
+/.clinerules/ai-rules/

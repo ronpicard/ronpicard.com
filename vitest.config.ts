@@ -21,6 +21,12 @@ export default defineConfig({
         'e2e/**',
       ],
       reporter: ['text', 'text-summary'],
+      thresholds: {
+        statements: 94,
+        branches: 85,
+        functions: 98,
+        lines: 97,
+      },
     },
   },
 })

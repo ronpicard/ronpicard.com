@@ -20,6 +20,22 @@ test.describe('home', () => {
     await skipLink.press('Enter')
     await expect(page.locator('#main-content')).toBeFocused()
   })
+
+  test('shows AI Chess demo and code actions on its card and article', async ({ page }) => {
+    await page.goto('/')
+    const card = page.locator('.project-card').filter({ hasText: 'AI Chess Web App V2' })
+    await expect(card.getByRole('link', { name: 'Demo' })).toBeVisible()
+    await expect(card.getByRole('link', { name: 'Code' })).toBeVisible()
+
+    await card.locator('.project-card__overlay-link').click()
+    const actions = page.locator('.article-actions--primary')
+    await expect(actions.getByRole('link', { name: 'Demo' })).toHaveAttribute(
+      'href',
+      'https://ronpicard.github.io/chess-web-app/',
+    )
+    await expect(actions.getByRole('link', { name: 'Code' })).toBeVisible()
+    await expect(actions.getByRole('link', { name: /Try on github/i })).toHaveCount(0)
+  })
 })
 
 test.describe('search', () => {
@@ -43,6 +59,16 @@ test.describe('search', () => {
 })
 
 test.describe('article routes', () => {
+  test('expands article pages across most of the viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 })
+    await page.goto('/blog/periodic-table-element-visualizer')
+    const width = await page.locator('.page--article').evaluate((element) => {
+      return element.getBoundingClientRect().width
+    })
+    expect(width).toBeGreaterThan(1440 * 0.9)
+    expect(width).toBeLessThan(1440)
+  })
+
   test('renders HTML article prose', async ({ page }) => {
     await page.goto(
       '/blog/software-lessons-session-25-cursor-and-claude-agentic-coding-workflow',
@@ -68,6 +94,20 @@ test.describe('article routes', () => {
     await expect(demo).toBeVisible()
     await expect(demo).toHaveAttribute('href', /^https:\/\/ronpicard\.github\.io\//)
     await expect(demo).toHaveAttribute('rel', /noopener/)
+  })
+
+  test('groups extra links with the primary actions above article content', async ({ page }) => {
+    await page.goto('/blog/aircraft-automated-collision-avoidance')
+    const actions = page.locator('.article-actions--primary')
+    await expect(actions.getByRole('link', { name: 'Code' })).toBeVisible()
+    await expect(actions.getByRole('link', { name: 'Paper' })).toBeVisible()
+    const content = page.locator('.article-prose, .article-summary-plain')
+    await expect(content).toBeVisible()
+    const actionsBox = await actions.boundingBox()
+    const contentBox = await content.boundingBox()
+    expect(actionsBox).not.toBeNull()
+    expect(contentBox).not.toBeNull()
+    expect(actionsBox!.y).toBeLessThan(contentBox!.y)
   })
 })
 

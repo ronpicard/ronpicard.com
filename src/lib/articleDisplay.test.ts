@@ -19,6 +19,8 @@ describe('article kind labels', () => {
     expect(articleKindBadgeClass('lesson')).toBe('project-card__badge--lesson')
     expect(articleKindBadgeClass('post')).toBe('project-card__badge--post')
     expect(articleKindLabel('app')).toBe('Web app')
+    expect(articleKindLabel('lesson')).toBe('Lesson')
+    expect(articleKindLabel('post')).toBe('Article')
     expect(articleKindShortLabel('app')).toBe('App')
     expect(articleKindShortLabel('lesson')).toBe('Lesson')
     expect(articleKindShortLabel('post')).toBe('Article')

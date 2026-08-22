@@ -76,6 +76,16 @@ describe('articles catalog', () => {
     expect(app?.kind).toBe('app')
     expect(lesson?.kind).toBe('lesson')
   })
+
+  it('exposes the AI Chess app demo without duplicating it as an extra link', () => {
+    const chess = articles.find((a) => a.sourceSlug === 'wasmj8db1br3ksr00ivvmyju8gniym')
+    expect(chess?.demoUrl).toBe('https://ronpicard.github.io/chess-web-app/')
+    expect(chess?.repoUrl).toBe('https://github.com/ronpicard/chess-web-app')
+    expect(chess?.extraLinks).toEqual([])
+
+    const card = getArticleTitleList().find((item) => item.slug === chess?.slug)
+    expect(card).toMatchObject({ showDemo: true, showCode: true })
+  })
 })
 
 describe('isThirdPartyArticleLink', () => {
@@ -97,6 +107,38 @@ describe('isThirdPartyArticleLink', () => {
     ).toBe(false)
     expect(
       isThirdPartyArticleLink({ label: 'Video demo', href: 'https://example.com/talk' }),
+    ).toBe(false)
+    expect(
+      isThirdPartyArticleLink({ label: 'Code', href: 'https://ronpicard.github.io/demo/' }),
+    ).toBe(false)
+    expect(isThirdPartyArticleLink({ label: 'Paper', href: 'not a url' })).toBe(false)
+    expect(isThirdPartyArticleLink({ label: 'Paper', href: '/resources/paper.pdf' })).toBe(false)
+  })
+
+  it('recognizes known publication and aviation hosts', () => {
+    expect(
+      isThirdPartyArticleLink({ label: 'Research', href: 'https://www.nature.com/articles/example' }),
+    ).toBe(true)
+    expect(
+      isThirdPartyArticleLink({
+        label: 'Research',
+        href: 'https://arc.aiaa.org/doi/10.2514/example',
+      }),
+    ).toBe(true)
+    expect(
+      isThirdPartyArticleLink({
+        label: 'Coverage',
+        href: 'https://www.af.mil/News/Article-Display/Article/example',
+      }),
+    ).toBe(true)
+    expect(
+      isThirdPartyArticleLink({
+        label: 'Coverage',
+        href: 'https://aviationweek.com/example',
+      }),
+    ).toBe(true)
+    expect(
+      isThirdPartyArticleLink({ label: 'Homepage', href: 'https://example.com/' }),
     ).toBe(false)
   })
 })

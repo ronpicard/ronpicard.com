@@ -34,7 +34,7 @@
     "title": "ClamAV Control &mdash; Home",
     "date": "2026-04-14",
     "summary": "Desktop Electron app with a local dashboard for ClamAV: virus definitions, daemon control, optional real-time folder monitoring, scans with live progress, quarantine, cron schedules on macOS/Linux, config editing, and DNS presets. Install ClamAV separately; the UI drives the tools on your machine.",
-    "imageUrl": "resources/clamav-control-gui-2026-04-14.png",
+    "imageUrl": "resources/clamav-control-dashboard-2026-08-22.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
     "demoUrl": null,
@@ -722,16 +722,11 @@
     "imageUrl": "resources/0895b25c0f50cf.png",
     "articleHeroUrl": null,
     "githubEmbed": "https://ronpicard.github.io/chess-web-app/",
-    "demoUrl": null,
+    "demoUrl": "https://ronpicard.github.io/chess-web-app/",
     "repoUrl": "https://github.com/ronpicard/chess-web-app",
     "youtubeId": null,
     "otherEmbed": null,
-    "extraLinks": [
-      {
-        "label": "Try on github",
-        "href": "https://ronpicard.github.io/chess-web-app/"
-      }
-    ],
+    "extraLinks": [],
     "bodyPath": "article-bodies/wasmj8db1br3ksr00ivvmyju8gniym.html"
   },
   {

@@ -51,10 +51,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (80 tests) |
+| `npm test` | Run Vitest unit tests once (92 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report (`shared/`, `src/lib/`, `src/data/`, `src/config/`) |
-| `npm run test:e2e` | Playwright browser smoke tests (9 tests; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (12 tests; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
@@ -97,12 +97,12 @@ npm run test:coverage   # terminal summary + optional HTML under coverage/
 
 | Metric | Coverage |
 |--------|----------|
-| Statements | ~84% |
-| Branches | ~77% |
-| Functions | ~98% |
-| Lines | ~91% |
+| Statements | ~96% |
+| Branches | ~88% |
+| Functions | 100% |
+| Lines | ~99% |
 
-By area (statements): `shared/` ~89%, `src/data/` ~94%, `src/lib/` ~76%. Weakest spots: `fetchGithubReadme.ts`, `safeUrls.ts`, `articleDisplay.ts`.
+Coverage thresholds prevent regressions below 94% statements, 85% branches, 98% functions, or 97% lines.
 
 Coverage counts only modules in `shared/`, `src/lib/`, `src/data/`, and `src/config/` that unit tests import. React pages, components, and build scripts are **not** included; use Playwright for UI smoke coverage.
 
