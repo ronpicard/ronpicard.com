@@ -1,0 +1,338 @@
+<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><h1>The Problem</h1><p class="">For a while now I have wondered how much faster it would be to build a C++ application with ChatGPT than without. So I set a goal to program a C++ chess engine with an AI player as fast as possible while heavily using Chat GPT. I have done this type of project without prompt programming before, and it was tedious. In this blog, I share my experience and explain why prompt programming is powerful and likely a key part of the future of software development. The code is available <a href="https://github.com/ronpicard/chess" target="_blank" rel="noopener noreferrer">here</a>.</p><h1>The Infrastructure</h1></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/4a9b4b5df4ee85.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">I leveraged Docker with dev containers in <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer">Visual Studio Code</a>, a STIG’d RedHat Linux image from <a href="https://p1.dso.mil/services/iron-bank" target="_blank" rel="noopener noreferrer">PLATFORM ONE</a>’s <a href="https://registry1.dso.mil/" target="_blank" rel="noopener noreferrer">Iron Bank</a> and <a href="https://cmake.org/" target="_blank" rel="noopener noreferrer">CMAKE</a> for this project. This was by far the easiest part of the project. I started with a series of prompts telling ChatGPT that I wanted it to build a dev container in VS Code that used a STIG’d RedHat Linux image from Iron Bank and that I needed it to generate some template files. Quickly it provided step-by-step instructions with completed devcontainer.json and Dockerfile files. I was up and running in a container in probably around 5 minutes. Next, I gave it a series of prompts telling it I wanted to leverage CMAKE as a build system with C++ 20. It generated the CMAKE files, and we chatted about how to format my directory appropriately for my needs. It generated the CMakeLists.txt files and we were quickly up and running with a Hello World example around 10 minutes. Throughout parts 2 and 3 I often updated this configuration simply by telling ChatGPT what I wanted to do, rather than manually doing it myself. Whenever unsure what a line of code was doing, I copied it back into ChatGPT and asked it to explain until I understood what was happening. I will caveat this by saying that I do have basic experience with Docker, Dev containers, and CMAKE, so I wasn’t going in blind. However, ChatGPT made the process seamless and simple.</p><h1>First Attempt - Fighting with ChatGPT</h1></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/df958dbb59251a.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">In the first attempt, I started by telling ChatGPT I wanted it to generate an entire chess program in C++. However, I quickly ran into issues. The LLM generated several classes (.cpp and .h files) with a main.cpp example. However, it was clear that not all game rules were implemented as I looked through the code. It didn’t have a concept of checkmate, stalemate, black-and-white pieces, player turns, a min/max solver, or even allowable moves. All it could do was move any piece to a random spot on the board. This revealed a limitation with how much of an application ChatGPT can generate. I spent the next several hours, asking it to generate as much code as possible in a given prompt to get to a full working solution. However, every time it would miss items. Within 1-2 hours I started to notice it was making poor architectural decisions that I would not have made had I programmed it myself. Combining classes in weird ways, representing the board in non-trivial ways, etc. In addition, at times there would be compiler errors. When I would copy the error into a prompt, ChatGPT usually gave a solution. However, the solution usually introduced a new bug to the functionality of the program itself. I spend another 2 hours trying to have it rewrite large chunks of code according to my prompts. In the last hour, I noticed it was stuck calculating valid moves. As I looked through the code, which was architecturally messy by this time, I struggled to find the error in a reasonable amount of time. I asked ChatGPT to add print statements to various portions of the code so I could manually debug, however, as time went on I realized that I had reached the limit of what ChatGPT could do for me. It would take too long to debug the issue in the messy architecture. So I started fresh with a new approach…</p><h1>Second Attempt - Symbiosis</h1></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/0115ba729a1db6.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">In part 1, I tried to move as fast as possible by having ChatGPT generate and fix huge portions of the code with each prompt. Keeping the entire application context was difficult for ChatGPT. So this time, I started differently. I decided to tell ChatGPT that I was going to have it write small pieces of the application at a time, and I would architecturally design it how I wanted. If I needed to glue pieces together, I would do it manually, or I would instruct ChatGPT to do it for me. I started small telling it I wanted a board class. Then I wanted a movement class. Then I wanted a few constraints. Then a few more constraints. At each step, I would review line-by-line what was written to ensure I understood it, and that no errors were introduced. Before too long I had a fully functioning application. I then told it I wanted to generate an AI player that solved for the best move using a min/max function with an adjustable depth. It was able to generate this piece with ease. After I instructed it to hook up the AI player, we had a fully functioning AI program. This process only took 2-3 hours. It was significantly faster than if I had written it by hand, and also significantly faster than trying to have it generate everything with one prompt. I had found the sweet spot. There were times when I had to manually fix small bugs, but these were few and far between. For the most part, it did a decent job. It’s not perfect, but it’s not bad either. It’s a solid starting point.  </p><h1>Key Takeaways</h1><ul><li><p class="">ChatGPT is not perfect, it makes mistakes like all humans do. Don’t get too lazy using it.</p></li><li><p class="">ChatGPT is significantly better at generating small chunks of code or portions of an architecture. Humans are better at maintaining the full program context.</p></li><li><p class="">ChatGPT is incredible at explaining pieces of code, concepts, or technologies in depth. When it doubt, just ask it. It will cut your learning curve dramatically.</p></li><li><p class="">I’m convinced that prompt programming will have a strong part to play in the future of software development. It is 100% worth learning how to use these tools.</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div></div></div></div>

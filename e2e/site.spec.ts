@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.describe('home', () => {
   test('loads project list and opens an article card', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByText('My projects')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
     const list = page.locator('.project-list')
     await expect(list.locator('.project-card').first()).toBeVisible()
 
@@ -11,20 +11,34 @@ test.describe('home', () => {
     await expect(page).toHaveURL(/\/blog\/periodic-table-element-visualizer\/?$/)
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/Periodic Table/i)
   })
+
+  test('offers a keyboard skip link', async ({ page }) => {
+    await page.goto('/')
+    await page.keyboard.press('Tab')
+    const skipLink = page.getByRole('link', { name: 'Skip to main content' })
+    await expect(skipLink).toBeFocused()
+    await skipLink.press('Enter')
+    await expect(page.locator('#main-content')).toBeFocused()
+  })
 })
 
 test.describe('search', () => {
-  test('filters articles and closes on Escape', async ({ page }) => {
+  test('filters articles, supports arrow selection, and closes on Escape', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('button', { name: 'Search posts' }).click()
-    const input = page.getByLabel('Search articles')
+    const input = page.getByRole('combobox', { name: 'Search articles' })
     await expect(input).toBeFocused()
     await input.fill('ClamAV')
-    await expect(
-      page.locator('.site-search__results').getByRole('link', { name: /ClamAV Control/i }),
-    ).toBeVisible()
+    const option = page.getByRole('option', { name: /ClamAV Control/i })
+    await expect(option).toBeVisible()
+    await page.keyboard.press('ArrowDown')
+    await expect(option).toHaveAttribute('aria-selected', 'true')
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(/\/blog\/clamav-control\/?$/)
+
+    await page.getByRole('button', { name: 'Search posts' }).click()
     await page.keyboard.press('Escape')
-    await expect(input).toHaveCount(0)
+    await expect(page.getByRole('combobox', { name: 'Search articles' })).toHaveCount(0)
   })
 })
 
@@ -33,7 +47,7 @@ test.describe('article routes', () => {
     await page.goto(
       '/blog/software-lessons-session-25-cursor-and-claude-agentic-coding-workflow',
     )
-    await expect(page.locator('.article-prose')).toBeVisible()
+    await expect(page.locator('.article-prose')).toBeVisible({ timeout: 15_000 })
     await expect(page.locator('.article-prose')).toContainText(/Introduction|AI|Cursor/i)
   })
 

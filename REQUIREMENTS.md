@@ -14,13 +14,15 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Content and routing
 
 - Article metadata MUST live in `src/data/siteArticles.json` and be normalized in `src/data/articles.ts`.
+- Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.
 - Mirrored assets MUST live under `public/resources/` and be referenced as `resources/...` in JSON, resolved with the Vite base URL at render time.
-- After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>` and Open Graph tags.
+- After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD.
+- Production MUST include `sitemap.xml`, `robots.txt`, and a dedicated `404.html` with `noindex, nofollow`.
 
 ### Dynamic GitHub README posts
 
-- Posts MAY set `readmeRawUrl` (validated `https://raw.githubusercontent.com/...` URL) instead of inlined `bodyHtml`.
+- Posts MAY set `readmeRawUrl` (validated `https://raw.githubusercontent.com/...` URL) instead of a static `bodyPath`.
 - The client MUST fetch README markdown at view time, show a loading state, and render sanitized HTML on success.
 - On fetch or sanitize failure, the UI MUST show the article summary and a safe link to view the README on GitHub.
 - README fetch MUST enforce a timeout (12s), a maximum body size (512 KiB), `credentials: 'omit'`, and `referrerPolicy: 'no-referrer'`.
@@ -34,22 +36,29 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, Google Fonts, GitHub raw/API for README fetch).
 - YouTube embeds MUST use validated video IDs and the nocookie embed host where applicable.
 
+### Accessibility
+
+- Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content.
+- Search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape.
+- Cards MUST NOT nest interactive elements inside a card-level link role; all interactive controls MUST have visible keyboard focus.
+
 ### Testing
 
 - Security-sensitive helpers (sanitization, slug rules, GitHub URL parsing, URL validation) MUST have unit tests in Vitest; run `npm test` before release-worthy changes.
 - Unit coverage SHOULD be measured with `npm run test:coverage` (`@vitest/coverage-v8`, config in `vitest.config.ts`). Scope is `shared/`, `src/lib/`, `src/data/`, and `src/config/` — not React pages, components, or Node build scripts.
-- Browser smoke coverage for home, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
+- Browser smoke coverage for home, keyboard navigation, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
 - Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
-- Pushes to `main` MUST run unit tests in CI before deploy; pull requests to `main` MUST run unit tests without deploying.
+- Pushes to `main` MUST run unit and Playwright tests in CI before deploy; pull requests to `main` MUST run both without deploying.
 
 ### Shared code and tooling
 
 - Logic shared between the app and Node scripts MUST live under `shared/` and be importable from both (`tsconfig.json` includes `shared/`).
 - Build and ingest scripts MUST reuse the same sanitization and routing rules as the app where they touch HTML or slugs.
+- Local development and CI MUST use the Node 22 LTS major pinned by `.nvmrc` and `package.json`.
 
 ### Content maintenance (optional workflows)
 
-- While Squarespace remains a source, `npm run sync:articles` and `npm run mirror:resources` MAY refresh JSON and `public/resources/`; resulting files SHOULD be committed intentionally.
+- While Squarespace remains a source, `npm run sync:articles` and `npm run mirror:resources` MAY refresh JSON, `public/article-bodies/`, and `public/resources/`; resulting files SHOULD be committed intentionally.
 - Single-post merges MAY use `npm run merge:blog-post` per `scripts/merge-blog-post.mjs`.
 
 ## Non-goals

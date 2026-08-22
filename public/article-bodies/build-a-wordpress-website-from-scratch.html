@@ -1,0 +1,143 @@
+<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class=""><strong>Step 1 – The Prep Work</strong></p><p class=""></p><p class="">When creating a WordPress website from scratch there are a couple of things we need to do upfront.</p><p class="">First, we need to purchase a domain name (e.g. <em>foo.com</em>) from a domain name an ICANN-Accredited registrar. This can be done on a registrar's website. First, search for the desired domain name to see if it is available (it does not have to be a .<em>com</em>, it can be a .<em>org</em>, .<em>space</em>, .<em>io, </em>or any available top-level domain name). The domain name prices typically range from $0.99/year to $1,000/year depending on the popularity of the domain name you wish to use. I’ve found that most hover around the $12.99/year mark.</p><p class="">Second, we need to purchase space on a Virtual Private Server (VPS). There are loads of VPS providers out there. A simple Google search will do. If you are just starting out I recommend purchasing a VPS that will provide around 1 GB of RAM and 10-20GB of SSD storage space to start. The RAM will help with performance, and the storage space will be plenty for a basic website. That should cost somewhere between $15-30/year. We will need to install some form of Linux (for this post we use Ubuntu 16+) on the VPS. This will likely be provided as a pre-install option when purchasing the VPS.</p><p class="">Third, after the first and second steps are completed, we will need to take the IP address of our VPS (this will be provided by the VPS), log onto our chosen registrar, and change our DNS records to that point to this IP address. When this is completed, someone who accesses our website using our domain name (e.g. types in <em>foo.com</em> or <em>www.foo.com</em> into a web browser) will be directed to our site.</p><p class="">The record entries should look something like this:</p><p class="">Note: Be sure to change xxx.xxx.xxx.xxx to your IP address, and foo.com to your domain name. After the changes are saved, it will take a few minutes (I’ve found it to be around 20 minutes) for this change to propagate the DNS databases across the internet. Once that is complete. Typing your domain name into your browser will take you to your soon-to-be-developed website.</p><p class="">Please note, that if you try now, you will either get an error of an unresolved domain name (because we haven’t developed our server yet), or if your Linux instance has an Apache2 web server installed and running by default, then you will be taken to its default page (which will look like the image below).</p></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">Congratulations we are now ready to begin our server-side development!</p><p class=""><br><strong>Step 2 – <em>Server-Side Setup</em></strong></p><p class=""></p><p class=""><strong>Step 2 – Part A – Set up Linux Accounts&nbsp;and&nbsp;Security</strong></p><p class=""></p><p class="">Okay, now the meat begins! We start by login into your new VPS. You should have received default login information (i.e. Username (likely root) &amp; Password) from the VPS provider (you might want to check your email).</p><p class="">So lets open up our favorite Linux terminal (you can enabled Bash on Windows 10), and use the ever-favorite SSH protocol to login. Type the following into the terminal, but replace foo.com with your domain name. Type yes to the authenticity question, followed by the default password.</p><p class=""></p><p class="">$ ssh root@foo.com</p><p class=""></p><p class="">Ok, now we are in! Just like a spy movie ;).</p><p class="">First things first, we are going to secure the server. This consists of the following but not limited: updating &amp; upgrading Ubuntu, changing the default root password to something long and complex (you probably won’t ever need it again, but you may want to have it just as a catastrophic backup), add a user with superuser privileges and set up ssh keys, disable root access over ssh entirely, set up the firewall, and set up unattended security updates. So let’s go through these step-by-step.</p><p class=""></p><p class=""><em>Change the root password</em></p><p class="">$ passwd</p><p class=""><em>Then enter a SuperSecretPassword!</em></p><p class=""></p><p class=""><em>Update&nbsp;&amp; Upgrade</em>:</p><p class="">$ apt-get update</p><p class="">$ apt-get upgrade</p><p class=""></p><p class=""><em>Create a&nbsp;new&nbsp;user</em></p><p class="">$ adduser computer</p><p class=""><em>End a SecondSuperSecretPassword!</em></p><p class=""></p><p class=""><em>Give the user superuser (sudo) privileges</em></p><p class="">$ visudo</p><p class=""></p><p class=""><em>Add the following line to the bottom of the file, then press control-z</em></p><p class="">computer ALL=(ALL:ALL) ALL</p><p class=""></p><p class=""><em>Install nano text editor (because it’s awesome…)</em></p><p class="">$ apt-get install nano</p><p class=""></p><p class=""><em>Exit the server</em></p><p class="">$ exit</p><p class=""></p><p class=""><em>Set up SSH keys for easy of login (make sure you do this from a secure computer).&nbsp;You&nbsp;will&nbsp;be&nbsp;prompted&nbsp;for&nbsp;your&nbsp;new&nbsp;user&nbsp;password.&nbsp;Be&nbsp;sure&nbsp;to&nbsp;replace&nbsp;foo.com&nbsp;with&nbsp;your&nbsp;domain.</em></p><p class="">$ ssh-keygen</p><p class="">$ ssh-copy-id computer@foo.com</p><p class=""></p><p class=""><em>Log into as the new user (no password needed because now we have SSH key authentication. Also if the shell looks strange and you cannot use the up arrows then that may mean the new user account was created with /bin/sh as its login shell, which symlinks to the dash shell by default. To fix this type&nbsp;“sudo chsh -s /bin/bash” then logout and log back in. Be&nbsp;sure&nbsp;to&nbsp;replace&nbsp;foo.com&nbsp;with&nbsp;your&nbsp;domain.</em></p><p class="">$ ssh computer@foo.com</p><p class=""></p><p class=""><em>Change some permissions for security.&nbsp;The&nbsp;first&nbsp;command&nbsp;(chmod 400)&nbsp;prevents&nbsp;accidental&nbsp;overwriting&nbsp;of&nbsp;our&nbsp;SSH keys.&nbsp;The&nbsp;second&nbsp;command&nbsp;makes&nbsp;our&nbsp;new&nbsp;user&nbsp;the&nbsp;owner&nbsp;of&nbsp;the&nbsp;computer&nbsp;directory&nbsp;(recursively).</em></p><p class="">$ <code>chmod 400 /home/computer/.ssh/authorized_keys</code></p><p class=""><code>$ chown computer:computer /home/computer -R</code></p><h2></h2><p class=""><em>Disable root ssh login&nbsp;and&nbsp;restart&nbsp;the&nbsp;service.&nbsp;You&nbsp;will&nbsp;be&nbsp;prompted&nbsp;for&nbsp;you&nbsp;password.</em></p><p class="">$ sudo -s</p><p class="">$ nano /etc/ssh/sshd_config</p><p class=""><em>Change the line that says:</em></p><p class="">PermitRootLogin yes</p><p class=""><em>To the following. Then press control-x, followed by y:</em></p><p class="">PermitRootLogin no</p><p class=""><em>Now restart the ssh service</em></p><p class="">$ service ssh restart</p><p class=""></p><p class=""><em>Now install and set up a firewall with some rules. Then enable the firewall.</em></p><p class="">$ apt-get install ufw</p><p class="">$ ufw allow 22</p><p class="">$ ufw allow 80</p><p class="">$ ufw allow 443</p><p class="">$ ufw enable</p><p class=""></p><p class=""><em>Finally set up some unattended auto-security updates</em></p><p class="">$ apt-get install unattended-upgrades</p><p class="">$ nano /etc/apt/apt.conf.d/10periodic</p><p class=""><em>Add the following lines to the file (note: the file may be empty when you first open it). Then press control-z, then press y.</em></p><p class="">APT::Periodic::Update-Package-Lists “1”;<br>APT::Periodic::Download-Upgradeable-Packages “1”;<br>APT::Periodic::AutocleanInterval “7”;<br>APT::Periodic::Unattended-Upgrade “1”;</p><p class="">$ nano /etc/apt/apt.conf.d/50unattended-upgrades</p><p class=""><em>Add the following line to the file if it is not already there. Append the line into the proper section, if the section is already there. Then press control-z, then press y.</em></p><pre><code>"Ubuntu lucid-security";</code></pre><p class=""></p><p class="">Ok, we made it! We officially have a secure Linux server that is ready to be worked on.</p><p class=""></p><p class=""><strong>Step 2 – Part B – Install LAMP stack&nbsp;(Apache &amp; SQL)</strong></p><p class=""><em>Run the following commands to install Apache</em></p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get install apache2</p><p class="">$ sudo apache2ctl configtest</p><p class=""><em>The last command should return “Syntax OK”</em></p><p class="">$ sudo nano /etc/apache2/apache2.conf</p><p class="">Scroll to the bottom of the file and add the following line (replace foo.com with your domain name). <em>Then press control-z, then press y.</em></p><p class="">ServerName foo.com</p><p class="">Restart Apache</p><p class="">$ sudo systemctl restart apache2</p><p class="">Allow Apache through the firewall</p><p class="">$ sudo ufw allow in “Apache Full”</p><p class="">Go to your domain and see if you see the Apache Page below. If you see this, then everything worked successfully.</p></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/1eb06ecc0c50d3.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class=""><em>Run the following command to install SQL.&nbsp;When&nbsp;prompted,&nbsp;put&nbsp;in&nbsp;a&nbsp;good&nbsp;root&nbsp;database&nbsp;password.&nbsp;If&nbsp;you&nbsp;mess&nbsp;this&nbsp;up&nbsp;and&nbsp;need&nbsp;to&nbsp;restart,&nbsp;use&nbsp;the&nbsp;following&nbsp;commands to purge SQL: $ sudo apt-get remove –purge mysql-server mysql-client mysql-common -y $ sudo apt-get autoremove -y $ sudo apt-get autoclean $ rm -rf /etc/mysql $ sudo find / -iname mysql* -exec rm -rf {} \;</em></p><p class="">$ sudo apt-get install mysql-server</p><p class=""><em>Secure the server with the following command. You will need to root password you just set. Select the security options as you see fit. I recommend: Validate password: n, Remove anonymous users: y, Disallow root login remotely: y, Remove test database: y, Reload privilege tables now: y.</em></p><p class="">$ mysql_secure_installation</p><p class=""></p><p class=""><em>Run the following command to install PHP</em></p><p class="">$ sudo apt-get install php libapache2-mod-php php-mcrypt php-mysql</p><p class=""></p><p class=""><em>Run the following command</em></p><p class="">$ sudo nano /etc/apache2/mods-enabled/dir.conf</p><p class=""><em>Change this:</em></p><pre><code>&lt;IfModule mod_dir.c&gt;
+    DirectoryIndex index.html index.cgi index.pl index.php index.xhtml index.htm
+&lt;/IfModule&gt;</code></pre><p class=""><em>To this:</em></p><pre><code>&lt;IfModule mod_dir.c&gt;
+    DirectoryIndex index.php index.html index.cgi index.pl index.xhtml index.htm
+&lt;/IfModule&gt;</code></pre><p class=""><em>Then press control-z, then press y</em></p><p class=""><em>Restart Apache</em></p><p class="">$ sudo systemctl restart apache2</p><p class=""><strong>Step 2 – Part C – Set&nbsp;up&nbsp;HTTPS&nbsp;encryption</strong></p><p class=""><em>Run the following commands:</em></p><p class="">$ sudo apt-get install software-properties-common</p><p class="">$ sudo add-apt-repository ppa:certbot/certbot</p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get install python-certbot-apache</p><p class=""><em>Run the following command: enter you email address, agree to the terms, and say no to the sharing of your email address (advised),&nbsp;and&nbsp;select&nbsp;redirect&nbsp;all&nbsp;requests&nbsp;to&nbsp;https.&nbsp;To&nbsp;test&nbsp;is&nbsp;this&nbsp;was&nbsp;successful&nbsp;go&nbsp;to: https://www.ssllabs.com/ssltest/analyze.html?d=foo.com&amp;latest</em></p><p class="">$ sudo certbot –apache -d foo.com</p><p class=""><strong>Step 2 – Part D – Create&nbsp;a&nbsp;MySQL&nbsp;Database&nbsp;and&nbsp;User&nbsp;for&nbsp;WordPress</strong></p><p class="">Type the following command. You will be prompted for the SQL root password again. Make sure to choose a good password for the user you are creating. Replace the<br>SecretSQLUserPassword with something strong.</p><p class="">$ mysql -u root -p</p><p class="">mysql&gt; CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;</p><p class="">mysql&gt; GRANT ALL ON wordpress.* TO ‘wordpressuser’@’localhost’ IDENTIFIED BY ‘SecretSQLUserPassword’;</p><p class="">$ FLUSH PRIVILEGES;</p><p class="">$ EXIT;</p><p class=""></p><p class="">Install additional PHP extensions</p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get install php-curl php-gd php-mbstring php-mcrypt php-xml php-xmlrpc</p><p class="">$ sudo systemctl restart apache2</p><p class=""></p><p class="">Type the following command:</p><p class="">$ sudo nano /etc/apache2/apache2.conf</p><p class="">Add this to the bottom of the file. <em>Then press control-z, then press y.</em></p><pre><code>&lt;Directory /var/www/html/&gt;
+    AllowOverride All
+&lt;/Directory&gt;</code></pre><p class="">Now run these commands:</p><p class="">$ sudo a2enmod rewrite</p><p class="">$ sudo apache2ctl configtest</p><p class="">$ sudo systemctl restart apache2</p><p class=""></p><p class="">Now run all of the following commands to install wordpress:</p><p class="">$ sudo apt-get install curl</p><p class="">$ cd /tmp</p><p class="">$ curl -O https://wordpress.org/latest.tar.gz</p><p class="">$ tar xzvf latest.tar.gz</p><p class="">$ touch /tmp/wordpress/.htaccess</p><p class="">$ chmod 660 /tmp/wordpress/.htaccess</p><p class="">$ cp /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php</p><p class="">$ mkdir /tmp/wordpress/wp-content/upgrade</p><p class="">$ sudo cp -a /tmp/wordpress/. /var/www/html</p><p class="">$ sudo chown -R computer:www-data /var/www/html</p><p class="">$ sudo find /var/www/html -type d -exec chmod g+s {} \;</p><p class="">$ sudo chmod g+w /var/www/html/wp-content</p><p class="">$ sudo chmod -R g+w /var/www/html/wp-content/themes</p><p class="">$ sudo chmod -R g+w /var/www/html/wp-content/plugins</p><p class=""></p><p class=""><em>Run the following command and it will return values:</em></p><p class="">$ curl -s https://api.wordpress.org/secret-key/1.1/salt/</p><p class="">Run the following command and use values returned by the previous command to overwrite the defaults in the file.</p><p class="">$ nano /var/www/html/wp-config.php</p><p class="">The defaults look like this:</p><p class="">define(‘AUTH_KEY’, ‘put your unique phrase here’);<br>define(‘SECURE_AUTH_KEY’, ‘put your unique phrase here’);<br>define(‘LOGGED_IN_KEY’, ‘put your unique phrase here’);<br>define(‘NONCE_KEY’, ‘put your unique phrase here’);<br>define(‘AUTH_SALT’, ‘put your unique phrase here’);<br>define(‘SECURE_AUTH_SALT’, ‘put your unique phrase here’);<br>define(‘LOGGED_IN_SALT’, ‘put your unique phrase here’);<br>define(‘NONCE_SALT’, ‘put your unique phrase here’);</p><p class="">In addition, replace your database name, username, and password in the appropriate lines. See the lines below (but with your password in there).</p><pre><code>define('DB_NAME', 'wordpress');
+
+/** MySQL database username */
+define('DB_USER', 'wordpressuser');
+
+/** MySQL database password */
+define('DB_PASSWORD', 'password');
+</code></pre><p class="">And that’s it! We have finished with the server side.</p></div>
+
+
+  
+
+
+
+</div>
+</div></div></div></div></div>

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * Downloads static assets from siteArticles.json (hero images, <img> and PDF/ZIP
- * in bodyHtml, and PDF/ZIP in extraLinks) into public/resources/, rewrites JSON to resources/<hash>.ext.
- * Run after sync:articles. Skips YouTube, github.io, etc.
+ * Downloads static assets from siteArticles.json, rewrites their URLs, and
+ * extracts article HTML into public/article-bodies/ so it is not bundled with
+ * homepage metadata. Run after sync:articles. Skips YouTube, github.io, etc.
  */
 import * as cheerio from 'cheerio'
 import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -14,6 +14,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const ARTICLES_JSON = join(ROOT, 'src/data/siteArticles.json')
 const OUT_DIR = join(ROOT, 'public/resources')
+const ARTICLE_BODIES_DIR = join(ROOT, 'public/article-bodies')
 const MANIFEST_JSON = join(__dirname, 'resource-manifest.json')
 
 const UA = 'ronpicard.com-mirror-resources/1.0'
@@ -106,6 +107,18 @@ function saveManifest(m) {
   writeFileSync(MANIFEST_JSON, JSON.stringify(m, null, 2))
 }
 
+function articleBodyHtml(row) {
+  if (typeof row.bodyHtml === 'string' && row.bodyHtml.trim()) return row.bodyHtml
+  if (!/^article-bodies\/[a-z0-9._-]+\.html$/i.test(row.bodyPath || '')) return null
+  const file = join(ROOT, 'public', row.bodyPath)
+  return existsSync(file) ? readFileSync(file, 'utf8') : null
+}
+
+function articleBodyPath(slug) {
+  const safeSlug = String(slug).replace(/[^a-z0-9._-]+/gi, '-')
+  return `article-bodies/${safeSlug}.html`
+}
+
 function collectUrls(rows) {
   const set = new Set()
   for (const row of rows) {
@@ -116,8 +129,9 @@ function collectUrls(rows) {
     if (row.articleHeroUrl && shouldMirrorAbsoluteUrl(row.articleHeroUrl.trim())) {
       set.add(row.articleHeroUrl.trim())
     }
-    if (row.bodyHtml) {
-      const $ = cheerio.load(row.bodyHtml, null, false)
+    const bodyHtml = articleBodyHtml(row)
+    if (bodyHtml) {
+      const $ = cheerio.load(bodyHtml, null, false)
       $('img[src]').each((_, el) => {
         const s = $(el).attr('src')
         if (!s || s.startsWith('resources/')) return
@@ -202,6 +216,7 @@ async function downloadWithConcurrency(urls, concurrency, fn) {
 
 async function main() {
   mkdirSync(OUT_DIR, { recursive: true })
+  mkdirSync(ARTICLE_BODIES_DIR, { recursive: true })
   const rows = JSON.parse(readFileSync(ARTICLES_JSON, 'utf8'))
   const wanted = collectUrls(rows)
   const manifest = loadManifest()
@@ -248,7 +263,7 @@ async function main() {
     if (articleHeroUrl && urlToLocal.has(articleHeroUrl.trim())) {
       articleHeroUrl = urlToLocal.get(articleHeroUrl.trim())
     }
-    let bodyHtml = row.bodyHtml
+    let bodyHtml = articleBodyHtml(row)
     if (bodyHtml) {
       const $ = cheerio.load(bodyHtml, null, false)
       $('img[src]').each((_, el) => {
@@ -279,8 +294,25 @@ async function main() {
         return l
       })
     }
-    return { ...row, imageUrl, articleHeroUrl, bodyHtml, extraLinks }
+    let bodyPath = null
+    if (bodyHtml?.trim()) {
+      bodyPath = articleBodyPath(row.slug)
+      writeFileSync(join(ROOT, 'public', bodyPath), bodyHtml, 'utf8')
+    }
+    const { bodyHtml: _bodyHtml, ...metadata } = row
+    return { ...metadata, imageUrl, articleHeroUrl, bodyPath, extraLinks }
   })
+
+  const currentBodyFiles = new Set(
+    updated
+      .map((row) => row.bodyPath?.replace(/^article-bodies\//, ''))
+      .filter(Boolean),
+  )
+  for (const name of readdirSync(ARTICLE_BODIES_DIR)) {
+    if (name.endsWith('.html') && !currentBodyFiles.has(name)) {
+      unlinkSync(join(ARTICLE_BODIES_DIR, name))
+    }
+  }
 
   writeFileSync(ARTICLES_JSON, JSON.stringify(updated, null, 2))
   console.log('mirror-resources: wrote', ARTICLES_JSON)

@@ -54,6 +54,25 @@ body {
   min-height: 100dvh;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.55rem 0.8rem;
+  border-radius: 6px;
+  color: #00120e;
+  background: var(--accent);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(calc(-100% - 1rem));
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 .app-content {
   position: relative;
   isolation: isolate;
@@ -351,7 +370,8 @@ body {
 }
 
 .site-search__link:hover,
-.site-search__link:focus-visible {
+.site-search__link:focus-visible,
+.site-search__link[aria-selected='true'] {
   background: var(--accent-dim);
   outline: none;
 }
@@ -409,6 +429,20 @@ body {
   border-color: rgba(0, 255, 200, 0.45);
   background: var(--accent-dim);
   box-shadow: 0 0 18px rgba(0, 255, 200, 0.12);
+}
+
+.site-top-bar__brand:focus-visible,
+.site-top-bar__icon:focus-visible,
+.project-card__btn:focus-visible,
+.project-card__overlay-link:focus-visible,
+.article-back:focus-visible,
+.article-btn:focus-visible,
+.article-nav__link:focus-visible,
+.article-prose a:focus-visible,
+.footer a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
 .header__tagline {
@@ -480,6 +514,7 @@ body {
 }
 
 .project-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -498,12 +533,14 @@ body {
     transform 0.2s ease;
 }
 
-.project-card--clickable {
-  cursor: pointer;
+.project-card__overlay-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
 }
 
-.project-card--clickable:focus-visible {
-  outline: 2px solid var(--accent);
+.project-card__overlay-link:focus-visible {
   outline-offset: 3px;
 }
 
@@ -551,6 +588,8 @@ body {
 }
 
 .project-card__btn {
+  position: relative;
+  z-index: 2;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 600;
@@ -682,21 +721,15 @@ body {
   flex-shrink: 0;
 }
 
-.project-card__link:hover {
+.project-card:hover .project-card__link {
   color: var(--accent-blue);
-}
-
-.project-card__link:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
 }
 
 .project-card__arrow {
   transition: transform 0.2s ease;
 }
 
-.project-card__link:hover .project-card__arrow {
+.project-card:hover .project-card__arrow {
   transform: translateX(3px);
 }
 

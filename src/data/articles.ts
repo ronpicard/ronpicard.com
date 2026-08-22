@@ -13,7 +13,8 @@ type SiteArticleRow = {
   title: string
   date: string
   summary: string | null
-  bodyHtml: string | null
+  /** Static HTML file loaded only on the article route. */
+  bodyPath: string | null
   imageUrl: string | null
   /** Leading Squarespace image block URL when live site shows a banner above body (null = no banner). */
   articleHeroUrl: string | null
@@ -27,8 +28,11 @@ type SiteArticleRow = {
   extraLinks: { label: string; href: string }[]
 }
 
-/** Rows in `siteArticles.json` may omit `readmeRawUrl`. */
-type SiteArticleJsonRow = Omit<SiteArticleRow, 'readmeRawUrl'> & { readmeRawUrl?: string | null }
+/** Optional fields support content generated before the latest mirror pass. */
+type SiteArticleJsonRow = Omit<SiteArticleRow, 'readmeRawUrl' | 'bodyPath'> & {
+  readmeRawUrl?: string | null
+  bodyPath?: string | null
+}
 
 function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
   if (row.githubEmbed) return 'app'
@@ -42,7 +46,7 @@ const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleJsonRow
   summary: row.summary ? decodeHtml(row.summary) : null,
   imageUrl: row.imageUrl ?? null,
   articleHeroUrl: row.articleHeroUrl ?? null,
-  bodyHtml: row.bodyHtml ?? null,
+  bodyPath: row.bodyPath ?? null,
   readmeRawUrl: row.readmeRawUrl ?? null,
 }))
 

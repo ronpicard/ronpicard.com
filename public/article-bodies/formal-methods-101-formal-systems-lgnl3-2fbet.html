@@ -1,0 +1,526 @@
+<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">Complexity Theory deals with how ‘complex’ a problem is to solve. That is, how many steps it takes to solve a problem.</p></li></ul><ul><li><p class="">This topic is one of the most profound and consequential topics in all of computer science and mathematics.</p></li></ul><p class=""><strong>Big-O Notation:</strong></p><ul><li><p class="">Big-O notation is a notation that computer scientists use to describe the complexity of algorithms. This notation helps to describe how many steps an algorithm will take to complete a task at runtime.</p></li></ul><ul><li><p class="">Big-O notation attempts to capture these algorithms “scale” (i.e. their growth rate) as the problem sizes growth.</p></li></ul><ul><li><p class="">Types:</p><ul><li><p class="">O(1) – Constant</p></li><li><p class="">O(n) – Linear</p></li><li><p class="">O(log(n)) – Logarithmic</p></li><li><p class="">O(n2) – Quadratic</p></li><li><p class="">O(n3) – Cubic</p></li><li><p class="">O(n^c) – Polynomial, C is a constant</p></li><li><p class="">O(c^n) – Exponential , C is a constant</p></li><li><p class="">O(n!) – Factorial</p></li></ul></li></ul><p class=""><strong>Example O(1):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">x = x + 1 <strong>(step 1)</strong></p></li><li><p class="">return x</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has Big-O of O(1) runtime, since no matter how big the input x is, it always takes the same number of steps (or amount of time) to compute things.</p></li></ul><p class=""><strong>Example O(1)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">x = x + 1<strong> (step 1)</strong></p></li><li><p class="">y = x + 1 <strong>(step 2)</strong></p></li><li><p class="">z = x + 1 <strong>(step 3)</strong></p></li><li><p class="">return x</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has Big-O of O(1) runtime, since no matter how big the input x is, it always takes the same number of steps (or amount of time) to compute things.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(3) runtime, this is also equivalent to O(1) runtime. This is because O(1) and O(3) both have an equivalent growth rate; that is constant. Therefore, we usually just say this function has a O(1) runtime. (i.e. O(3) = O(1) = O(C), where C is a constant Integer).</strong></p></li></ul><ul><li><p class=""><strong>Notice how this would still be a constant runtime even if we add more arbitrary steps because the number of steps does not increase based on the input size.</strong></p></li></ul><p class=""><strong>Example O(n):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1)</p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">y = y + 1<strong> (steps 2 to n+1)</strong></p></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale linearly with x.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(n + 1) runtime, this is also equivalent to O(n) runtime. This is because O(n+1) and O(n) both have an equivalent growth rate; that is linear. Therefore, we usually just say this function has a O(n) runtime. (i.e. O(n+1) = O(n) = O(n + C), where C is a constant Integer).</strong></p></li></ul><p class=""><strong>Example O(n)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 <strong>(step 1)</strong></p></li><li><p class="">z = 1 <strong>(step 2)</strong></p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">y = y + 1<strong> (step 3 to n+2)</strong></p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">z = z + 1 <strong>(step n+3 to 2n+2)</strong></p></li><li><p class="">return y, z</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale linearly with x.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(2n+2) runtime, this is also equivalent to O(n) runtime. This is because O(2n+2) and O(n) both have an equivalent growth rate; that is constant. Therefore, we usually just say this function has a O(n) runtime. (i.e. O(2n+2) = O(n) = O(Bn+C), where B &amp; C is are constant integers).</strong></p></li></ul><ul><li><p class=""><strong>Notice how this would still be a linear runtime even if we add more non-nested for loops because the number of steps does not increase based on the input size.</strong></p></li></ul><p class=""><strong>Example O(n^2)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 <strong>(step 1)</strong></p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">y = y + 1 <strong>(steps 2 to n^2+1)</strong></p></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n^2) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things is will scale quadradically with x.</p></li></ul><p class=""><strong>Example O(n</strong> <strong>^</strong> <strong>3)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1) (step 1)</p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">y = y + 1 (steps 2 to n<strong>^</strong>3+1)</p></li></ul></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n<strong>^</strong>3) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things is will scale cubically with x.</p></li></ul><p class=""><strong>Example O(n^c):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1) (step 1)</p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">……</p><ul><li><p class="">…….</p><ul><li><p class="">….…….</p><ul><li><p class="">y = y + 1 (steps 2 to n^c+1)</p></li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n^c) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things is will scale to the power of c with x.</p></li></ul><p class=""><strong>Complexity Classes:</strong></p><ul><li><p class="">In general, algorithms that have a polynomial runtime or lower are considered computationally friendly, and can be solved in a reasonable amount of time by a computer due to scaling polynomially. The class of problems that can be solved by deterministic polynomial runtime algorithms are known as the P-class problems. In other words, they are<strong> Polynomial-time problems</strong> that belong to the polynomial-time complexity class.</p></li></ul><ul><li><p class="">In contrast, algorithms that have an exponential runtime, prove to be very computationally challenging for computers as they scale. Computers often cannot solve these in a reasonable amount of time because they scale exponentially. This class of problems that required algorithms with exponential or greater runtimes are known as NP-hard class problems. Here, NP stands for <strong>Nondeterministic Polynomial-Time Problems. </strong>This essentially means that if we could search all paths of the problem at one time (simultaneously), we could find a polynomial-time solution.</p></li></ul><ul><li><p class=""><strong>NP-Complete class problems</strong> are a subclass of NP-Hard problems and a subclass of NP problems (however: NP class ≠ NP-Hard class) for which it is difficult to find a solution (takes an exponential time algorithm) but if the solution is known, if can be verified in Polynomial-time (by a polynomial-time algorithm). The de facto NP-Complete problem is SAT. It is very easy to verify a solution once it’s given, but it is very hard to find a solution. NP-Complete problems are the hardest problems in the NP class. In fact, if a Polynomial-time algorithm is found (none have been found yet) to solve an NP-Complete problem, then all NP problems can be solved using it.</p></li></ul><ul><li><p class=""><strong>NP class problems sit in between P and NP-Complete class problems and are a class of problems that can be reduced to NP-Complete problems (such as a being converted to a SAT problem) by a polynomial-time</strong> algorithm.</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/83b02b54803618.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>coNP class problems</strong> are a subclass of NP-Hard problems which, rather than being easy to verify a solution, it is easy to exclude non-solutions. In other words, you can exclude non-solutions in polynomial time. The de facto coNP-Complete problem is UNSAT (proving that a Boolean formula is unsatisfiable).</p></li></ul><ul><li><p class=""><strong>coNP-Complete class problems</strong> are the hardest problem in coNP. coNP problems are both NP-hard and coNP.</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/22a365d0ec6a1c.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/296c35d71e0bff.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">Every once in a while we find an efficient polynomial time algorithm for a problem in NP, and realize that it is actually a P problem; we just never realized it.</p><ul><li><p class="">This leads us to one of the biggest unsolved questions in all of computer science and mathematics:</p></li><li><p class="">P = NP? Or P ≠ NP?</p></li></ul><ul><li><p class="">If P = NP, then all of the NP-Complete &amp; coNP-Complete problems (including SAT/UNSAT) are really P problems, and many of the computational challenges we have today will disappear.</p></li></ul><ul><li><p class="">The general suspicion is that P ≠ NP, but no one has been able to prove it.</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/090249f8bbcd87.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/78afbb3b5713f4.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div></div></div></div>

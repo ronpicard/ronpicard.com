@@ -1,0 +1,172 @@
+<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">Building your own own bare-bones Linux router is not only educational but in this age of cyber-security threats, it is an excellent way to secure your home network. On top of this, you may see a significant performance boost on your internet speeds.</p><p class="">Most commercial routers these days are low quality, and the desire to build your own bare-bones version from scratch is completely understandable.</p><p class="">Without further ado, let’s get start!</p><p class=""><strong>What you will need:</strong></p><p class="">A Linux PC (I use a self build of the following components)</p><p class="">Mini ATX CPU integrated mother board</p><p class="">4 GB RAM</p><p class="">16 GB Flash drive to Run the Linux OSA</p><p class="">550 Watt Psu</p><p class="">Mini ATX case</p><p class="">With these components in mind lets get started.</p><p class=""><strong>Install Ubuntu and run the following commands:</strong></p><p class=""></p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get upgrade</p><p class="">$ sudo apt-get install netplan</p><p class="">$ sudo apt-get install ifupdown</p><p class="">$ sudo apt-get isc-dhcp-server</p><p class="">$ sudo apt-get iptables-persistent</p><p class="">$ sudo netfilter-persistent</p><p class="">$ sudo bind9</p><p class="">$ sudo nano /etc/sysctl.conf</p><p class="">Add the following line:</p><p class="">net.ipv4.ip_forward=1</p><p class="">$ sudo rm /etc/network/interfaces</p><p class="">$ sudo touch /etc/network/interfaces</p><p class="">$ sudo nano /etc/network/interfaces</p><p class="">Place the following lines in this file</p><pre><code># The loopback network interface
+auto lo
+iface lo inet loopback
+# The WAN interface, motherboard interface
+auto enp2s0
+iface enp2s0 inet dhcp
+# The LAN interface, pci express interface
+auto enp1s0
+iface enp1s0 inet static
+\taddress 10.0.0.1
+\tnetwork 10.0.0.0
+\tnetmask 255.0.0.0
+\tbroadcast 10.255.255.255</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo touch /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo chmod 775 /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">Place the following lines in this file.</p><pre><code>#!/bin/sh
+/sbin/iptables-restore &lt; /etc/iptables/rules.v4</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/default/isc-dhcp-server</p><p class="">$ sudo touch /etc/default/isc-dhcp-server</p><p class="">$ sudo nano /etc/default/isc-dhcp-server</p><p class="">Then place the following lines in this file.</p><pre><code>
+# Defaults for isc-dhcp-server (sourced by /etc/init.d/isc-dhcp-server)
+
+# Path to dhcpd config file (default: /etc/dhcp/dhcpd.conf).
+DHCPDv4_CONF=/etc/dhcp/dhcpd.conf
+#DHCPDv6_CONF=/etc/dhcp/dhcpd6.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPDv4_PID=/var/run/dhcpd.pid
+#DHCPDv6_PID=/var/run/dhcpd6.pid
+
+# Additional options to start dhcpd with.
+#       Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=\"\"
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. \"eth0 eth1\".
+INTERFACESv4=\"en1s0\"
+INTERFACESv6=\"\"
+</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo touch /etc/dhcp/dhcpd.conf</p><p class="">$ sudo nano /etc/dhcp/dhcpd.conf</p><p class="">Place the following lines in this file. (Note the spaces in the paragraph breaks must all be different as copied.)</p><pre><code>
+default-lease-time 600;
+max-lease-time 7200;
+ddns-update-style none;
+authoritative;
+log-facility local7;
+ 
+host WAP {
+    hardware ethernet XX:XX:XX:XX:XX:XX;
+    fixed-address 10.0.0.2;
+}
+  
+host VPN {
+    hardware ethernet XX:XX:XX:XX:XX:XX;
+    fixed-address 10.0.0.3;
+} 
+   
+host DESKTOP {
+    hardware ethernet XX:XX:XX:XX:XX:XX;
+    fixed-address 10.0.0.4;
+}  
+    
+subnet 10.0.0.0 netmask 255.0.0.0 {
+  range 10.0.0.2 10.0.255.254;
+  option routers 10.0.0.1;
+  option domain-name-servers 10.0.0.1;
+  option domain-name \"example.local\";
+  option broadcast-address 10.255.255.255;
+}   </code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/bind/named.conf.options</p><p class="">$ sudo touch /etc/bind/named.conf.options</p><p class="">$ sudo nano /etc/bind/named.conf.options</p><p class="">Place the following lines in this file. (Notes: The blank spaces in this file are required.)</p><pre><code>options {
+\tdirectory \"/var/cache/bind\";
+
+\t// If there is a firewall between you and nameservers you want
+\t// to talk to, you may need to fix the firewall to allow multiple
+\t// ports to talk.  See http://www.kb.cert.org/vuls/id/800113
+ 
+\t// If your ISP provided one or more IP addresses for stable
+\t// nameservers, you probably want to use them as forwarders.
+\t// Uncomment the following block, and insert the addresses replacing"
+\t// the all-0's placeholder.
+  
+\t forwarders {
+\t \t8.8.8.8;
+\t \t8.8.4.4;
+\t };
+   
+\t allow-query {
+\t \t10.0.0.0/8;
+\t \t127.0.0.1;
+\t }; 
+    
+\t allow-transfer {
+\t \t10.0.0.0/8; 
+\t \t127.0.0.1; 
+\t };  
+     
+\t//========================================================================
+\t// If BIND logs error messages about the root key being expired,
+\t// you will need to update your keys.  See https://www.isc.org/bind-keys
+\t//=========================================================================
+\tdnssec-validation auto;
+      
+\tauth-nxdomain no;    # conform to RFC1035
+\tlisten-on-v6 { any; };
+};</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/iptables/rules.v4</p><p class="">$ sudo touch /etc/iptables/rules.v4</p><p class="">$ sudo nano /etc/iptables/rules.v4</p><pre><code>#####################
+######## NAT ########
+######################
+*nat
+:PREROUTING ACCEPT [0:0]
+:INPUT ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+#
+# Enable NAT on WAN interface enp3s0
+-A POSTROUTING -o enp2s0 -j MASQUERADE
+##
+#### Port Forwarding Section 1 - Add any port forwarding rules here and in Section 2 ####
+# Example: Port forward HTTP traffic from WAN to LAN client 10.0.0.2
+-A PREROUTING -p tcp -m tcp -i enp2s0 --dport 22 -j DNAT --to-destination 10.0.0.3:22
+
+COMMIT
+
+*filter
+:INPUT ACCEPT [0:0]#
+:FORWARD ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]#
+####
+########################
+####### Services #######
+#########################
+#####
+# ICMP/Loopback - Accept all traffic from the router to itself (loopback) and ICMP (e.g. ping) traffic
+-A INPUT -s 127.0.0.0/8 -d 127.0.0.0/8 -i lo -j ACCEPT
+-A INPUT -p icmp -j ACCEPT
+-A INPUT -m state --state ESTABLISHED -j ACCEPT
+######
+# Traceroute - Send a traceroute reject message instead of doing nothing when a    # client traceroute hits the router
+-A INPUT -p udp -m udp --dport 33434:33523 -j REJECT --reject-with icmp-port-unreachable
+#######
+# DNS - Accept DNS requests traffic (port 53) from the private LAN interface
+-A INPUT -i enp1s0 -p tcp --dport 53 -j ACCEPT
+-A INPUT -i enp1s0 -p udp --dport 53 -j ACCEPT
+########
+# SSH - Accept SSH traffic (port 22) from the private LAN so we can manage the router from any machine on the private network
+-A INPUT -i enp1s0 -p tcp --dport 22 -j ACCEPT
+#########
+# DHCP - Accept DHCP requests from the private LAN so that clients can get IP addresses from the router
+-A INPUT -i enp1s0 -p udp --dport 67:68 -j ACCEPT
+##########
+# Drop any other traffic that hits the router
+-A INPUT -j DROP
+###########
+###########################
+#### Forwarding rules #####
+############################
+############
+# forward packets to related/established connections
+-A FORWARD -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+#############
+# Forward from LAN enp2s0 interface to WAN enp3s0 interface
+-A FORWARD -i enp1s0 -o enp2s0 -j ACCEPT
+##############
+#### Port Forwarding Section 2 - Add any port forwarding rules here and in Section
+# Example: Allow HTTP traffic from our NAT rule to client 10.0.0.2
+-A FORWARD -p tcp -d 10.0.0.3 --dport 22 -j ACCEPT
+###############
+# drop all other forwarded traffic
+-A FORWARD -j DROP
+
+COMMIT#
+</code></pre><p class="">Now reboot your router and it should be up and running!</p><p class="">One thing to note is that this router does not contain a wireless access point (WAP) to enable WiFi, but that is OK because nothing is stopping you front grabbing an excellent commercial-grade WAP such as a Unify-AC from Ubiquiti. These devices provide incredible WiFi speeds, which when paired with your new bare-bones Linux router will have you securely browsing the internet at lightning speed!</p></div>
+
+
+  
+
+
+
+</div>
+</div></div></div></div></div>

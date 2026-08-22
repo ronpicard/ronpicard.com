@@ -18,7 +18,7 @@ function stubArticle(overrides: Partial<Article>): Article {
     title: 'Stub',
     date: '2024-01-01',
     summary: null,
-    bodyHtml: null,
+    bodyPath: null,
     imageUrl: null,
     articleHeroUrl: null,
     githubEmbed: null,

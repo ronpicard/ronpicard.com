@@ -3,7 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "homepage": "https://ronpicard.github.io/ronpicard.com/",
+  "homepage": "https://ronpicard.com/",
+  "engines": {
+    "node": ">=22 <23"
+  },
   "scripts": {
     "dev": "vite",
     "test": "vitest run",

@@ -5,11 +5,12 @@ import {
   DEFAULT_DESCRIPTION,
   truncateMetaDescription,
 } from '../lib/siteMeta'
+export { articleJsonLd, homeJsonLd } from '../../shared/jsonLd'
 
 type Props = {
   title: string
   description: string
-  /** Hash-router path, e.g. `/` or `/blog/my-slug` */
+  /** History-router path, e.g. `/` or `/blog/my-slug` */
   path: string
   ogType?: 'website' | 'article'
   ogImage?: string | null
@@ -51,31 +52,4 @@ export function Seo({ title, description, path, ogType = 'website', ogImage, jso
       ) : null}
     </Helmet>
   )
-}
-
-export function homeJsonLd() {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Ron Picard',
-    url: canonicalUrl('/'),
-    description: DEFAULT_DESCRIPTION,
-  }
-}
-
-export function articleJsonLd(input: {
-  title: string
-  date: string
-  description: string
-  path: string
-}) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: input.title,
-    datePublished: `${input.date}T12:00:00.000Z`,
-    description: truncateMetaDescription(input.description),
-    url: canonicalUrl(input.path),
-    author: { '@type': 'Person', name: 'Ron Picard' },
-  }
 }

@@ -18,9 +18,9 @@ export default function HomePage() {
       />
 
       <SiteTopBar />
-      <p className="header__tagline">My projects</p>
+      <h1 className="header__tagline">My projects</h1>
 
-      <main className="main">
+      <main id="main-content" className="main" tabIndex={-1}>
         <ul className="project-list" role="list">
           {list.map((item) => (
             <li key={item.slug} className="project-list__item">

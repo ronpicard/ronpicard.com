@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SEARCH_QUERY_MAX_LEN } from '../config/security'
 import { articles } from '../data/articles'
 import { articleKindShortLabel } from '../lib/articleDisplay'
@@ -8,11 +8,14 @@ import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQue
 export function SiteSearch() {
   const id = useId()
   const panelId = `${id}-panel`
+  const listboxId = `${id}-results`
   const location = useLocation()
+  const navigate = useNavigate()
   const rootRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const [activeIndex, setActiveIndex] = useState(-1)
 
   const results = useMemo(() => {
     if (!open) return []
@@ -22,6 +25,7 @@ export function SiteSearch() {
   const close = useCallback(() => {
     setOpen(false)
     setQuery('')
+    setActiveIndex(-1)
   }, [])
 
   useEffect(() => {
@@ -43,6 +47,25 @@ export function SiteSearch() {
     document.addEventListener('mousedown', onDoc)
     return () => document.removeEventListener('mousedown', onDoc)
   }, [open, close])
+
+  function onInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      if (results.length === 0) return
+      event.preventDefault()
+      setActiveIndex((current) => {
+        if (event.key === 'ArrowDown') return (current + 1) % results.length
+        return current <= 0 ? results.length - 1 : current - 1
+      })
+      return
+    }
+    if (event.key === 'Enter' && activeIndex >= 0) {
+      const result = results[activeIndex]
+      if (!result) return
+      event.preventDefault()
+      close()
+      void navigate(`/blog/${result.slug}`)
+    }
+  }
 
   useEffect(() => {
     if (!open) return
@@ -80,20 +103,45 @@ export function SiteSearch() {
             id={`${id}-q`}
             className="site-search__input"
             type="search"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={open}
+            aria-controls={listboxId}
+            aria-activedescendant={
+              activeIndex >= 0 && results[activeIndex] ? `${id}-option-${activeIndex}` : undefined
+            }
             placeholder="Search articles…"
             autoComplete="off"
             value={query}
-            onChange={(e) => setQuery(e.target.value.slice(0, SEARCH_QUERY_MAX_LEN))}
+            onChange={(e) => {
+              setQuery(e.target.value.slice(0, SEARCH_QUERY_MAX_LEN))
+              setActiveIndex(-1)
+            }}
+            onKeyDown={onInputKeyDown}
           />
-          <ul className="site-search__results" aria-label="Matching posts">
+          <ul
+            className="site-search__results"
+            id={listboxId}
+            role="listbox"
+            aria-label="Matching posts"
+          >
             {results.length === 0 ? (
               <li className="site-search__empty">
                 {normalizeSearchQuery(query) ? 'No matches.' : 'Type to search.'}
               </li>
             ) : (
-              results.map((a) => (
-                <li key={a.slug} className="site-search__item">
-                  <Link className="site-search__link" to={`/blog/${a.slug}`} onClick={close}>
+              results.map((a, index) => (
+                <li key={a.slug} className="site-search__item" role="none">
+                  <Link
+                    id={`${id}-option-${index}`}
+                    className="site-search__link"
+                    role="option"
+                    aria-selected={index === activeIndex}
+                    tabIndex={-1}
+                    to={`/blog/${a.slug}`}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={close}
+                  >
                     <span className="site-search__link-title">{a.title}</span>
                     <span className="site-search__link-kind">
                       {articleKindShortLabel(a.kind)}

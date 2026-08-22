@@ -1,0 +1,1547 @@
+<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">A Boolean-valued logic formula (predicate) is said to be Satisfiable (SAT) if a valid assignment (also known as a model) to the predicate variables exists that causes the formula to evaluate to TRUE.</p></li></ul><ul><li><p class=""><strong>Example 1:</strong></p><ul><li><p class="">Predicate: P = (A ∧ ¬B)</p></li><li><p class="">This predicate is satisfiable (SAT)</p></li><li><p class="">Proof:</p><ul><li><p class="">A = TRUE, B = FALSE</p></li><li><p class="">P = (TRUE ∧ ¬FALSE)</p></li><li><p class="">P = (TRUE ∧ TRUE)</p></li><li><p class="">P = TRUE</p></li></ul></li></ul></li></ul><ul><li><p class=""><strong>Example 2:</strong></p><ul><li><p class="">Predicate: P = (A ∧ <strong>¬</strong>A)</p></li><li><p class="">This predicate is unsatisfiable (not SAT)</p></li><li><p class="">Proof: Predicate variable A would have be both TRUE and FALSE simultaneously to make this predicate evaluate to TRUE. Therefore, this is predicate is unsatisfiable</p></li></ul></li></ul><p class=""><strong>Truth Table:</strong></p><ul><li><p class="">A common practice to find all possible states of a predicate is to build a truth table. This table represents all possible values for the predicate variables along with resultant Boolean values.</p></li></ul><ul><li><p class="">Predicate (A ∧ ¬B) ∨ C</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">Predicates (Boolean-valued functions) can be specified using Truth tables alone; rather than First-Order Logic.</p><ul><li><p class="">Predicate: P(a,b)</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/18b3b7490ee3d0.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class="">Note: this predicate may also be specified using First-Order Logic as follows:&nbsp;<br>P = (A ∧ <strong>¬</strong>B)</p></li></ul><ul><li><p class=""><strong>Conjunctive Normal Form (CNF)</strong></p><ul><li><p class="">CNF is a conjunction (ANDs) of one or more predicates where the predicates are made up of disjunctions (ORs) predicates.</p></li><li><p class="">Ex. (A ∨ B ∨ C) ∧ (D ∨ E ∨ F) ∧ (H ∨ I ∨ J)</p></li></ul></li></ul><ul><li><p class=""><strong>Disjunction Normal Form (DNF)</strong></p><ul><li><p class="">DNF is a disjunction (ORs) of one or more predicates where the predicates are made up of conjunctions (ANDs) predicates.</p></li><li><p class="">Ex. (A ∧ B ∧ C) ∨ (D ∧ E ∧ F) ∨ (H ∧ I ∧ J)</p></li></ul></li></ul><ul><li><p class="">Any propositional formula can be converted into CNF or DNF using the following logical equivalences: double negation elimination, De Morgan’s laws, and the distributive law.</p></li><li><p class="">This also means that CNF and DNF are interchangeable (one can be converted into the other) using the same logical equivalences.</p></li></ul><p class=""><strong>Solver Algorithms:</strong></p><ul><li><p class=""><strong>Depth-First Search (DFS)</strong></p><ul><li><p class="">DFS is a search algorithm for searching tree or graph data structures. DFS starts at the root and explores as deep into a branch as possible before backtracking up the tree one level.</p></li></ul></li><li><p class=""><strong>Breadth-First Search (BFS)</strong></p><ul><li><p class="">BFS is a search algorithm for searching tree or graph data structures. BFS starts at the root and explores all of the neighbor nodes before proceeding down to the next layer in the tree.</p></li></ul></li><li><p class=""><strong>Bounded Model Checking (BMC)</strong></p><ul><li><p class="">BMC is a bounded-DFS approach. This is an iterative approach to DFS to K-depth with backtracking. If no SAT is found, then perform to (K+D)-depth and repeat; or stop when necessary. This approach prevents falling into the pitfalls of infinite loops.</p></li></ul></li><li><p class=""><strong>Reduced-Order Binary Decision Diagrams (ROBDDs, or simply BBDs)</strong></p><ul><li><p class="">ROBDDs are an approach to SAT (and reachable state-space representations). ROBDD procedure builds a compressed tree representation of predicate variable assignments and their results. It does this by selecting a predicate variable as a root node, building branches off of this node into variables; then merging isomorphic nodes (nodes representing the same variable with the same child nodes and results) and equivalent results (leaves).</p></li></ul></li><li><p class=""><strong>Davis-Putnam-Logemann-Loveland (DPLL)</strong></p><ul><li><p class="">DPLL (sometimes interchangeable with CNF-SAT) is a back-tracking search algorithm that utilizes conjunctive normal form (CNF). DPLL looks at all the CNF sub-predicates (clauses), picks a predicate variable (literal) or its negation and assumes that its TRUE, compares the leftover sub-predicates (clauses) that did not become true because of that assumption, removes the assigned predicate variable from the leftover sub predicates, then looks for conflicts among the other predicate variables of sub predicates (ex. Clause 1 =&nbsp; (A ∧ B), and Clause 2 = (¬A ∧ B), thus A is in conflict). If a conflict occurs, it backtracks and flips the previous variable assumption; if no conflict occurs, it picks a new variable assumption in the leftover sub-predicates. This repeats until SAT is proven or not proven.</p></li></ul></li></ul><ul><li><p class=""><strong>Depth-First Search (DFS)</strong>:</p><ul><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/d105e04bb0c5fd.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Breath-First Search (BFS)</strong>:</p></li></ul><ul><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/433e7b75e06f28.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Bounded Model Checking (BMC)</strong>:</p></li></ul><ul><li><p class="">DFS to length K</p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li><li><p class="">Ex. K = 2</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/f989cd238abad0.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class="">Terminates as UNSAT!! (Its depth is too short never evaluates variable C, so it would terminate without prove SAT.)</p></li></ul><ul><li><p class="">Note: This is a little bit deceiving because this is not the true purpose of BMC. Usually, for BMC you search to the depth of the number of variables in the CNF (which is a standard DFS search). This is because your CNF would be created from a translation of your state transition system into CNF up to K time steps.</p></li></ul><ul><li><p class=""><strong>Bounded Model Checking (BMC)</strong>:</p><ul><li><p class="">DFS to length K</p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li><li><p class="">Ex. K = 3</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/7ec9b5e999d508.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class="">Note: This is a little bit deceiving because this is not the true purpose of BMC. Usually, for BMC you search to the depth of the number of variables in the CNF (which is a standard DFS search). This is because your CNF would be created from a translation of your state transition system into CNF up to K time steps.</p></li></ul><ul><li><p class=""><strong>Unreduced Binary Decision Diagram</strong>:</p><ul><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/c3cd00627d9e9a.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p></li></ul><ul><li><p class=""><strong>Step 1: Merge Isomorphic Subgraphs</strong></p><ul><li><p class=""><strong>Layer 3 – Process</strong></p></li></ul></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/3311659fcb8f5f.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p></li></ul><ul><li><p class=""><strong>Step 1: Merge Isomorphic Subgraphs</strong></p><ul><li><p class=""><strong>Layer 3 – Result</strong></p></li></ul></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/5841832db674c1.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p></li></ul><ul><li><p class=""><strong>Step 2: Eliminate Nodes w/two Isomorphic Children</strong></p></li><li><p class=""><strong>Layer 2 – Process</strong></p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/7c0fb432560ca1.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p></li></ul><ul><li><p class=""><strong>Step 2: Eliminate Nodes w/two Isomorphic Children</strong></p></li><li><p class=""><strong>Layer 2 – Result</strong></p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/0d3c2b9e5b46dd.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p><ul><li><p class=""><strong>Step 1: Merge Isomorphic Nodes</strong></p></li><li><p class=""><strong>Layer 4 – Process</strong></p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/29ffcd8e2fc563.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p><ul><li><p class=""><strong>Step 1: Merge Isomorphic Nodes</strong></p></li><li><p class=""><strong>Layer 4 – Process</strong></p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/de5717dd3dd9ea.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p><ul><li><p class=""><strong>Step 2: Eliminate Nodes w/two Isomorphic Children</strong></p></li><li><p class=""><strong>Layer 3 – Process</strong></p></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/ddf59ea7f00261.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><ul><li><p class=""><strong>Reduced-Order Binary Decision Diagram</strong>:</p><ul><li><p class=""><strong>Step 2: Eliminate Nodes w/two Isomorphic Children</strong></p><ul><li><p class=""><strong>Layer 3 – Result</strong></p></li><li><p class=""><strong>FINAL RESULT</strong></p></li></ul></li><li><p class="">Predicate: (¬A ∧ B ∧ C )</p></li></ul></li></ul></div>
+
+
+  
+
+
+
+</div>
+</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+    
+  
+    <div class="image-block-outer-wrapper
+          layout-caption-below
+          design-layout-inline
+          combination-animation-site-default
+          individual-animation-site-default
+          individual-text-animation-site-default">
+
+      
+
+      
+        <figure class="sqs-block-image-figure
+              intrinsic">
+          
+        
+        
+
+        
+          
+            
+          <div class="image-block-wrapper">
+            <div class="sqs-image-shape-container-element
+              
+          
+        
+              has-aspect-ratio">
+                
+                
+                
+                
+                
+                
+                
+                <img alt="" src="resources/134cac103475e7.png">
+
+            </div>
+          </div>
+        
+          
+        
+
+        
+      
+        </figure>
+      
+
+    </div>
+  
+
+
+  
+
+
+</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
+  
+  <div class="sqs-html-content"><p class="">Note: Variable (node) ordering can affect the size of the ROBDD in larger predicates.</p><p class=""><strong>Davis-Putnam-Logemann-Loveland (DPLL)</strong></p><p class=""><strong>Steps:</strong></p><ol><li><p class="">Choose a variable, R, from the CNF predicate, P, and assume it’s TRUE (preferably one that has a high multiplicity throughout the sub-predicates). (Note: the negation of R could also be assumed true.)</p></li><li><p class="">Identify the sub predicates, Y, that DO NOT contain R.</p><ul><li><p class="">If Y is an empty set ∅, then terminate as SAT.</p></li></ul></li><li><p class="">Remove from these sub predicates any references to ¬”R”.</p></li><li><p class="">Look for conflicts among the remaining variables of the predicates. (Example conflict is if one predicate only contained A, and another sub-predicate only contained B.)</p></li><li><p class="">If a conflict exists go back to step 1 and pick a variable, L, that you did not pick and assume it is TRUE (i.e. L ≠”R”). Then repeat steps 2 – 4.</p><ul><li><p class="">If no such variable exists, terminate as NOT SAT.</p></li></ul></li><li><p class="">Repeat step 1, but pick a variable, T | (T ≠”R”), from Y, and assume it’s TRUE.</p></li><li><p class="">Repeat steps 2 to 6 with variable, T.</p></li></ol><p class=""><strong>Example: CNF Predicate P: (¬A ∨ C ) ∧ (¬A ∨ B ∨ ¬C ) ∧ (A ∨ ¬B ∨ ¬C )</strong></p><ol><li><p class="">Assume A is TRUE</p></li><li><p class="">The sub predicate set P without A is Y = (¬A ∨ C ) ∧ (¬A ∨ B ∨ ¬C )</p></li><li><p class="">Remove ¬A from Y and get: (C) ∧ (B ∨ ¬C )</p></li><li><p class="">Assume B is TRUE</p></li><li><p class="">The sub-predicate set Y without B is W = (C)</p></li><li><p class="">Assume C is TRUE</p></li><li><p class="">The sub-predicate set W without B is the empty set, ∅</p></li><li><p class="">Therefore this predicate is SAT by A=1, B=1, C=1</p></li></ol><p class=""><strong>There are other variants of the SAT problem:</strong></p><ul><li><p class=""><strong>MAJ-SAT</strong></p><ul><li><p class="">The problem of finding out if the majority of all assignments make the predicate TRUE.</p></li></ul></li><li><p class=""><strong>#SAT</strong></p><ul><li><p class="">The problem of counting the number of variable assignments that make the predicate true.</p></li></ul></li><li><p class=""><strong>UNIQUE-SAT</strong></p><ul><li><p class="">The problem of determining if a predicate has exactly one assignment.</p></li></ul></li><li><p class=""><strong>UNAMBIGUOUS-SAT</strong></p><ul><li><p class="">A SAT problem is when the formula gives a guarantee that there is only one satisfying assignment.</p></li></ul></li><li><p class=""><strong>MAX-SAT</strong></p><ul><li><p class="">Find the Maximum number of sub-predicates that can be satisfied by any assignment.</p></li></ul></li><li><p class="">Etc…..</p></li></ul><p class=""></p></div>
+
+
+  
+
+
+
+</div>
+</div></div></div></div></div>

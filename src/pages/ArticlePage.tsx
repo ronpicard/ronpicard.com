@@ -3,6 +3,7 @@ import { ArticleNav } from '../components/ArticleNav'
 import { LessonOutline } from '../components/LessonOutline'
 import { articleJsonLd, Seo } from '../components/Seo'
 import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
+import { DynamicArticleBody } from '../components/DynamicArticleBody'
 import { SiteTopBar } from '../components/SiteTopBar'
 import {
   filterExtraLinks,
@@ -14,7 +15,6 @@ import {
 } from '../data/articles'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
-import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -74,7 +74,6 @@ export default function ArticlePage() {
   const ytId = safeYoutubeId(article.youtubeId)
   const videoUrl = youtubeWatchUrl(article.youtubeId)
   const readmeRawUrl = safeGithubReadmeRawUrl(article.readmeRawUrl)
-  const proseHtml = prepareArticleBodyHtml(readmeRawUrl ? null : article.bodyHtml)
   const otherEmbedSrc = article.otherEmbed ? safeHttpsEmbedUrl(stripQuery(article.otherEmbed)) : null
   const path = `/blog/${article.slug}`
   const metaDesc =
@@ -89,8 +88,8 @@ export default function ArticlePage() {
       fallbackSummary={article.summary}
       viewerUrl={githubBlobViewerUrlFromRawUrl(readmeRawUrl)}
     />
-  ) : proseHtml != null && proseHtml !== '' ? (
-      <div className="article-prose" dangerouslySetInnerHTML={{ __html: proseHtml }} />
+  ) : article.bodyPath ? (
+    <DynamicArticleBody bodyPath={article.bodyPath} fallbackSummary={article.summary} />
     ) : article.kind === 'lesson' && article.summary ? (
       <LessonOutline text={article.summary} />
     ) : article.summary ? (
@@ -210,7 +209,7 @@ export default function ArticlePage() {
         </div>
       </header>
 
-      <main className="article-body">
+      <main id="main-content" className="article-body" tabIndex={-1}>
         {embedBlock}
         {textBlock}
 

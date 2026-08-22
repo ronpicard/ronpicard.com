@@ -29,11 +29,12 @@ export const PRODUCTION_SECURITY_METAS: ReadonlyArray<{
   content: string
 }> = [
   { httpEquiv: 'Cross-Origin-Opener-Policy', content: 'same-origin-allow-popups' },
-  { name: 'referrer', content: 'strict-origin-when-cross-origin' },
 ]
 
 export const README_FETCH_TIMEOUT_MS = 12_000
 export const README_MAX_BYTES = 512 * 1024
+export const ARTICLE_BODY_FETCH_TIMEOUT_MS = 8_000
+export const ARTICLE_BODY_MAX_BYTES = 512 * 1024
 export const SEARCH_QUERY_MAX_LEN = 120
 export const PUBLIC_SLUG_MAX_LEN = 96
 export const PUBLIC_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i

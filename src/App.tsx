@@ -19,6 +19,9 @@ export default function App() {
       <div className="app-content">
         <AmbientParticles />
         <div className="app-content__surface">
+          <a className="skip-link" href="#main-content">
+            Skip to main content
+          </a>
           <RouterProvider router={router} />
         </div>
       </div>

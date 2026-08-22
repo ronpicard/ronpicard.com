@@ -1,6 +1,8 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { escapeHtml, escapeHtmlAttr } from '../shared/htmlEscape.ts'
+import { articleJsonLd, homeJsonLd } from '../shared/jsonLd.ts'
+import { buildRobotsTxt, buildSitemapXml } from '../shared/sitemap.ts'
 import {
   absoluteAssetUrl,
   canonicalUrl,
@@ -21,17 +23,23 @@ function stripExistingSeoHead(html) {
   return html
     .replace(/<title>[\s\S]*?<\/title>\s*/i, '')
     .replace(/<meta\s+name="description"[\s\S]*?>\s*/gi, '')
+    .replace(/<meta\s+name="robots"[\s\S]*?>\s*/gi, '')
+    .replace(/<meta\s+name="author"[\s\S]*?>\s*/gi, '')
     .replace(/<link\s+rel="canonical"[\s\S]*?>\s*/gi, '')
     .replace(/<meta\s+property="og:[\s\S]*?>\s*/gi, '')
     .replace(/<meta\s+name="twitter:[\s\S]*?>\s*/gi, '')
+    .replace(/<script\s+type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '')
 }
 
-function injectSeoHead(html, { title, description, url, imageAbs, ogType }) {
+function injectSeoHead(
+  html,
+  { title, description, url, imageAbs, ogType, jsonLd = null, robots = 'index, follow' },
+) {
   const twitterCard = imageAbs ? 'summary_large_image' : 'summary'
   const tags = [
     `<title>${escapeHtml(title)}</title>`,
     `<meta name="description" content="${escapeHtmlAttr(description)}" />`,
-    `<meta name="robots" content="index, follow" />`,
+    `<meta name="robots" content="${escapeHtmlAttr(robots)}" />`,
     `<meta name="author" content="Ron Picard" />`,
     `<link rel="canonical" href="${escapeHtmlAttr(url)}" />`,
     `<meta property="og:title" content="${escapeHtmlAttr(title)}" />`,
@@ -46,6 +54,9 @@ function injectSeoHead(html, { title, description, url, imageAbs, ogType }) {
     `<meta name="twitter:title" content="${escapeHtmlAttr(title)}" />`,
     `<meta name="twitter:description" content="${escapeHtmlAttr(description)}" />`,
     imageAbs ? `<meta name="twitter:image" content="${escapeHtmlAttr(imageAbs)}" />` : '',
+    jsonLd
+      ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
+      : '',
   ]
     .filter(Boolean)
     .join('\n')
@@ -70,6 +81,7 @@ async function main() {
     url: canonicalUrl('/'),
     imageAbs: absoluteAssetUrl('resources/82f3c8eae802c3.jpg') ?? null,
     ogType: 'website',
+    jsonLd: homeJsonLd(),
   })
   await writeOut('index.html', home)
 
@@ -94,6 +106,12 @@ async function main() {
       url: canonicalUrl(route),
       imageAbs,
       ogType: 'article',
+      jsonLd: articleJsonLd({
+        title,
+        date: row.date,
+        description: summary,
+        path: route,
+      }),
     })
 
     await writeOut(path.join('blog', slug, 'index.html'), html)
@@ -104,7 +122,33 @@ async function main() {
     }
   }
 
-  await writeOut('404.html', home)
+  const sitemapEntries = [
+    { url: canonicalUrl('/') },
+    ...sorted.map((row, index) => ({
+      url: canonicalUrl(`/blog/${routeSlugs[index]}`),
+      lastModified: row.date,
+    })),
+  ]
+  await writeFile(
+    path.join(DIST_DIR, 'sitemap.xml'),
+    buildSitemapXml(sitemapEntries),
+    'utf8',
+  )
+  await writeFile(
+    path.join(DIST_DIR, 'robots.txt'),
+    buildRobotsTxt(canonicalUrl('/sitemap.xml')),
+    'utf8',
+  )
+
+  const notFound = injectSeoHead(template, {
+    title: 'Page not found | Ron Picard',
+    description: 'The requested page could not be found.',
+    url: canonicalUrl('/'),
+    imageAbs: null,
+    ogType: 'website',
+    robots: 'noindex, nofollow',
+  })
+  await writeOut('404.html', notFound)
 }
 
 main().catch((err) => {
