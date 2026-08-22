@@ -34,6 +34,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Article JSON now passes a shared runtime schema, and external consumers use the articles feature public entry point.
 - CI now enforces coverage thresholds; local and CI runtimes are aligned on Node.js 22.23.2.
 
+### Fixed
+
+- Article navigation starts at the top, while Browser Back restores the prior home catalog position without a visible scroll animation.
+
 ### Removed
 
 - Stray root `vite` dev-server log file; unused re-exports and internal-only exports tightened.

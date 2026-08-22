@@ -12,6 +12,28 @@ test.describe('home', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText(/Periodic Table/i)
   })
 
+  test('starts articles at the top and restores the prior home position', async ({ page }) => {
+    await page.goto('/')
+    const cardLink = page.getByRole('link', { name: /Open Convolutional Neural Networks/i })
+    await cardLink.scrollIntoViewIfNeeded()
+    const previousScrollY = await page.evaluate(() => window.scrollY)
+    expect(previousScrollY).toBeGreaterThan(0)
+
+    await cardLink.click()
+    await expect(page).toHaveURL(/\/blog\/convolutional-neural-networks\/?$/)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+
+    await page.goBack()
+    await expect(page).toHaveURL(/\/$/)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
+    await expect(cardLink).toBeInViewport()
+
+    const scrollBehavior = await page.evaluate(
+      () => window.getComputedStyle(document.documentElement).scrollBehavior,
+    )
+    expect(scrollBehavior).toBe('auto')
+  })
+
   test('offers a keyboard skip link', async ({ page }) => {
     await page.goto('/')
     await page.keyboard.press('Tab')

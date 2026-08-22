@@ -17,6 +17,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.
+- Client-side navigation to an article MUST start at the top of the page.
+- Browser Back navigation from an article MUST restore the prior home catalog position without animating down from the top.
 - Mirrored assets MUST live under `public/resources/` and be referenced as `resources/...` in JSON, resolved with the Vite base URL at render time.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD.

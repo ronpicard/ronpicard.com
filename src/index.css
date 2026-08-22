@@ -23,7 +23,6 @@
 }
 
 html {
-  scroll-behavior: smooth;
   color-scheme: dark;
   /* Avoid iOS/Safari inflating text and shifting the grid vs desktop browsers */
   -webkit-text-size-adjust: 100%;
