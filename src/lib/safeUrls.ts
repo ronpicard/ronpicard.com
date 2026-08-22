@@ -2,17 +2,15 @@
  * Validates URLs used for navigation and embeds so tampered JSON cannot
  * inject javascript:, data:, or unexpected hosts into the DOM.
  */
+import { parseRawGithubContentUrl } from '../../shared/githubRawContentUrls'
+import { parseGithubRepoUrl } from '../../shared/githubRepo'
 import { UNSAFE_HREF_SCHEME_RE } from '../../shared/urlSchemes'
+import { isSafeLocalAssetPath } from './assetUrl'
 
 const YOUTUBE_ID = /^[a-zA-Z0-9_-]{6,32}$/
 
 function isProduction(): boolean {
   return import.meta.env.PROD
-}
-
-function hasPathTraversal(pathname: string): boolean {
-  const parts = pathname.split('/').filter(Boolean)
-  return parts.some((p) => p === '..' || p === '.' || /%2e/i.test(p))
 }
 
 export function safeYoutubeId(raw: string | null | undefined): string | null {
@@ -43,35 +41,11 @@ export function safeGithubPagesUrl(raw: string | null | undefined): string | nul
  */
 export function safeGithubReadmeRawUrl(raw: string | null | undefined): string | null {
   if (!raw?.trim()) return null
-  let u: URL
-  try {
-    u = new URL(raw.trim())
-  } catch {
-    return null
-  }
-  if (u.protocol !== 'https:') return null
-  if (u.hostname.toLowerCase() !== 'raw.githubusercontent.com') return null
-  if (u.username || u.password) return null
-  if (hasPathTraversal(u.pathname)) return null
-  const parts = u.pathname.split('/').filter(Boolean)
-  if (parts.length < 4) return null
-  if (parts.some((p) => !/^[a-zA-Z0-9._-]+$/.test(p))) return null
-  return u.toString()
+  return parseRawGithubContentUrl(raw.trim())?.rawUrl ?? null
 }
 
 export function safeGithubRepoUrl(raw: string | null | undefined): string | null {
-  if (!raw?.trim()) return null
-  let u: URL
-  try {
-    u = new URL(raw.trim())
-  } catch {
-    return null
-  }
-  if (u.protocol !== 'https:') return null
-  const h = u.hostname.toLowerCase()
-  if (h !== 'github.com' && h !== 'www.github.com') return null
-  if (u.username || u.password) return null
-  return u.toString()
+  return parseGithubRepoUrl(raw)?.url ?? null
 }
 
 /** Demo URLs: GitHub Pages (same rules as embed). */
@@ -131,6 +105,7 @@ export function safeArticleLinkHref(
   if (/^https?:\/\//i.test(t)) {
     return safeHttpUrl(t)
   }
+  if (!t.startsWith('resources/') || !isSafeLocalAssetPath(t)) return null
   const local = resolveAsset(t)
   return local ?? null
 }

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SEARCH_QUERY_MAX_LEN } from '../config/security'
-import { articles } from '../data/articles'
-import { articleKindShortLabel } from '../lib/articleDisplay'
+import { articleKindShortLabel, articles } from '../features/articles'
 import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
 
 export function SiteSearch() {

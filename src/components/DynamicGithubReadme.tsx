@@ -28,8 +28,9 @@ export function DynamicGithubReadme({ rawUrl, fallbackSummary, viewerUrl }: Prop
         if (!safe) throw new Error('sanitize')
         setHtml(safe)
         setPhase('ready')
-      } catch (e) {
+      } catch (error: unknown) {
         if (ac.signal.aborted) return
+        console.error('Could not load GitHub README', error)
         setPhase('error')
       }
     })()

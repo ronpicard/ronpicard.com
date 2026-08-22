@@ -6,8 +6,10 @@ export function parseRawGithubContentUrl(rawUrl: string) {
   try {
     const u = new URL(rawUrl)
     if (u.protocol !== 'https:' || u.hostname.toLowerCase() !== 'raw.githubusercontent.com') return null
+    if (u.username || u.password || u.search || u.hash) return null
     const parts = u.pathname.split('/').filter(Boolean)
     if (parts.length < 4) return null
+    if (parts.some((part) => !/^[a-zA-Z0-9._-]+$/.test(part))) return null
     const owner = parts[0]!
     const repo = parts[1]!
     const branch = parts[2]!
@@ -18,7 +20,7 @@ export function parseRawGithubContentUrl(rawUrl: string) {
     const sub = dirParts.length ? `${dirParts.map(encodeURIComponent).join('/')}/` : ''
     const blobDirBase = `https://github.com/${owner}/${repo}/blob/${branch}/${sub}`
     const viewerUrl = `https://github.com/${owner}/${repo}/blob/${branch}/${filePath}`
-    return { owner, repo, branch, blobDirBase, viewerUrl }
+    return { owner, repo, branch, blobDirBase, viewerUrl, rawUrl: u.toString() }
   } catch {
     return null
   }

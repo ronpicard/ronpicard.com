@@ -8,7 +8,15 @@ import * as cheerio from 'cheerio'
 import { createHash } from 'node:crypto'
 import { existsSync, mkdirSync, readFileSync, readdirSync, unlinkSync, writeFileSync } from 'node:fs'
 import { dirname, extname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+import { parseSiteArticleRows } from '../shared/siteArticleSchema.ts'
+import {
+  detectAssetExtension,
+  isSupportedAssetPath,
+  shouldMirrorAbsoluteUrl,
+  validateAssetUrl,
+} from './lib/assetSafety.mjs'
+import { fetchBytes } from './lib/fetchText.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
@@ -19,16 +27,8 @@ const MANIFEST_JSON = join(__dirname, 'resource-manifest.json')
 
 const UA = 'ronpicard.com-mirror-resources/1.0'
 const REFERER = 'https://www.ronpicard.com/'
-
-const EXCLUDE_HOST = [
-  /(^|\.)youtube\.com$/i,
-  /(^|\.)youtube-nocookie\.com$/i,
-  /^youtu\.be$/i,
-  /(^|\.)github\.io$/i,
-  /(^|\.)googlevideo\.com$/i,
-]
-
-const EXT_RE = /\.(png|jpe?g|gif|webp|svg|avif|ico|bmp|pdf|zip)$/i
+const ASSET_MAX_BYTES = 20 * 1024 * 1024
+const ASSET_FETCH_TIMEOUT_MS = 20_000
 
 function extFromMime(ct) {
   if (!ct) return ''
@@ -39,7 +39,6 @@ function extFromMime(ct) {
     'image/jpg': '.jpg',
     'image/gif': '.gif',
     'image/webp': '.webp',
-    'image/svg+xml': '.svg',
     'image/avif': '.avif',
     'image/x-icon': '.ico',
     'image/bmp': '.bmp',
@@ -47,22 +46,6 @@ function extFromMime(ct) {
     'application/zip': '.zip',
   }
   return map[m] || ''
-}
-
-function shouldMirrorAbsoluteUrl(href) {
-  if (!href || typeof href !== 'string') return false
-  const t = href.trim()
-  if (t.startsWith('resources/')) return false
-  let u
-  try {
-    u = new URL(t)
-  } catch {
-    return false
-  }
-  if (u.protocol !== 'https:') return false
-  if (EXCLUDE_HOST.some((re) => re.test(u.hostname))) return false
-  const pathOnly = u.pathname.split('/').pop() || ''
-  return EXT_RE.test(pathOnly)
 }
 
 function absolutize(href, postBase) {
@@ -98,8 +81,8 @@ function loadManifest() {
   if (!existsSync(MANIFEST_JSON)) return {}
   try {
     return JSON.parse(readFileSync(MANIFEST_JSON, 'utf8'))
-  } catch {
-    return {}
+  } catch (cause) {
+    throw new Error(`Could not parse resource manifest: ${MANIFEST_JSON}`, { cause })
   }
 }
 
@@ -142,7 +125,7 @@ function collectUrls(rows) {
         const h = $(el).attr('href')
         if (!h || h.startsWith('resources/')) return
         const path = h.split('?')[0] || ''
-        if (!EXT_RE.test(path)) return
+        if (!isSupportedAssetPath(path)) return
         const abs = absolutize(h, postBase)
         if (abs && shouldMirrorAbsoluteUrl(abs)) set.add(abs)
       })
@@ -160,38 +143,25 @@ function collectUrls(rows) {
 }
 
 async function fetchAsset(url) {
-  const res = await fetch(url, {
+  const { body, contentType } = await fetchBytes(url, {
     headers: {
       'user-agent': UA,
       referer: REFERER,
-      accept: '*/*',
+      accept: 'image/avif,image/webp,image/png,image/jpeg,image/gif,application/pdf,application/zip',
     },
-    redirect: 'follow',
+    maxBytes: ASSET_MAX_BYTES,
+    timeoutMs: ASSET_FETCH_TIMEOUT_MS,
+    validateUrl: validateAssetUrl,
   })
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
-  const buf = Buffer.from(await res.arrayBuffer())
-  const ct = res.headers.get('content-type') || ''
-  let ext = extname(new URL(url).pathname).toLowerCase()
-  if (!ext) {
-    ext = extFromMime(ct) || '.bin'
+  const buf = Buffer.from(body)
+  const detectedExtension = detectAssetExtension(buf)
+  if (!detectedExtension) {
+    const declaredExtension = extFromMime(contentType) || extname(new URL(url).pathname)
+    throw new Error(
+      `Unsupported or invalid asset content (${contentType || 'unknown'}; ${declaredExtension || 'no extension'})`,
+    )
   }
-  if (ext === '.jpeg') ext = '.jpg'
-  const mimeOk =
-    /^image\//i.test(ct) ||
-    ct.includes('application/pdf') ||
-    ct.includes('application/zip') ||
-    ct.includes('application/octet-stream')
-  if (!mimeOk && buf.length > 0) {
-    const isPdf = buf.slice(0, 4).toString() === '%PDF'
-    const isPng = buf[0] === 0x89 && buf[1] === 0x50
-    const isJpg = buf[0] === 0xff && buf[1] === 0xd8
-    const isGif = buf.slice(0, 3).toString() === 'GIF'
-    const isWebp = buf.slice(8, 12).toString() === 'WEBP'
-    if (!(isPdf || isPng || isJpg || isGif || isWebp)) {
-      throw new Error(`unexpected content-type: ${ct || '(none)'}`)
-    }
-  }
-  return { buf, ext }
+  return { buf, ext: detectedExtension }
 }
 
 async function downloadWithConcurrency(urls, concurrency, fn) {
@@ -214,10 +184,10 @@ async function downloadWithConcurrency(urls, concurrency, fn) {
   return results
 }
 
-async function main() {
+export async function main() {
   mkdirSync(OUT_DIR, { recursive: true })
   mkdirSync(ARTICLE_BODIES_DIR, { recursive: true })
-  const rows = JSON.parse(readFileSync(ARTICLES_JSON, 'utf8'))
+  const rows = parseSiteArticleRows(JSON.parse(readFileSync(ARTICLES_JSON, 'utf8')), ARTICLES_JSON)
   const wanted = collectUrls(rows)
   const manifest = loadManifest()
   const urlToLocal = new Map()
@@ -233,7 +203,9 @@ async function main() {
 
   if (missing.length > 0) {
     const fetched = await downloadWithConcurrency(missing, 6, async (url) => {
-      process.stderr.write(`  fetch ${url.slice(0, 88)}…\n`)
+      const parsedUrl = new URL(url)
+      const safeLogUrl = `${parsedUrl.origin}${parsedUrl.pathname}`
+      process.stderr.write(`  fetch ${safeLogUrl.slice(0, 88)}…\n`)
       const { buf, ext } = await fetchAsset(url)
       const name = hashName(url, ext)
       const rel = `resources/${name}`
@@ -318,7 +290,10 @@ async function main() {
   console.log('mirror-resources: wrote', ARTICLES_JSON)
 }
 
-main().catch((e) => {
-  console.error(e)
-  process.exit(1)
-})
+const isMainModule = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href
+if (isMainModule) {
+  main().catch((e) => {
+    console.error(e)
+    process.exit(1)
+  })
+}

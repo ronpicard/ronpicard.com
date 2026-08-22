@@ -5,33 +5,19 @@ import {
   decodeHtml,
   sortIndexedArticles,
 } from '../../shared/siteArticlesRouting'
+import {
+  parseSiteArticleRows,
+  type SiteArticleRow as IngestedSiteArticleRow,
+} from '../../shared/siteArticleSchema'
 import { safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
 
-type SiteArticleRow = {
-  slug: string
-  title: string
-  date: string
-  summary: string | null
-  /** Static HTML file loaded only on the article route. */
+type SiteArticleRow = Omit<
+  IngestedSiteArticleRow,
+  'bodyHtml' | 'bodyPath' | 'readmeRawUrl'
+> & {
   bodyPath: string | null
-  imageUrl: string | null
-  /** Leading Squarespace image block URL when live site shows a banner above body (null = no banner). */
-  articleHeroUrl: string | null
-  githubEmbed: string | null
-  demoUrl: string | null
-  repoUrl: string | null
-  youtubeId: string | null
-  otherEmbed: string | null
-  /** If set, article page fetches this raw GitHub URL at runtime and renders README markdown. */
   readmeRawUrl: string | null
-  extraLinks: { label: string; href: string }[]
-}
-
-/** Optional fields support content generated before the latest mirror pass. */
-type SiteArticleJsonRow = Omit<SiteArticleRow, 'readmeRawUrl' | 'bodyPath'> & {
-  readmeRawUrl?: string | null
-  bodyPath?: string | null
 }
 
 function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
@@ -40,15 +26,15 @@ function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 
   return 'post'
 }
 
-const normalizedRows: SiteArticleRow[] = (siteArticlesData as SiteArticleJsonRow[]).map((row) => ({
-  ...row,
-  title: decodeHtml(row.title),
-  summary: row.summary ? decodeHtml(row.summary) : null,
-  imageUrl: row.imageUrl ?? null,
-  articleHeroUrl: row.articleHeroUrl ?? null,
-  bodyPath: row.bodyPath ?? null,
-  readmeRawUrl: row.readmeRawUrl ?? null,
-}))
+const normalizedRows: SiteArticleRow[] = parseSiteArticleRows(siteArticlesData).map(
+  ({ bodyHtml: _bodyHtml, ...row }) => ({
+    ...row,
+    title: decodeHtml(row.title),
+    summary: row.summary ? decodeHtml(row.summary) : null,
+    bodyPath: row.bodyPath ?? null,
+    readmeRawUrl: row.readmeRawUrl ?? null,
+  }),
+)
 
 type IndexedArticle = SiteArticleRow & { sourceIndex: number }
 

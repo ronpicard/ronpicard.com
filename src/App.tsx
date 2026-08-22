@@ -1,7 +1,7 @@
 import { HelmetProvider } from 'react-helmet-async'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { AmbientParticles } from './components/AmbientParticles'
-import ArticlePage from './pages/ArticlePage'
+import { ArticlePage } from './features/articles'
 import HomePage from './pages/HomePage'
 
 const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '')

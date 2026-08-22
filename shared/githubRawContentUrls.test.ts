@@ -17,11 +17,15 @@ describe('parseRawGithubContentUrl', () => {
       blobDirBase: 'https://github.com/ronpicard/clamav-antivirus-control-gui/blob/main/',
       viewerUrl:
         'https://github.com/ronpicard/clamav-antivirus-control-gui/blob/main/README.md',
+      rawUrl: RAW,
     })
   })
 
-  it('rejects non-raw hosts', () => {
+  it('rejects non-raw hosts, credentials, query strings, and invalid path segments', () => {
     expect(parseRawGithubContentUrl('https://github.com/ronpicard/repo/blob/main/README.md')).toBeNull()
+    expect(parseRawGithubContentUrl('https://user@raw.githubusercontent.com/o/r/main/README.md')).toBeNull()
+    expect(parseRawGithubContentUrl('https://raw.githubusercontent.com/o/r/main/README.md?token=x')).toBeNull()
+    expect(parseRawGithubContentUrl('https://raw.githubusercontent.com/o/r/main/bad%20file.md')).toBeNull()
   })
 })
 

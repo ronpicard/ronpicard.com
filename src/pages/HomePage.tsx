@@ -1,7 +1,6 @@
 import { homeJsonLd, Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
-import { ProjectCard } from '../components/ProjectCard'
-import { getArticleTitleList } from '../data/articles'
+import { getArticleTitleList, ProjectCard } from '../features/articles'
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '../lib/siteMeta'
 
 const list = getArticleTitleList()

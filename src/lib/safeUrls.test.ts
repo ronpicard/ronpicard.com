@@ -137,6 +137,9 @@ describe('safeArticleLinkHref', () => {
   it('rejects dangerous schemes and unknown relative paths', () => {
     expect(safeArticleLinkHref('javascript:alert(1)', resolveAsset)).toBeNull()
     expect(safeArticleLinkHref('../etc/passwd', resolveAsset)).toBeNull()
+    expect(safeArticleLinkHref('//evil.example/file.pdf', resolveAsset)).toBeNull()
+    expect(safeArticleLinkHref('/resources/file.pdf', resolveAsset)).toBeNull()
+    expect(safeArticleLinkHref('resources/../file.pdf', resolveAsset)).toBeNull()
     expect(safeArticleLinkHref('  ', resolveAsset)).toBeNull()
   })
 })

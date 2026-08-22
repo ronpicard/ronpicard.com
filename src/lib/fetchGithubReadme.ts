@@ -1,4 +1,5 @@
 import { README_FETCH_TIMEOUT_MS, README_MAX_BYTES } from '../config/security'
+import { readBoundedResponseText } from './readBoundedResponseText'
 
 function mergeSignals(a: AbortSignal, b: AbortSignal): AbortSignal {
   if (typeof AbortSignal.any === 'function') return AbortSignal.any([a, b])
@@ -39,39 +40,11 @@ export async function fetchGithubReadmeText(
     redirect: 'follow',
   })
 
-  if (!res.ok) throw new Error(`http-${res.status}`)
+  if (!res.ok) throw new Error(`GitHub README request failed (http-${res.status})`)
 
   const ct = res.headers.get('content-type') ?? ''
-  if (!isTextualContentType(ct)) throw new Error('content-type')
-
-  const body = res.body
-  if (!body) {
-    const text = await res.text()
-    if (text.length > README_MAX_BYTES) throw new Error('too-large')
-    return text
+  if (!isTextualContentType(ct)) {
+    throw new Error(`GitHub README response has an unexpected content type (content-type): ${ct}`)
   }
-
-  const reader = body.getReader()
-  const chunks: Uint8Array[] = []
-  let total = 0
-  try {
-    for (;;) {
-      const { done, value } = await reader.read()
-      if (done) break
-      if (!value) continue
-      total += value.byteLength
-      if (total > README_MAX_BYTES) throw new Error('too-large')
-      chunks.push(value)
-    }
-  } finally {
-    reader.releaseLock()
-  }
-
-  const merged = new Uint8Array(total)
-  let offset = 0
-  for (const c of chunks) {
-    merged.set(c, offset)
-    offset += c.byteLength
-  }
-  return new TextDecoder('utf-8', { fatal: false }).decode(merged)
+  return readBoundedResponseText(res, README_MAX_BYTES, 'GitHub README')
 }

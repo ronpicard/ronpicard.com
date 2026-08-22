@@ -1,7 +1,9 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 import { escapeHtml, escapeHtmlAttr } from '../shared/htmlEscape.ts'
 import { articleJsonLd, homeJsonLd } from '../shared/jsonLd.ts'
+import { parseSiteArticleRows } from '../shared/siteArticleSchema.ts'
 import { buildRobotsTxt, buildSitemapXml } from '../shared/sitemap.ts'
 import {
   absoluteAssetUrl,
@@ -17,9 +19,10 @@ import {
   sortIndexedArticles,
 } from '../shared/siteArticlesRouting.ts'
 
-const DIST_DIR = path.resolve(process.cwd(), 'dist')
+const DEFAULT_DIST_DIR = path.resolve(process.cwd(), 'dist')
+const DEFAULT_ARTICLES_PATH = path.resolve(process.cwd(), 'src/data/siteArticles.json')
 
-function stripExistingSeoHead(html) {
+export function stripExistingSeoHead(html) {
   return html
     .replace(/<title>[\s\S]*?<\/title>\s*/i, '')
     .replace(/<meta\s+name="description"[\s\S]*?>\s*/gi, '')
@@ -31,7 +34,7 @@ function stripExistingSeoHead(html) {
     .replace(/<script\s+type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '')
 }
 
-function injectSeoHead(
+export function injectSeoHead(
   html,
   { title, description, url, imageAbs, ogType, jsonLd = null, robots = 'index, follow' },
 ) {
@@ -65,15 +68,21 @@ function injectSeoHead(
   return cleaned.replace(/<\/head>/i, `${tags}\n</head>`)
 }
 
-async function writeOut(relPath, html) {
-  const outFile = path.join(DIST_DIR, relPath)
+async function writeOut(distDir, relPath, html) {
+  const outFile = path.join(distDir, relPath)
   await mkdir(path.dirname(outFile), { recursive: true })
   await writeFile(outFile, html, 'utf8')
 }
 
-async function main() {
-  const template = await readFile(path.join(DIST_DIR, 'index.html'), 'utf8')
-  const rows = JSON.parse(await readFile(path.resolve('src/data/siteArticles.json'), 'utf8'))
+export async function main({
+  distDir = DEFAULT_DIST_DIR,
+  articlesPath = DEFAULT_ARTICLES_PATH,
+} = {}) {
+  const template = await readFile(path.join(distDir, 'index.html'), 'utf8')
+  const rows = parseSiteArticleRows(
+    JSON.parse(await readFile(articlesPath, 'utf8')),
+    'prerender site articles',
+  )
 
   const home = injectSeoHead(template, {
     title: DEFAULT_TITLE,
@@ -83,7 +92,7 @@ async function main() {
     ogType: 'website',
     jsonLd: homeJsonLd(),
   })
-  await writeOut('index.html', home)
+  await writeOut(distDir, 'index.html', home)
 
   const indexed = rows.map((row, sourceIndex) => ({ row, sourceIndex }))
   const sorted = sortIndexedArticles(indexed).map((x) => x.row)
@@ -114,11 +123,11 @@ async function main() {
       }),
     })
 
-    await writeOut(path.join('blog', slug, 'index.html'), html)
+    await writeOut(distDir, path.join('blog', slug, 'index.html'), html)
 
     const leg = legacyRouteSlugs[i]
     if (leg !== slug) {
-      await writeOut(path.join('blog', leg, 'index.html'), html)
+      await writeOut(distDir, path.join('blog', leg, 'index.html'), html)
     }
   }
 
@@ -130,12 +139,12 @@ async function main() {
     })),
   ]
   await writeFile(
-    path.join(DIST_DIR, 'sitemap.xml'),
+    path.join(distDir, 'sitemap.xml'),
     buildSitemapXml(sitemapEntries),
     'utf8',
   )
   await writeFile(
-    path.join(DIST_DIR, 'robots.txt'),
+    path.join(distDir, 'robots.txt'),
     buildRobotsTxt(canonicalUrl('/sitemap.xml')),
     'utf8',
   )
@@ -148,10 +157,13 @@ async function main() {
     ogType: 'website',
     robots: 'noindex, nofollow',
   })
-  await writeOut('404.html', notFound)
+  await writeOut(distDir, '404.html', notFound)
 }
 
-main().catch((err) => {
-  console.error(err)
-  process.exitCode = 1
-})
+const isMainModule = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+if (isMainModule) {
+  main().catch((err) => {
+    console.error(err)
+    process.exitCode = 1
+  })
+}

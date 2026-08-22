@@ -1,4 +1,5 @@
 import { ARTICLE_BODY_FETCH_TIMEOUT_MS, ARTICLE_BODY_MAX_BYTES } from '../config/security'
+import { readBoundedResponseText } from './readBoundedResponseText'
 
 export async function fetchArticleBodyHtml(
   url: string,
@@ -16,18 +17,12 @@ export async function fetchArticleBodyHtml(
     redirect: 'error',
   })
 
-  if (!response.ok) throw new Error(`http-${response.status}`)
+  if (!response.ok) throw new Error(`Article body request failed (http-${response.status})`)
   const contentType = response.headers.get('content-type')?.split(';')[0]?.trim() ?? ''
-  if (contentType && contentType !== 'text/html') throw new Error('content-type')
-
-  const contentLength = Number(response.headers.get('content-length'))
-  if (Number.isFinite(contentLength) && contentLength > ARTICLE_BODY_MAX_BYTES) {
-    throw new Error('too-large')
+  if (contentType && contentType !== 'text/html') {
+    throw new Error(
+      `Article body response has an unexpected content type (content-type): ${contentType}`,
+    )
   }
-
-  const html = await response.text()
-  if (new TextEncoder().encode(html).byteLength > ARTICLE_BODY_MAX_BYTES) {
-    throw new Error('too-large')
-  }
-  return html
+  return readBoundedResponseText(response, ARTICLE_BODY_MAX_BYTES, 'Article body')
 }

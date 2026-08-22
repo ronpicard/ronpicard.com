@@ -5,7 +5,7 @@
   "type": "module",
   "homepage": "https://ronpicard.com/",
   "engines": {
-    "node": ">=22 <23"
+    "node": ">=22.22.2 <23"
   },
   "scripts": {
     "dev": "vite",
@@ -16,12 +16,10 @@
     "test:e2e:ui": "playwright test --ui",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "predeploy": "npm run build:full",
-    "deploy": "gh-pages -d dist",
     "sync:articles": "node --experimental-strip-types scripts/fetch-site-articles.mjs",
-    "merge:blog-post": "node scripts/merge-blog-post.mjs",
-    "mirror:resources": "node scripts/mirror-resources.mjs",
-    "build:full": "tsc --noEmit && node scripts/mirror-resources.mjs && vite build && node --experimental-strip-types scripts/prerender.mjs"
+    "merge:blog-post": "node --experimental-strip-types scripts/merge-blog-post.mjs",
+    "mirror:resources": "node --experimental-strip-types scripts/mirror-resources.mjs",
+    "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && vite build && node --experimental-strip-types scripts/prerender.mjs"
   },
   "dependencies": {
     "isomorphic-dompurify": "^3.22.0",
@@ -38,7 +36,7 @@
     "@vitejs/plugin-react": "^6.0.5",
     "@vitest/coverage-v8": "^4.1.10",
     "cheerio": "^1.2.0",
-    "gh-pages": "^6.3.0",
+    "jsdom": "^30.0.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
     "vitest": "^4.1.10"

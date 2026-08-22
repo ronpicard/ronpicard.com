@@ -5,19 +5,17 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'node',
-    include: ['**/*.{test,spec}.ts'],
+    include: ['**/*.{test,spec}.{ts,tsx,mjs}'],
     exclude: ['dist/**', 'node_modules/**', 'e2e/**', 'playwright.config.ts'],
     coverage: {
       provider: 'v8',
       exclude: [
-        '**/*.{test,spec}.ts',
+        '**/*.{test,spec}.{ts,tsx,mjs}',
         'src/main.tsx',
         'src/App.tsx',
         'src/pages/**',
-        'src/components/**',
         'src/config/site.ts',
         'shared/siteMeta.ts',
-        'scripts/**',
         'e2e/**',
       ],
       reporter: ['text', 'text-summary'],

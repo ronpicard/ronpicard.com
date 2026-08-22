@@ -13,10 +13,20 @@ import { fileURLToPath } from 'node:url'
 import { normalizeGithubRepoUrl } from '../shared/githubRepo.ts'
 import { normalizeHrefKey } from '../shared/hrefKey.ts'
 import { sanitizeArticleHtmlRaw } from '../shared/articleHtmlSanitize.ts'
-import { fetchText } from './lib/fetchText.mjs'
+import { parseSiteArticleRows } from '../shared/siteArticleSchema.ts'
+import {
+  fetchText,
+  parseRonPicardBlogUrl,
+  requireAllowedHttpsUrl,
+} from './lib/fetchText.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const OUT = join(__dirname, '../src/data/siteArticles.json')
+const RONPICARD_HOSTS = new Set(['ronpicard.com', 'www.ronpicard.com'])
+
+function validateRonPicardUrl(url) {
+  requireAllowedHttpsUrl(url, RONPICARD_HOSTS)
+}
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms))
@@ -192,7 +202,7 @@ function extractBlogBodyHtml($) {
 }
 
 export function parsePost(url, html) {
-  const slug = url.replace(/^https:\/\/www\.ronpicard\.com\/blog\//, '').replace(/\/$/, '')
+  const slug = parseRonPicardBlogUrl(url).pathname.replace(/^\/blog\//, '').replace(/\/$/, '')
   const title = ogTitle(html)
   const date = itempropDate(html) || '1970-01-01'
   let summary = description(html)
@@ -239,8 +249,8 @@ export function parsePost(url, html) {
         const j = JSON.parse(jsonLd[1])
         const node = Array.isArray(j) ? j[0] : j
         summary = node?.description || node?.headline || null
-      } catch {
-        /* ignore */
+      } catch (error) {
+        console.warn(`Could not parse article JSON-LD for ${url}: ${error.message}`)
       }
     }
   }
@@ -263,7 +273,9 @@ export function parsePost(url, html) {
 }
 
 async function main() {
-  const xml = await fetchText('https://www.ronpicard.com/sitemap.xml')
+  const xml = await fetchText('https://www.ronpicard.com/sitemap.xml', {
+    validateUrl: validateRonPicardUrl,
+  })
   const urls = [...xml.matchAll(/<loc>(https:\/\/www\.ronpicard\.com\/blog\/[^<]+)<\/loc>/g)]
     .map((m) => m[1].replace(/\/$/, ''))
     .filter((u) => !u.endsWith('/blog'))
@@ -274,7 +286,7 @@ async function main() {
     const u = urls[i]
     process.stderr.write(`\r${i + 1}/${urls.length} ${u.slice(-40)}   `)
     try {
-      const html = await fetchText(u)
+      const html = await fetchText(u, { validateUrl: validateRonPicardUrl })
       rows.push(parsePost(u, html))
     } catch (e) {
       console.error(`\nfail ${u}`, e.message)
@@ -282,7 +294,8 @@ async function main() {
     await sleep(120)
   }
   process.stderr.write('\n')
-  writeFileSync(OUT, JSON.stringify(rows, null, 2))
+  const validatedRows = parseSiteArticleRows(rows, 'fetched site articles')
+  writeFileSync(OUT, JSON.stringify(validatedRows, null, 2))
   console.error('wrote', OUT)
 }
 

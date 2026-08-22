@@ -5,17 +5,18 @@ Static **React** portfolio and blog, built with **Vite** and deployed to **GitHu
 ## Quickstart
 
 ```bash
+nvm use
 npm install
 npm run dev
 ```
 
-Open the URL Vite prints (usually `http://localhost:5173/`). Routes: `/` (project list), `/blog/:slug` (article).
+The project uses Node.js 22.23.2. Open the URL Vite prints (usually `http://localhost:5173/`). Routes: `/` (project list), `/blog/:slug` (article).
 
 ## What’s in the repo
 
 - **App**: React 19, React Router (history URLs), `react-helmet-async` for per-page `<title>` and Open Graph tags.
 - **Content**: `src/data/siteArticles.json` — article metadata, per-article `bodyPath`, demo/repo links, embeds, mirrored asset paths, and optional `readmeRawUrl` for live GitHub README rendering.
-- **Normalization**: `src/data/articles.ts` sorts entries and builds public `/blog/*` slugs from titles; legacy slugs from an older naming scheme still resolve.
+- **Articles feature**: `src/features/articles/index.ts` is the public entry point; `src/data/articles.ts` validates and sorts entries and builds public `/blog/*` slugs from titles.
 - **Assets**: Files under `public/resources/`; article HTML under `public/article-bodies/`; `scripts/resource-manifest.json` tracks mirrored resources.
 - **Prerender**: `scripts/prerender.mjs` writes route HTML with SEO and JSON-LD, plus `sitemap.xml`, `robots.txt`, and a noindex `404.html`.
 - **Shared modules**: `shared/` — sanitization, slug/routing (`buildArticleRouteSlugs`), site meta URLs, href dedup keys, GitHub repo parsing, URL scheme guards, raw README URL helpers, and HTML escaping (used by `src/` and `scripts/`).
@@ -51,15 +52,14 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (92 tests) |
+| `npm test` | Run Vitest unit tests once (110 tests) |
 | `npm run test:watch` | Vitest in watch mode |
-| `npm run test:coverage` | Vitest with V8 coverage report (`shared/`, `src/lib/`, `src/data/`, `src/config/`) |
+| `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
 | `npm run test:e2e` | Playwright browser smoke tests (12 tests; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
 | `npm run preview` | Serve production build locally |
-| `npm run deploy` | `build:full` then push `dist/` to `gh-pages` (manual; CI deploys via GitHub Actions on push to `main`) |
 | `npm run sync:articles` | Scrape/update `siteArticles.json` from legacy Squarespace |
 | `npm run mirror:resources` | Fetch assets and extract HTML into `public/article-bodies/` |
 | `npm run merge:blog-post` | Merge one post from Squarespace (see `scripts/merge-blog-post.mjs`) |
@@ -74,7 +74,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 
 | Test file | Focus |
 |-----------|--------|
-| `shared/siteArticlesRouting.test.ts` | Slugs, sort order, legacy titles |
+| `shared/siteArticlesRouting.test.ts`, `shared/siteArticleSchema.test.ts` | Runtime article validation, slugs, sort order, legacy titles |
 | `shared/jsonLd.test.ts`, `shared/sitemap.test.ts` | Structured data and crawler files |
 | `shared/articleHtmlSanitize.test.ts` | DOMPurify rules and link hardening |
 | `shared/githubRawContentUrls.test.ts` | Raw GitHub URL → blob/viewer URLs |
@@ -87,6 +87,9 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `src/lib/githubReadme.test.ts`, `src/lib/fetchGithubReadme.test.ts`, `src/lib/fetchArticleBody.test.ts` | Dynamic content rendering + fetch limits |
 | `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
 | `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
+| `src/components/DynamicArticleBody.test.tsx` | Article loading, sanitization, and fallback UI |
+| `scripts/lib/fetchText.test.mjs`, `scripts/mirror-resources.test.mjs` | Bounded fetches, redirect/host controls, and passive asset signatures |
+| `scripts/prerender.test.mjs` | Route metadata, sitemap, robots, and 404 output |
 
 ```bash
 npm test
@@ -97,14 +100,14 @@ npm run test:coverage   # terminal summary + optional HTML under coverage/
 
 | Metric | Coverage |
 |--------|----------|
-| Statements | ~96% |
-| Branches | ~88% |
-| Functions | 100% |
-| Lines | ~99% |
+| Statements | ~95% |
+| Branches | ~89% |
+| Functions | ~98% |
+| Lines | ~97% |
 
 Coverage thresholds prevent regressions below 94% statements, 85% branches, 98% functions, or 97% lines.
 
-Coverage counts only modules in `shared/`, `src/lib/`, `src/data/`, and `src/config/` that unit tests import. React pages, components, and build scripts are **not** included; use Playwright for UI smoke coverage.
+Coverage includes imported shared logic, runtime libraries, article data, tested components, and build-script helpers. React pages remain covered by Playwright user-journey checks.
 
 ### End-to-end (Playwright)
 
@@ -128,10 +131,10 @@ First-time Playwright setup (Chromium):
 npx playwright install chromium
 ```
 
-Run unit + e2e before deploy or when changing `shared/`, `safeUrls`, security config, or UI routing:
+Run coverage + e2e before deploy or when changing `shared/`, URL validation, security config, or UI routing:
 
 ```bash
-npm test && npm run test:e2e
+npm run test:coverage && npm run test:e2e
 ```
 
 ## Refreshing content from the legacy Squarespace site
@@ -159,23 +162,13 @@ See `scripts/merge-blog-post.mjs` for usage.
 
 Pushes to **`main`** run [GitHub Actions](.github/workflows/deploy.yml):
 
-1. `npm test` and `npm run test:e2e`
+1. `npm run test:coverage` and `npm run test:e2e`
 2. `npm run build:full`
 3. Deploy `dist/` to GitHub Pages
 
 Pull requests to `main` run unit and browser tests (no deploy).
 
 **One-time setup** (repo owner): **Settings → Pages → Build and deployment → Source** → **GitHub Actions**. Custom domain `ronpicard.com` stays configured via `public/CNAME` (copied into `dist/` on build).
-
-### Manual
-
-```bash
-npm run deploy
-```
-
-This runs `predeploy` → `build:full`, then pushes `dist/` to the `gh-pages` branch via [gh-pages](https://github.com/tschaub/gh-pages). Use this if Pages is still set to deploy from the `gh-pages` branch instead of GitHub Actions.
-
-**GitHub Pages**: Repository **Settings → Pages** — deploy from branch **gh-pages**, folder **/** (root). Set the custom domain to **ronpicard.com** and use the DNS settings GitHub documents.
 
 **Git push**: Use the GitHub account that owns the repo (`gh auth switch` if `gh` is logged in as another user).
 
@@ -194,6 +187,7 @@ The site is static: no app server or database in this repo.
 - **CSP**: Production `index.html` gets a Content-Security-Policy from `src/config/security.ts` (injected in `vite.config.ts`). `connect-src` includes GitHub raw/API hosts for dynamic README fetch.
 - **Sanitization**: Stored and fetched HTML goes through `shared/articleHtmlSanitize.ts`; README markdown is converted then sanitized in `src/lib/githubReadme.ts`.
 - **URL validation**: `src/lib/safeUrls.ts` gates demo, repo, embed, readme, and link fields from JSON.
+- **Content ingestion**: Build scripts enforce exact source hosts, manually validate redirects, cap response sizes, and reject active SVG content before publication.
 - **Slugs**: Route params are checked with `isSafePublicSlug()` in `src/config/security.ts`.
 - **Dependencies**: Run `npm audit` and address issues before deploys.
 

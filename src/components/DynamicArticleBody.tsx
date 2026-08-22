@@ -31,8 +31,11 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
         setHtml(safeHtml)
         setPhase('ready')
       })
-      .catch(() => {
-        if (!controller.signal.aborted) setPhase('error')
+      .catch((error: unknown) => {
+        if (!controller.signal.aborted) {
+          console.error('Could not load article body', error)
+          setPhase('error')
+        }
       })
 
     return () => controller.abort()

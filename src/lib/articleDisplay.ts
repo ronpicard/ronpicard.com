@@ -8,20 +8,20 @@ export function formatArticleDate(iso: string): string {
   }).format(new Date(iso + 'T12:00:00'))
 }
 
-export function articleKindBadgeClass(kind: ArticleKind | string): string {
+export function articleKindBadgeClass(kind: ArticleKind): string {
   if (kind === 'app') return 'project-card__badge--app'
   if (kind === 'lesson') return 'project-card__badge--lesson'
   return 'project-card__badge--post'
 }
 
-export function articleKindLabel(kind: ArticleKind | string): string {
+export function articleKindLabel(kind: ArticleKind): string {
   if (kind === 'app') return 'Web app'
   if (kind === 'lesson') return 'Lesson'
   return 'Article'
 }
 
 /** Compact label for search results. */
-export function articleKindShortLabel(kind: ArticleKind | string): string {
+export function articleKindShortLabel(kind: ArticleKind): string {
   if (kind === 'app') return 'App'
   if (kind === 'lesson') return 'Lesson'
   return 'Article'
