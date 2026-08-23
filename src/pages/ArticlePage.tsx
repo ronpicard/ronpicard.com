@@ -31,6 +31,7 @@ import {
   formatArticleDate,
 } from '../lib/articleDisplay'
 import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
+import { EmbedFrame } from '../components/EmbedFrame'
 import { YoutubeIcon } from '../components/YoutubeIcon'
 
 function stripQuery(url: string) {
@@ -156,16 +157,12 @@ export default function ArticlePage() {
       )}
 
       {iframeSrc ? (
-        <div className="embed-frame embed-frame--demo">
-          <iframe
-            title={`${article.title} demo`}
-            src={iframeSrc}
-            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allow="clipboard-write; fullscreen"
-          />
-        </div>
+        <EmbedFrame
+          title={`${article.title} demo`}
+          src={iframeSrc}
+          sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
+          allow="clipboard-write; fullscreen"
+        />
       ) : null}
 
       {ytId ? (
@@ -183,16 +180,12 @@ export default function ArticlePage() {
       ) : null}
 
       {otherEmbedSrc ? (
-        <div className="embed-frame embed-frame--demo">
-          <iframe
-            title={`${article.title} embed`}
-            src={otherEmbedSrc}
-            sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allow="fullscreen"
-          />
-        </div>
+        <EmbedFrame
+          title={`${article.title} embed`}
+          src={otherEmbedSrc}
+          sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
+          allow="fullscreen"
+        />
       ) : null}
     </>
   )

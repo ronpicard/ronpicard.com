@@ -52,10 +52,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (118 tests) |
+| `npm test` | Run Vitest unit tests once (121 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (13 tests; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (14 tests; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
@@ -88,6 +88,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
 | `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
 | `src/components/DynamicArticleBody.test.tsx` | Article loading, sanitization, and fallback UI |
+| `src/components/EmbedFrame.test.tsx` | Demo iframe sandboxing and Full view / Escape toggle |
 | `scripts/lib/fetchText.test.mjs`, `scripts/mirror-resources.test.mjs` | Bounded fetches, redirect/host controls, and passive asset signatures |
 | `scripts/prerender.test.mjs` | Route metadata, sitemap, robots, and 404 output |
 
@@ -117,7 +118,7 @@ Smoke tests use [Playwright](https://playwright.dev/) (`playwright.config.ts`, `
 - Search combobox Arrow/Enter navigation and Escape to close
 - Keyboard skip link
 - HTML article prose, invalid slug → home, legacy slug → canonical slug
-- Demo link host validation
+- Demo link host validation, phone-width embed sizing, and Full view toggle
 - Dynamic README success (mocked fetch) and error fallback
 
 ```bash

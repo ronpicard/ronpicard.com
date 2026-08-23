@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `EmbedFrame` with a Full view / Exit full view control for GitHub Pages demo embeds on article pages.
 - Vitest unit tests for routing, HTML sanitization, URL validation, CSP/slug guards, and GitHub raw URL helpers (`npm test`).
 - Expanded unit coverage for article catalog helpers, README fetch/render, search query normalization, asset URLs, and display labels.
 - Playwright e2e smoke tests for home navigation, search, slug redirects, demo links, and dynamic README success/error paths (`npm run test:e2e`).
@@ -22,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Phone and tablet layouts give demo embeds a taller usable frame, larger touch targets, safer page padding, and a Full view control for near-fullscreen interaction.
 - Search normalize/match helpers extracted to `src/lib/siteSearchQuery.ts` for unit testing.
 - README and REQUIREMENTS document test commands, coverage scope, and current coverage levels.
 - Production Content-Security-Policy `connect-src` allows GitHub raw content and API hosts so in-browser README fetch works on GitHub Pages.

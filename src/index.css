@@ -1132,6 +1132,8 @@ body {
   aspect-ratio: 16 / 10;
   margin-top: 1.25rem;
   box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 
 .embed-frame iframe {
@@ -1140,6 +1142,8 @@ body {
   width: 100%;
   height: 100%;
   border: 0;
+  /* Keep chrome controls clickable above the iframe */
+  z-index: 0;
 }
 
 .embed-frame--video {
@@ -1150,6 +1154,81 @@ body {
 .embed-frame--demo {
   aspect-ratio: unset;
   height: clamp(32rem, 85dvh, 60rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.embed-frame--demo iframe {
+  position: relative;
+  inset: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  height: auto;
+}
+
+.embed-frame__chrome {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  pointer-events: none;
+}
+
+.embed-frame__expand {
+  pointer-events: auto;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(2, 8, 10, 0.88);
+  border: 1px solid rgba(0, 255, 200, 0.4);
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  min-height: 2.25rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.embed-frame__expand:hover {
+  border-color: rgba(0, 255, 200, 0.65);
+  background: rgba(0, 255, 200, 0.12);
+}
+
+.embed-frame__expand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.embed-frame--expanded {
+  position: fixed;
+  z-index: 200;
+  inset: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+    env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  width: auto;
+  height: auto;
+  max-width: none;
+  margin: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  box-shadow: none;
+}
+
+.embed-frame--expanded .embed-frame__chrome {
+  top: max(0.65rem, env(safe-area-inset-top, 0px));
+  right: max(0.65rem, env(safe-area-inset-right, 0px));
+}
+
+@media (min-width: 42.01rem) and (max-width: 64rem) {
+  .embed-frame--demo:not(.embed-frame--expanded) {
+    height: clamp(26rem, 78dvh, 48rem);
+  }
 }
 
 .lesson-outline {
@@ -1240,6 +1319,7 @@ body {
 
   .site-top-bar {
     gap: 0.5rem;
+    margin-bottom: 0.5rem;
   }
 
   .site-top-bar__brand {
@@ -1251,15 +1331,32 @@ body {
 
   .site-top-bar__social {
     flex-shrink: 0;
+    gap: 0.3rem;
+  }
+
+  .site-top-bar__icon {
+    width: 44px;
+    height: 44px;
   }
 
   .page {
+    padding-top: max(1.15rem, env(safe-area-inset-top, 0px));
     padding-left: max(0.65rem, env(safe-area-inset-left, 0px));
     padding-right: max(0.65rem, env(safe-area-inset-right, 0px));
+    padding-bottom: max(2.5rem, env(safe-area-inset-bottom, 0px));
   }
 
   .page--article {
     max-width: 100%;
+    width: 100%;
+  }
+
+  .page.page--home {
+    max-width: 100%;
+  }
+
+  .article-header {
+    margin-bottom: 1.25rem;
   }
 
   .article-body {
@@ -1290,18 +1387,62 @@ body {
     padding: 0.65rem 0.75rem;
   }
 
-  /* 32rem min height was taller than many phone screens */
-  .embed-frame--demo {
-    height: clamp(13rem, 46dvh, 28rem);
+  .article-prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .article-actions {
+    gap: 0.55rem;
+  }
+
+  .article-actions--primary {
+    margin-bottom: 1rem;
+  }
+
+  .article-btn,
+  .project-card__btn {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Tall enough for interactive apps; Full view covers near-fullscreen use */
+  .embed-frame--demo:not(.embed-frame--expanded) {
+    height: clamp(18rem, 70dvh, 36rem);
   }
 
   .embed-frame {
     max-width: 100%;
+    border-radius: 10px;
+  }
+
+  .embed-frame__chrome {
+    top: 0.45rem;
+    right: 0.45rem;
+  }
+
+  .embed-frame__expand {
+    min-height: 2.75rem;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.7rem;
   }
 
   .article-btn {
-    padding: 0.48rem 0.85rem;
+    padding: 0.55rem 0.95rem;
     font-size: 0.74rem;
+  }
+
+  .project-card__btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.74rem;
+  }
+
+  .project-card__body {
+    padding: 0.95rem 1rem 1.05rem;
   }
 
   .article-nav__half {

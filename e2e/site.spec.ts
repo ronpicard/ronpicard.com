@@ -37,6 +37,7 @@ test.describe('home', () => {
 
   test('offers a keyboard skip link on home and article pages', async ({ page }) => {
     await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
     await page.keyboard.press('Tab')
     const skipLink = page.getByRole('link', { name: 'Skip to main content' })
     await expect(skipLink).toBeFocused()
@@ -44,6 +45,7 @@ test.describe('home', () => {
     await expect(page.locator('#main-content')).toBeFocused()
 
     await page.goto('/blog/periodic-table-element-visualizer')
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(/Periodic Table/i)
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
     await page.getByRole('link', { name: 'Skip to main content' }).press('Enter')
@@ -96,6 +98,47 @@ test.describe('article routes', () => {
     })
     expect(width).toBeGreaterThan(1440 * 0.9)
     expect(width).toBeLessThan(1440)
+  })
+
+  test('keeps the home catalog and demo embeds usable on a phone viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto('/')
+    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+    const homeOverflow = await page.evaluate(() => {
+      return document.documentElement.scrollWidth - window.innerWidth
+    })
+    expect(homeOverflow).toBeLessThanOrEqual(1)
+
+    await page.goto('/blog/periodic-table-element-visualizer')
+    const frame = page.locator('.embed-frame--demo').first()
+    await expect(frame).toBeVisible()
+    await expect(frame.locator('iframe')).toHaveAttribute(
+      'src',
+      /ronpicard\.github\.io\/periodic-table-element-visualizor/,
+    )
+
+    const metrics = await frame.evaluate((element) => {
+      const box = element.getBoundingClientRect()
+      return {
+        height: box.height,
+        width: box.width,
+        viewportHeight: window.innerHeight,
+        pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
+      }
+    })
+    expect(metrics.width).toBeGreaterThan(300)
+    expect(metrics.height).toBeGreaterThanOrEqual(metrics.viewportHeight * 0.55)
+    expect(metrics.height).toBeLessThanOrEqual(metrics.viewportHeight * 0.92)
+    expect(metrics.pageOverflow).toBeLessThanOrEqual(1)
+
+    await page.getByRole('button', { name: /full view/i }).click()
+    await expect(page.locator('.embed-frame--expanded')).toBeVisible()
+    const expandedHeight = await page.locator('.embed-frame--expanded').evaluate((element) => {
+      return element.getBoundingClientRect().height
+    })
+    expect(expandedHeight).toBeGreaterThanOrEqual(800)
+    await page.getByRole('button', { name: /exit full view/i }).click()
+    await expect(page.locator('.embed-frame--expanded')).toHaveCount(0)
   })
 
   test('renders HTML article prose', async ({ page }) => {

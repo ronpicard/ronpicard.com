@@ -45,12 +45,14 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content.
 - Search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape.
 - Cards MUST NOT nest interactive elements inside a card-level link role; all interactive controls MUST have visible keyboard focus.
+- Narrow viewports (phone-width) MUST avoid horizontal page overflow on home and article routes.
+- GitHub Pages demo embeds MUST use a tall viewport-relative frame on narrow screens and MUST offer a full-view control that expands the embed to nearly the viewport (dismissible via the control or Escape).
 
 ### Testing
 
 - Security-sensitive helpers, tested components, and build-script boundaries MUST have unit or integration tests in Vitest.
 - Unit coverage MUST pass the thresholds in `vitest.config.ts` (94% statements, 85% branches, 98% functions, 97% lines) via `npm run test:coverage`.
-- Browser smoke coverage for home, keyboard navigation, search, slug redirects, demo links, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
+- Browser smoke coverage for home, keyboard navigation, search, slug redirects, demo links, phone-width embeds, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
 - Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
 - Pushes to `main` MUST enforce Vitest coverage thresholds and Playwright tests in CI before deploy; pull requests to `main` MUST run both without deploying.
 
