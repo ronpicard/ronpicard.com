@@ -51,4 +51,18 @@ describe('fetchArticleBodyHtml', () => {
     )
     await expect(fetchArticleBodyHtml('/large.html')).rejects.toThrow('too-large')
   })
+
+  it('forwards an already-aborted parent signal to fetch', async () => {
+    const parent = new AbortController()
+    parent.abort()
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (_url, init) => {
+        expect(init?.signal?.aborted).toBe(true)
+        return new Response('<p>ok</p>', { headers: { 'content-type': 'text/html' } })
+      }),
+    )
+
+    await fetchArticleBodyHtml('/article-bodies/example.html', parent.signal)
+  })
 })

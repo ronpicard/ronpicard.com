@@ -647,10 +647,10 @@ body {
 }
 
 .project-card:hover {
-  border-color: rgba(0, 255, 200, 0.35);
+  border-color: rgba(0, 255, 200, 0.75);
   box-shadow:
-    0 0 0 1px rgba(0, 255, 200, 0.1),
-    0 0 28px rgba(0, 255, 200, 0.08),
+    0 0 0 1px rgba(0, 255, 200, 0.45),
+    0 0 28px rgba(0, 255, 200, 0.22),
     0 20px 50px -24px rgba(0, 0, 0, 0.85);
   transform: translateY(-2px);
 }

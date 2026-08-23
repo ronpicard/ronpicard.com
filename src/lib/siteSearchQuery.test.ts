@@ -24,4 +24,13 @@ describe('articleMatchesSearch', () => {
     expect(articleMatchesSearch('antivirus', 'ClamAV Control', 'Antivirus GUI')).toBe(true)
     expect(articleMatchesSearch('xyzzy', 'ClamAV Control', 'Antivirus GUI')).toBe(false)
   })
+
+  it('matches after collapsing extra whitespace in the query and the article text', () => {
+    expect(articleMatchesSearch('neural   networks', 'Convolutional Neural  Networks', null)).toBe(
+      true,
+    )
+    expect(
+      articleMatchesSearch('live progress', 'ClamAV Control', 'scans with   live   progress'),
+    ).toBe(true)
+  })
 })

@@ -14,7 +14,14 @@ describe('markdownReadmeToSafeHtml', () => {
     expect(html).toContain('Hello')
     expect(html).toContain('<strong>world</strong>')
     expect(html).not.toContain('<script')
+    expect(html).not.toContain('alert(1)')
     expect(html).toContain('github.com/ronpicard/clamav-antivirus-control-gui/blob/main/docs/guide.md')
+  })
+
+  it('strips javascript: markdown links', () => {
+    const html = markdownReadmeToSafeHtml('[xss](javascript:alert(1))', RAW)
+    expect(html).toBeTruthy()
+    expect(html).not.toContain('javascript:')
   })
 
   it('rejects oversized markdown and bad raw URLs', () => {

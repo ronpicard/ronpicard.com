@@ -13,6 +13,7 @@ test.describe('home', () => {
   })
 
   test('starts articles at the top and restores the prior home position', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 720 })
     await page.goto('/')
     const cardLink = page.getByRole('link', { name: /Open Convolutional Neural Networks/i })
     await cardLink.scrollIntoViewIfNeeded()
@@ -34,12 +35,18 @@ test.describe('home', () => {
     expect(scrollBehavior).toBe('auto')
   })
 
-  test('offers a keyboard skip link', async ({ page }) => {
+  test('offers a keyboard skip link on home and article pages', async ({ page }) => {
     await page.goto('/')
     await page.keyboard.press('Tab')
     const skipLink = page.getByRole('link', { name: 'Skip to main content' })
     await expect(skipLink).toBeFocused()
     await skipLink.press('Enter')
+    await expect(page.locator('#main-content')).toBeFocused()
+
+    await page.goto('/blog/periodic-table-element-visualizer')
+    await page.keyboard.press('Tab')
+    await expect(page.getByRole('link', { name: 'Skip to main content' })).toBeFocused()
+    await page.getByRole('link', { name: 'Skip to main content' }).press('Enter')
     await expect(page.locator('#main-content')).toBeFocused()
   })
 
@@ -95,14 +102,20 @@ test.describe('article routes', () => {
     await page.goto(
       '/blog/software-lessons-session-25-cursor-and-claude-agentic-coding-workflow',
     )
-    await expect(page.locator('.article-prose')).toBeVisible({ timeout: 15_000 })
-    await expect(page.locator('.article-prose')).toContainText(/Introduction|AI|Cursor/i)
+    const prose = page.locator('.article-prose')
+    await expect(prose).toBeVisible({ timeout: 15_000 })
+    await expect(prose).toContainText('Agentic programming with AI coding assistants')
+    await expect(prose).toContainText('Practical patterns for LLM-assisted development')
+    await expect(prose.locator('script')).toHaveCount(0)
   })
 
-  test('redirects invalid slug to home', async ({ page }) => {
+  test('redirects unknown and unsafe slugs to home', async ({ page }) => {
     await page.goto('/blog/not-a-real-slug-xyz')
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByText('My projects')).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+
+    await page.goto('/blog/not_a_safe_slug')
+    await expect(page).toHaveURL(/\/$/)
   })
 
   test('redirects legacy slug to canonical title slug', async ({ page }) => {
@@ -114,7 +127,10 @@ test.describe('article routes', () => {
     await page.goto('/blog/periodic-table-element-visualizer')
     const demo = page.getByRole('link', { name: 'Demo' })
     await expect(demo).toBeVisible()
-    await expect(demo).toHaveAttribute('href', /^https:\/\/ronpicard\.github\.io\//)
+    await expect(demo).toHaveAttribute(
+      'href',
+      'https://ronpicard.github.io/periodic-table-element-visualizor/',
+    )
     await expect(demo).toHaveAttribute('rel', /noopener/)
   })
 

@@ -59,14 +59,16 @@ describe('getArticle', () => {
 })
 
 describe('articles catalog', () => {
-  it('has unique public slugs and prev/next chain', () => {
+  it('has unique public slugs and a complete prev/next chain', () => {
     const slugs = articles.map((a) => a.slug)
+    expect(slugs.length).toBeGreaterThan(1)
     expect(new Set(slugs).size).toBe(slugs.length)
     expect(articles[0]?.prevSlug).toBeNull()
     expect(articles[articles.length - 1]?.nextSlug).toBeNull()
-    if (articles.length > 1) {
-      expect(articles[0]?.nextSlug).toBe(articles[1]?.slug)
-      expect(articles[1]?.prevSlug).toBe(articles[0]?.slug)
+    for (let i = 0; i < articles.length; i++) {
+      const article = articles[i]!
+      expect(article.prevSlug).toBe(i === 0 ? null : slugs[i - 1])
+      expect(article.nextSlug).toBe(i === articles.length - 1 ? null : slugs[i + 1])
     }
   })
 
@@ -151,6 +153,17 @@ describe('filterExtraLinks', () => {
       extraLinks: [
         { label: 'Demo', href: 'https://ronpicard.github.io/demo/' },
         { label: 'Code', href: 'https://github.com/ronpicard/demo-repo' },
+        { label: 'Paper', href: 'https://arxiv.org/abs/1' },
+      ],
+    })
+    expect(filterExtraLinks(a)).toEqual([{ label: 'Paper', href: 'https://arxiv.org/abs/1' }])
+  })
+
+  it('drops extra links that point at the same GitHub repo as repoUrl', () => {
+    const a = stubArticle({
+      repoUrl: 'https://github.com/ronpicard/demo-repo',
+      extraLinks: [
+        { label: 'Source', href: 'https://github.com/ronpicard/demo-repo/blob/main/README.md' },
         { label: 'Paper', href: 'https://arxiv.org/abs/1' },
       ],
     })

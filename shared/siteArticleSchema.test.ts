@@ -21,11 +21,12 @@ function validRow() {
 }
 
 describe('parseSiteArticleRows', () => {
-  it('normalizes optional ingestion fields', () => {
+  it('omits optional fields that were not present in the source row', () => {
     const row = validRow()
     delete (row as Partial<typeof row>).readmeRawUrl
 
     expect(parseSiteArticleRows([row])).toEqual([row])
+    expect(parseSiteArticleRows([row])[0]).not.toHaveProperty('readmeRawUrl')
   })
 
   it('rejects malformed rows with field context', () => {

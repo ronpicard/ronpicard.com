@@ -19,6 +19,14 @@ describe('slugifyTitleForRoute', () => {
   it('slugifies titles for public routes', () => {
     expect(slugifyTitleForRoute('Hello World — Home')).toBe('hello-world')
   })
+
+  it('keeps public slugs within the 96-character route limit', () => {
+    const title = Array.from({ length: 20 }, (_, i) => `Word${i}`).join(' ')
+    const slug = slugifyTitleForRoute(title)
+    expect(slug.length).toBeLessThanOrEqual(96)
+    expect(slug).not.toMatch(/-$/)
+    expect(slug.startsWith('word0')).toBe(true)
+  })
 })
 
 describe('uniqueSlugsFromTitles', () => {
@@ -28,7 +36,7 @@ describe('uniqueSlugsFromTitles', () => {
 })
 
 describe('legacySlugTitle', () => {
-  it('appends Web App for post-2026-03-22 github embed apps', () => {
+  it('appends Web App for github embed apps on or after 2026-03-22', () => {
     expect(
       legacySlugTitle('Sorting Algorithms', {
         date: '2026-03-22',
@@ -72,9 +80,8 @@ describe('buildArticleRouteSlugs', () => {
       { title: 'Post B — Home', date: '2026-03-22', githubEmbed: 'https://ronpicard.github.io/app/' },
     ]
     const { routeSlugs, legacyRouteSlugs } = buildArticleRouteSlugs(rows)
-    expect(routeSlugs[0]).toBe('post-a')
-    expect(routeSlugs[1]).toBe('post-b')
-    expect(legacyRouteSlugs[1]).toContain('web-app')
+    expect(routeSlugs).toEqual(['post-a', 'post-b'])
+    expect(legacyRouteSlugs).toEqual(['post-a', 'post-b-web-app'])
   })
 })
 

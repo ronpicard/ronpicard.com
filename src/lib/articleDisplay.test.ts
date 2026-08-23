@@ -8,8 +8,7 @@ import {
 
 describe('formatArticleDate', () => {
   it('formats ISO dates in en-US', () => {
-    expect(formatArticleDate('2024-06-15')).toMatch(/Jun/)
-    expect(formatArticleDate('2024-06-15')).toMatch(/2024/)
+    expect(formatArticleDate('2024-06-15')).toBe('Jun 15, 2024')
   })
 })
 

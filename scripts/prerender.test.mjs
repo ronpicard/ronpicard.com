@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import { DEFAULT_TITLE } from '../shared/siteMeta.ts'
 import { injectSeoHead, main, stripExistingSeoHead } from './prerender.mjs'
 
 const temporaryDirectories = []
@@ -55,9 +56,25 @@ describe('prerender main', () => {
           date: '2026-08-22',
           summary: 'Example summary',
           bodyPath: null,
-          imageUrl: null,
+          imageUrl: 'resources/example.png',
           articleHeroUrl: null,
           githubEmbed: null,
+          demoUrl: null,
+          repoUrl: null,
+          youtubeId: null,
+          otherEmbed: null,
+          readmeRawUrl: null,
+          extraLinks: [],
+        },
+        {
+          slug: 'example-app',
+          title: 'Example App',
+          date: '2026-03-22',
+          summary: 'Example app summary',
+          bodyPath: null,
+          imageUrl: null,
+          articleHeroUrl: null,
+          githubEmbed: 'https://ronpicard.github.io/example-app/',
           demoUrl: null,
           repoUrl: null,
           youtubeId: null,
@@ -71,14 +88,33 @@ describe('prerender main', () => {
 
     await main({ distDir, articlesPath })
 
+    const homeHtml = await readFile(path.join(distDir, 'index.html'), 'utf8')
     const routeHtml = await readFile(path.join(distDir, 'blog/example-post/index.html'), 'utf8')
+    const legacyHtml = await readFile(
+      path.join(distDir, 'blog/example-app-web-app/index.html'),
+      'utf8',
+    )
     const notFoundHtml = await readFile(path.join(distDir, '404.html'), 'utf8')
     const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8')
     const robots = await readFile(path.join(distDir, 'robots.txt'), 'utf8')
+
+    expect(homeHtml).toContain(`<title>${DEFAULT_TITLE}</title>`)
+    expect(homeHtml).toContain('property="og:type" content="website"')
+    expect(homeHtml).toContain('"@type":"WebSite"')
+
     expect(routeHtml).toContain('<title>Example Post | Ron Picard</title>')
-    expect(routeHtml).toContain('application/ld+json')
+    expect(routeHtml).toContain('property="og:type" content="article"')
+    expect(routeHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-post"')
+    expect(routeHtml).toContain('property="og:image" content="https://ronpicard.com/resources/example.png"')
+    expect(routeHtml).toContain('"@type":"BlogPosting"')
+
+    expect(legacyHtml).toContain('<title>Example App | Ron Picard</title>')
+    expect(legacyHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-app"')
+
     expect(notFoundHtml).toContain('content="noindex, nofollow"')
     expect(sitemap).toContain('https://ronpicard.com/blog/example-post')
+    expect(sitemap).toContain('https://ronpicard.com/blog/example-app')
+    expect(sitemap).not.toContain('example-app-web-app')
     expect(robots).toContain('https://ronpicard.com/sitemap.xml')
   })
 })

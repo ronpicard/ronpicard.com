@@ -37,6 +37,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Fixed
 
 - Article navigation starts at the top, while Browser Back restores the prior home catalog position without a visible scroll animation.
+- Search matches titles and summaries after collapsing extra whitespace, so a query like `neural   networks` finds `Neural  Networks`.
 
 ### Removed
 

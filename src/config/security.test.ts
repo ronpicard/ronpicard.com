@@ -2,10 +2,14 @@ import { describe, expect, it } from 'vitest'
 import { buildProductionCsp, isSafePublicSlug, PUBLIC_SLUG_MAX_LEN } from './security'
 
 describe('buildProductionCsp', () => {
-  it('includes github fetch hosts and frame-ancestors', () => {
+  it('allows only the required third-party hosts', () => {
     const csp = buildProductionCsp()
     expect(csp).toContain("connect-src 'self' https://raw.githubusercontent.com https://api.github.com")
+    expect(csp).toContain('frame-src https://www.youtube-nocookie.com https://ronpicard.github.io')
+    expect(csp).toContain("font-src 'self' https://fonts.gstatic.com")
+    expect(csp).toContain('https://fonts.googleapis.com')
     expect(csp).toContain("frame-ancestors 'self'")
+    expect(csp).not.toContain('youtube.com/embed')
   })
 })
 

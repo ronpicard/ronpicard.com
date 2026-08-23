@@ -50,6 +50,24 @@ describe('fetchBytes', () => {
     expect(new TextDecoder().decode(result.body)).toBe('done')
     expect(fetchImpl).toHaveBeenCalledTimes(2)
     expect(fetchImpl.mock.calls[0][1]).toMatchObject({ redirect: 'manual' })
+    expect(fetchImpl.mock.calls[1][0].toString()).toBe('https://www.ronpicard.com/blog/final')
+  })
+
+  it('rejects more than five redirects', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(
+      new Response(null, {
+        status: 302,
+        headers: { location: 'https://www.ronpicard.com/blog/next' },
+      }),
+    )
+    await expect(
+      fetchBytes('https://www.ronpicard.com/blog/start', {
+        maxBytes: 16,
+        validateUrl,
+        fetchImpl,
+      }),
+    ).rejects.toThrow('Too many redirects')
+    expect(fetchImpl).toHaveBeenCalledTimes(6)
   })
 
   it('rejects disallowed redirects and oversized streamed responses', async () => {

@@ -25,7 +25,9 @@ describe('safeYoutubeId', () => {
 
 describe('safeGithubPagesUrl', () => {
   it('only allows ronpicard.github.io over https', () => {
-    expect(safeGithubPagesUrl('https://ronpicard.github.io/demo/')).toContain('ronpicard.github.io')
+    expect(safeGithubPagesUrl('https://ronpicard.github.io/demo/')).toBe(
+      'https://ronpicard.github.io/demo/',
+    )
     expect(safeGithubPagesUrl('https://evil.github.io/')).toBeNull()
     expect(safeGithubPagesUrl('http://ronpicard.github.io/')).toBeNull()
     expect(safeGithubPagesUrl('not a url')).toBeNull()
@@ -67,10 +69,12 @@ describe('safeGithubReadmeRawUrl', () => {
 
 describe('safeGithubRepoUrl', () => {
   it('allows github.com repo URLs', () => {
-    expect(safeGithubRepoUrl('https://github.com/ronpicard/clamav-antivirus-control-gui')).toContain(
-      'github.com',
+    expect(safeGithubRepoUrl('https://github.com/ronpicard/clamav-antivirus-control-gui')).toBe(
+      'https://github.com/ronpicard/clamav-antivirus-control-gui',
     )
-    expect(safeGithubRepoUrl('https://www.github.com/ronpicard/repo')).toContain('www.github.com')
+    expect(safeGithubRepoUrl('https://www.github.com/ronpicard/repo')).toBe(
+      'https://www.github.com/ronpicard/repo',
+    )
   })
 
   it('rejects malformed, insecure, credentialed, and third-party URLs', () => {
@@ -121,7 +125,9 @@ describe('safeHttpUrl', () => {
 
 describe('safeDemoUrl', () => {
   it('delegates to GitHub Pages allowlist', () => {
-    expect(safeDemoUrl('https://ronpicard.github.io/demo/')).toContain('ronpicard.github.io')
+    expect(safeDemoUrl('https://ronpicard.github.io/demo/')).toBe(
+      'https://ronpicard.github.io/demo/',
+    )
     expect(safeDemoUrl('https://evil.example/demo/')).toBeNull()
   })
 })
@@ -130,7 +136,7 @@ describe('safeArticleLinkHref', () => {
   const resolveAsset = (u: string) => (u.startsWith('resources/') ? `/${u}` : null)
 
   it('allows https links and resolves local assets', () => {
-    expect(safeArticleLinkHref('https://example.com/a', resolveAsset)).toContain('https://example.com/a')
+    expect(safeArticleLinkHref('https://example.com/a', resolveAsset)).toBe('https://example.com/a')
     expect(safeArticleLinkHref('resources/x.pdf', resolveAsset)).toBe('/resources/x.pdf')
   })
 

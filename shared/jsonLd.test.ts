@@ -21,8 +21,10 @@ describe('JSON-LD builders', () => {
     ).toMatchObject({
       '@type': 'BlogPosting',
       headline: 'Example',
+      description: 'Example article',
       datePublished: '2026-08-22T12:00:00.000Z',
       url: 'https://ronpicard.com/blog/example',
+      author: { '@type': 'Person', name: 'Ron Picard' },
     })
   })
 })
