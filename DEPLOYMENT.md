@@ -71,7 +71,7 @@ push to main
 
 ### 4. Deploy (`deploy`)
 
-- Uses [`actions/deploy-pages@v4`](https://github.com/actions/deploy-pages) with OIDC (`id-token: write`).
+- Uses [`actions/deploy-pages@v5`](https://github.com/actions/deploy-pages) with OIDC (`id-token: write`).
 - Targets the **`github-pages`** environment, which exposes the deployed URL as a workflow output.
 - Publishes the uploaded artifact to GitHub Pages.
 
