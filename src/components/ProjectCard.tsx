@@ -1,10 +1,12 @@
+import { useState } from 'react'
+import { preload } from 'react-dom'
 import { Link } from 'react-router-dom'
 import {
   articleKindBadgeClass,
   articleKindLabel,
   formatArticleDate,
 } from '../lib/articleDisplay'
-import { resolveAssetUrl } from '../lib/assetUrl'
+import { resolveAssetUrl, resolveThumbAssetUrl } from '../lib/assetUrl'
 import { YoutubeIcon } from './YoutubeIcon'
 import {
   safeArticleLinkHref,
@@ -31,10 +33,18 @@ export type ProjectListItem = {
 
 type Props = {
   item: ProjectListItem
+  /** Above the fold: load eagerly at high priority instead of lazily. */
+  priority?: boolean
 }
 
-export function ProjectCard({ item }: Props) {
-  const thumbSrc = resolveAssetUrl(item.imageUrl)
+export function ProjectCard({ item, priority = false }: Props) {
+  const fullSrc = resolveAssetUrl(item.imageUrl)
+  const [thumbFailed, setThumbFailed] = useState(false)
+  const generatedThumb = thumbFailed ? null : resolveThumbAssetUrl(item.imageUrl)
+  const thumbSrc = generatedThumb ?? fullSrc
+  if (priority && thumbSrc) {
+    preload(thumbSrc, { as: 'image', fetchPriority: 'high' })
+  }
   const articleHref = item.articleUrl ? safeHttpUrl(item.articleUrl) : null
   const demoHref = item.showDemo && item.demoUrl ? safeDemoUrl(item.demoUrl) : null
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
@@ -46,7 +56,14 @@ export function ProjectCard({ item }: Props) {
       <Link className="project-card__overlay-link" to={to} aria-label={`Open ${item.title}`} />
       <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
         {thumbSrc ? (
-          <img src={thumbSrc} alt="" loading="lazy" decoding="async" />
+          <img
+            src={thumbSrc}
+            alt=""
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : undefined}
+            decoding="async"
+            onError={generatedThumb ? () => setThumbFailed(true) : undefined}
+          />
         ) : null}
       </div>
       <div className="project-card__body">

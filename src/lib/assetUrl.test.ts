@@ -5,6 +5,7 @@ import {
   resolveAssetUrl,
   resolveReadmeSnapshotUrl,
   resolveResourcePathsInHtml,
+  resolveThumbAssetUrl,
 } from './assetUrl'
 
 describe('resolveAssetUrl', () => {
@@ -35,6 +36,24 @@ describe('resolveAssetUrl', () => {
   it('returns null for empty input', () => {
     expect(resolveAssetUrl(null)).toBeNull()
     expect(resolveAssetUrl('')).toBeNull()
+  })
+})
+
+describe('resolveThumbAssetUrl', () => {
+  it('builds a base-prefixed thumbnail URL for mirrored images', () => {
+    const base = getViteBasePath()
+    expect(resolveThumbAssetUrl('resources/card.png')).toBe(
+      `${base}/resources/thumbs/card.webp`,
+    )
+  })
+
+  it('returns null for external URLs, non-images, and empty input', () => {
+    expect(
+      resolveThumbAssetUrl('https://img.youtube.com/vi/Glhr3OIjwsI/maxresdefault.jpg'),
+    ).toBeNull()
+    expect(resolveThumbAssetUrl('resources/paper.pdf')).toBeNull()
+    expect(resolveThumbAssetUrl(null)).toBeNull()
+    expect(resolveThumbAssetUrl('')).toBeNull()
   })
 })
 

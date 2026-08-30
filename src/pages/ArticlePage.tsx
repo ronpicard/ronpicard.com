@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArticleNav } from '../components/ArticleNav'
 import { LessonOutline } from '../components/LessonOutline'
-import { articleJsonLd, Seo } from '../components/Seo'
+import { Seo } from '../components/Seo'
 import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
 import { DynamicArticleBody } from '../components/DynamicArticleBody'
 import { SiteTopBar } from '../components/SiteTopBar'
@@ -200,12 +200,6 @@ export default function ArticlePage() {
         path={path}
         ogType="article"
         ogImage={ogImage}
-        jsonLd={articleJsonLd({
-          title: article.title,
-          date: article.date,
-          description: metaDesc,
-          path,
-        })}
       />
 
       <SiteTopBar />

@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Pages ship prerendered content: the homepage card grid and article pages are rendered into the HTML at build time and hydrated in the browser, removing the blank-page delay on first visit.
+- The homepage card grid loads card-sized WebP thumbnails (~768px) instead of full-resolution title images, cutting its image weight from roughly 14 MB to about 2 MB; the first row of cards loads eagerly at high priority with preload hints.
+
 - Offline fallback for dynamic README posts: the build snapshots each referenced GitHub README (`npm run mirror:readmes`), and article pages render the snapshot when GitHub is unreachable.
 - Link previews on social platforms now include per-article image dimensions and alt text (`og:image:width`/`height`/`alt`, `twitter:image:alt`), so cards render on the first share.
 - `npm run optimize:resources` recompresses mirrored images in place.

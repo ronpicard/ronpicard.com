@@ -22,6 +22,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Mirrored assets MUST live under `public/resources/` and be referenced as `resources/...` in JSON, resolved with the Vite base URL at render time.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
+- Prerendered pages MUST include the route's app markup in `#root` (rendered by the SSR bundle) so first paint shows content before hydration; the markup MUST be static — no inline scripts or streaming placeholders, which the CSP would block.
+- The homepage card grid MUST load generated WebP thumbnails (`public/resources/thumbs/`, built by `npm run generate:thumbs`) instead of full-size title images, falling back to the original when a thumbnail is missing; cards above the fold SHOULD load eagerly with preload hints while the rest stay lazy.
 - Blog canonical URLs, `og:url`, and sitemap entries MUST use the trailing-slash form (`/blog/<slug>/`) that GitHub Pages redirects to.
 - Production MUST include `sitemap.xml`, `robots.txt`, and a dedicated `404.html` with `noindex, nofollow`.
 

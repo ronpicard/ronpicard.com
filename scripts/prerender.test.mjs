@@ -35,20 +35,24 @@ describe('SEO head helpers', () => {
   })
 })
 
+async function writeFixture(root, { template }) {
+  const distDir = path.join(root, 'dist')
+  const articlesPath = path.join(root, 'siteArticles.json')
+  await import('node:fs/promises').then(({ mkdir }) =>
+    mkdir(path.join(distDir, 'resources'), { recursive: true }),
+  )
+  await writeFile(path.join(distDir, 'index.html'), template, 'utf8')
+  return { distDir, articlesPath }
+}
+
 describe('prerender main', () => {
   it('writes route metadata, sitemap, robots, and a noindex 404 page', async () => {
     const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
     temporaryDirectories.push(root)
-    const distDir = path.join(root, 'dist')
-    const articlesPath = path.join(root, 'siteArticles.json')
-    await import('node:fs/promises').then(({ mkdir }) =>
-      mkdir(path.join(distDir, 'resources'), { recursive: true }),
-    )
-    await writeFile(
-      path.join(distDir, 'index.html'),
-      '<!doctype html><html><head><title>Template</title></head><body><main></main></body></html>',
-      'utf8',
-    )
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template:
+        '<!doctype html><html><head><title>Template</title></head><body><main></main></body></html>',
+    })
     const { default: sharp } = await import('sharp')
     await writeFile(
       path.join(distDir, 'resources/example.png'),
@@ -131,5 +135,75 @@ describe('prerender main', () => {
     expect(sitemap).toContain('https://ronpicard.com/blog/example-app/')
     expect(sitemap).not.toContain('example-app-web-app')
     expect(robots).toContain('https://ronpicard.com/sitemap.xml')
+  })
+
+  it('injects per-route app markup and preload links when a render function is given', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
+    temporaryDirectories.push(root)
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template:
+        '<!doctype html><html><head><title>Template</title></head><body><div id="root"></div></body></html>',
+    })
+    await writeFile(
+      articlesPath,
+      JSON.stringify([
+        {
+          slug: 'example-post',
+          title: 'Example Post',
+          date: '2026-08-22',
+          summary: 'Example summary',
+          bodyPath: null,
+          imageUrl: null,
+          articleHeroUrl: null,
+          githubEmbed: null,
+          demoUrl: null,
+          repoUrl: null,
+          youtubeId: null,
+          otherEmbed: null,
+          readmeRawUrl: null,
+          extraLinks: [],
+        },
+      ]),
+      'utf8',
+    )
+
+    const renderedUrls = []
+    const render = async (url) => {
+      renderedUrls.push(url)
+      return {
+        appHtml: `<div class="app-content" data-url="${url}"></div>`,
+        preloadLinks: '<link rel="preload" as="image" href="/resources/thumbs/x.webp" fetchpriority="high" />',
+      }
+    }
+
+    await main({ distDir, articlesPath, render })
+
+    const homeHtml = await readFile(path.join(distDir, 'index.html'), 'utf8')
+    expect(homeHtml).toContain('<div id="root"><div class="app-content" data-url="/"></div></div>')
+    expect(homeHtml).toContain('rel="preload"')
+    expect(homeHtml.indexOf('rel="preload"')).toBeLessThan(homeHtml.indexOf('</head>'))
+
+    const routeHtml = await readFile(path.join(distDir, 'blog/example-post/index.html'), 'utf8')
+    expect(routeHtml).toContain('data-url="/blog/example-post/"')
+    expect(renderedUrls).toContain('/blog/example-post/')
+
+    // The 404 page has no route to render; its root stays empty.
+    const notFoundHtml = await readFile(path.join(distDir, '404.html'), 'utf8')
+    expect(notFoundHtml).toContain('<div id="root"></div>')
+  })
+
+  it('leaves the root div empty when no render function is given', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
+    temporaryDirectories.push(root)
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template:
+        '<!doctype html><html><head><title>Template</title></head><body><div id="root"></div></body></html>',
+    })
+    await writeFile(articlesPath, JSON.stringify([]), 'utf8')
+
+    await main({ distDir, articlesPath })
+
+    const homeHtml = await readFile(path.join(distDir, 'index.html'), 'utf8')
+    expect(homeHtml).toContain('<div id="root"></div>')
   })
 })

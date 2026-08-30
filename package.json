@@ -21,7 +21,9 @@
     "mirror:resources": "node --experimental-strip-types scripts/mirror-resources.mjs",
     "mirror:readmes": "node --experimental-strip-types scripts/mirror-readmes.mjs",
     "optimize:resources": "node --experimental-strip-types scripts/optimize-resources.mjs",
-    "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && node --experimental-strip-types scripts/mirror-readmes.mjs && vite build && node --experimental-strip-types scripts/prerender.mjs"
+    "generate:thumbs": "node --experimental-strip-types scripts/generate-thumbs.mjs",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-server",
+    "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && node --experimental-strip-types scripts/mirror-readmes.mjs && node --experimental-strip-types scripts/generate-thumbs.mjs && vite build && npm run build:ssr && node --experimental-strip-types scripts/prerender.mjs"
   },
   "dependencies": {
     "isomorphic-dompurify": "^3.22.0",

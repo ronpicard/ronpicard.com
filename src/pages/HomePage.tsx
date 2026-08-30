@@ -1,9 +1,12 @@
-import { homeJsonLd, Seo } from '../components/Seo'
+import { Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
 import { getArticleTitleList, ProjectCard } from '../features/articles'
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '../lib/siteMeta'
 
 const list = getArticleTitleList()
+
+/** Cards likely in the first viewport (grid is 1–3 columns) load eagerly. */
+const PRIORITY_CARD_COUNT = 4
 
 export default function HomePage() {
   return (
@@ -13,7 +16,6 @@ export default function HomePage() {
         description={DEFAULT_DESCRIPTION}
         path="/"
         ogImage="resources/82f3c8eae802c3.jpg"
-        jsonLd={homeJsonLd()}
       />
 
       <SiteTopBar />
@@ -21,9 +23,9 @@ export default function HomePage() {
 
       <main id="main-content" className="main" tabIndex={-1}>
         <ul className="project-list" role="list">
-          {list.map((item) => (
+          {list.map((item, index) => (
             <li key={item.slug} className="project-list__item">
-              <ProjectCard item={item} />
+              <ProjectCard item={item} priority={index < PRIORITY_CARD_COUNT} />
             </li>
           ))}
         </ul>

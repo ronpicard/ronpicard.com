@@ -84,6 +84,33 @@ export function injectSeoHead(
   return cleaned.replace(/<\/head>/i, `${tags}\n</head>`)
 }
 
+const EMPTY_ROOT_DIV = '<div id="root"></div>'
+const DEFAULT_SERVER_ENTRY = path.resolve(process.cwd(), 'dist-server/entry-server.js')
+
+/**
+ * Fill #root with the prerendered app markup (from entry-server's render) and
+ * hoist its priority-image preload links into <head>, so first paint shows
+ * real content before the client bundle hydrates.
+ */
+export function injectAppHtml(html, { appHtml, preloadLinks }) {
+  if (!html.includes(EMPTY_ROOT_DIV)) {
+    throw new Error(`prerender: template has no empty ${EMPTY_ROOT_DIV} to fill`)
+  }
+  const withPreloads = preloadLinks
+    ? html.replace(/<\/head>/i, `${preloadLinks}\n</head>`)
+    : html
+  return withPreloads.replace(EMPTY_ROOT_DIV, `<div id="root">${appHtml}</div>`)
+}
+
+/** render() from the vite-built SSR bundle (build:full runs that build first). */
+async function loadServerRender(serverEntry = DEFAULT_SERVER_ENTRY) {
+  const module_ = await import(pathToFileURL(serverEntry).href)
+  if (typeof module_.render !== 'function') {
+    throw new Error(`prerender: ${serverEntry} does not export a render function`)
+  }
+  return module_.render
+}
+
 async function writeOut(distDir, relPath, html) {
   const outFile = path.join(distDir, relPath)
   await mkdir(path.dirname(outFile), { recursive: true })
@@ -110,8 +137,12 @@ async function localImageDims(distDir, imageRel) {
 export async function main({
   distDir = DEFAULT_DIST_DIR,
   articlesPath = DEFAULT_ARTICLES_PATH,
+  /** entry-server render(url); null writes head-only pages with an empty #root. */
+  render = null,
 } = {}) {
   const template = await readFile(path.join(distDir, 'index.html'), 'utf8')
+  const renderRoute = async (html, route) =>
+    render ? injectAppHtml(html, await render(route)) : html
   const rows = parseSiteArticleRows(
     JSON.parse(await readFile(articlesPath, 'utf8')),
     'prerender site articles',
@@ -130,7 +161,7 @@ export async function main({
     imageHeight: homeDims?.height ?? null,
     imageAlt: DEFAULT_TITLE,
   })
-  await writeOut(distDir, 'index.html', home)
+  await writeOut(distDir, 'index.html', await renderRoute(home, '/'))
 
   const indexed = rows.map((row, sourceIndex) => ({ row, sourceIndex }))
   const sorted = sortIndexedArticles(indexed).map((x) => x.row)
@@ -166,11 +197,16 @@ export async function main({
       imageAlt: title,
     })
 
-    await writeOut(distDir, path.join('blog', slug, 'index.html'), html)
+    await writeOut(distDir, path.join('blog', slug, 'index.html'), await renderRoute(html, route))
 
     const leg = legacyRouteSlugs[i]
     if (leg !== slug) {
-      await writeOut(distDir, path.join('blog', leg, 'index.html'), html)
+      // Rendered for its own URL so hydration on the legacy route matches.
+      await writeOut(
+        distDir,
+        path.join('blog', leg, 'index.html'),
+        await renderRoute(html, `/blog/${leg}/`),
+      )
     }
   }
 
@@ -205,8 +241,13 @@ export async function main({
 
 const isMainModule = process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
 if (isMainModule) {
-  main().catch((err) => {
-    console.error(err)
-    process.exitCode = 1
-  })
+  loadServerRender()
+    .then((render) => main({ render }))
+    // The imported SSR bundle keeps the event loop alive; exit explicitly
+    // (all writes above are awaited before main resolves).
+    .then(() => process.exit(0))
+    .catch((err) => {
+      console.error(err)
+      process.exit(1)
+    })
 }

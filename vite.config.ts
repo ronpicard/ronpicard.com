@@ -19,11 +19,15 @@ function productionSecurityMetaTags(): string {
   return `${csp}\n    ${rest}`
 }
 
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, isSsrBuild }) => {
   const base = command === 'serve' ? '/' : prodBase
 
   return {
     base,
+    build: {
+      // The SSR bundle (dist-server) is build-time only; don't copy public/.
+      copyPublicDir: !isSsrBuild,
+    },
     plugins: [
       react(),
       {

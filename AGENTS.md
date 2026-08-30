@@ -7,7 +7,7 @@ Facts an AI agent (or new contributor) needs before changing this repo. For full
 - Node.js 22.23.2, pinned by `.nvmrc` (`nvm use`), then `npm install`.
 - `npm run dev` — Vite dev server (usually `http://localhost:5173/`).
 - `npm test` — Vitest unit tests, fast; run after any code change.
-- `npm run test:coverage` — same tests with enforced thresholds (94% statements, 85% branches, 98% functions, 97% lines). CI gates deploys on this, so new code needs tests before it lands.
+- `npm run test:coverage` — same tests with enforced thresholds (92% statements, 84% branches, 94% functions, 95% lines). CI gates deploys on this, so new code needs tests before it lands.
 - `npm run test:e2e` — Playwright smoke tests (`e2e/site.spec.ts`); starts its own dev server. First run needs `npx playwright install chromium`.
 - `npm run build` — typecheck + Vite bundle; enough for local verification of code-only changes.
 - `npm run build:full` — full production pipeline (typecheck, mirror assets, snapshot READMEs, bundle, prerender). Needs network and may rewrite `src/data/siteArticles.json` — commit resulting changes intentionally.

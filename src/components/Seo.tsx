@@ -5,7 +5,6 @@ import {
   DEFAULT_DESCRIPTION,
   truncateMetaDescription,
 } from '../lib/siteMeta'
-export { articleJsonLd, homeJsonLd } from '../../shared/jsonLd'
 
 type Props = {
   title: string
@@ -14,10 +13,12 @@ type Props = {
   path: string
   ogType?: 'website' | 'article'
   ogImage?: string | null
-  jsonLd?: Record<string, unknown> | null
 }
 
-export function Seo({ title, description, path, ogType = 'website', ogImage, jsonLd }: Props) {
+// JSON-LD is not emitted here: inline <script> can't be hoisted to <head> by
+// React, so it would land in the prerendered body. scripts/prerender.mjs
+// injects the per-route JSON-LD (shared/jsonLd) into each page's head instead.
+export function Seo({ title, description, path, ogType = 'website', ogImage }: Props) {
   const canonical = canonicalUrl(path === '/' ? '/' : path)
   const desc = truncateMetaDescription(description || DEFAULT_DESCRIPTION)
   const imageAbs = absoluteAssetUrl(ogImage ?? undefined)
@@ -44,12 +45,6 @@ export function Seo({ title, description, path, ogType = 'website', ogImage, jso
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={desc} />
       {imageAbs ? <meta name="twitter:image" content={imageAbs} /> : null}
-
-      {jsonLd ? (
-        <script type="application/ld+json">
-          {JSON.stringify(jsonLd).replace(/</g, '\\u003c')}
-        </script>
-      ) : null}
     </Helmet>
   )
 }

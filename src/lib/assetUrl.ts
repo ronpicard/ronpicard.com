@@ -2,6 +2,8 @@
  * Mirrored assets live under public/resources/ and are referenced as
  * `resources/...` in JSON. Prefix Vite base for GitHub Pages.
  */
+import { resourceThumbPath } from '../../shared/resourceThumbs'
+
 const LOCAL_ASSET_PATH_RE =
   /^(?:resources\/[a-z0-9][a-z0-9._-]*|article-bodies\/[a-z0-9][a-z0-9._-]*\.html)$/i
 const YOUTUBE_THUMBNAIL_PATH_RE =
@@ -39,6 +41,17 @@ export function resolveAssetUrl(url: string | null | undefined): string | null {
   if (!isSafeLocalAssetPath(trimmed)) return null
   const b = getViteBasePath()
   return `${b}/${trimmed}`
+}
+
+/**
+ * Base-prefixed URL of the generated card thumbnail (written by
+ * scripts/generate-thumbs.mjs), or null when the source is not a mirrored
+ * local image — callers fall back to resolveAssetUrl's original.
+ */
+export function resolveThumbAssetUrl(url: string | null | undefined): string | null {
+  const thumb = resourceThumbPath(url)
+  if (!thumb) return null
+  return `${getViteBasePath()}/${thumb}`
 }
 
 /** Local README snapshot (written by scripts/mirror-readmes.mjs) for a validated slug. */
