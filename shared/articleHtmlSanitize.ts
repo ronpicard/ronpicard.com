@@ -78,11 +78,12 @@ const FORBID_ATTR = [
   'onpointerup',
 ] as const
 
-function stripResidualUnsafeLinks(html: string): string {
-  return html.replace(/<a\s+([^>]*?)href\s*=\s*["']([^"']*)["']/gi, (full, before, href) => {
-    const h = href.trim()
-    if (!UNSAFE_HREF_SCHEME_RE.test(h)) return full
-    return `<a ${before.replace(/\s*href\s*=\s*["'][^"']*["']/i, '')}>`
+export function stripResidualUnsafeLinks(html: string): string {
+  return html.replace(/<a\s+([^>]*)>/gi, (full, attrs: string) => {
+    const href = /href\s*=\s*["']([^"']*)["']/i.exec(attrs)?.[1]?.trim()
+    if (href === undefined || !UNSAFE_HREF_SCHEME_RE.test(href)) return full
+    const rest = attrs.replace(/\s*href\s*=\s*["'][^"']*["']/i, '').trim()
+    return rest ? `<a ${rest}>` : '<a>'
   })
 }
 
@@ -92,7 +93,7 @@ export function hardenExternalAnchors(html: string): string {
     if (!/href\s*=\s*["']https?:/i.test(inner)) return full
     const rel = /rel\s*=/i.test(inner) ? inner : `${inner} rel="noopener noreferrer"`
     const target = /target\s*=/i.test(rel) ? rel : `${rel} target="_blank"`
-    return `<a${target}`
+    return `<a${target}>`
   })
 }
 

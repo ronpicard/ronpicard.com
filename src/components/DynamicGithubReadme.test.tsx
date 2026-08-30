@@ -86,4 +86,36 @@ describe('DynamicGithubReadme', () => {
     expect(link?.getAttribute('href')).toBe(VIEWER)
     expect(link?.getAttribute('rel')).toContain('noopener')
   })
+
+  it('renders the local snapshot when the live GitHub fetch fails', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+    const SNAPSHOT = '/readme-snapshots/clamav-antivirus-control-gui.md'
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input)
+        if (url === SNAPSHOT) {
+          return new Response('# Title\n\n**Snapshot README**\n', {
+            headers: { 'content-type': 'text/markdown' },
+          })
+        }
+        return new Response('fail', { status: 500 })
+      }),
+    )
+
+    act(() => {
+      root.render(
+        <DynamicGithubReadme
+          rawUrl={RAW}
+          fallbackSummary="Summary"
+          viewerUrl={VIEWER}
+          snapshotUrl={SNAPSHOT}
+        />,
+      )
+    })
+    await flushEffects()
+
+    expect(container.textContent).toContain('Snapshot README')
+    expect(container.textContent).not.toContain('Could not load the README')
+  })
 })

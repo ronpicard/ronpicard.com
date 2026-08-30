@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Offline fallback for dynamic README posts: the build snapshots each referenced GitHub README (`npm run mirror:readmes`), and article pages render the snapshot when GitHub is unreachable.
+- Link previews on social platforms now include per-article image dimensions and alt text (`og:image:width`/`height`/`alt`, `twitter:image:alt`), so cards render on the first share.
+- `npm run optimize:resources` recompresses mirrored images in place.
+
 - `EmbedFrame` with a Full view / Exit full view control for GitHub Pages demo embeds on article pages.
 - Vitest unit tests for routing, HTML sanitization, URL validation, CSP/slug guards, and GitHub raw URL helpers (`npm test`).
 - Expanded unit coverage for article catalog helpers, README fetch/render, search query normalization, asset URLs, and display labels.
@@ -23,6 +27,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Fonts (Orbitron, Rajdhani) are self-hosted from `public/fonts/` instead of loading from Google Fonts, removing a render-blocking third-party request.
+- Mirrored images recompressed in place, cutting total image weight from about 32 MB to 21 MB for faster page loads.
+- Blog canonical URLs, `og:url`, and sitemap entries use the trailing-slash form GitHub Pages redirects to, so crawlers and scrapers skip a redirect hop.
+- The expanded demo Full view is now a modal dialog: Tab focus stays inside the overlay and Escape returns focus to the toggle.
 - Phone and tablet layouts give demo embeds a taller usable frame, larger touch targets, safer page padding, and a Full view control for near-fullscreen interaction.
 - Search normalize/match helpers extracted to `src/lib/siteSearchQuery.ts` for unit testing.
 - README and REQUIREMENTS document test commands, coverage scope, and current coverage levels.
@@ -38,16 +46,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- External links in article bodies and dynamic READMEs render correctly again: the sanitizer's anchor hardening dropped the tag's closing bracket, so link text was parsed as attributes and following content was swallowed into the link (visible as many consecutive elements sharing one URL, e.g. in the AGI essay).
+- Focusing the search field on iPhones no longer zooms the page (input font size raised to the 16px iOS Safari threshold).
+- On touch devices, inline demo embeds start behind a "Tap to interact" guard so swiping over them scrolls the page instead of the embedded app; tapping the guard (or Full view) enables interaction.
+- Full view locks background scrolling reliably on iOS Safari by fixing the body in place, restoring the scroll position on exit.
+- Footer links have a larger touch target without any visual layout change.
+- Site title and descriptions read "My projects involving…" instead of "My project involving…" in the browser tab, search results, and social cards.
 - Article navigation starts at the top, while Browser Back restores the prior home catalog position without a visible scroll animation.
 - Search matches titles and summaries after collapsing extra whitespace, so a query like `neural   networks` finds `Neural  Networks`.
 
 ### Removed
 
+- Obsolete `meta keywords` tag from the page head.
 - Stray root `vite` dev-server log file; unused re-exports and internal-only exports tightened.
 - Superseded manual `gh-pages` deployment scripts and dependency; GitHub Actions is the single deployment path.
 
 ### Security
 
+- Content-Security-Policy no longer allows Google Fonts hosts; fonts and stylesheets load only from the site's own origin.
 - Stricter validation for outbound links, embeds, GitHub raw README URLs, and public blog slugs (`src/lib/safeUrls.ts`, `src/config/security.ts`).
 - Article and README HTML sanitized with DOMPurify rules in `shared/articleHtmlSanitize.ts`; external links hardened with `rel="noopener noreferrer"`.
 - README fetch capped by size and timeout; requests use `credentials: 'omit'` and `referrerPolicy: 'no-referrer'`.

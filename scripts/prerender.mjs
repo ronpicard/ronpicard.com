@@ -36,9 +36,21 @@ export function stripExistingSeoHead(html) {
 
 export function injectSeoHead(
   html,
-  { title, description, url, imageAbs, ogType, jsonLd = null, robots = 'index, follow' },
+  {
+    title,
+    description,
+    url,
+    imageAbs,
+    ogType,
+    jsonLd = null,
+    robots = 'index, follow',
+    imageWidth = null,
+    imageHeight = null,
+    imageAlt = null,
+  },
 ) {
   const twitterCard = imageAbs ? 'summary_large_image' : 'summary'
+  const hasDims = imageAbs && Number.isFinite(imageWidth) && Number.isFinite(imageHeight)
   const tags = [
     `<title>${escapeHtml(title)}</title>`,
     `<meta name="description" content="${escapeHtmlAttr(description)}" />`,
@@ -53,10 +65,14 @@ export function injectSeoHead(
     `<meta property="og:locale" content="en_US" />`,
     imageAbs ? `<meta property="og:image" content="${escapeHtmlAttr(imageAbs)}" />` : '',
     imageAbs ? `<meta property="og:image:secure_url" content="${escapeHtmlAttr(imageAbs)}" />` : '',
+    hasDims ? `<meta property="og:image:width" content="${imageWidth}" />` : '',
+    hasDims ? `<meta property="og:image:height" content="${imageHeight}" />` : '',
+    imageAbs && imageAlt ? `<meta property="og:image:alt" content="${escapeHtmlAttr(imageAlt)}" />` : '',
     `<meta name="twitter:card" content="${escapeHtmlAttr(twitterCard)}" />`,
     `<meta name="twitter:title" content="${escapeHtmlAttr(title)}" />`,
     `<meta name="twitter:description" content="${escapeHtmlAttr(description)}" />`,
     imageAbs ? `<meta name="twitter:image" content="${escapeHtmlAttr(imageAbs)}" />` : '',
+    imageAbs && imageAlt ? `<meta name="twitter:image:alt" content="${escapeHtmlAttr(imageAlt)}" />` : '',
     jsonLd
       ? `<script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>`
       : '',
@@ -74,6 +90,23 @@ async function writeOut(distDir, relPath, html) {
   await writeFile(outFile, html, 'utf8')
 }
 
+/**
+ * Pixel dimensions for a mirrored `resources/...` image in dist/, or null when
+ * the path is remote/missing/unreadable (dims are an enhancement, not a gate).
+ */
+async function localImageDims(distDir, imageRel) {
+  const rel = String(imageRel || '').replace(/^\/+/, '')
+  if (!/^resources\/[a-z0-9][a-z0-9._-]*$/i.test(rel)) return null
+  try {
+    const { default: sharp } = await import('sharp')
+    const meta = await sharp(path.join(distDir, rel)).metadata()
+    if (!meta.width || !meta.height) return null
+    return { width: meta.width, height: meta.height }
+  } catch {
+    return null
+  }
+}
+
 export async function main({
   distDir = DEFAULT_DIST_DIR,
   articlesPath = DEFAULT_ARTICLES_PATH,
@@ -84,13 +117,18 @@ export async function main({
     'prerender site articles',
   )
 
+  const homeImageRel = 'resources/82f3c8eae802c3.jpg'
+  const homeDims = await localImageDims(distDir, homeImageRel)
   const home = injectSeoHead(template, {
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
     url: canonicalUrl('/'),
-    imageAbs: absoluteAssetUrl('resources/82f3c8eae802c3.jpg') ?? null,
+    imageAbs: absoluteAssetUrl(homeImageRel) ?? null,
     ogType: 'website',
     jsonLd: homeJsonLd(),
+    imageWidth: homeDims?.width ?? null,
+    imageHeight: homeDims?.height ?? null,
+    imageAlt: DEFAULT_TITLE,
   })
   await writeOut(distDir, 'index.html', home)
 
@@ -107,7 +145,9 @@ export async function main({
       truncateMetaDescription(stripTagsForMeta(row.summary || '')) || title
     const ogImage = row.articleHeroUrl || row.imageUrl || null
     const imageAbs = absoluteAssetUrl(ogImage) ?? null
-    const route = `/blog/${slug}`
+    const dims = ogImage ? await localImageDims(distDir, ogImage) : null
+    // Trailing slash matches the URL GitHub Pages 301s to, so scrapers skip a hop.
+    const route = `/blog/${slug}/`
 
     const html = injectSeoHead(template, {
       title: `${title} | Ron Picard`,
@@ -121,6 +161,9 @@ export async function main({
         description: summary,
         path: route,
       }),
+      imageWidth: dims?.width ?? null,
+      imageHeight: dims?.height ?? null,
+      imageAlt: title,
     })
 
     await writeOut(distDir, path.join('blog', slug, 'index.html'), html)
@@ -134,7 +177,7 @@ export async function main({
   const sitemapEntries = [
     { url: canonicalUrl('/') },
     ...sorted.map((row, index) => ({
-      url: canonicalUrl(`/blog/${routeSlugs[index]}`),
+      url: canonicalUrl(`/blog/${routeSlugs[index]}/`),
       lastModified: row.date,
     })),
   ]

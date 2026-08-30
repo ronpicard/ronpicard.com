@@ -3,6 +3,7 @@ import {
   getViteBasePath,
   isSafeLocalAssetPath,
   resolveAssetUrl,
+  resolveReadmeSnapshotUrl,
   resolveResourcePathsInHtml,
 } from './assetUrl'
 
@@ -34,6 +35,22 @@ describe('resolveAssetUrl', () => {
   it('returns null for empty input', () => {
     expect(resolveAssetUrl(null)).toBeNull()
     expect(resolveAssetUrl('')).toBeNull()
+  })
+})
+
+describe('resolveReadmeSnapshotUrl', () => {
+  it('builds a base-prefixed snapshot path for valid slugs', () => {
+    const base = getViteBasePath()
+    expect(resolveReadmeSnapshotUrl('clamav-antivirus-control-gui')).toBe(
+      `${base}/readme-snapshots/clamav-antivirus-control-gui.md`,
+    )
+  })
+
+  it('rejects traversal, invalid characters, and empty input', () => {
+    expect(resolveReadmeSnapshotUrl('../etc/passwd')).toBeNull()
+    expect(resolveReadmeSnapshotUrl('bad_slug')).toBeNull()
+    expect(resolveReadmeSnapshotUrl('')).toBeNull()
+    expect(resolveReadmeSnapshotUrl(null)).toBeNull()
   })
 })
 

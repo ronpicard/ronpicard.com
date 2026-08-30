@@ -75,6 +75,11 @@ test.describe('search', () => {
     await page.getByRole('button', { name: 'Search posts' }).click()
     const input = page.getByRole('combobox', { name: 'Search articles' })
     await expect(input).toBeFocused()
+    // Under 16px, iOS Safari zooms the page when the input gains focus.
+    const fontSize = await input.evaluate((element) => {
+      return Number.parseFloat(window.getComputedStyle(element).fontSize)
+    })
+    expect(fontSize).toBeGreaterThanOrEqual(16)
     await input.fill('ClamAV')
     const option = page.getByRole('option', { name: /ClamAV Control/i })
     await expect(option).toBeVisible()
@@ -130,6 +135,18 @@ test.describe('article routes', () => {
     expect(metrics.height).toBeGreaterThanOrEqual(metrics.viewportHeight * 0.55)
     expect(metrics.height).toBeLessThanOrEqual(metrics.viewportHeight * 0.92)
     expect(metrics.pageOverflow).toBeLessThanOrEqual(1)
+
+    // Touch devices get a tap-to-interact guard so the iframe can't swallow
+    // scroll gestures; fine pointers interact with the iframe directly.
+    const touchGuard = frame.locator('.embed-frame__touch-guard')
+    const isTouchOnly = await page.evaluate(() => window.matchMedia('(hover: none)').matches)
+    if (isTouchOnly) {
+      await expect(touchGuard).toBeVisible()
+      await touchGuard.click()
+      await expect(touchGuard).toBeHidden()
+    } else {
+      await expect(touchGuard).toBeHidden()
+    }
 
     await page.getByRole('button', { name: /full view/i }).click()
     await expect(page.locator('.embed-frame--expanded')).toBeVisible()
@@ -210,9 +227,31 @@ test.describe('dynamic README', () => {
     await expect(page.locator('.article-prose script')).toHaveCount(0)
   })
 
-  test('shows error fallback when README fetch fails', async ({ page }) => {
+  test('renders the local snapshot when the live README fetch fails', async ({ page }) => {
     await page.route('https://raw.githubusercontent.com/**', async (route) => {
       await route.fulfill({ status: 500, body: 'fail' })
+    })
+    await page.route('**/readme-snapshots/*.md', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/markdown; charset=utf-8',
+        body: '# ClamAV Control\n\n**Snapshot README** body for e2e.\n',
+      })
+    })
+
+    await page.goto('/blog/clamav-control')
+    await expect(page.locator('.article-readme-dynamic .article-prose')).toBeVisible({
+      timeout: 15_000,
+    })
+    await expect(page.locator('.article-prose')).toContainText('Snapshot README')
+  })
+
+  test('shows error fallback when both README fetch and snapshot fail', async ({ page }) => {
+    await page.route('https://raw.githubusercontent.com/**', async (route) => {
+      await route.fulfill({ status: 500, body: 'fail' })
+    })
+    await page.route('**/readme-snapshots/*.md', async (route) => {
+      await route.fulfill({ status: 404, body: 'missing' })
     })
 
     await page.goto('/blog/clamav-control')

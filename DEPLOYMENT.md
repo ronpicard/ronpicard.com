@@ -64,8 +64,9 @@ push to main
 - Runs `npm run build:full`, which:
   1. Typechecks with `tsc --noEmit`
   2. Mirrors remote assets and article HTML (`scripts/mirror-resources.mjs`)
-  3. Bundles the app with Vite into `dist/`
-  4. Prerenders route HTML, `sitemap.xml`, `robots.txt`, and `404.html` (`scripts/prerender.mjs`)
+  3. Snapshots GitHub READMEs into `public/readme-snapshots/` (`scripts/mirror-readmes.mjs`; fetch failures keep the committed snapshot)
+  4. Bundles the app with Vite into `dist/`
+  5. Prerenders route HTML (including per-article Open Graph image tags with dimensions), `sitemap.xml`, `robots.txt`, and `404.html` (`scripts/prerender.mjs`)
 - Uploads `dist/` as a GitHub Pages artifact.
 
 ### 4. Deploy (`deploy`)
@@ -96,7 +97,7 @@ The contents of `dist/` after `build:full`:
 
 - Vite-built JS/CSS and `index.html` (with production CSP meta tags from [`vite.config.ts`](vite.config.ts))
 - Prerendered HTML for home, each blog route, sitemap, and robots
-- Static files from `public/` (favicon, `CNAME`, mirrored `resources/`, `article-bodies/`, etc.)
+- Static files from `public/` (favicon, `CNAME`, mirrored `resources/`, `article-bodies/`, `readme-snapshots/`, self-hosted `fonts/`, etc.)
 
 The app uses history-based routing (`react-router-dom`). GitHub Pages serves prerendered files for known routes; unknown paths fall through to the noindex `404.html`.
 

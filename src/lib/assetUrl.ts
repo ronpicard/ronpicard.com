@@ -41,6 +41,13 @@ export function resolveAssetUrl(url: string | null | undefined): string | null {
   return `${b}/${trimmed}`
 }
 
+/** Local README snapshot (written by scripts/mirror-readmes.mjs) for a validated slug. */
+export function resolveReadmeSnapshotUrl(slug: string | null | undefined): string | null {
+  const s = slug?.trim()
+  if (!s || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(s)) return null
+  return `${getViteBasePath()}/readme-snapshots/${s}.md`
+}
+
 /** Inline HTML uses relative resource paths; inject base for img/src and a/href. */
 export function resolveResourcePathsInHtml(html: string | null | undefined): string | null {
   if (html == null || html === '') return null

@@ -17,7 +17,7 @@ The project uses Node.js 22.23.2. Open the URL Vite prints (usually `http://loca
 - **App**: React 19, React Router (history URLs), `react-helmet-async` for per-page `<title>` and Open Graph tags.
 - **Content**: `src/data/siteArticles.json` — article metadata, per-article `bodyPath`, demo/repo links, embeds, mirrored asset paths, and optional `readmeRawUrl` for live GitHub README rendering.
 - **Articles feature**: `src/features/articles/index.ts` is the public entry point; `src/data/articles.ts` validates and sorts entries and builds public `/blog/*` slugs from titles.
-- **Assets**: Files under `public/resources/`; article HTML under `public/article-bodies/`; `scripts/resource-manifest.json` tracks mirrored resources.
+- **Assets**: Files under `public/resources/`; article HTML under `public/article-bodies/`; README snapshots under `public/readme-snapshots/`; self-hosted fonts under `public/fonts/`; `scripts/resource-manifest.json` tracks mirrored resources.
 - **Prerender**: `scripts/prerender.mjs` writes route HTML with SEO and JSON-LD, plus `sitemap.xml`, `robots.txt`, and a noindex `404.html`.
 - **Shared modules**: `shared/` — sanitization, slug/routing (`buildArticleRouteSlugs`), site meta URLs, href dedup keys, GitHub repo parsing, URL scheme guards, raw README URL helpers, and HTML escaping (used by `src/` and `scripts/`).
 
@@ -34,7 +34,7 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 }
 ```
 
-`ArticlePage` renders `DynamicGithubReadme`, which fetches markdown in the browser, converts it with `marked`, and sanitizes HTML before display. Card images and summaries still come from committed JSON and `public/resources/`.
+`ArticlePage` renders `DynamicGithubReadme`, which fetches markdown in the browser, converts it with `marked`, and sanitizes HTML before display. If the live fetch fails, it falls back to the build-time snapshot in `public/readme-snapshots/` (written by `npm run mirror:readmes`) before showing an error. Card images and summaries still come from committed JSON and `public/resources/`.
 
 ## Configuration
 
@@ -52,16 +52,18 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (121 tests) |
+| `npm test` | Run Vitest unit tests once (125 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (14 tests; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (15 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
-| `npm run build:full` | Typecheck + mirror assets + Vite + prerender (use before deploy) |
+| `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + Vite + prerender (use before deploy) |
 | `npm run preview` | Serve production build locally |
 | `npm run sync:articles` | Scrape/update `siteArticles.json` from legacy Squarespace |
 | `npm run mirror:resources` | Fetch assets and extract HTML into `public/article-bodies/` |
+| `npm run mirror:readmes` | Snapshot GitHub READMEs into `public/readme-snapshots/` (offline fallback for article pages) |
+| `npm run optimize:resources` | Recompress `public/resources/` images in place (run after mirroring new assets) |
 | `npm run merge:blog-post` | Merge one post from Squarespace (see `scripts/merge-blog-post.mjs`) |
 
 `build:full` may rewrite `siteArticles.json` and fetch files — commit intentional changes after it runs.
@@ -112,14 +114,14 @@ Coverage includes imported shared logic, runtime libraries, article data, tested
 
 ### End-to-end (Playwright)
 
-Smoke tests use [Playwright](https://playwright.dev/) (`playwright.config.ts`, `e2e/site.spec.ts`):
+Smoke tests use [Playwright](https://playwright.dev/) (`playwright.config.ts`, `e2e/site.spec.ts`) and run on two projects: desktop Chrome and an emulated mobile device (`mobile-chrome`, Pixel 7):
 
 - Home project list and card → article navigation
-- Search combobox Arrow/Enter navigation and Escape to close
+- Search combobox Arrow/Enter navigation, Escape to close, and a 16px minimum input font size (iOS focus-zoom guard)
 - Keyboard skip link
 - HTML article prose, invalid slug → home, legacy slug → canonical slug
-- Demo link host validation, phone-width embed sizing, and Full view toggle
-- Dynamic README success (mocked fetch) and error fallback
+- Demo link host validation, phone-width embed sizing, tap-to-interact guard on touch devices, and Full view toggle
+- Dynamic README success (mocked fetch), local snapshot fallback, and error fallback
 
 ```bash
 npm run test:e2e

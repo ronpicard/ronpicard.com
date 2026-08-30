@@ -13,7 +13,7 @@ import {
   showDemoButton,
   youtubeWatchUrl,
 } from '../data/articles'
-import { resolveAssetUrl } from '../lib/assetUrl'
+import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
 import {
   safeArticleLinkHref,
@@ -80,7 +80,8 @@ export default function ArticlePage() {
     const href = safeArticleLinkHref(link.href, resolveAssetUrl)
     return href ? [{ link, href, articleStyle: isThirdPartyArticleLink(link) }] : []
   })
-  const path = `/blog/${article.slug}`
+  // Trailing slash matches the prerendered canonical (GitHub Pages 301s to it).
+  const path = `/blog/${article.slug}/`
   const metaDesc =
     article.summary?.replace(/&nbsp;/gi, ' ').replace(/<[^>]+>/g, '') ||
     `${article.title} — ${DEFAULT_TITLE}`
@@ -92,6 +93,7 @@ export default function ArticlePage() {
       rawUrl={readmeRawUrl}
       fallbackSummary={article.summary}
       viewerUrl={githubBlobViewerUrlFromRawUrl(readmeRawUrl)}
+      snapshotUrl={resolveReadmeSnapshotUrl(article.slug)}
     />
   ) : article.bodyPath ? (
     <DynamicArticleBody bodyPath={article.bodyPath} fallbackSummary={article.summary} />

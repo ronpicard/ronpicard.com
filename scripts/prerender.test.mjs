@@ -41,11 +41,20 @@ describe('prerender main', () => {
     temporaryDirectories.push(root)
     const distDir = path.join(root, 'dist')
     const articlesPath = path.join(root, 'siteArticles.json')
-    await import('node:fs/promises').then(({ mkdir }) => mkdir(distDir, { recursive: true }))
+    await import('node:fs/promises').then(({ mkdir }) =>
+      mkdir(path.join(distDir, 'resources'), { recursive: true }),
+    )
     await writeFile(
       path.join(distDir, 'index.html'),
       '<!doctype html><html><head><title>Template</title></head><body><main></main></body></html>',
       'utf8',
+    )
+    const { default: sharp } = await import('sharp')
+    await writeFile(
+      path.join(distDir, 'resources/example.png'),
+      await sharp({ create: { width: 3, height: 2, channels: 3, background: '#000' } })
+        .png()
+        .toBuffer(),
     )
     await writeFile(
       articlesPath,
@@ -104,16 +113,22 @@ describe('prerender main', () => {
 
     expect(routeHtml).toContain('<title>Example Post | Ron Picard</title>')
     expect(routeHtml).toContain('property="og:type" content="article"')
-    expect(routeHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-post"')
+    expect(routeHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-post/"')
     expect(routeHtml).toContain('property="og:image" content="https://ronpicard.com/resources/example.png"')
+    expect(routeHtml).toContain('property="og:image:width" content="3"')
+    expect(routeHtml).toContain('property="og:image:height" content="2"')
+    expect(routeHtml).toContain('property="og:image:alt" content="Example Post"')
+    expect(routeHtml).toContain('name="twitter:image:alt" content="Example Post"')
     expect(routeHtml).toContain('"@type":"BlogPosting"')
 
     expect(legacyHtml).toContain('<title>Example App | Ron Picard</title>')
-    expect(legacyHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-app"')
+    expect(legacyHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-app/"')
+    // The example-app row has no image, so no dimension or alt tags are emitted.
+    expect(legacyHtml).not.toContain('og:image:width')
 
     expect(notFoundHtml).toContain('content="noindex, nofollow"')
-    expect(sitemap).toContain('https://ronpicard.com/blog/example-post')
-    expect(sitemap).toContain('https://ronpicard.com/blog/example-app')
+    expect(sitemap).toContain('https://ronpicard.com/blog/example-post/')
+    expect(sitemap).toContain('https://ronpicard.com/blog/example-app/')
     expect(sitemap).not.toContain('example-app-web-app')
     expect(robots).toContain('https://ronpicard.com/sitemap.xml')
   })

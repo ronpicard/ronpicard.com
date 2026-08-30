@@ -1,3 +1,54 @@
+/* Self-hosted fonts (latin subsets mirrored from Google Fonts into public/fonts/). */
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 600 700;
+  font-display: swap;
+  src: url('/fonts/orbitron-latin-var.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/rajdhani-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/rajdhani-latin-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/rajdhani-latin-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/rajdhani-latin-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --bg-deep: #000000;
   --bg-card: rgba(6, 10, 14, 0.88);
@@ -314,7 +365,8 @@ body {
   margin: 0 0 0.5rem;
   padding: 0.5rem 0.65rem;
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  /* Must stay >= 16px or iOS Safari zooms the page when the input is focused. */
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text);
   background: rgba(0, 0, 0, 0.5);
@@ -748,6 +800,10 @@ body {
 .footer a {
   color: var(--accent-blue);
   text-decoration: none;
+  /* Grow the touch target of the small footer text without shifting layout. */
+  display: inline-block;
+  padding: 0.9rem 0.35rem;
+  margin: -0.9rem -0.35rem;
 }
 
 .footer a:hover {
@@ -1201,6 +1257,48 @@ body {
 }
 
 .embed-frame__expand:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* On touch devices the inline demo iframe would swallow scroll gestures, so it
+   sits behind a tap-to-interact guard until the visitor opts in. Fine pointers
+   interact with the iframe directly. */
+.embed-frame__touch-guard {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+}
+
+@media (hover: none) {
+  .embed-frame__touch-guard {
+    display: flex;
+  }
+}
+
+.embed-frame__touch-guard-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(2, 8, 10, 0.88);
+  border: 1px solid rgba(0, 255, 200, 0.4);
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.embed-frame__touch-guard:focus-visible .embed-frame__touch-guard-label {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }

@@ -19,7 +19,9 @@
     "sync:articles": "node --experimental-strip-types scripts/fetch-site-articles.mjs",
     "merge:blog-post": "node --experimental-strip-types scripts/merge-blog-post.mjs",
     "mirror:resources": "node --experimental-strip-types scripts/mirror-resources.mjs",
-    "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && vite build && node --experimental-strip-types scripts/prerender.mjs"
+    "mirror:readmes": "node --experimental-strip-types scripts/mirror-readmes.mjs",
+    "optimize:resources": "node --experimental-strip-types scripts/optimize-resources.mjs",
+    "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && node --experimental-strip-types scripts/mirror-readmes.mjs && vite build && node --experimental-strip-types scripts/prerender.mjs"
   },
   "dependencies": {
     "isomorphic-dompurify": "^3.22.0",
@@ -37,6 +39,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "cheerio": "^1.2.0",
     "jsdom": "^30.0.1",
+    "sharp": "^0.35.4",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
     "vitest": "^4.1.10"
