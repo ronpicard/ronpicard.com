@@ -34,6 +34,7 @@ function item(overrides: Partial<ProjectListItem> = {}): ProjectListItem {
     articleUrl: null,
     demoUrl: null,
     repoUrl: null,
+    releasesUrl: null,
     videoUrl: null,
     pdfLinks: [],
     ...overrides,
@@ -83,5 +84,39 @@ describe('ProjectCard image loading', () => {
   it('renders no image element when there is no title image', () => {
     const img = renderCard({ item: item({ imageUrl: null }) })
     expect(img).toBeNull()
+  })
+})
+
+describe('ProjectCard actions', () => {
+  function links() {
+    return Array.from(container.querySelectorAll('a.project-card__btn')).map((a) => ({
+      text: a.textContent?.trim(),
+      href: a.getAttribute('href'),
+    }))
+  }
+
+  it('renders a Releases button after Code that points at the latest release', () => {
+    renderCard({
+      item: item({
+        showCode: true,
+        repoUrl: 'https://github.com/ronpicard/clamav-antivirus-ui',
+        releasesUrl: 'https://github.com/ronpicard/clamav-antivirus-ui/releases/latest',
+      }),
+    })
+    expect(links()).toEqual([
+      { text: 'Code', href: 'https://github.com/ronpicard/clamav-antivirus-ui' },
+      {
+        text: 'Releases',
+        href: 'https://github.com/ronpicard/clamav-antivirus-ui/releases/latest',
+      },
+    ])
+  })
+
+  it('omits the Releases button when releasesUrl is missing or not a GitHub releases page', () => {
+    renderCard({ item: item({ showCode: true, repoUrl: 'https://github.com/ronpicard/x' }) })
+    expect(links().map((l) => l.text)).toEqual(['Code'])
+
+    renderCard({ item: item({ releasesUrl: 'https://example.com/releases/latest' }) })
+    expect(links()).toEqual([])
   })
 })

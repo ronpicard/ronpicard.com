@@ -7,6 +7,7 @@ export {
   pdfExtraLinks,
   showCodeButton,
   showDemoButton,
+  showReleasesButton,
   thirdPartyArticleUrl,
   youtubeWatchUrl,
   type Article,

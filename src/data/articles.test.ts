@@ -8,6 +8,7 @@ import {
   pdfExtraLinks,
   showCodeButton,
   showDemoButton,
+  showReleasesButton,
   thirdPartyArticleUrl,
   youtubeWatchUrl,
   type Article,
@@ -27,6 +28,7 @@ function stubArticle(overrides: Partial<Article>): Article {
     youtubeId: null,
     otherEmbed: null,
     readmeRawUrl: null,
+    releasesUrl: null,
     extraLinks: [],
     sourceSlug: 'stub',
     slug: 'stub',
@@ -204,6 +206,27 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     expect(showDemoButton(stubArticle({}))).toBe(false)
     expect(showCodeButton(stubArticle({ repoUrl: 'https://github.com/ronpicard/x' }))).toBe(true)
     expect(showCodeButton(stubArticle({}))).toBe(false)
+  })
+
+  it('gates the Releases button on a validated releasesUrl', () => {
+    expect(
+      showReleasesButton(
+        stubArticle({ releasesUrl: 'https://github.com/ronpicard/x/releases/latest' }),
+      ),
+    ).toBe(true)
+    expect(showReleasesButton(stubArticle({ releasesUrl: 'https://github.com/ronpicard/x' }))).toBe(
+      false,
+    )
+    expect(showReleasesButton(stubArticle({}))).toBe(false)
+  })
+
+  it('exposes releasesUrl on card items only for posts that have one', () => {
+    const list = getArticleTitleList()
+    const clamav = articles.find((a) => a.sourceSlug === 'clamav-antivirus-control-gui')
+    const card = list.find((item) => item.slug === clamav?.slug)
+    expect(card?.releasesUrl).toBe('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest')
+    const withReleases = list.filter((item) => item.releasesUrl)
+    expect(withReleases.map((item) => item.slug)).toEqual([clamav?.slug])
   })
 
   it('lists one card item per article with matching slug', () => {

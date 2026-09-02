@@ -18,6 +18,8 @@ export type SiteArticleRow = {
   youtubeId: string | null
   otherEmbed: string | null
   readmeRawUrl?: string | null
+  /** GitHub releases page (e.g. `.../releases/latest`) for posts whose repo publishes releases. */
+  releasesUrl?: string | null
   extraLinks: SiteArticleLink[]
 }
 
@@ -86,6 +88,7 @@ export function parseSiteArticleRows(
     const bodyHtml = optionalNullableString(row, 'bodyHtml', path)
     const bodyPath = optionalNullableString(row, 'bodyPath', path)
     const readmeRawUrl = optionalNullableString(row, 'readmeRawUrl', path)
+    const releasesUrl = optionalNullableString(row, 'releasesUrl', path)
 
     if (!SLUG_RE.test(slug)) throw new Error(`${path}.slug contains unsupported characters`)
     if (!DATE_RE.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) {
@@ -110,6 +113,7 @@ export function parseSiteArticleRows(
       otherEmbed: nullableString(row, 'otherEmbed', path),
       extraLinks: parseExtraLinks(row.extraLinks, `${path}.extraLinks`),
       ...(readmeRawUrl !== undefined ? { readmeRawUrl } : {}),
+      ...(releasesUrl !== undefined ? { releasesUrl } : {}),
       ...(bodyPath !== undefined ? { bodyPath } : {}),
     }
   })

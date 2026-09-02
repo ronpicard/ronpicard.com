@@ -67,6 +67,23 @@ test.describe('home', () => {
     await expect(actions.getByRole('link', { name: 'Code' })).toBeVisible()
     await expect(actions.getByRole('link', { name: /Try on github/i })).toHaveCount(0)
   })
+
+  test('shows a Releases action next to Code for posts whose repo publishes releases', async ({
+    page,
+  }) => {
+    await page.goto('/')
+    const releases = 'https://github.com/ronpicard/clamav-antivirus-ui/releases/latest'
+    const card = page.locator('.project-card').filter({ hasText: 'ClamAV Control' })
+    await expect(card.getByRole('link', { name: 'Code' })).toBeVisible()
+    await expect(card.getByRole('link', { name: 'Releases' })).toHaveAttribute('href', releases)
+
+    const chess = page.locator('.project-card').filter({ hasText: 'AI Chess Web App V2' })
+    await expect(chess.getByRole('link', { name: 'Releases' })).toHaveCount(0)
+
+    await card.locator('.project-card__overlay-link').click()
+    const actions = page.locator('.article-actions--primary')
+    await expect(actions.getByRole('link', { name: 'Releases' })).toHaveAttribute('href', releases)
+  })
 })
 
 test.describe('search', () => {

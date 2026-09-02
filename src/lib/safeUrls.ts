@@ -48,6 +48,19 @@ export function safeGithubRepoUrl(raw: string | null | undefined): string | null
   return parseGithubRepoUrl(raw)?.url ?? null
 }
 
+/**
+ * GitHub releases page for a repo: `https://github.com/owner/repo/releases[/latest|/tag/<tag>]`.
+ * Same host/scheme/credential rules as repo URLs, plus the path must stay under `releases`.
+ */
+export function safeGithubReleasesUrl(raw: string | null | undefined): string | null {
+  const parsed = parseGithubRepoUrl(raw)
+  if (!parsed) return null
+  const parts = new URL(parsed.url).pathname.split('/').filter(Boolean)
+  if (parts[2] !== 'releases') return null
+  if (parts.some((p) => p === '.' || p === '..')) return null
+  return parsed.url
+}
+
 /** Demo URLs: GitHub Pages (same rules as embed). */
 export function safeDemoUrl(raw: string | null | undefined): string | null {
   return safeGithubPagesUrl(raw)

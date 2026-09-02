@@ -11,6 +11,7 @@ import { YoutubeIcon } from './YoutubeIcon'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
+  safeGithubReleasesUrl,
   safeGithubRepoUrl,
   safeHttpUrl,
 } from '../lib/safeUrls'
@@ -27,6 +28,8 @@ export type ProjectListItem = {
   articleUrl: string | null
   demoUrl: string | null
   repoUrl: string | null
+  /** Latest GitHub release page, for repos that publish releases. */
+  releasesUrl: string | null
   videoUrl: string | null
   pdfLinks: { label: string; href: string }[]
 }
@@ -48,6 +51,7 @@ export function ProjectCard({ item, priority = false }: Props) {
   const articleHref = item.articleUrl ? safeHttpUrl(item.articleUrl) : null
   const demoHref = item.showDemo && item.demoUrl ? safeDemoUrl(item.demoUrl) : null
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
+  const releasesHref = safeGithubReleasesUrl(item.releasesUrl)
   const videoHref = item.videoUrl ? safeHttpUrl(item.videoUrl) : null
   const to = `/blog/${item.slug}`
 
@@ -103,6 +107,16 @@ export function ProjectCard({ item, priority = false }: Props) {
               rel="noopener noreferrer"
             >
               Code
+            </a>
+          ) : null}
+          {releasesHref ? (
+            <a
+              className="project-card__btn project-card__btn--code"
+              href={releasesHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Releases
             </a>
           ) : null}
           {videoHref ? (

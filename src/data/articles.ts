@@ -9,15 +9,16 @@ import {
   parseSiteArticleRows,
   type SiteArticleRow as IngestedSiteArticleRow,
 } from '../../shared/siteArticleSchema'
-import { safeYoutubeId } from '../lib/safeUrls'
+import { safeGithubReleasesUrl, safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
 
 type SiteArticleRow = Omit<
   IngestedSiteArticleRow,
-  'bodyHtml' | 'bodyPath' | 'readmeRawUrl'
+  'bodyHtml' | 'bodyPath' | 'readmeRawUrl' | 'releasesUrl'
 > & {
   bodyPath: string | null
   readmeRawUrl: string | null
+  releasesUrl: string | null
 }
 
 function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
@@ -33,6 +34,7 @@ const normalizedRows: SiteArticleRow[] = parseSiteArticleRows(siteArticlesData).
     summary: row.summary ? decodeHtml(row.summary) : null,
     bodyPath: row.bodyPath ?? null,
     readmeRawUrl: row.readmeRawUrl ?? null,
+    releasesUrl: row.releasesUrl ?? null,
   }),
 )
 
@@ -99,6 +101,11 @@ export function showDemoButton(a: Article): boolean {
 
 export function showCodeButton(a: Article): boolean {
   return !!a.repoUrl
+}
+
+/** Releases button: only for posts whose JSON names a valid GitHub releases page. */
+export function showReleasesButton(a: Article): boolean {
+  return !!safeGithubReleasesUrl(a.releasesUrl)
 }
 
 export function isThirdPartyArticleLink(link: { label: string; href: string }): boolean {
@@ -194,6 +201,7 @@ export function getArticleTitleList() {
     articleUrl: thirdPartyArticleUrl(a),
     demoUrl: a.demoUrl,
     repoUrl: a.repoUrl,
+    releasesUrl: showReleasesButton(a) ? a.releasesUrl : null,
     videoUrl: youtubeWatchUrl(a.youtubeId),
     pdfLinks: pdfExtraLinks(a),
   }))

@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Posts whose GitHub repo publishes releases show a Releases button next to Code, on the home card and the article page, linking to the latest release. Set `releasesUrl` in `src/data/siteArticles.json` to enable it; the ClamAV Control post is the first.
 - Pages ship prerendered content: the homepage card grid and article pages are rendered into the HTML at build time and hydrated in the browser, removing the blank-page delay on first visit.
 - The homepage card grid loads card-sized WebP thumbnails (~768px) instead of full-resolution title images, cutting its image weight from roughly 14 MB to about 2 MB; the first row of cards loads eagerly at high priority with preload hints.
 

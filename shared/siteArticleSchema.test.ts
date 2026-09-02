@@ -16,6 +16,7 @@ function validRow() {
     youtubeId: null,
     otherEmbed: null,
     readmeRawUrl: null,
+    releasesUrl: null,
     extraLinks: [{ label: 'Paper', href: 'resources/example.pdf' }],
   }
 }
@@ -27,6 +28,24 @@ describe('parseSiteArticleRows', () => {
 
     expect(parseSiteArticleRows([row])).toEqual([row])
     expect(parseSiteArticleRows([row])[0]).not.toHaveProperty('readmeRawUrl')
+  })
+
+  it('keeps releasesUrl when present and omits it when absent', () => {
+    const withReleases = {
+      ...validRow(),
+      releasesUrl: 'https://github.com/ronpicard/example/releases/latest',
+    }
+    expect(parseSiteArticleRows([withReleases])[0]?.releasesUrl).toBe(
+      'https://github.com/ronpicard/example/releases/latest',
+    )
+
+    const row = validRow()
+    delete (row as Partial<typeof row>).releasesUrl
+    expect(parseSiteArticleRows([row])[0]).not.toHaveProperty('releasesUrl')
+
+    expect(() => parseSiteArticleRows([{ ...validRow(), releasesUrl: 42 }])).toThrow(
+      'site article data[0].releasesUrl',
+    )
   })
 
   it('rejects malformed rows with field context', () => {

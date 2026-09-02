@@ -4,6 +4,7 @@ import {
   safeDemoUrl,
   safeGithubPagesUrl,
   safeGithubReadmeRawUrl,
+  safeGithubReleasesUrl,
   safeGithubRepoUrl,
   safeHttpUrl,
   safeHttpsEmbedUrl,
@@ -83,6 +84,31 @@ describe('safeGithubRepoUrl', () => {
     expect(safeGithubRepoUrl('https://gitlab.com/ronpicard/repo')).toBeNull()
     expect(safeGithubRepoUrl('https://user@github.com/ronpicard/repo')).toBeNull()
     expect(safeGithubRepoUrl('')).toBeNull()
+  })
+})
+
+describe('safeGithubReleasesUrl', () => {
+  it('allows GitHub releases pages for a repo', () => {
+    expect(
+      safeGithubReleasesUrl('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest'),
+    ).toBe('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest')
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo/releases')).toBe(
+      'https://github.com/ronpicard/repo/releases',
+    )
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo/releases/tag/v1.0.0')).toBe(
+      'https://github.com/ronpicard/repo/releases/tag/v1.0.0',
+    )
+  })
+
+  it('rejects repo roots, other repo pages, and everything safeGithubRepoUrl rejects', () => {
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo')).toBeNull()
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo/issues')).toBeNull()
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo/releases/../issues')).toBeNull()
+    expect(safeGithubReleasesUrl('http://github.com/ronpicard/repo/releases/latest')).toBeNull()
+    expect(safeGithubReleasesUrl('https://gitlab.com/ronpicard/repo/releases')).toBeNull()
+    expect(safeGithubReleasesUrl('https://github.com/ronpicard/repo/releases?x=1')).toBeNull()
+    expect(safeGithubReleasesUrl(null)).toBeNull()
+    expect(safeGithubReleasesUrl('')).toBeNull()
   })
 })
 

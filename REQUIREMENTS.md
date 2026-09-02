@@ -20,6 +20,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Client-side navigation to an article MUST start at the top of the page.
 - Browser Back navigation from an article MUST restore the prior home catalog position without animating down from the top.
 - Mirrored assets MUST live under `public/resources/` and be referenced as `resources/...` in JSON, resolved with the Vite base URL at render time.
+- Posts MAY set `releasesUrl` (validated `https://github.com/<owner>/<repo>/releases/...` URL); when set, the home card and article page MUST show a Releases button immediately after Code linking to it, and MUST omit the button otherwise.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
 - Prerendered pages MUST include the route's app markup in `#root` (rendered by the SSR bundle) so first paint shows content before hydration; the markup MUST be static — no inline scripts or streaming placeholders, which the CSP would block.

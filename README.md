@@ -15,7 +15,7 @@ The project uses Node.js 22.23.2. Open the URL Vite prints (usually `http://loca
 ## What’s in the repo
 
 - **App**: React 19, React Router (history URLs), `react-helmet-async` for per-page `<title>` and Open Graph tags.
-- **Content**: `src/data/siteArticles.json` — article metadata, per-article `bodyPath`, demo/repo links, embeds, mirrored asset paths, and optional `readmeRawUrl` for live GitHub README rendering.
+- **Content**: `src/data/siteArticles.json` — article metadata, per-article `bodyPath`, demo/repo links, embeds, mirrored asset paths, optional `readmeRawUrl` for live GitHub README rendering, and optional `releasesUrl` (a `https://github.com/<owner>/<repo>/releases/...` page) that adds a Releases button beside Code.
 - **Articles feature**: `src/features/articles/index.ts` is the public entry point; `src/data/articles.ts` validates and sorts entries and builds public `/blog/*` slugs from titles.
 - **Assets**: Files under `public/resources/`; article HTML under `public/article-bodies/`; README snapshots under `public/readme-snapshots/`; self-hosted fonts under `public/fonts/`; `scripts/resource-manifest.json` tracks mirrored resources.
 - **Prerender**: `scripts/prerender.mjs` writes route HTML with SEO and JSON-LD, plus `sitemap.xml`, `robots.txt`, and a noindex `404.html`. It also injects each route's app markup (rendered by the `src/entry-server.tsx` SSR bundle from `npm run build:ssr`) into `#root`, so first paint shows real content before `src/main.tsx` hydrates it.
@@ -31,7 +31,8 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
   "slug": "clamav-antivirus-control-gui",
   "title": "ClamAV Control — Home",
   "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-ui/main/README.md",
-  "repoUrl": "https://github.com/ronpicard/clamav-antivirus-ui"
+  "repoUrl": "https://github.com/ronpicard/clamav-antivirus-ui",
+  "releasesUrl": "https://github.com/ronpicard/clamav-antivirus-ui/releases/latest"
 }
 ```
 
@@ -53,10 +54,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (163 tests) |
+| `npm test` | Run Vitest unit tests once (170 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (15 tests × desktop and mobile projects; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (16 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + thumbnails + Vite + SSR bundle + prerender (use before deploy) |

@@ -11,6 +11,7 @@ import {
   isThirdPartyArticleLink,
   showCodeButton,
   showDemoButton,
+  showReleasesButton,
   youtubeWatchUrl,
 } from '../data/articles'
 import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
@@ -20,6 +21,7 @@ import {
   safeDemoUrl,
   safeGithubPagesUrl,
   safeGithubReadmeRawUrl,
+  safeGithubReleasesUrl,
   safeGithubRepoUrl,
   safeHttpsEmbedUrl,
   safeYoutubeId,
@@ -72,6 +74,7 @@ export default function ArticlePage() {
   const repoHref = safeGithubRepoUrl(article.repoUrl)
   const hasDemo = showDemoButton(article) && !!demoHref
   const hasCode = showCodeButton(article) && !!repoHref
+  const releasesHref = showReleasesButton(article) ? safeGithubReleasesUrl(article.releasesUrl) : null
   const ytId = safeYoutubeId(article.youtubeId)
   const videoUrl = youtubeWatchUrl(article.youtubeId)
   const readmeRawUrl = safeGithubReadmeRawUrl(article.readmeRawUrl)
@@ -105,7 +108,7 @@ export default function ArticlePage() {
 
   const embedBlock = (
     <>
-      {(hasDemo || hasCode || videoUrl || safeExtras.length > 0) && (
+      {(hasDemo || hasCode || releasesHref || videoUrl || safeExtras.length > 0) && (
         <div className="article-actions article-actions--primary">
           {hasDemo && demoHref ? (
             <a
@@ -125,6 +128,16 @@ export default function ArticlePage() {
               rel="noopener noreferrer"
             >
               Code
+            </a>
+          ) : null}
+          {releasesHref ? (
+            <a
+              className="article-btn article-btn--secondary"
+              href={releasesHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Releases
             </a>
           ) : null}
           {videoUrl ? (
