@@ -1,197 +1,143 @@
-import { useMemo, type CSSProperties } from 'react'
+import { useEffect, useRef } from 'react'
+import { createField, fadeAlpha, primeField, stepField, type Field, type Hue, type Paint } from './circuitPulses'
 
-const TOTAL = 120
-/** Rough fraction of items that render as matrix-style glyphs instead of dots. */
-const GLYPH_FRACTION = 0.36
+/** Backing-store scale cap; 3x phones get a 2x canvas, which is indistinguishable at this size. */
+const MAX_DPR = 2
 
-/** Half-range per leg (px); total path span scales with ~4 legs. */
-const SEGMENT = 52
-
-const MATRIX_CHARS =
-  'ｦｧｨｩｪｫｬｭｮｯｰアイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789:・."=*+-<>¦|ﾊﾐﾋﾟﾊｴﾘｸﾀﾝﾅµﾃﾉﾎﾜ×÷§'
-
-function pseudoRandom(seed: number) {
-  const x = Math.sin(seed * 12.9898 + seed * 78.233) * 43758.5453
-  return x - Math.floor(x)
+const HEAD_COLOR: Record<Hue, string> = {
+  cyan: '#e6fffa',
+  magenta: '#ffe0f8',
+}
+const TRACE_COLOR: Record<Hue, string> = {
+  cyan: 'rgb(0, 255, 200)',
+  magenta: 'rgb(255, 43, 214)',
+}
+const GLOW_COLOR: Record<Hue, string> = {
+  cyan: 'rgba(0, 255, 200, 0.9)',
+  magenta: 'rgba(255, 43, 214, 0.9)',
 }
 
-function leg(i: number, k: number) {
-  return {
-    x: (pseudoRandom(i * 17 + k * 31) - 0.5) * 2 * SEGMENT,
-    y: (pseudoRandom(i * 17 + k * 31 + 79) - 0.5) * 2 * SEGMENT,
+const TAU = Math.PI * 2
+
+function stroke(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, width: number) {
+  ctx.lineWidth = width
+  ctx.beginPath()
+  ctx.moveTo(x1, y1)
+  ctx.lineTo(x2, y2)
+  ctx.stroke()
+}
+
+function dot(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
+  ctx.beginPath()
+  ctx.arc(x, y, r, 0, TAU)
+  ctx.fill()
+}
+
+function paint(ctx: CanvasRenderingContext2D, cells: Paint[]) {
+  ctx.lineCap = 'round'
+  for (const c of cells) {
+    if (c.kind === 'segment') {
+      ctx.strokeStyle = TRACE_COLOR[c.hue]
+      // Soft halo under a sharp core so traces read as lit, not drawn.
+      ctx.globalAlpha = c.alpha * 0.28
+      stroke(ctx, c.x1, c.y1, c.x2, c.y2, c.width * 3.2)
+      ctx.globalAlpha = c.alpha
+      stroke(ctx, c.x1, c.y1, c.x2, c.y2, c.width)
+    } else if (c.kind === 'node') {
+      ctx.fillStyle = TRACE_COLOR[c.hue]
+      ctx.globalAlpha = c.alpha
+      dot(ctx, c.x, c.y, 3)
+    } else {
+      ctx.fillStyle = HEAD_COLOR[c.hue]
+      ctx.globalAlpha = c.alpha
+      ctx.shadowColor = GLOW_COLOR[c.hue]
+      ctx.shadowBlur = 12
+      dot(ctx, c.x, c.y, c.width * 1.2)
+      ctx.shadowBlur = 0
+    }
+  }
+  ctx.globalAlpha = 1
+}
+
+function erase(ctx: CanvasRenderingContext2D, field: Field, alpha: number) {
+  if (alpha <= 0) return
+  ctx.globalCompositeOperation = 'destination-out'
+  ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`
+  ctx.fillRect(0, 0, field.width, field.height)
+  ctx.globalCompositeOperation = 'source-over'
+}
+
+/**
+ * Runs the pulses on `canvas` until the returned cleanup is called. Handles
+ * viewport sizing, reduced-motion (a single static frame), and the frame loop.
+ */
+function startPulses(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): () => void {
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+  let field = createField(0, 0)
+  let frame = 0
+  let last: number | null = null
+
+  function fit() {
+    const dpr = Math.min(MAX_DPR, window.devicePixelRatio || 1)
+    const w = window.innerWidth
+    const h = window.innerHeight
+    canvas.width = Math.round(w * dpr)
+    canvas.height = Math.round(h * dpr)
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    field = createField(w, h)
+    ctx.clearRect(0, 0, w, h)
+    paint(ctx, primeField(field))
+  }
+
+  function tick(ts: number) {
+    const dt = last === null ? 0 : ts - last
+    last = ts
+    erase(ctx, field, fadeAlpha(dt))
+    paint(ctx, stepField(field, dt))
+    frame = window.requestAnimationFrame(tick)
+  }
+
+  function stop() {
+    if (frame !== 0) window.cancelAnimationFrame(frame)
+    frame = 0
+    last = null
+  }
+
+  function apply() {
+    stop()
+    fit()
+    if (!reduced.matches) frame = window.requestAnimationFrame(tick)
+  }
+
+  const onResize = () => apply()
+  const onMotionChange = () => apply()
+
+  apply()
+  window.addEventListener('resize', onResize)
+  reduced.addEventListener('change', onMotionChange)
+
+  return () => {
+    stop()
+    window.removeEventListener('resize', onResize)
+    reduced.removeEventListener('change', onMotionChange)
   }
 }
 
-function px(n: number) {
-  return `${n.toFixed(1)}px`
-}
-
-type AmbientItemBase = {
-  id: string
-  left: string
-  top: string
-  hue: 'cyan' | 'magenta'
-  driftDur: string
-  twDur: string
-  driftDelay: string
-  twDelay: string
-  carryDur: string
-  carryDelay: string
-  carryX: string
-  carryY: string
-  x1: string
-  y1: string
-  x2: string
-  y2: string
-  x3: string
-  y3: string
-  x4: string
-  y4: string
-}
-
-type AmbientItem =
-  | (AmbientItemBase & { kind: 'dot'; size: string })
-  | (AmbientItemBase & { kind: 'glyph'; char: string; fontSize: string })
-
-function motionBase(i: number): Omit<AmbientItemBase, 'id'> {
-  const rPosX = pseudoRandom(i * 997 + 401)
-  const rPosY = pseudoRandom(i * 541 + 203)
-  const rTwA = pseudoRandom(i * 313 + 67)
-  const rTwB = pseudoRandom(i * 211 + 89)
-  const rCarry = pseudoRandom(i * 919 + 3)
-  const rCarryDist = pseudoRandom(i * 727 + 17)
-
-  const v1 = leg(i, 1)
-  const v2 = leg(i, 2)
-  const v3 = leg(i, 3)
-  const v4 = leg(i, 4)
-
-  const x1 = v1.x
-  const y1 = v1.y
-  const x2 = x1 + v2.x
-  const y2 = y1 + v2.y
-  const x3 = x2 + v3.x
-  const y3 = y2 + v3.y
-  const x4 = x3 + v4.x
-  const y4 = y3 + v4.y
-
-  const angle = rCarry * Math.PI * 2
-  const dist = 40 + rCarryDist * 56
-  const carryX = Math.cos(angle) * dist
-  const carryY = Math.sin(angle) * dist
-
-  return {
-    left: `${(rPosX * 96 + 2).toFixed(2)}%`,
-    top: `${(rPosY * 96 + 2).toFixed(2)}%`,
-    driftDur: `${22 + (i % 6) * 1.4 + rTwB * 14}s`,
-    twDur: `${32 + (i % 9) * 1.6 + rTwA * 30}s`,
-    driftDelay: `${(rTwB * -28).toFixed(2)}s`,
-    twDelay: `${(rTwA * 36).toFixed(2)}s`,
-    carryDur: `${22 + (i % 5) * 1.5 + rCarry * 20}s`,
-    carryDelay: `${(rCarry * -14).toFixed(2)}s`,
-    carryX: px(carryX),
-    carryY: px(carryY),
-    hue: pseudoRandom(i * 127 + 5) < 0.5 ? 'cyan' : 'magenta',
-    x1: px(x1),
-    y1: px(y1),
-    x2: px(x2),
-    y2: px(y2),
-    x3: px(x3),
-    y3: px(y3),
-    x4: px(x4),
-    y4: px(y4),
-  }
-}
-
-function motionStyle(item: AmbientItemBase): CSSProperties {
-  return {
-    '--amb-drift-dur': item.driftDur,
-    '--amb-tw-dur': item.twDur,
-    '--amb-drift-delay': item.driftDelay,
-    '--amb-tw-delay': item.twDelay,
-    '--amb-x1': item.x1,
-    '--amb-y1': item.y1,
-    '--amb-x2': item.x2,
-    '--amb-y2': item.y2,
-    '--amb-x3': item.x3,
-    '--amb-y3': item.y3,
-    '--amb-x4': item.x4,
-    '--amb-y4': item.y4,
-  } as CSSProperties
-}
-
+/**
+ * Full-viewport circuit-pulse animation behind the page: lit signals running
+ * along the body's grid lines. One canvas and one requestAnimationFrame loop.
+ * Markup is a bare canvas so server and client render identically.
+ */
 export function AmbientParticles() {
-  const items = useMemo((): AmbientItem[] => {
-    const n = MATRIX_CHARS.length
-    return Array.from({ length: TOTAL }, (_, i) => {
-      const base = motionBase(i)
-      const isGlyph = pseudoRandom(i * 444 + 2) < GLYPH_FRACTION
-      if (isGlyph) {
-        const ci = Math.min(n - 1, Math.floor(pseudoRandom(i * 883 + 44) * n))
-        const fontSize = `${10 + pseudoRandom(i * 55 + 3) * 9}px`
-        return {
-          kind: 'glyph',
-          id: `g-${i}`,
-          ...base,
-          /* No twinkle delay — random twDelay (was up to ~36s) kept glyphs invisible at first paint. */
-          twDelay: '0s',
-          char: MATRIX_CHARS[ci]!,
-          fontSize,
-        }
-      }
-      const rSize = pseudoRandom(i * 433 + 11)
-      return {
-        kind: 'dot',
-        id: `s-${i}`,
-        ...base,
-        size: `${2 + rSize * 4}px`,
-      }
-    })
+  const ref = useRef<HTMLCanvasElement>(null)
+
+  useEffect(() => {
+    const canvas = ref.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    return startPulses(canvas, ctx)
   }, [])
 
-  return (
-    <div className="ambient-particles" aria-hidden>
-      {items.map((item) => (
-        <span
-          key={item.id}
-          className="ambient-particles__carrier"
-          style={
-            {
-              left: item.left,
-              top: item.top,
-              '--amb-carry-dur': item.carryDur,
-              '--amb-carry-delay': item.carryDelay,
-              '--amb-carry-x': item.carryX,
-              '--amb-carry-y': item.carryY,
-            } as CSSProperties
-          }
-        >
-          {item.kind === 'dot' ? (
-            <span
-              className={`ambient-particles__dot ambient-particles__dot--${item.hue}`}
-              style={
-                {
-                  width: item.size,
-                  height: item.size,
-                  ...motionStyle(item),
-                } as CSSProperties
-              }
-            />
-          ) : (
-            <span
-              className={`ambient-particles__glyph ambient-particles__glyph--${item.hue}`}
-              style={
-                {
-                  fontSize: item.fontSize,
-                  ...motionStyle(item),
-                } as CSSProperties
-              }
-            >
-              {item.char}
-            </span>
-          )}
-        </span>
-      ))}
-    </div>
-  )
+  return <canvas ref={ref} className="ambient-particles" aria-hidden />
 }

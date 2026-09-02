@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The background animation is now circuit pulses: bright cyan and magenta signals run along the page grid lines, turn at intersections, branch, and fade like traces on a circuit board, drawn on a single canvas instead of animated DOM elements. Home cards are slightly more translucent so the traces glow through them, article pages dim the effect behind body text, and reduced-motion users get a single static frame.
 - The ClamAV Control post now describes the current Tauri 2 + Rust desktop app instead of the retired Electron build, and its repo link and live README point at the renamed `clamav-antivirus-ui` repository; its card image is a fresh v2.2.0 Status screen screenshot.
 
 ### Added

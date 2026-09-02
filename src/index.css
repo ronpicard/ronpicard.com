@@ -51,7 +51,8 @@
 
 :root {
   --bg-deep: #000000;
-  --bg-card: rgba(6, 10, 14, 0.88);
+  /* Translucent enough for the circuit pulses to glow through behind the blur. */
+  --bg-card: rgba(6, 10, 14, 0.72);
   --border: rgba(0, 255, 200, 0.14);
   --text: #e4f2f0;
   --text-muted: rgba(160, 200, 195, 0.5);
@@ -139,133 +140,16 @@ body {
 .ambient-particles {
   position: fixed;
   inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
-  overflow: hidden;
 }
 
-/* Anchor point; slides back and forth on one straight line so motion never rests. */
-.ambient-particles__carrier {
-  position: absolute;
-  width: 0;
-  height: 0;
-  animation: ambient-carrier-line linear infinite alternate;
-  animation-duration: var(--amb-carry-dur, 32s);
-  animation-delay: var(--amb-carry-delay, 0s);
-  will-change: transform;
-}
-
-@keyframes ambient-carrier-line {
-  0% {
-    transform: translate(0, 0);
-  }
-  100% {
-    transform: translate(var(--amb-carry-x, 0), var(--amb-carry-y, 0));
-  }
-}
-
-.ambient-particles__dot {
-  position: absolute;
-  left: 0;
-  top: 0;
-  border-radius: 50%;
-  opacity: 0;
-  animation-name: ambient-star-drift, ambient-star-twinkle;
-  animation-duration: var(--amb-drift-dur, 32s), var(--amb-tw-dur, 52s);
-  animation-delay: var(--amb-drift-delay, 0s), var(--amb-tw-delay, 0s);
-  animation-timing-function: linear, ease-in-out;
-  animation-direction: alternate, normal;
-  animation-iteration-count: infinite, infinite;
-  will-change: opacity, transform;
-}
-
-.ambient-particles__dot--cyan {
-  background-color: rgba(0, 255, 200, 0.78);
-}
-
-.ambient-particles__dot--magenta {
-  background-color: rgba(255, 43, 214, 0.74);
-}
-
-.ambient-particles__glyph {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: 0;
-  white-space: nowrap;
-  /* Match twinkle 0% so glyphs are visible on first paint (twDelay is 0 for glyphs in TS). */
-  opacity: 0.06;
-  transform: translate(-50%, -50%);
-  animation-name: ambient-star-drift, ambient-star-twinkle;
-  animation-duration: var(--amb-drift-dur, 32s), var(--amb-tw-dur, 52s);
-  animation-delay: var(--amb-drift-delay, 0s), var(--amb-tw-delay, 0s);
-  animation-timing-function: linear, ease-in-out;
-  animation-direction: alternate, normal;
-  animation-iteration-count: infinite, infinite;
-  animation-fill-mode: both, both;
-  will-change: opacity, transform;
-}
-
-.ambient-particles__glyph--cyan {
-  color: rgba(0, 255, 200, 0.72);
-  text-shadow: 0 0 6px rgba(0, 255, 200, 0.22);
-}
-
-.ambient-particles__glyph--magenta {
-  color: rgba(255, 43, 214, 0.68);
-  text-shadow: 0 0 6px rgba(255, 43, 214, 0.2);
-}
-
-/* Piecewise-linear path: origin → 4 corners → back home (straight segments). */
-@keyframes ambient-star-drift {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) translate(0, 0);
-  }
-  20% {
-    transform: translate(-50%, -50%) translate(var(--amb-x1, 0), var(--amb-y1, 0));
-  }
-  40% {
-    transform: translate(-50%, -50%) translate(var(--amb-x2, 0), var(--amb-y2, 0));
-  }
-  60% {
-    transform: translate(-50%, -50%) translate(var(--amb-x3, 0), var(--amb-y3, 0));
-  }
-  80% {
-    transform: translate(-50%, -50%) translate(var(--amb-x4, 0), var(--amb-y4, 0));
-  }
-}
-
-@keyframes ambient-star-twinkle {
-  0%,
-  100% {
-    opacity: 0.06;
-  }
-  14% {
-    opacity: 0.58;
-  }
-  26% {
-    opacity: 0.12;
-  }
-  41% {
-    opacity: 0.72;
-  }
-  54% {
-    opacity: 0.14;
-  }
-  68% {
-    opacity: 0.62;
-  }
-  81% {
-    opacity: 0.16;
-  }
-  93% {
-    opacity: 0.48;
-  }
+/* Article pages are mostly body text; keep the rain ambient behind them. */
+.app-content:has(.page--article) .ambient-particles {
+  opacity: 0.35;
 }
 
 .page {
@@ -1573,19 +1457,9 @@ body {
     scroll-behavior: auto;
   }
 
-  .ambient-particles__carrier {
-    animation: none;
-  }
-
-  .ambient-particles__dot {
-    animation: none;
-    opacity: 0.38;
-  }
-
-  .ambient-particles__glyph {
-    animation: none;
-    opacity: 0.38;
-    text-shadow: none;
+  /* The canvas draws one static frame under reduced motion; soften it. */
+  .ambient-particles {
+    opacity: 0.55;
   }
 
   .project-card,

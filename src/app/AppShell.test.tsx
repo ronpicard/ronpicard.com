@@ -16,6 +16,8 @@ beforeEach(() => {
   container = document.createElement('div')
   document.body.append(container)
   root = createRoot(container)
+  // jsdom has no 2d canvas; the ambient rain bails out cleanly on a null context.
+  vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockImplementation(() => null)
 })
 
 afterEach(() => {
