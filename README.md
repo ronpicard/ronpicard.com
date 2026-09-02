@@ -30,8 +30,8 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 {
   "slug": "clamav-antivirus-control-gui",
   "title": "ClamAV Control — Home",
-  "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-control-gui/main/README.md",
-  "repoUrl": "https://github.com/ronpicard/clamav-antivirus-control-gui"
+  "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-ui/main/README.md",
+  "repoUrl": "https://github.com/ronpicard/clamav-antivirus-ui"
 }
 ```
 
