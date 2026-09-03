@@ -68,5 +68,7 @@ describe('AppShell', () => {
     }
     expect(scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: 'auto' })
     expect(container.querySelector('.page--article')).not.toBeNull()
+    // Marks the article column so the ambient pulses stay out from under the text.
+    expect(container.querySelector('.page--article')?.hasAttribute('data-ambient-exclude')).toBe(true)
   })
 })

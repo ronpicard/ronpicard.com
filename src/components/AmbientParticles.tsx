@@ -1,70 +1,97 @@
 import { useEffect, useRef } from 'react'
-import { createField, fadeAlpha, primeField, stepField, type Field, type Hue, type Paint } from './circuitPulses'
+import {
+  brightnessAt,
+  createField,
+  PEAK_FRACTION,
+  renderField,
+  stepField,
+  type Field,
+  type Point,
+  type Rect,
+  type Trace,
+} from './circuitPulses'
 
 /** Backing-store scale cap; 3x phones get a 2x canvas, which is indistinguishable at this size. */
 const MAX_DPR = 2
 
-const HEAD_COLOR: Record<Hue, string> = {
-  cyan: '#e6fffa',
-  magenta: '#ffe0f8',
-}
-const TRACE_COLOR: Record<Hue, string> = {
-  cyan: 'rgb(0, 255, 200)',
-  magenta: 'rgb(255, 43, 214)',
-}
-const GLOW_COLOR: Record<Hue, string> = {
-  cyan: 'rgba(0, 255, 200, 0.9)',
-  magenta: 'rgba(255, 43, 214, 0.9)',
+/** White light with a faint cool bloom so it still belongs to the site's palette. */
+const CORE_RGB = '255, 255, 255'
+const HALO_RGB = '190, 255, 235'
+
+/** Elements carrying this attribute keep pulses from spawning or drawing underneath them. */
+const EXCLUDE_SELECTOR = '[data-ambient-exclude]'
+
+function excludedRects(): Rect[] {
+  const out: Rect[] = []
+  for (const el of document.querySelectorAll(EXCLUDE_SELECTOR)) {
+    const r = el.getBoundingClientRect()
+    if (r.width > 0 && r.height > 0) out.push({ x: r.left, y: r.top, w: r.width, h: r.height })
+  }
+  return out
 }
 
-const TAU = Math.PI * 2
+/** Restricts drawing to the viewport minus the excluded rectangles. Caller must restore. */
+function clipExcluded(ctx: CanvasRenderingContext2D, field: Field) {
+  if (field.exclude.length === 0) return
+  ctx.beginPath()
+  ctx.rect(0, 0, field.width, field.height)
+  for (const r of field.exclude) ctx.rect(r.x, r.y, r.w, r.h)
+  ctx.clip('evenodd')
+}
 
-function stroke(ctx: CanvasRenderingContext2D, x1: number, y1: number, x2: number, y2: number, width: number) {
+function gradient(ctx: CanvasRenderingContext2D, a: Point, b: Point, rgb: string, a0: number, a1: number) {
+  const g = ctx.createLinearGradient(a.x, a.y, b.x, b.y)
+  g.addColorStop(0, `rgba(${rgb}, ${a0})`)
+  g.addColorStop(1, `rgba(${rgb}, ${a1})`)
+  return g
+}
+
+function strokeSegment(ctx: CanvasRenderingContext2D, a: Point, b: Point, rgb: string, a0: number, a1: number, width: number) {
+  ctx.strokeStyle = gradient(ctx, a, b, rgb, a0, a1)
   ctx.lineWidth = width
   ctx.beginPath()
-  ctx.moveTo(x1, y1)
-  ctx.lineTo(x2, y2)
+  ctx.moveTo(a.x, a.y)
+  ctx.lineTo(b.x, b.y)
   ctx.stroke()
 }
 
-function dot(ctx: CanvasRenderingContext2D, x: number, y: number, r: number) {
-  ctx.beginPath()
-  ctx.arc(x, y, r, 0, TAU)
-  ctx.fill()
-}
-
-function paint(ctx: CanvasRenderingContext2D, cells: Paint[]) {
-  ctx.lineCap = 'round'
-  for (const c of cells) {
-    if (c.kind === 'segment') {
-      ctx.strokeStyle = TRACE_COLOR[c.hue]
-      // Soft halo under a sharp core so traces read as lit, not drawn.
-      ctx.globalAlpha = c.alpha * 0.28
-      stroke(ctx, c.x1, c.y1, c.x2, c.y2, c.width * 3.2)
-      ctx.globalAlpha = c.alpha
-      stroke(ctx, c.x1, c.y1, c.x2, c.y2, c.width)
-    } else if (c.kind === 'node') {
-      ctx.fillStyle = TRACE_COLOR[c.hue]
-      ctx.globalAlpha = c.alpha
-      dot(ctx, c.x, c.y, 3)
+/**
+ * Strokes the bar as a chain of linear gradients that fade in from the
+ * leading tip and out toward the tail. A linear gradient cannot bend, so the
+ * segment holding the peak is split there to keep the bright point sharp.
+ */
+function strokeBar(ctx: CanvasRenderingContext2D, t: Trace, rgb: string, scale: number, width: number) {
+  const peak = t.trailLen * PEAK_FRACTION
+  const alphaAt = (d: number) => brightnessAt(d, t.trailLen) * t.alpha * scale
+  let d = 0
+  for (let i = 1; i < t.points.length; i++) {
+    const a = t.points[i - 1]!
+    const b = t.points[i]!
+    const seg = Math.hypot(b.x - a.x, b.y - a.y)
+    if (d < peak && peak < d + seg) {
+      const k = (peak - d) / seg
+      const mid = { x: a.x + (b.x - a.x) * k, y: a.y + (b.y - a.y) * k }
+      strokeSegment(ctx, a, mid, rgb, alphaAt(d), alphaAt(peak), width)
+      strokeSegment(ctx, mid, b, rgb, alphaAt(peak), alphaAt(d + seg), width)
     } else {
-      ctx.fillStyle = HEAD_COLOR[c.hue]
-      ctx.globalAlpha = c.alpha
-      ctx.shadowColor = GLOW_COLOR[c.hue]
-      ctx.shadowBlur = 12
-      dot(ctx, c.x, c.y, c.width * 1.2)
-      ctx.shadowBlur = 0
+      strokeSegment(ctx, a, b, rgb, alphaAt(d), alphaAt(d + seg), width)
     }
+    d += seg
   }
-  ctx.globalAlpha = 1
 }
 
-function erase(ctx: CanvasRenderingContext2D, field: Field, alpha: number) {
-  if (alpha <= 0) return
-  ctx.globalCompositeOperation = 'destination-out'
-  ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`
-  ctx.fillRect(0, 0, field.width, field.height)
-  ctx.globalCompositeOperation = 'source-over'
+function paint(ctx: CanvasRenderingContext2D, field: Field, traces: Trace[]) {
+  ctx.clearRect(0, 0, field.width, field.height)
+  ctx.save()
+  clipExcluded(ctx, field)
+  // Flush ends: the wide halo must not poke out past the core, so both read as one bar.
+  ctx.lineCap = 'butt'
+  ctx.globalAlpha = 1
+  for (const t of traces) {
+    strokeBar(ctx, t, HALO_RGB, 0.3, t.width * 3.6)
+    strokeBar(ctx, t, CORE_RGB, 1, t.width)
+  }
+  ctx.restore()
 }
 
 /**
@@ -84,16 +111,17 @@ function startPulses(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): 
     canvas.width = Math.round(w * dpr)
     canvas.height = Math.round(h * dpr)
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-    field = createField(w, h)
-    ctx.clearRect(0, 0, w, h)
-    paint(ctx, primeField(field))
+    field = createField(w, h, Math.random, excludedRects())
+    paint(ctx, field, renderField(field))
   }
 
   function tick(ts: number) {
     const dt = last === null ? 0 : ts - last
     last = ts
-    erase(ctx, field, fadeAlpha(dt))
-    paint(ctx, stepField(field, dt))
+    // The article column scrolls under the fixed canvas, so re-measure every frame.
+    field.exclude = excludedRects()
+    stepField(field, dt)
+    paint(ctx, field, renderField(field))
     frame = window.requestAnimationFrame(tick)
   }
 
@@ -124,9 +152,10 @@ function startPulses(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): 
 }
 
 /**
- * Full-viewport circuit-pulse animation behind the page: lit signals running
- * along the body's grid lines. One canvas and one requestAnimationFrame loop.
- * Markup is a bare canvas so server and client render identically.
+ * Full-viewport circuit-pulse animation behind the page: bars of white light
+ * running along the body's grid lines. One canvas and one
+ * requestAnimationFrame loop. Markup is a bare canvas so server and client
+ * render identically.
  */
 export function AmbientParticles() {
   const ref = useRef<HTMLCanvasElement>(null)

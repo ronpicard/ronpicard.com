@@ -206,7 +206,7 @@ export default function ArticlePage() {
   )
 
   return (
-    <div className="page page--article">
+    <div className="page page--article" data-ambient-exclude>
       <Seo
         title={seoTitle}
         description={truncateMetaDescription(metaDesc)}

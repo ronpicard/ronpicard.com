@@ -18,6 +18,11 @@ type FakeCtx = {
   stroke: ReturnType<typeof vi.fn>
   arc: ReturnType<typeof vi.fn>
   fill: ReturnType<typeof vi.fn>
+  createLinearGradient: ReturnType<typeof vi.fn>
+  save: ReturnType<typeof vi.fn>
+  restore: ReturnType<typeof vi.fn>
+  rect: ReturnType<typeof vi.fn>
+  clip: ReturnType<typeof vi.fn>
   globalCompositeOperation: string
   globalAlpha: number
   fillStyle: string
@@ -39,6 +44,11 @@ function makeCtx(): FakeCtx {
     stroke: vi.fn(),
     arc: vi.fn(),
     fill: vi.fn(),
+    createLinearGradient: vi.fn(() => ({ addColorStop: vi.fn() })),
+    save: vi.fn(),
+    restore: vi.fn(),
+    rect: vi.fn(),
+    clip: vi.fn(),
     globalCompositeOperation: 'source-over',
     globalAlpha: 1,
     fillStyle: '',
@@ -161,31 +171,80 @@ describe('AmbientParticles', () => {
     await mount()
     expect(painted()).toBeGreaterThan(0)
     expect(ctx.stroke).toHaveBeenCalled()
-    expect(ctx.fill).toHaveBeenCalled()
     expect(requestAnimationFrame).toHaveBeenCalledTimes(1)
 
     ctx.stroke.mockClear()
     ctx.fill.mockClear()
-    ctx.fillRect.mockClear()
+    ctx.clearRect.mockClear()
     act(() => runFrame(0))
     act(() => runFrame(50))
-    // A frame fades the previous trails (erase pass) and paints the newly covered segments.
-    expect(ctx.fillRect).toHaveBeenCalled()
+    // A frame clears the canvas and redraws every trace.
+    expect(ctx.clearRect).toHaveBeenCalled()
     expect(ctx.stroke).toHaveBeenCalled()
     expect(rafCallbacks.size).toBe(1)
   })
 
-  it('fades using destination-out so the page background stays visible through the canvas', async () => {
+  it('draws bars as gradient strokes that fade at both ends', async () => {
     await mount()
-    const ops: string[] = []
-    ctx.fillRect.mockImplementation(() => {
-      ops.push(ctx.globalCompositeOperation)
-    })
     act(() => runFrame(0))
-    act(() => runFrame(100))
-    expect(ops).toContain('destination-out')
-    // Traces are painted normally after the erase pass.
+    act(() => runFrame(50))
+    expect(ctx.createLinearGradient).toHaveBeenCalled()
+    // Every gradient stop is a valid rgba with a finite alpha in [0, 1].
+    for (const call of ctx.createLinearGradient.mock.results) {
+      const stops = (call.value as { addColorStop: ReturnType<typeof vi.fn> }).addColorStop.mock.calls
+      for (const [, color] of stops as [number, string][]) {
+        const alpha = Number(/rgba\([^)]*,\s*([^,)]+)\)/.exec(color)?.[1])
+        expect(Number.isFinite(alpha)).toBe(true)
+        expect(alpha).toBeGreaterThanOrEqual(0)
+        expect(alpha).toBeLessThanOrEqual(1)
+      }
+    }
+  })
+
+  it('draws no dot at the bright point and ends both strokes flush so halo and core share a length', async () => {
+    await mount()
+    act(() => runFrame(0))
+    act(() => runFrame(50))
+    expect(ctx.arc).not.toHaveBeenCalled()
+    expect(ctx.fill).not.toHaveBeenCalled()
+    expect(ctx.shadowBlur).toBe(0)
+    expect(ctx.lineCap).toBe('butt')
+  })
+
+  it('leaves the canvas transparent between traces so the page grid shows through', async () => {
+    await mount()
+    act(() => runFrame(0))
+    act(() => runFrame(50))
+    // Redraw is clear-then-paint; nothing ever fills the whole canvas.
+    expect(ctx.fillRect).not.toHaveBeenCalled()
     expect(ctx.globalCompositeOperation).toBe('source-over')
+  })
+
+  it('clips pulses out from under elements marked data-ambient-exclude', async () => {
+    const article = document.createElement('div')
+    article.setAttribute('data-ambient-exclude', '')
+    article.getBoundingClientRect = () =>
+      ({ left: 100, top: 20, width: 600, height: 500, right: 700, bottom: 520, x: 100, y: 20 }) as DOMRect
+    document.body.append(article)
+    try {
+      await mount()
+      act(() => runFrame(0))
+      act(() => runFrame(50))
+      expect(ctx.clip).toHaveBeenCalledWith('evenodd')
+      expect(ctx.rect).toHaveBeenCalledWith(100, 20, 600, 500)
+      expect(ctx.rect).toHaveBeenCalledWith(0, 0, 1000, 600)
+      expect(ctx.save).toHaveBeenCalled()
+      expect(ctx.restore).toHaveBeenCalled()
+    } finally {
+      article.remove()
+    }
+  })
+
+  it('does not clip when nothing on the page is excluded', async () => {
+    await mount()
+    act(() => runFrame(0))
+    act(() => runFrame(50))
+    expect(ctx.clip).not.toHaveBeenCalled()
   })
 
   it('draws a static field and never schedules a frame when reduced motion is preferred', async () => {

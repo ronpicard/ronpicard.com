@@ -51,7 +51,7 @@
 
 :root {
   --bg-deep: #000000;
-  /* Translucent enough for the circuit pulses to glow through behind the blur. */
+  /* Translucent enough for the light pulses to glow through behind the blur. */
   --bg-card: rgba(6, 10, 14, 0.72);
   --border: rgba(0, 255, 200, 0.14);
   --text: #e4f2f0;
@@ -145,11 +145,6 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-}
-
-/* Article pages are mostly body text; keep the rain ambient behind them. */
-.app-content:has(.page--article) .ambient-particles {
-  opacity: 0.35;
 }
 
 .page {
