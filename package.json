@@ -26,7 +26,7 @@
     "build:full": "tsc --noEmit && node --experimental-strip-types scripts/mirror-resources.mjs && node --experimental-strip-types scripts/mirror-readmes.mjs && node --experimental-strip-types scripts/generate-thumbs.mjs && vite build && npm run build:ssr && node --experimental-strip-types scripts/prerender.mjs"
   },
   "dependencies": {
-    "isomorphic-dompurify": "^3.22.0",
+    "isomorphic-dompurify": "^4.1.0",
     "marked": "^18.0.9",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
