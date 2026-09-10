@@ -201,14 +201,20 @@ describe('AmbientParticles', () => {
     }
   })
 
-  it('draws no dot at the bright point and ends both strokes flush so halo and core share a length', async () => {
+  it('keeps the initial straight trails free of dots and heavyweight shadow effects', async () => {
     await mount()
-    act(() => runFrame(0))
-    act(() => runFrame(50))
     expect(ctx.arc).not.toHaveBeenCalled()
     expect(ctx.fill).not.toHaveBeenCalled()
     expect(ctx.shadowBlur).toBe(0)
     expect(ctx.lineCap).toBe('butt')
+  })
+
+  it('adds a small fading junction glow as a signal rounds a corner', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    await mount()
+    for (let i = 0; i < 25; i++) act(() => runFrame(i * 100))
+    expect(ctx.arc).toHaveBeenCalledWith(40.5, 0.5, 1.8, 0, Math.PI * 2)
+    expect(ctx.fill).toHaveBeenCalled()
   })
 
   it('leaves the canvas transparent between traces so the page grid shows through', async () => {
@@ -217,7 +223,7 @@ describe('AmbientParticles', () => {
     act(() => runFrame(50))
     // Redraw is clear-then-paint; nothing ever fills the whole canvas.
     expect(ctx.fillRect).not.toHaveBeenCalled()
-    expect(ctx.globalCompositeOperation).toBe('source-over')
+
   })
 
   it('clips pulses out from under elements marked data-ambient-exclude', async () => {
@@ -237,6 +243,21 @@ describe('AmbientParticles', () => {
       expect(ctx.restore).toHaveBeenCalled()
     } finally {
       article.remove()
+    }
+  })
+
+  it('softens pulses under home cards without clipping the card gaps', async () => {
+    const card = document.createElement('article')
+    card.className = 'project-card'
+    card.getBoundingClientRect = () => ({ left: 80, top: 150, width: 360, height: 390 }) as DOMRect
+    document.body.append(card)
+    try {
+      await mount()
+      expect(ctx.fillRect).toHaveBeenCalledWith(80, 150, 360, 390)
+      expect(ctx.clip).not.toHaveBeenCalled()
+      expect(ctx.fillStyle).toBe('rgba(0, 0, 0, 0.85)')
+    } finally {
+      card.remove()
     }
   })
 

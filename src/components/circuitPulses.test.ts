@@ -43,6 +43,8 @@ function pulse(over: Partial<Pulse> = {}): Pulse {
   const head = node(3, 2)
   return {
     ...head,
+    delayMs: 0,
+    blue: false,
     dir: 0,
     speed: 400,
     traveled: 0,
@@ -66,8 +68,8 @@ describe('targetCount', () => {
   it('grows with viewport area and is bounded', () => {
     expect(targetCount(0, 0)).toBe(0)
     expect(targetCount(1280, 720)).toBeGreaterThan(targetCount(640, 480))
-    expect(targetCount(5000, 3000)).toBeLessThanOrEqual(40)
-    expect(targetCount(320, 200)).toBeGreaterThanOrEqual(4)
+    expect(targetCount(5000, 3000)).toBeLessThanOrEqual(10)
+    expect(targetCount(320, 200)).toBeGreaterThanOrEqual(1)
   })
 
   it('is lighter per pixel on phones than on wide viewports', () => {
@@ -318,7 +320,7 @@ describe('stepField', () => {
     const field = createField(800, 600, fixed)
     const p = pulse({ dir: 0, speed: 400 })
     field.pulses = [p]
-    field.target = 1
+    field.target = 2
     // turn roll fails (0.99), branch roll succeeds (0), then branch params.
     stepField(field, 100, seq([0.99, 0, 0.5]))
     expect(field.pulses.length).toBe(2)
@@ -328,6 +330,7 @@ describe('stepField', () => {
     expect(child.dir === 1 || child.dir === 3).toBe(true)
     expect(child.path).toEqual([node(4, 2)])
     expect(child.traveled).toBe(0)
+    expect(child.delayMs).toBeGreaterThan(0)
   })
 
   it('never branches beyond the population cap', () => {
@@ -346,6 +349,13 @@ describe('stepField', () => {
     expect(field.pulses.length).toBe(1)
     expect(field.pulses[0]).not.toBe(p)
     expect(field.pulses[0]!.traveled).toBe(0)
+    const replacement = field.pulses[0]!
+    const position = { x: replacement.x, y: replacement.y }
+    stepField(field, 100, lcg(10))
+    expect({ x: replacement.x, y: replacement.y }).toEqual(position)
+    expect(renderField(field)[0]!.alpha).toBe(0)
+    for (let i = 0; i < 60; i++) stepField(field, 100, () => 0.99)
+    expect(replacement.traveled).toBeGreaterThan(0)
   })
 
   it('drops a dead pulse instead of respawning when the population is above target', () => {

@@ -11,6 +11,12 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Production asset base URL MUST be `/` for the apex domain; project Pages hosting MUST be supported by changing `prodBase` in `vite.config.ts` and `homepage` in `package.json`.
 - Blog routes MUST use history URLs (`/blog/:slug`), not hash routing.
 
+### Background animation
+
+- Background signals MUST follow the 40px grid with right-angle turns, short fading tails, sparse teal pulses, occasional muted blue accents, and quiet intervals between replacement signals.
+- Signals MUST favor open space and dim beneath homepage cards and the header; article exclusion zones MUST remain clear.
+- Reduced-motion users MUST receive a static frame, and the animation MUST NOT track the pointer or use parallax.
+
 ### Content and routing
 
 - Article metadata MUST live in `src/data/siteArticles.json` and be normalized in `src/data/articles.ts`.

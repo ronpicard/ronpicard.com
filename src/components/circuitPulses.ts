@@ -25,6 +25,9 @@ export type Rect = { x: number; y: number; w: number; h: number }
 export type Pulse = {
   x: number
   y: number
+  /** Quiet interval before a replacement starts moving. */
+  delayMs: number
+  blue: boolean
   dir: Dir
   /** CSS px per second. */
   speed: number
@@ -52,11 +55,14 @@ export type Field = {
   pulses: Pulse[]
   /** Regions pulses must not spawn in (the canvas also clips them out there); updated by the component as the page scrolls. */
   exclude: Rect[]
+  /** Prefer spawning outside these rectangles; the renderer dims signals beneath them. */
+  quiet: Rect[]
 }
 
 /** One pulse ready to draw: head first, then the tail bending back through its corners. */
 export type Trace = {
   points: Point[]
+  blue: boolean
   alpha: number
   width: number
   trailLen: number
@@ -72,39 +78,39 @@ export const LINE_OFFSET = 0.5
 /** Largest time slice the simulation will consume in one call (tab returns from background). */
 export const MAX_STEP_MS = 100
 
-const AREA_PER_PULSE_WIDE = 45_000
-const AREA_PER_PULSE_NARROW = 70_000
+const AREA_PER_PULSE_WIDE = 180_000
+const AREA_PER_PULSE_NARROW = 240_000
 const NARROW_MAX_PX = 640
-const MIN_PULSES = 4
-const MAX_PULSES = 40
+const MIN_PULSES = 1
+const MAX_PULSES = 10
 /** Branching may grow the population to this multiple of the target. */
-const CAP_FACTOR = 1.5
+const CAP_FACTOR = 1.2
 
-const SPEED_MIN = 36
-const SPEED_MAX = 36
+const SPEED_MIN = 22
+const SPEED_MAX = 32
 const LIFE_MIN = 250
 const LIFE_MAX = 800
-const TRAIL_MIN = 50
-const TRAIL_MAX = 140
-const WIDTH_MIN = 0.9
-const WIDTH_MAX = 1.5
+const TRAIL_MIN = 36
+const TRAIL_MAX = 76
+const WIDTH_MIN = 0.7
+const WIDTH_MAX = 1.1
 
 /** Where the brightest point of a bar sits, as a fraction of its length back from the leading tip. */
-export const PEAK_FRACTION = 0.3
+export const PEAK_FRACTION = 0.06
 /** Sharpness of the fade on either side of the peak. */
 const FADE_POWER = 1.4
 
 /** Chance of turning 90° at an intersection. */
-const TURN_PROBABILITY = 0.35
+const TURN_PROBABILITY = 0.14
 /** Chance of spawning a perpendicular child at an intersection. */
-const BRANCH_PROBABILITY = 0.08
+const BRANCH_PROBABILITY = 0.015
 /** Fraction of life over which a freshly spawned pulse fades in from nothing. */
 export const FADE_IN_END = 0.2
 /** Fraction of life after which a pulse fades toward zero. */
 const FADE_START = 0.7
 
 /** Tries to find a spawn node outside the exclusion zones before giving up and using the last one. */
-const SPAWN_ATTEMPTS = 12
+const SPAWN_ATTEMPTS = 48
 
 const EPS = 1e-6
 
@@ -143,7 +149,7 @@ function makePulse(x: number, y: number, dir: Dir, rand: Rand, startInside: bool
   const [dx, dy] = DIRS[dir]!
   // Origin sits behind the head by the distance already traveled so the tail is visible on first paint.
   const origin = { x: x - dx * traveled, y: y - dy * traveled }
-  return { x, y, dir, speed, traveled, life, trailLen, width, path: [origin] }
+  return { x, y, delayMs: startInside ? 0 : lerp(1800, 5200, rand()), blue: rand() < 0.12, dir, speed, traveled, life, trailLen, width, path: [origin] }
 }
 
 function insideAny(rects: Rect[], x: number, y: number) {
@@ -158,14 +164,14 @@ function spawnAtRandomNode(field: Field, rand: Rand, startInside: boolean): Puls
     const ny = Math.floor(rand() * (lastNode(field.height) + 1))
     x = nx * GRID_PX + LINE_OFFSET
     y = ny * GRID_PX + LINE_OFFSET
-    if (!insideAny(field.exclude, x, y)) break
+    if (!insideAny(field.exclude, x, y) && !insideAny(field.quiet, x, y)) break
   }
   const dir = (Math.floor(rand() * 4) & 3) as Dir
   return makePulse(x, y, dir, rand, startInside)
 }
 
-export function createField(width: number, height: number, rand: Rand = Math.random, exclude: Rect[] = []): Field {
-  const field: Field = { width, height, target: targetCount(width, height), pulses: [], exclude }
+export function createField(width: number, height: number, rand: Rand = Math.random, exclude: Rect[] = [], quiet: Rect[] = []): Field {
+  const field: Field = { width, height, target: targetCount(width, height), pulses: [], exclude, quiet }
   for (let i = 0; i < field.target; i++) {
     field.pulses.push(spawnAtRandomNode(field, rand, true))
   }
@@ -248,7 +254,7 @@ export function renderField(field: Field): Trace[] {
       remaining -= seg
       cur = q
     }
-    out.push({ points, alpha: lifeAlpha(p), width: p.width, trailLen: p.trailLen })
+    out.push({ points, blue: p.blue, alpha: p.delayMs > 0 ? 0 : lifeAlpha(p), width: p.width, trailLen: p.trailLen })
   }
   return out
 }
@@ -266,7 +272,9 @@ export function stepField(field: Field, dtMs: number, rand: Rand = Math.random):
   const spawned: Pulse[] = []
 
   for (const p of field.pulses) {
-    let remaining = (p.speed * dt) / 1000
+    const activeDt = Math.max(0, dt - p.delayMs)
+    p.delayMs = Math.max(0, p.delayMs - dt)
+    let remaining = (p.speed * activeDt) / 1000
     let alive = true
     while (remaining > 0) {
       const { dist, nodePos } = nextNode(p)
