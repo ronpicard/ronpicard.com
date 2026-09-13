@@ -158,6 +158,7 @@ body {
 }
 
 .page.page--home {
+  --text-muted: #99b4b0;
   width: 100%;
   /* Use more horizontal space on large / ultrawide displays (was 1120px — felt tiny vs viewport) */
   max-width: min(92vw, 1560px);
@@ -405,16 +406,8 @@ body {
     --home-grid-gap: clamp(0.75rem, 2cqw, 1.5rem);
   }
 
-  .page.page--home .project-card__title {
-    font-size: clamp(1rem, 2.8cqi, 1.12rem);
-  }
-
   .page.page--home .project-card__link {
     font-size: clamp(0.78rem, 2.2cqi, 0.85rem);
-  }
-
-  .page.page--home .project-card__body {
-    padding: clamp(1.05rem, 3cqi, 1.45rem) clamp(1.1rem, 3.2cqi, 1.45rem);
   }
 
   .page.page--home .site-top-bar__brand {
@@ -494,9 +487,39 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: var(--card-image-fit, cover);
   object-position: center;
   display: block;
+  transform: scale(var(--card-image-scale, 1));
+  transform-origin: var(--card-image-origin, center);
+}
+
+/* Frame selected screenshots without changing their source files or thumbnails. */
+.project-card[data-project='the-infinite-library'] {
+  --card-image-scale: 1.035;
+  --card-image-origin: 52% 50%;
+}
+
+.project-card[data-project='periodic-table-element-visualizer'] {
+  --card-image-fit: contain;
+}
+
+.project-card[data-project='clamav-control'] {
+  --card-image-scale: 1.12;
+  --card-image-origin: 70% 45%;
+}
+
+.project-card[data-project='back-rooms'] {
+  --card-image-scale: 1.035;
+  --card-image-origin: 50% 60%;
+}
+
+.project-card[data-project='daily-tech-brief'] {
+  --card-image-fit: contain;
+}
+
+.project-card[data-project='artemis-ii-mission-tracker'] {
+  --card-image-fit: contain;
 }
 
 .project-card__body {
@@ -504,7 +527,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 0;
-  padding: clamp(1rem, 2.8vw, 1.35rem) clamp(1.05rem, 3vw, 1.35rem);
+  padding: 1.25rem;
 }
 
 .project-card__actions {
@@ -596,7 +619,7 @@ body {
 
 .project-card__meta time {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
 }
 
@@ -628,7 +651,7 @@ body {
 .project-card__title {
   flex: 1 1 auto;
   margin: 0 0 0.85rem;
-  font-size: clamp(0.98rem, 2.4vw, 1.05rem);
+  font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.35;
@@ -1330,6 +1353,12 @@ body {
 
   .page.page--home {
     max-width: 100%;
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px));
+  }
+
+  .page.page--home .site-top-bar__brand {
+    font-size: clamp(1rem, 5.2vw, 1.55rem);
   }
 
   .article-header {
@@ -1416,10 +1445,6 @@ body {
   .project-card__btn {
     padding: 0.5rem 0.85rem;
     font-size: 0.74rem;
-  }
-
-  .project-card__body {
-    padding: 0.95rem 1rem 1.05rem;
   }
 
   .article-nav__half {

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "pool-rooms-game-web-app",
+    "title": "Pool Rooms &mdash; Home",
+    "date": "2026-09-12",
+    "summary": "First-person browser exploration through a connected pool complex: sunlit arcades, rain halls, sunken baths, a golden slide, floating beach balls, and a Sky Pool overlooking the ocean. Walk, swim, and rest with atmospheric audio. React and Three.js on GitHub Pages.",
+    "imageUrl": "resources/pool-rooms-game-web-app-2026-09-12.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/pool-rooms-game-web-app/",
+    "demoUrl": "https://ronpicard.github.io/pool-rooms-game-web-app/",
+    "repoUrl": "https://github.com/ronpicard/pool-rooms-game-web-app",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "infinite-library-game-web-app",
     "title": "The Infinite Library &mdash; Home",
     "date": "2026-08-17",

@@ -56,7 +56,7 @@ export function ProjectCard({ item, priority = false }: Props) {
   const to = `/blog/${item.slug}`
 
   return (
-    <article className="project-card">
+    <article className="project-card" data-project={item.slug}>
       <Link className="project-card__overlay-link" to={to} aria-label={`Open ${item.title}`} />
       <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
         {thumbSrc ? (

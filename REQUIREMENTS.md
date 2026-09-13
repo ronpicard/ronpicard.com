@@ -11,6 +11,14 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Production asset base URL MUST be `/` for the apex domain; project Pages hosting MUST be supported by changing `prodBase` in `vite.config.ts` and `homepage` in `package.json`.
 - Blog routes MUST use history URLs (`/blog/:slug`), not hash routing.
 
+### Portfolio presentation
+
+- The homepage MUST remain a simple project catalog with a compact header and uniform cards in the existing dark neon theme.
+- The grid MUST use three columns at viewport widths of 68rem and above, two from 40rem to below 68rem, and one below 40rem.
+- Card titles MUST use 1.25rem text; homepage dates and supporting text MUST remain readable against the dark background.
+- Phone-width homepage layouts MUST provide at least 1.25rem side padding, respect safe-area insets, and keep the brand and social controls within the viewport.
+- Thumbnail framing MAY be adjusted per project using presentation styles; the original image files, formats, and references MUST be preserved.
+
 ### Background animation
 
 - Background signals MUST follow the 40px grid with right-angle turns, short fading tails, sparse teal pulses, occasional muted blue accents, and quiet intervals between replacement signals.

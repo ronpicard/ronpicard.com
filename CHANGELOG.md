@@ -8,11 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The portfolio grid has larger project titles, brighter dates and supporting text, more room at the edges on phones, and subtle thumbnail framing adjustments. The compact header, neon theme, and three-column desktop layout remain.
 - The background uses sparse, slow teal circuit signals with occasional blue accents, short fading tails, subtle junction glows, and staggered quiet intervals. Signals favor card gaps and margins and dim beneath cards and the header; article content stays clear and reduced-motion users get a static frame.
 - The ClamAV Control post now describes the current Tauri 2 + Rust desktop app instead of the retired Electron build, and its repo link and live README point at the renamed `clamav-antivirus-ui` repository; its card image is a fresh v2.2.0 Status screen screenshot.
 
 ### Added
 
+- Pool Rooms joins the portfolio as the newest project, with a gameplay thumbnail, playable embedded demo, source code link, and a short introduction to the pool complex.
 - Posts whose GitHub repo publishes releases show a Releases button next to Code, on the home card and the article page, linking to the latest release. Set `releasesUrl` in `src/data/siteArticles.json` to enable it; the ClamAV Control post is the first.
 - Pages ship prerendered content: the homepage card grid and article pages are rendered into the HTML at build time and hydrated in the browser, removing the blank-page delay on first visit.
 - The homepage card grid loads card-sized WebP thumbnails (~768px) instead of full-resolution title images, cutting its image weight from roughly 14 MB to about 2 MB; the first row of cards loads eagerly at high priority with preload hints.
