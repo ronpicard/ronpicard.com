@@ -58,6 +58,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 
 - All HTML rendered from JSON or fetched READMEs MUST pass through `shared/articleHtmlSanitize.ts` (DOMPurify allowlists, forbidden tags/attrs, external link hardening).
 - URLs from JSON (images, demo, repo, embed, readme, extra links) MUST be validated before use in the DOM; dangerous schemes, protocol-relative URLs, traversal paths, credentials, and unapproved hosts MUST be rejected.
+- The Pool Rooms demo iframe MUST allow its form-based Start Exploring action; `allow-forms` MUST be limited to the exact approved `https://ronpicard.github.io/pool-rooms-game-web-app/` demo URL.
 - Blog `:slug` route params MUST pass `isSafePublicSlug()` before loading an article.
 - Search input MUST be bounded (`SEARCH_QUERY_MAX_LEN`) and match titles and summaries after the same case and whitespace normalization.
 - Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, GitHub raw/API for README fetch).

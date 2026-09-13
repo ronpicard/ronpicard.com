@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The background uses sparse, slow teal circuit signals with occasional blue accents, short fading tails, subtle junction glows, and staggered quiet intervals. Signals favor card gaps and margins and dim beneath cards and the header; article content stays clear and reduced-motion users get a static frame.
 - The ClamAV Control post now describes the current Tauri 2 + Rust desktop app instead of the retired Electron build, and its repo link and live README point at the renamed `clamav-antivirus-ui` repository; its card image is a fresh v2.2.0 Status screen screenshot.
 
+### Fixed
+
+- Pool Rooms' Start Exploring button now starts the game inside the blog embed.
+
 ### Added
 
 - Fish Tank Simulator joins the portfolio as the latest project, with an aquarium thumbnail, interactive embedded demo, source code link, and an introduction to Pelagic's saltwater reef.

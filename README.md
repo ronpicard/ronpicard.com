@@ -54,10 +54,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (217 tests) |
+| `npm test` | Run Vitest unit tests once (218 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (16 tests × desktop and mobile projects; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (17 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + thumbnails + Vite + SSR bundle + prerender (use before deploy) |
@@ -127,6 +127,7 @@ Smoke tests use [Playwright](https://playwright.dev/) (`playwright.config.ts`, `
 - Keyboard skip link
 - HTML article prose, invalid slug → home, legacy slug → canonical slug
 - Demo link host validation, phone-width embed sizing, tap-to-interact guard on touch devices, and Full view toggle
+- Pool Rooms' form-based start action inside the sandboxed demo (mocked game page)
 - Dynamic README success (mocked fetch), local snapshot fallback, and error fallback
 
 ```bash

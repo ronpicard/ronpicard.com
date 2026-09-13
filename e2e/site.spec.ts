@@ -112,6 +112,32 @@ test.describe('search', () => {
 })
 
 test.describe('article routes', () => {
+  test('starts the Pool Rooms demo through its form inside the embed', async ({ page }) => {
+    // Match the game's form-based start handler without depending on its live build.
+    await page.route('https://ronpicard.github.io/pool-rooms-game-web-app/', (route) =>
+      route.fulfill({
+        contentType: 'text/html',
+        body: `<!doctype html><html><body>
+          <form id="start"><button type="submit">Start Exploring</button></form>
+          <p id="playing" hidden>Game started</p>
+          <script>
+            document.querySelector('#start').addEventListener('submit', (event) => {
+              event.preventDefault();
+              document.querySelector('#start').hidden = true;
+              document.querySelector('#playing').hidden = false;
+            });
+          </script>
+        </body></html>`,
+      }),
+    )
+    await page.goto('/blog/pool-rooms/')
+    const guard = page.getByRole('button', { name: 'Tap to interact' })
+    if (await guard.isVisible()) await guard.click()
+    const demo = page.frameLocator('iframe[title="Pool Rooms demo"]')
+    await demo.getByRole('button', { name: 'Start Exploring' }).click()
+    await expect(demo.getByText('Game started')).toBeVisible()
+  })
+
   test('expands article pages across most of the viewport', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     await page.goto('/blog/periodic-table-element-visualizer')

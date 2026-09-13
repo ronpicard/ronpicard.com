@@ -38,4 +38,12 @@ describe('entry-server render', () => {
     expect(appHtml).toContain('page--article')
     expect(appHtml).toContain('article-header__title')
   })
+
+  it('allows form-based startup only in the Pool Rooms demo', async () => {
+    const pool = await render('/blog/pool-rooms/')
+    const periodic = await render('/blog/periodic-table-element-visualizer/')
+    const sandbox = (html: string) => html.match(/<iframe[^>]*sandbox="([^"]*)"/)?.[1].split(' ')
+    expect(sandbox(pool.appHtml)).toContain('allow-forms')
+    expect(sandbox(periodic.appHtml)).not.toContain('allow-forms')
+  })
 })

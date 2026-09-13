@@ -36,6 +36,9 @@ import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
 import { EmbedFrame } from '../components/EmbedFrame'
 import { YoutubeIcon } from '../components/YoutubeIcon'
 
+const DEFAULT_DEMO_SANDBOX =
+  'allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox'
+
 function stripQuery(url: string) {
   return url.split('?')[0]
 }
@@ -68,6 +71,10 @@ export default function ArticlePage() {
       ? approvedEmbed
       : `${approvedEmbed}/`
     : null
+  // Pool Rooms starts through a form submit handler, which needs this permission.
+  const demoSandbox = iframeSrc === 'https://ronpicard.github.io/pool-rooms-game-web-app/'
+    ? `${DEFAULT_DEMO_SANDBOX} allow-forms`
+    : DEFAULT_DEMO_SANDBOX
 
   const extras = filterExtraLinks(article)
   const demoHref = safeDemoUrl(article.demoUrl)
@@ -175,7 +182,7 @@ export default function ArticlePage() {
         <EmbedFrame
           title={`${article.title} demo`}
           src={iframeSrc}
-          sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox"
+          sandbox={demoSandbox}
           allow="clipboard-write; fullscreen"
         />
       ) : null}
