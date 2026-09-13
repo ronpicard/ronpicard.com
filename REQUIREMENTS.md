@@ -28,6 +28,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Content and routing
 
 - Article metadata MUST live in `src/data/siteArticles.json` and be normalized in `src/data/articles.ts`.
+- The Periodic Table Element Visualizer project MUST use a current local screenshot of its elemental interface for its blog thumbnail and Open Graph image.
 - The Fish Tank Simulator project MUST use a current local aquarium screenshot for its blog thumbnail and Open Graph image, include a short introduction and playable demo and source code links, and appear ahead of Pool Rooms among the September 12, 2026 additions.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.

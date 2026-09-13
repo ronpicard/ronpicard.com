@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Periodic Table Element Visualizer's blog thumbnail and social link preview use a fresh screenshot of the updated elemental interface, captured September 13, 2026.
 - Fish Tank Simulator's blog thumbnail and social link preview use a fresh screenshot of the updated aquarium, captured September 13, 2026.
 - The portfolio grid has larger project titles, brighter dates and supporting text, more room at the edges on phones, and subtle thumbnail framing adjustments. The compact header, neon theme, and three-column desktop layout remain.
 - The background uses sparse, slow teal circuit signals with occasional blue accents, short fading tails, subtle junction glows, and staggered quiet intervals. Signals favor card gaps and margins and dim beneath cards and the header; article content stays clear and reduced-motion users get a static frame.
