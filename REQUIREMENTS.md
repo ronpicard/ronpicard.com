@@ -28,6 +28,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Content and routing
 
 - Article metadata MUST live in `src/data/siteArticles.json` and be normalized in `src/data/articles.ts`.
+- The Fish Tank Simulator project MUST include a local aquarium thumbnail, a short introduction, and playable demo and source code links; it MUST appear ahead of Pool Rooms among the September 12, 2026 additions.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.

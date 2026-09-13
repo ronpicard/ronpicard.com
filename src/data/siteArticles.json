@@ -15,6 +15,21 @@
     "bodyPath": null
   },
   {
+    "slug": "fish-tank-simulator",
+    "title": "Fish Tank Simulator &mdash; Home",
+    "date": "2026-09-12",
+    "summary": "Pelagic brings a small saltwater reef to the browser: nine distinct fish species, a cleaner shrimp, snail, hermit crab, and starfish inside a glass aquarium. Choose daylight, golden hour, or moonlight; adjust the current and fish population; and relax with gentle aquarium audio. Built with React, TypeScript, and Three.js.",
+    "imageUrl": "resources/fish-tank-simulator-2026-09-12.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/fish-tank-simulator/",
+    "demoUrl": "https://ronpicard.github.io/fish-tank-simulator/",
+    "repoUrl": "https://github.com/ronpicard/fish-tank-simulator",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "infinite-library-game-web-app",
     "title": "The Infinite Library &mdash; Home",
     "date": "2026-08-17",

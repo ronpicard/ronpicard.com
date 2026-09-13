@@ -610,5 +610,9 @@
   "local://clamav-control-gui-2026-04-14.png": {
     "path": "resources/clamav-control-gui-2026-04-14.png",
     "bytes": 44184
+  },
+  "local://fish-tank-simulator-2026-09-12.jpg": {
+    "path": "resources/fish-tank-simulator-2026-09-12.jpg",
+    "bytes": 199577
   }
 }
