@@ -3,7 +3,7 @@
     "slug": "orbit-golf",
     "title": "Orbit Golf &mdash; Home",
     "date": "2026-09-19",
-    "summary": "Orbit Golf is a 3D gravity-slingshot puzzle game: pull back, launch a probe, and let real Newtonian gravity bend its path around planets, moons, and a black hole to reach the gate under par. Ten levels that a solver proves are winnable, a free-play sandbox, ghost trails of every attempt, and a rubber-sheet grid that shows each gravity well. Works with touch, mouse, and keyboard. Built with React, TypeScript, and Three.js.",
+    "summary": "Orbit Golf is 18 holes of 3D mini-golf in space: drag toward your target, launch the ball, and let real Newtonian gravity bend its path around planets, moons, and black holes to reach the flagged portal under par. The ball rolls on a neon fairway shaped by each gravity well, a solver proves every hole is winnable, and a free-play sandbox lets you build your own. Works with touch, mouse, and keyboard. Built with React, TypeScript, and Three.js.",
     "imageUrl": "resources/orbit-golf-2026-09-19.jpg",
     "articleHeroUrl": null,
     "githubEmbed": "https://ronpicard.github.io/orbit-golf/",

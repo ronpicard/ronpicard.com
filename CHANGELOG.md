@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Orbit Golf's blog thumbnail, social link preview, and introduction reflect its 18-hole update with the new putt-putt view, captured September 19, 2026.
 - Pool Rooms' blog thumbnail and social link preview use a fresh gameplay screenshot of the updated Sun Pavilion, captured September 13, 2026.
 - Periodic Table Element Visualizer's blog thumbnail and social link preview use a fresh screenshot of the updated elemental interface, captured September 13, 2026.
 - Fish Tank Simulator's blog thumbnail and social link preview use a fresh screenshot of the updated aquarium, captured September 13, 2026.
