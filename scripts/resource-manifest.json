@@ -614,5 +614,9 @@
   "local://fish-tank-simulator-2026-09-12.jpg": {
     "path": "resources/fish-tank-simulator-2026-09-12.jpg",
     "bytes": 96907
+  },
+  "local://orbit-golf-2026-09-19.jpg": {
+    "path": "resources/orbit-golf-2026-09-19.jpg",
+    "bytes": 308257
   }
 }
