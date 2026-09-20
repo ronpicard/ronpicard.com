@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Neon Pinball's blog thumbnail, social link preview, and introduction show its new arcade room, dot-matrix scoreboard, and low default camera, captured September 20, 2026.
 - Marble Tilt's blog thumbnail, social link preview, and introduction show its new two-storey boards with ramps, decks, and bridges in the isometric view, captured September 20, 2026.
 - Orbit Golf's blog thumbnail, social link preview, and introduction reflect its mini-golf redesign with walled courses, the alien golfer, and the new space backdrop, captured September 19, 2026.
 - Pool Rooms' blog thumbnail and social link preview use a fresh gameplay screenshot of the updated Sun Pavilion, captured September 13, 2026.
