@@ -622,5 +622,9 @@
   "local://marble-tilt-2026-09-20.jpg": {
     "path": "resources/marble-tilt-2026-09-20.jpg",
     "bytes": 178803
+  },
+  "local://neon-pinball-2026-09-20.jpg": {
+    "path": "resources/neon-pinball-2026-09-20.jpg",
+    "bytes": 293248
   }
 }

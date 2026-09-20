@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Neon Pinball joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its retro arcade 3D pinball machine.
 - Marble Tilt joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its tilt-the-board labyrinth.
 - Orbit Golf joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its gravity-slingshot puzzles.
 - Fish Tank Simulator joins the portfolio as the latest project, with an aquarium thumbnail, interactive embedded demo, source code link, and an introduction to Pelagic's saltwater reef.
