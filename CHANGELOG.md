@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Neon Pinball now appears ahead of Marble Tilt as the most recent project; the two share a date and were listed the wrong way round.
 - Pool Rooms' Start Exploring button now starts the game inside the blog embed.
 
 ### Added
