@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Marble Tilt's blog thumbnail and social link preview show its new isometric view of the board, captured September 20, 2026.
 - Orbit Golf's blog thumbnail, social link preview, and introduction reflect its mini-golf redesign with walled courses, the alien golfer, and the new space backdrop, captured September 19, 2026.
 - Pool Rooms' blog thumbnail and social link preview use a fresh gameplay screenshot of the updated Sun Pavilion, captured September 13, 2026.
 - Periodic Table Element Visualizer's blog thumbnail and social link preview use a fresh screenshot of the updated elemental interface, captured September 13, 2026.

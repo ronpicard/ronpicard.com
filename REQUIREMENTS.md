@@ -34,6 +34,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Orbit Golf project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first as the September 19, 2026 addition.
 - The Orbit Golf project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Marble Tilt project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first as the September 20, 2026 addition.
+- The Marble Tilt project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.
