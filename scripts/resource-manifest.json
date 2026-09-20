@@ -618,5 +618,9 @@
   "local://orbit-golf-2026-09-19.jpg": {
     "path": "resources/orbit-golf-2026-09-19.jpg",
     "bytes": 457210
+  },
+  "local://marble-tilt-2026-09-20.jpg": {
+    "path": "resources/marble-tilt-2026-09-20.jpg",
+    "bytes": 234783
   }
 }

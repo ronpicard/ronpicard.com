@@ -1,5 +1,20 @@
 [
   {
+    "slug": "marble-tilt",
+    "title": "Marble Tilt &mdash; Home",
+    "date": "2026-09-20",
+    "summary": "Marble Tilt is a 3D wooden labyrinth you tilt to roll a steel marble past the pits and into the cup. Steer with your mouse, the arrow keys, a touch drag, or by tilting your phone. Twelve boards alternate between walled mazes with a pit at the end of every wrong turn and open boards where the only way across is a slalom, a one-cell bridge, or a spiral of bridges between pits. Beat par for three stars; your best times are saved. An autopilot drives the real physics through every board to prove it can be finished, and plays the demo behind the menu. Built with React, TypeScript, and Three.js.",
+    "imageUrl": "resources/marble-tilt-2026-09-20.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/marble-tilt/",
+    "demoUrl": "https://ronpicard.github.io/marble-tilt/",
+    "repoUrl": "https://github.com/ronpicard/marble-tilt",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "orbit-golf",
     "title": "Orbit Golf &mdash; Home",
     "date": "2026-09-19",
