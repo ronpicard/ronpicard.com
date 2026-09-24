@@ -1,5 +1,20 @@
 [
   {
+    "slug": "roulette-royale",
+    "title": "Roulette Royale &mdash; Home",
+    "date": "2026-09-24",
+    "summary": "Roulette Royale is a 3D European roulette table on a dim casino floor: a lacquered mahogany wheel with a brass turret, chrome frets and diamonds, and an ivory ball, beside a green baize layout under the table lamps, with a lit tote board of recent numbers and rows of slot machines, chandeliers, and marquee lights around it. The ball is simulated, not animated: it rides the rim, spirals down the bowl, glances off the diamonds, and rattles between the frets until it settles, and a test suite spins it hundreds of times to prove every pocket comes up evenly. Place chips from 1 to 500 credits on every European bet, from straight up to red or black, with undo, rebet, and double; winners are paid beside their stacks and a dolly marks the number. Follow the spin from the seat, the wheel, or overhead, with touch controls for phones in either orientation. Play credits only. Built with React, TypeScript, and Three.js.",
+    "imageUrl": "resources/roulette-royale-2026-09-24.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/roulette-royale/",
+    "demoUrl": "https://ronpicard.github.io/roulette-royale/",
+    "repoUrl": "https://github.com/ronpicard/roulette-royale",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "marble-tilt",
     "title": "Marble Tilt &mdash; Home",
     "date": "2026-09-20",

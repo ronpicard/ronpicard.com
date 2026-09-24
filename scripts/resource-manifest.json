@@ -626,5 +626,9 @@
   "local://neon-pinball-2026-09-20.jpg": {
     "path": "resources/neon-pinball-2026-09-20.jpg",
     "bytes": 292678
+  },
+  "local://roulette-royale-2026-09-24.jpg": {
+    "path": "resources/roulette-royale-2026-09-24.jpg",
+    "bytes": 255946
   }
 }
