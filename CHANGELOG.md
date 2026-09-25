@@ -31,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Fish Tank Simulator joins the portfolio as the latest project, with an aquarium thumbnail, interactive embedded demo, source code link, and an introduction to Pelagic's saltwater reef.
 - Pool Rooms joins the portfolio as the newest project, with a gameplay thumbnail, playable embedded demo, source code link, and a short introduction to the pool complex.
 - Roulette Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino roulette table and simulated ball.
+- Domino Topple joins the portfolio, listed just after Roulette Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its chain-reaction puzzles in three furnished rooms.
 - Posts whose GitHub repo publishes releases show a Releases button next to Code, on the home card and the article page, linking to the latest release. Set `releasesUrl` in `src/data/siteArticles.json` to enable it; the ClamAV Control post is the first.
 - Pages ship prerendered content: the homepage card grid and article pages are rendered into the HTML at build time and hydrated in the browser, removing the blank-page delay on first visit.
 - The homepage card grid loads card-sized WebP thumbnails (~768px) instead of full-resolution title images, cutting its image weight from roughly 14 MB to about 2 MB; the first row of cards loads eagerly at high priority with preload hints.

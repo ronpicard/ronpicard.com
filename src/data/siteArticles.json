@@ -1,5 +1,20 @@
 [
   {
+    "slug": "domino-topple",
+    "title": "Domino Topple &mdash; Home",
+    "date": "2026-09-24",
+    "summary": "Domino Topple is a 3D chain-reaction puzzle set on tabletops in three furnished rooms: a study with a desk lamp and bookshelf, a garage workshop with a pegboard of tools, and a pastel playroom strewn with toys. Every level has a trigger, such as a swinging pendulum, a wind-up car or a marble chute, and a goal, such as a bell, a flag or a cup, and you build the chain between them from dominoes, stairs, bridges, levers, marbles, ramps and springs, then press GO and watch the physics play out. Drag across the table to lay a whole row of glossy ivory dominoes at once, turn or remove pieces from the buttons that appear above them, and replay a run in slow motion. Fifteen levels award up to three stars each for reaching the goal, beating par and knocking over the bonus star, and a sandbox hands you the full set of pieces. Works with mouse, keyboard and touch on desktops and phones. Built with React, TypeScript, Three.js and Rapier.",
+    "imageUrl": "resources/domino-topple-2026-09-24.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/domino-topple/",
+    "demoUrl": "https://ronpicard.github.io/domino-topple/",
+    "repoUrl": "https://github.com/ronpicard/domino-topple",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "roulette-royale",
     "title": "Roulette Royale &mdash; Home",
     "date": "2026-09-24",

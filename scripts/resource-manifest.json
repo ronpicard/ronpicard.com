@@ -630,5 +630,9 @@
   "local://roulette-royale-2026-09-24.jpg": {
     "path": "resources/roulette-royale-2026-09-24.jpg",
     "bytes": 255946
+  },
+  "local://domino-topple-2026-09-24.jpg": {
+    "path": "resources/domino-topple-2026-09-24.jpg",
+    "bytes": 111108
   }
 }
