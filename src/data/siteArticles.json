@@ -1201,7 +1201,7 @@
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b",
-    "title": "Formal Methods 101: Satisfiable Modulo Theories (SMT) &mdash; Home",
+    "title": "Formal Methods 101: Satisfiability Modulo Theories (SMT) &mdash; Home",
     "date": "2019-10-05",
     "summary": "Introduction:     The Satisfiability Modulo Theories (SMT) problem is an extension to SAT problems in which the variables take on values beyond just Boolean-valued variables.      SMT solvers can be thought of as finding out if the predicate is satisfiable by utilizing a combination of SAT technique",
     "imageUrl": "resources/fm-stock-smt.jpg",
@@ -1531,7 +1531,7 @@
   },
   {
     "slug": "linear-regression-using-gradient-decent",
-    "title": "Linear Regression Using Gradient Decent &mdash; Home",
+    "title": "Linear Regression Using Gradient Descent &mdash; Home",
     "date": "2019-01-10",
     "summary": "When it comes to machine learning a popular starting place tends to be linear regression using gradient descent. The reasoning is that it is a simple optimization problem, that is easy to understand and helps to gradually introduce a common topic in machine learning.  Many of you are probably famili",
     "imageUrl": "resources/72665bdb2dbabd.jpg",

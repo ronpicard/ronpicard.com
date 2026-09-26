@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Every blog post now shares a 1200×630 social preview card made from its own image, so links on Facebook, LinkedIn, and X show the whole picture instead of cropping portrait, square, and small images.
+- The ClamAV Control card is labelled Desktop app instead of Article.
+- The home page's search and link-preview description now summarizes the site instead of repeating its title.
 - Neon Pinball's blog thumbnail, social link preview, and introduction show its new arcade room, dot-matrix scoreboard, and low default camera, captured September 20, 2026.
 - Marble Tilt's blog thumbnail, social link preview, and introduction show its new two-storey boards with ramps, decks, and bridges in the isometric view, captured September 20, 2026.
 - Orbit Golf's blog thumbnail, social link preview, and introduction reflect its mini-golf redesign with walled courses, the alien golfer, and the new space backdrop, captured September 19, 2026.
@@ -20,20 +23,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Software Lessons Session 11 is labelled Lesson like the rest of the series instead of Article.
+- Corrected the titles "Linear Regression Using Gradient Descent" (was "Decent") and "Formal Methods 101: Satisfiability Modulo Theories (SMT)" (was "Satisfiable"); links to the old addresses still work.
 - Neon Pinball now appears ahead of Marble Tilt as the most recent project; the two share a date and were listed the wrong way round.
 - Pool Rooms' Start Exploring button now starts the game inside the blog embed.
 
 ### Added
 
+- Blackjack Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino blackjack table, card overlay, and cheering crowd.
+- Slots Royale joins the portfolio, listed just after Blackjack Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its five-reel slot machine with blurred reels, free spins, and a jackpot.
+- Roulette Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino roulette table and simulated ball.
+- Domino Topple joins the portfolio, listed just after Roulette Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its chain-reaction puzzles in three furnished rooms.
 - Neon Pinball joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its retro arcade 3D pinball machine.
 - Marble Tilt joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its tilt-the-board labyrinth.
 - Orbit Golf joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its gravity-slingshot puzzles.
 - Fish Tank Simulator joins the portfolio as the latest project, with an aquarium thumbnail, interactive embedded demo, source code link, and an introduction to Pelagic's saltwater reef.
 - Pool Rooms joins the portfolio as the newest project, with a gameplay thumbnail, playable embedded demo, source code link, and a short introduction to the pool complex.
-- Blackjack Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino blackjack table, card overlay, and cheering crowd.
-- Slots Royale joins the portfolio, listed just after Blackjack Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its five-reel slot machine with blurred reels, free spins, and a jackpot.
-- Roulette Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino roulette table and simulated ball.
-- Domino Topple joins the portfolio, listed just after Roulette Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its chain-reaction puzzles in three furnished rooms.
 - Posts whose GitHub repo publishes releases show a Releases button next to Code, on the home card and the article page, linking to the latest release. Set `releasesUrl` in `src/data/siteArticles.json` to enable it; the ClamAV Control post is the first.
 - Pages ship prerendered content: the homepage card grid and article pages are rendered into the HTML at build time and hydrated in the browser, removing the blank-page delay on first visit.
 - The homepage card grid loads card-sized WebP thumbnails (~768px) instead of full-resolution title images, cutting its image weight from roughly 14 MB to about 2 MB; the first row of cards loads eagerly at high priority with preload hints.

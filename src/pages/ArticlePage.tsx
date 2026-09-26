@@ -16,6 +16,7 @@ import {
 } from '../data/articles'
 import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
+import { postShareImage, resourceOgPath } from '../../shared/resourceOgImages'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -96,7 +97,8 @@ export default function ArticlePage() {
     article.summary?.replace(/&nbsp;/gi, ' ').replace(/<[^>]+>/g, '') ||
     `${article.title} — ${DEFAULT_TITLE}`
   const seoTitle = `${article.title} | Ron Picard`
-  const ogImage = article.articleHeroUrl ?? article.imageUrl
+  const shareImage = postShareImage(article)
+  const ogImage = resourceOgPath(shareImage) ?? shareImage
 
   const textBlock = readmeRawUrl ? (
     <DynamicGithubReadme

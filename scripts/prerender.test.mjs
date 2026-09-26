@@ -137,6 +137,53 @@ describe('prerender main', () => {
     expect(robots).toContain('https://ronpicard.com/sitemap.xml')
   })
 
+  it('shares the generated og card, with its dimensions, when one exists', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
+    temporaryDirectories.push(root)
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template: '<!doctype html><html><head><title>Template</title></head><body></body></html>',
+    })
+    const { mkdir } = await import('node:fs/promises')
+    const { default: sharp } = await import('sharp')
+    await mkdir(path.join(distDir, 'resources/og'), { recursive: true })
+    await writeFile(
+      path.join(distDir, 'resources/og/portrait.jpg'),
+      await sharp({ create: { width: 1200, height: 630, channels: 3, background: '#000' } })
+        .jpeg()
+        .toBuffer(),
+    )
+    await writeFile(
+      articlesPath,
+      JSON.stringify([
+        {
+          slug: 'portrait-post',
+          title: 'Portrait Post',
+          date: '2026-08-22',
+          summary: 'Summary',
+          bodyPath: null,
+          imageUrl: 'resources/portrait.png',
+          articleHeroUrl: null,
+          githubEmbed: null,
+          demoUrl: null,
+          repoUrl: null,
+          youtubeId: null,
+          otherEmbed: null,
+          readmeRawUrl: null,
+          extraLinks: [],
+        },
+      ]),
+      'utf8',
+    )
+
+    await main({ distDir, articlesPath })
+
+    const html = await readFile(path.join(distDir, 'blog/portrait-post/index.html'), 'utf8')
+    expect(html).toContain('property="og:image" content="https://ronpicard.com/resources/og/portrait.jpg"')
+    expect(html).toContain('name="twitter:image" content="https://ronpicard.com/resources/og/portrait.jpg"')
+    expect(html).toContain('property="og:image:width" content="1200"')
+    expect(html).toContain('property="og:image:height" content="630"')
+  })
+
   it('injects per-route app markup and preload links when a render function is given', async () => {
     const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
     temporaryDirectories.push(root)

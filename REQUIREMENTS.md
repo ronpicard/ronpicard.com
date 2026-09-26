@@ -37,7 +37,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Marble Tilt project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Neon Pinball project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first among the September 20, 2026 additions.
 - The Neon Pinball project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
-- The Roulette Royale project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first as the September 24, 2026 addition.
+- The Roulette Royale project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first among the September 24, 2026 additions.
 - The Roulette Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Domino Topple project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear second among the September 24, 2026 additions, after Roulette Royale.
 - The Domino Topple project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
@@ -54,6 +54,9 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Posts MAY set `releasesUrl` (validated `https://github.com/<owner>/<repo>/releases/...` URL); when set, the home card and article page MUST show a Releases button immediately after Code linking to it, and MUST omit the button otherwise.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
+- Each blog post MUST share a generated 1200×630 card of its own image (`public/resources/og/`, built by `npm run generate:og`) as its Open Graph and Twitter image, showing portrait, square, and small images uncropped; a post MUST fall back to its original image when no card exists.
+- Every Software Lessons session MUST carry the Lesson badge regardless of its source slug, and release-shipped desktop software MUST carry a Desktop app badge.
+- Correcting a published post title MUST keep the post reachable at the URL derived from its old title.
 - Prerendered pages MUST include the route's app markup in `#root` (rendered by the SSR bundle) so first paint shows content before hydration; the markup MUST be static — no inline scripts or streaming placeholders, which the CSP would block.
 - The homepage card grid MUST load generated WebP thumbnails (`public/resources/thumbs/`, built by `npm run generate:thumbs`) instead of full-size title images, falling back to the original when a thumbnail is missing; cards above the fold SHOULD load eagerly with preload hints while the rest stay lazy.
 - Blog canonical URLs, `og:url`, and sitemap entries MUST use the trailing-slash form (`/blog/<slug>/`) that GitHub Pages redirects to.

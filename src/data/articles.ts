@@ -21,9 +21,15 @@ type SiteArticleRow = Omit<
   releasesUrl: string | null
 }
 
-function deriveKind(row: Pick<SiteArticleRow, 'slug' | 'githubEmbed'>): 'app' | 'lesson' | 'post' {
+function deriveKind(
+  row: Pick<SiteArticleRow, 'slug' | 'title' | 'githubEmbed' | 'releasesUrl'>,
+): ArticleKind {
   if (row.githubEmbed) return 'app'
-  if (/software-lessons-session/i.test(row.slug)) return 'lesson'
+  if (row.releasesUrl) return 'software'
+  // Some lessons keep Squarespace storage slugs, so the title decides too.
+  if (/software-lessons-session/i.test(row.slug) || /^Software Lessons Session\b/i.test(row.title)) {
+    return 'lesson'
+  }
   return 'post'
 }
 
@@ -47,7 +53,8 @@ const indexed: IndexedArticle[] = normalizedRows.map((row, sourceIndex) => ({
 
 const sorted = sortIndexedArticles(indexed)
 
-export type ArticleKind = 'app' | 'lesson' | 'post'
+/** `app` = embedded web app; `software` = downloadable app shipped as GitHub releases. */
+export type ArticleKind = 'app' | 'software' | 'lesson' | 'post'
 
 /** `slug` is the public URL segment (from title). `sourceSlug` is the id from `siteArticles.json`. */
 export type Article = Omit<SiteArticleRow, 'slug'> & {

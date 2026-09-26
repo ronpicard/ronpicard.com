@@ -48,6 +48,15 @@ describe('legacySlugTitle', () => {
   it('leaves older posts unchanged', () => {
     expect(legacySlugTitle('Old Post', { date: '2024-01-01', githubEmbed: 'https://x' })).toBe('Old Post')
   })
+
+  it('returns the pre-correction title for renamed posts', () => {
+    expect(
+      legacySlugTitle('Linear Regression Using Gradient Descent', {
+        slug: 'linear-regression-using-gradient-decent',
+        date: '2019-01-10',
+      }),
+    ).toBe('Linear Regression Using Gradient Decent')
+  })
 })
 
 describe('compareIndexedArticles', () => {

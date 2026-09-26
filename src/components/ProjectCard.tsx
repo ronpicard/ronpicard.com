@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { preload } from 'react-dom'
 import { Link } from 'react-router-dom'
+import type { ArticleKind } from '../data/articles'
 import {
   articleKindBadgeClass,
   articleKindLabel,
@@ -20,7 +21,7 @@ export type ProjectListItem = {
   slug: string
   title: string
   date: string
-  kind: 'app' | 'lesson' | 'post'
+  kind: ArticleKind
   imageUrl: string | null
   showDemo: boolean
   showCode: boolean

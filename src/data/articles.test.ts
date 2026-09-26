@@ -81,6 +81,25 @@ describe('articles catalog', () => {
     expect(lesson?.kind).toBe('lesson')
   })
 
+  it('labels every Software Lessons session as a lesson, whatever its source slug', () => {
+    const sessions = articles.filter((a) => /^Software Lessons Session\b/.test(a.title))
+    expect(sessions.length).toBeGreaterThan(20)
+    expect(sessions.filter((a) => a.kind !== 'lesson').map((a) => a.title)).toEqual([])
+  })
+
+  it('labels release-shipped software as a desktop app', () => {
+    const clamav = articles.find((a) => a.sourceSlug === 'clamav-antivirus-control-gui')
+    expect(clamav?.kind).toBe('software')
+  })
+
+  it('keeps corrected titles reachable at their old URLs', () => {
+    const post = getArticle('linear-regression-using-gradient-decent')
+    expect(post?.title).toBe('Linear Regression Using Gradient Descent')
+    expect(post?.slug).toBe('linear-regression-using-gradient-descent')
+    const smt = getArticle('formal-methods-101-satisfiable-modulo-theories-smt')
+    expect(smt?.title).toBe('Formal Methods 101: Satisfiability Modulo Theories (SMT)')
+  })
+
   it('exposes the AI Chess app demo without duplicating it as an extra link', () => {
     const chess = articles.find((a) => a.sourceSlug === 'wasmj8db1br3ksr00ivvmyju8gniym')
     expect(chess?.demoUrl).toBe('https://ronpicard.github.io/chess-web-app/')

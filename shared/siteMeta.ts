@@ -5,7 +5,7 @@ const SITE_NAME = 'Ron Picard'
 
 export const DEFAULT_TITLE = `${SITE_NAME} — My projects involving AI, Software, Aviation, and more`
 export const DEFAULT_DESCRIPTION =
-  'Ron Picard — My projects involving AI, Software, Aviation, and more: portfolio, web apps, software lessons, research, and engineering work.'
+  'Interactive web apps and games, a free software engineering lesson series, AI and formal methods research, and flying logs from pilot and engineer Ron Picard.'
 
 export function canonicalUrl(route: string): string {
   const p = route.startsWith('/') ? route : `/${route}`

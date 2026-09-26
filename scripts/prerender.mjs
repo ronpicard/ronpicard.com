@@ -3,6 +3,7 @@ import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { escapeHtml, escapeHtmlAttr } from '../shared/htmlEscape.ts'
 import { articleJsonLd, homeJsonLd } from '../shared/jsonLd.ts'
+import { postShareImage, resourceOgPath } from '../shared/resourceOgImages.ts'
 import { parseSiteArticleRows } from '../shared/siteArticleSchema.ts'
 import { buildRobotsTxt, buildSitemapXml } from '../shared/sitemap.ts'
 import {
@@ -123,7 +124,7 @@ async function writeOut(distDir, relPath, html) {
  */
 async function localImageDims(distDir, imageRel) {
   const rel = String(imageRel || '').replace(/^\/+/, '')
-  if (!/^resources\/[a-z0-9][a-z0-9._-]*$/i.test(rel)) return null
+  if (!/^resources\/(?:og\/)?[a-z0-9][a-z0-9._-]*$/i.test(rel)) return null
   try {
     const { default: sharp } = await import('sharp')
     const meta = await sharp(path.join(distDir, rel)).metadata()
@@ -174,9 +175,13 @@ export async function main({
     const title = decodedTitles[i]
     const summary =
       truncateMetaDescription(stripTagsForMeta(row.summary || '')) || title
-    const ogImage = row.articleHeroUrl || row.imageUrl || null
+    // Share the generated 1200×630 card when build:full made one, else the original.
+    const shareImage = postShareImage(row)
+    const cardRel = resourceOgPath(shareImage)
+    const cardDims = cardRel ? await localImageDims(distDir, cardRel) : null
+    const ogImage = cardDims ? cardRel : shareImage
     const imageAbs = absoluteAssetUrl(ogImage) ?? null
-    const dims = ogImage ? await localImageDims(distDir, ogImage) : null
+    const dims = cardDims ?? (shareImage ? await localImageDims(distDir, shareImage) : null)
     // Trailing slash matches the URL GitHub Pages 301s to, so scrapers skip a hop.
     const route = `/blog/${slug}/`
 

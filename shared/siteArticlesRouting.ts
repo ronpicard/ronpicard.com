@@ -92,17 +92,33 @@ export function sortIndexedArticles<T extends { sourceIndex?: number }>(indexed:
   return [...indexed].sort(compareIndexedArticles)
 }
 
-/** Pre–Mar-2026 refresh URLs used “… Web App” in the title; keep old /blog/* paths working. */
+/**
+ * Titles corrected after publishing, keyed by source slug; the old title's
+ * /blog/* path stays routable as the post's legacy slug.
+ */
+const PREVIOUS_TITLES: Readonly<Record<string, string>> = {
+  'linear-regression-using-gradient-decent': 'Linear Regression Using Gradient Decent',
+  'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b':
+    'Formal Methods 101: Satisfiable Modulo Theories (SMT)',
+}
+
+/**
+ * Title whose slug is the post's legacy /blog/* path: the pre-correction title
+ * for renamed posts, else the pre–Mar-2026 “… Web App” form for embedded apps.
+ */
 export function legacySlugTitle(
   title: string,
-  row: { date?: string; githubEmbed?: string | null },
+  row: { slug?: string; date?: string; githubEmbed?: string | null },
 ): string {
+  const previous = row.slug ? PREVIOUS_TITLES[row.slug] : undefined
+  if (previous) return previous
   const date = String(row.date ?? '')
   return date >= '2026-03-22' && row.githubEmbed ? `${title.trim()} Web App` : title
 }
 
 type SlugRow = {
   title: string
+  slug?: string
   date?: string
   githubEmbed?: string | null
 }
