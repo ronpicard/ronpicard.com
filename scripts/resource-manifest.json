@@ -642,5 +642,9 @@
   "local://slots-royale-2026-09-26.jpg": {
     "path": "resources/slots-royale-2026-09-26.jpg",
     "bytes": 96315
+  },
+  "local://mustang-showroom-2026-09-26.jpg": {
+    "path": "resources/mustang-showroom-2026-09-26.jpg",
+    "bytes": 102000
   }
 }

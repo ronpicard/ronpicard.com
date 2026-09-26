@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Mustang Showroom joins the portfolio as the latest project, with a showroom thumbnail, interactive embedded demo, source code link, and an introduction to its 1969 Mustang on a turntable, opening panels, explode view, and parts catalogue.
 - Blackjack Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino blackjack table, card overlay, and cheering crowd.
 - Slots Royale joins the portfolio, listed just after Blackjack Royale under the same date, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its five-reel slot machine with blurred reels, free spins, and a jackpot.
 - Roulette Royale joins the portfolio as the latest project, with a gameplay thumbnail, interactive embedded demo, source code link, and an introduction to its casino roulette table and simulated ball.
