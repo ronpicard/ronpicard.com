@@ -41,6 +41,10 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Roulette Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Domino Topple project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear second among the September 24, 2026 additions, after Roulette Royale.
 - The Domino Topple project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
+- The Blackjack Royale project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear first among the September 26, 2026 additions.
+- The Blackjack Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
+- The Slots Royale project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear second among the September 26, 2026 additions, after Blackjack Royale.
+- The Slots Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.

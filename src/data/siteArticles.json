@@ -1,5 +1,35 @@
 [
   {
+    "slug": "slots-royale",
+    "title": "Slots Royale &mdash; Home",
+    "date": "2026-09-26",
+    "summary": "Slots Royale is a 3D five-reel, twenty-line slot machine on a casino floor: a black lacquered cabinet with a gold bezel and glass reel window, a backlit marquee with chasing bulbs, and a chrome pull lever, among other machines with live lounge music in the background. The reels blur as they spin and flash as each one stops behind glass that reflects the room, and a light sweeps the window on a win. Pick a coin value from 1 to 25 credits per line, pull the lever or press spin, and watch wilds substitute, scatters award doubled free spins, and five sevens pay the 1000-coin jackpot; max bet and autoplay do what they say. A floor attendant and casino guests cheer your wins under a shower of confetti and groan at your losses. The camera sits close on the reel window, or steps back to the whole cabinet or along the row of machines, with touch controls for phones. Play credits only. Built with React, TypeScript, and Three.js.",
+    "imageUrl": "resources/slots-royale-2026-09-26.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/slots-royale/",
+    "demoUrl": "https://ronpicard.github.io/slots-royale/",
+    "repoUrl": "https://github.com/ronpicard/slots-royale",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
+    "slug": "blackjack-royale",
+    "title": "Blackjack Royale &mdash; Home",
+    "date": "2026-09-26",
+    "summary": "Blackjack Royale is a 3D blackjack table on a dim casino floor: a felt half-moon table with a padded rail, a card shoe and discard tray, and a chip tray along the dealer's edge, among slot machines, chandeliers and marquee lights, with live lounge music in the background. The cards are dealt one at a time from the shoe, and as each one lands a large copy fades into an overlay so every hand is readable at any camera distance. Bet chips from 1 to 500 credits, take insurance against a dealer ace, then hit, stand, double, or split up to four hands, with a hint that marks the basic-strategy play; the dealer stands on soft 17 and blackjack pays 3 to 2. A crowd of spectators cheers your wins under a shower of confetti and groans at your losses. Follow the hand from the seat, close over the cards, or straight down on the table, with touch controls for phones. Play credits only. Built with React, TypeScript, and Three.js.",
+    "imageUrl": "resources/blackjack-royale-2026-09-26.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/blackjack-royale/",
+    "demoUrl": "https://ronpicard.github.io/blackjack-royale/",
+    "repoUrl": "https://github.com/ronpicard/blackjack-royale",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "domino-topple",
     "title": "Domino Topple &mdash; Home",
     "date": "2026-09-24",

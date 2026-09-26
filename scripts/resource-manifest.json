@@ -634,5 +634,13 @@
   "local://domino-topple-2026-09-24.jpg": {
     "path": "resources/domino-topple-2026-09-24.jpg",
     "bytes": 111108
+  },
+  "local://blackjack-royale-2026-09-26.jpg": {
+    "path": "resources/blackjack-royale-2026-09-26.jpg",
+    "bytes": 114730
+  },
+  "local://slots-royale-2026-09-26.jpg": {
+    "path": "resources/slots-royale-2026-09-26.jpg",
+    "bytes": 96315
   }
 }
