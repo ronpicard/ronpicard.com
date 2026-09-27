@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The Slots Royale card has a fresh screenshot of the whole machine with its new domed buttons and leather stool, and its introduction says the camera now opens wide on the cabinet.
 - The Mustang Showroom card shows the car's new gunmetal paint and five-spoke wheels.
 - The Mustang Showroom card has a fresh screenshot of the spot-lit car and an introduction that now mentions the recorded V8, the amber turn signals, and the see-through part selection.
 - Every blog post now shares a 1200×630 social preview card made from its own image, so links on Facebook, LinkedIn, and X show the whole picture instead of cropping portrait, square, and small images.
