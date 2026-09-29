@@ -180,6 +180,34 @@
     "bodyPath": null
   },
   {
+    "slug": "ai-rulebook-vscode-extension",
+    "title": "AI Rulebook: Always-On Rules for AI Coding Agents &mdash; Home",
+    "date": "2026-04-29",
+    "summary": "AI Rulebook is a free VS Code and Open VSX extension from Wyvern Systems LLC that installs six always-on engineering rules for AI coding agents (scope, code reuse, tests, docs, Markdown, and Git) into a project's AGENTS.md, with a CLAUDE.md import for Claude Code. A sidebar toggles each rule in place, the same file works in Cursor, Cline, opencode, Windsurf, and GitHub Copilot, and an optional token-efficient subagent mode tells agents to hand routine work to cheaper models.",
+    "imageUrl": "resources/ai-rulebook-icon-2026-04-29.png",
+    "articleHeroUrl": null,
+    "githubEmbed": null,
+    "demoUrl": null,
+    "repoUrl": "https://github.com/wyvernsystems/ai-rulebook-vscode-extension",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [
+      {
+        "label": "VS Code Marketplace",
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.ai-rulebook"
+      },
+      {
+        "label": "Open VSX",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/ai-rulebook"
+      },
+      {
+        "label": "Wyvern Systems",
+        "href": "https://wyvernsystems.com/"
+      }
+    ],
+    "bodyPath": "article-bodies/ai-rulebook-vscode-extension.html"
+  },
+  {
     "slug": "clamav-antivirus-control-gui",
     "title": "ClamAV Control &mdash; Home",
     "date": "2026-04-14",
@@ -195,6 +223,34 @@
     "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-ui/main/README.md",
     "releasesUrl": "https://github.com/ronpicard/clamav-antivirus-ui/releases/latest",
     "bodyPath": null
+  },
+  {
+    "slug": "auto-color-vscode-extension",
+    "title": "Auto Color: A Distinct Color for Every VS Code Workspace &mdash; Home",
+    "date": "2026-04-13",
+    "summary": "Auto Color is a free VS Code and Open VSX extension from Wyvern Systems LLC that gives every workspace its own golden-ratio color: pastel title, activity, and status bars plus a matching tint across the editor, sidebar, tabs, and terminal, so you can tell your VS Code and Cursor windows apart at a glance. Colors stay stable per folder or git remote, follow light and dark themes, preview live, and come in named palettes like Dracula, Nord, and Matrix. Everything is computed locally and only Auto Color's own settings keys are touched.",
+    "imageUrl": "resources/auto-color-icon-2026-04-13.png",
+    "articleHeroUrl": null,
+    "githubEmbed": null,
+    "demoUrl": null,
+    "repoUrl": "https://github.com/wyvernsystems/auto-color-vscode-extension",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [
+      {
+        "label": "VS Code Marketplace",
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.auto-color"
+      },
+      {
+        "label": "Open VSX",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/auto-color"
+      },
+      {
+        "label": "Wyvern Systems",
+        "href": "https://wyvernsystems.com/"
+      }
+    ],
+    "bodyPath": "article-bodies/auto-color-vscode-extension.html"
   },
   {
     "slug": "daily-tech-brief-web-app",

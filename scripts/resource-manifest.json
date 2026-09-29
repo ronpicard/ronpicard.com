@@ -646,5 +646,21 @@
   "local://mustang-showroom-2026-09-26.jpg": {
     "path": "resources/mustang-showroom-2026-09-26.jpg",
     "bytes": 138858
+  },
+  "local://auto-color-vscode-2026-09-28.jpg": {
+    "path": "resources/auto-color-vscode-2026-09-28.jpg",
+    "bytes": 47821
+  },
+  "local://auto-color-cursor-2026-09-28.jpg": {
+    "path": "resources/auto-color-cursor-2026-09-28.jpg",
+    "bytes": 30503
+  },
+  "local://ai-rulebook-icon-2026-04-29.png": {
+    "path": "resources/ai-rulebook-icon-2026-04-29.png",
+    "bytes": 27050
+  },
+  "local://auto-color-icon-2026-04-13.png": {
+    "path": "resources/auto-color-icon-2026-04-13.png",
+    "bytes": 8330
   }
 }

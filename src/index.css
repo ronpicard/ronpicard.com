@@ -522,6 +522,11 @@ body {
   --card-image-fit: contain;
 }
 
+.project-card[data-project='ai-rulebook-always-on-rules-for-ai-coding-agents'],
+.project-card[data-project='auto-color-a-distinct-color-for-every-vs-code-workspace'] {
+  --card-image-fit: contain;
+}
+
 .project-card__body {
   flex: 1;
   display: flex;
