@@ -36,7 +36,7 @@ function item(overrides: Partial<ProjectListItem> = {}): ProjectListItem {
     repoUrl: null,
     releasesUrl: null,
     videoUrl: null,
-    pdfLinks: [],
+    cardLinks: [],
     ...overrides,
   }
 }
@@ -109,6 +109,26 @@ describe('ProjectCard actions', () => {
         text: 'Releases',
         href: 'https://github.com/ronpicard/clamav-antivirus-ui/releases/latest',
       },
+    ])
+  })
+
+  it('renders card links after Releases', () => {
+    renderCard({
+      item: item({
+        showCode: true,
+        repoUrl: 'https://github.com/wyvernsystems/x',
+        releasesUrl: 'https://github.com/wyvernsystems/x/releases/latest',
+        cardLinks: [
+          { label: 'VS Code Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=A.x' },
+          { label: 'Open VSX Registry', href: 'https://open-vsx.org/extension/A/x' },
+        ],
+      }),
+    })
+    expect(links().map((l) => l.text)).toEqual([
+      'Code',
+      'Releases',
+      'VS Code Marketplace',
+      'Open VSX Registry',
     ])
   })
 

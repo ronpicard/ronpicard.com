@@ -2,9 +2,9 @@ export { ProjectCard } from '../../components/ProjectCard'
 export {
   articles,
   filterExtraLinks,
+  cardExtraLinks,
   getArticle,
   getArticleTitleList,
-  pdfExtraLinks,
   showCodeButton,
   showDemoButton,
   showReleasesButton,

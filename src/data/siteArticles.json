@@ -194,17 +194,21 @@
     "extraLinks": [
       {
         "label": "VS Code Marketplace",
-        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.ai-rulebook"
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.ai-rulebook",
+        "card": true
       },
       {
-        "label": "Open VSX",
-        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/ai-rulebook"
+        "label": "Open VSX Registry",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/ai-rulebook",
+        "card": true
       },
       {
         "label": "Wyvern Systems",
-        "href": "https://wyvernsystems.com/"
+        "href": "https://wyvernsystems.com/",
+        "card": true
       }
     ],
+    "releasesUrl": "https://github.com/wyvernsystems/ai-rulebook-vscode-extension/releases/latest",
     "bodyPath": "article-bodies/ai-rulebook-vscode-extension.html"
   },
   {
@@ -239,17 +243,21 @@
     "extraLinks": [
       {
         "label": "VS Code Marketplace",
-        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.auto-color"
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.auto-color",
+        "card": true
       },
       {
-        "label": "Open VSX",
-        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/auto-color"
+        "label": "Open VSX Registry",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/auto-color",
+        "card": true
       },
       {
         "label": "Wyvern Systems",
-        "href": "https://wyvernsystems.com/"
+        "href": "https://wyvernsystems.com/",
+        "card": true
       }
     ],
+    "releasesUrl": "https://github.com/wyvernsystems/auto-color-vscode-extension/releases/latest",
     "bodyPath": "article-bodies/auto-color-vscode-extension.html"
   },
   {

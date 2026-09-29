@@ -3,9 +3,9 @@ import {
   articles,
   filterExtraLinks,
   getArticle,
+  cardExtraLinks,
   getArticleTitleList,
   isThirdPartyArticleLink,
-  pdfExtraLinks,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
@@ -90,6 +90,14 @@ describe('articles catalog', () => {
   it('labels release-shipped software as a desktop app', () => {
     const clamav = articles.find((a) => a.sourceSlug === 'clamav-antivirus-control-gui')
     expect(clamav?.kind).toBe('software')
+  })
+
+  it('keeps written articles about released software labelled as articles', () => {
+    for (const sourceSlug of ['ai-rulebook-vscode-extension', 'auto-color-vscode-extension']) {
+      const post = articles.find((a) => a.sourceSlug === sourceSlug)
+      expect(post?.releasesUrl).toMatch(/^https:\/\/github\.com\/wyvernsystems\/.+\/releases\/latest$/)
+      expect(post?.kind).toBe('post')
+    }
   })
 
   it('keeps corrected titles reachable at their old URLs', () => {
@@ -192,15 +200,20 @@ describe('filterExtraLinks', () => {
   })
 })
 
-describe('pdfExtraLinks / thirdPartyArticleUrl / youtubeWatchUrl', () => {
-  it('filters PDF extra links', () => {
+describe('cardExtraLinks / thirdPartyArticleUrl / youtubeWatchUrl', () => {
+  it('keeps PDF extra links and links flagged for the card', () => {
     const a = stubArticle({
       extraLinks: [
         { label: 'PDF', href: 'https://example.com/paper.pdf' },
         { label: 'HTML', href: 'https://example.com/paper' },
+        { label: 'Store', href: 'https://example.com/store', card: true },
+        { label: 'Other', href: 'https://example.com/other', card: false },
       ],
     })
-    expect(pdfExtraLinks(a)).toEqual([{ label: 'PDF', href: 'https://example.com/paper.pdf' }])
+    expect(cardExtraLinks(a)).toEqual([
+      { label: 'PDF', href: 'https://example.com/paper.pdf' },
+      { label: 'Store', href: 'https://example.com/store' },
+    ])
   })
 
   it('returns first third-party article URL', () => {
@@ -244,8 +257,22 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     const clamav = articles.find((a) => a.sourceSlug === 'clamav-antivirus-control-gui')
     const card = list.find((item) => item.slug === clamav?.slug)
     expect(card?.releasesUrl).toBe('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest')
-    const withReleases = list.filter((item) => item.releasesUrl)
-    expect(withReleases.map((item) => item.slug)).toEqual([clamav?.slug])
+    const withReleases = articles.filter((a) => a.releasesUrl).map((a) => a.slug)
+    expect(list.filter((item) => item.releasesUrl).map((item) => item.slug)).toEqual(withReleases)
+    expect(withReleases).toHaveLength(3)
+  })
+
+  it('puts the extension store and company links on the extension cards', () => {
+    const list = getArticleTitleList()
+    for (const sourceSlug of ['ai-rulebook-vscode-extension', 'auto-color-vscode-extension']) {
+      const slug = articles.find((a) => a.sourceSlug === sourceSlug)?.slug
+      const card = list.find((item) => item.slug === slug)
+      expect(card?.cardLinks.map((l) => l.label)).toEqual([
+        'VS Code Marketplace',
+        'Open VSX Registry',
+        'Wyvern Systems',
+      ])
+    }
   })
 
   it('lists one card item per article with matching slug', () => {

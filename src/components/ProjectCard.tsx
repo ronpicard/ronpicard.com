@@ -32,7 +32,8 @@ export type ProjectListItem = {
   /** Latest GitHub release page, for repos that publish releases. */
   releasesUrl: string | null
   videoUrl: string | null
-  pdfLinks: { label: string; href: string }[]
+  /** Extra link buttons: PDFs and links flagged for the card (e.g. extension stores). */
+  cardLinks: { label: string; href: string }[]
 }
 
 type Props = {
@@ -133,7 +134,7 @@ export function ProjectCard({ item, priority = false }: Props) {
               YouTube
             </a>
           ) : null}
-          {item.pdfLinks.map((p) => {
+          {item.cardLinks.map((p) => {
             const href = safeArticleLinkHref(p.href, resolveAssetUrl)
             if (!href) return null
             const label = p.label?.trim() || 'PDF'

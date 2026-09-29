@@ -30,6 +30,17 @@ describe('parseSiteArticleRows', () => {
     expect(parseSiteArticleRows([row])[0]).not.toHaveProperty('readmeRawUrl')
   })
 
+  it('keeps an extra link card flag when present and rejects non-boolean flags', () => {
+    const link = { label: 'Store', href: 'https://example.com/store', card: true }
+    const withCardLink = { ...validRow(), extraLinks: [link] }
+    expect(parseSiteArticleRows([withCardLink])[0]?.extraLinks).toEqual([link])
+    expect(parseSiteArticleRows([validRow()])[0]?.extraLinks[0]).not.toHaveProperty('card')
+
+    expect(() =>
+      parseSiteArticleRows([{ ...validRow(), extraLinks: [{ ...link, card: 'yes' }] }]),
+    ).toThrow('site article data[0].extraLinks[0].card must be a boolean')
+  })
+
   it('keeps releasesUrl when present and omits it when absent', () => {
     const withReleases = {
       ...validRow(),

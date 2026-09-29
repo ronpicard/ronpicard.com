@@ -22,10 +22,11 @@ type SiteArticleRow = Omit<
 }
 
 function deriveKind(
-  row: Pick<SiteArticleRow, 'slug' | 'title' | 'githubEmbed' | 'releasesUrl'>,
+  row: Pick<SiteArticleRow, 'slug' | 'title' | 'githubEmbed' | 'releasesUrl' | 'bodyPath'>,
 ): ArticleKind {
   if (row.githubEmbed) return 'app'
-  if (row.releasesUrl) return 'software'
+  // A written article about released software stays an article.
+  if (row.releasesUrl && !row.bodyPath) return 'software'
   // Some lessons keep Squarespace storage slugs, so the title decides too.
   if (/software-lessons-session/i.test(row.slug) || /^Software Lessons Session\b/i.test(row.title)) {
     return 'lesson'
@@ -53,7 +54,7 @@ const indexed: IndexedArticle[] = normalizedRows.map((row, sourceIndex) => ({
 
 const sorted = sortIndexedArticles(indexed)
 
-/** `app` = embedded web app; `software` = downloadable app shipped as GitHub releases. */
+/** `app` = embedded web app; `software` = downloadable app shipped as GitHub releases, without a written article. */
 export type ArticleKind = 'app' | 'software' | 'lesson' | 'post'
 
 /** `slug` is the public URL segment (from title). `sourceSlug` is the id from `siteArticles.json`. */
@@ -169,9 +170,11 @@ function isPdfHref(href: string): boolean {
   return /\.pdf$/i.test(href.split('?')[0].split('#')[0])
 }
 
-/** PDF (and similar) links from `extraLinks` for home cards and nav. */
-export function pdfExtraLinks(a: Article): { label: string; href: string }[] {
-  return filterExtraLinks(a).filter((l) => l?.href && isPdfHref(l.href))
+/** `extraLinks` shown as home card buttons: PDFs, plus links flagged `card: true`. */
+export function cardExtraLinks(a: Article): { label: string; href: string }[] {
+  return filterExtraLinks(a)
+    .filter((l) => l?.href && (isPdfHref(l.href) || l.card === true))
+    .map(({ label, href }) => ({ label, href }))
 }
 
 export function filterExtraLinks(a: Article) {
@@ -210,6 +213,6 @@ export function getArticleTitleList() {
     repoUrl: a.repoUrl,
     releasesUrl: showReleasesButton(a) ? a.releasesUrl : null,
     videoUrl: youtubeWatchUrl(a.youtubeId),
-    pdfLinks: pdfExtraLinks(a),
+    cardLinks: cardExtraLinks(a),
   }))
 }

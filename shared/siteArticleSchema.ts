@@ -1,6 +1,8 @@
 export type SiteArticleLink = {
   label: string
   href: string
+  /** Also show this link as a button on the home card, not just the article page. */
+  card?: boolean
 }
 
 export type SiteArticleRow = {
@@ -67,9 +69,13 @@ function parseExtraLinks(value: unknown, path: string): SiteArticleLink[] {
   return value.map((candidate, index) => {
     const linkPath = `${path}[${index}]`
     const link = recordAt(candidate, linkPath)
+    if ('card' in link && typeof link.card !== 'boolean') {
+      throw new Error(`${linkPath}.card must be a boolean`)
+    }
     return {
       label: requiredString(link, 'label', linkPath),
       href: requiredString(link, 'href', linkPath),
+      ...(typeof link.card === 'boolean' ? { card: link.card } : {}),
     }
   })
 }
