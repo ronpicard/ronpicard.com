@@ -55,7 +55,9 @@
   --bg-card: rgba(6, 10, 14, 0.72);
   --border: rgba(0, 255, 200, 0.14);
   --text: #e4f2f0;
-  --text-muted: rgba(160, 200, 195, 0.5);
+  --text-body: rgba(210, 230, 225, 0.9);
+  /* Secondary text (dates, summaries, notes) matches article body text so nothing reads as dimmed. */
+  --text-muted: var(--text-body);
   --accent: #00ffc8;
   --accent-dim: rgba(0, 255, 200, 0.1);
   --accent-blue: #00d4ff;
@@ -158,7 +160,6 @@ body {
 }
 
 .page.page--home {
-  --text-muted: #99b4b0;
   width: 100%;
   /* Use more horizontal space on large / ultrawide displays (was 1120px — felt tiny vs viewport) */
   max-width: min(92vw, 1560px);
@@ -256,7 +257,7 @@ body {
 }
 
 .site-search__input::placeholder {
-  color: var(--text-muted);
+  color: rgba(160, 200, 195, 0.5);
 }
 
 .site-search__input:focus {
@@ -510,7 +511,7 @@ body {
   width: 100%;
   height: 100%;
   object-fit: var(--card-image-fit, cover);
-  object-position: center;
+  object-position: var(--card-image-position, center);
   display: block;
   transform: scale(var(--card-image-scale, 1));
   transform-origin: var(--card-image-origin, center);
@@ -547,6 +548,53 @@ body {
 .project-card[data-project='ai-rulebook-always-on-rules-for-ai-coding-agents'],
 .project-card[data-project='auto-color-a-distinct-color-for-every-vs-code-workspace'] {
   --card-image-fit: contain;
+}
+
+/* Portrait photos of me: slide the 16:9 crop so my whole head shows, as close to center as the photo allows. */
+.project-card[data-project='got-my-boating-license'] {
+  --card-image-position: 50% 16%;
+}
+
+.project-card[data-project='flew-a-tb-10-with-a-retired-t-38-pilot'] {
+  --card-image-position: 50% 12%;
+}
+
+.project-card[data-project='first-multi-engine-flight-1959-beechcraft-be95'] {
+  --card-image-position: 50% 62%;
+}
+
+.project-card[data-project='simulated-engine-failures-in-a-piper-warrior-ii-pa-28-161'] {
+  --card-image-position: 50% 36%;
+}
+
+.project-card[data-project='flew-a-super-decathlon-today'] {
+  --card-image-position: 50% 71%;
+}
+
+.project-card[data-project='flew-a-cherokee-6-pa-32-with-a-friend'] {
+  --card-image-position: 50% 36%;
+}
+
+.project-card[data-project='4th-solo'] {
+  --card-image-position: 50% 0%;
+}
+
+/* These video stills have a transparent strip down the right side; zoom from the top-left until it leaves the frame. */
+.project-card[data-project='first-solo'] {
+  --card-image-position: 50% 0%;
+  --card-image-scale: 1.18;
+  --card-image-origin: 0% 0%;
+}
+
+.project-card[data-project='second-solo'] {
+  --card-image-position: 50% 0%;
+  --card-image-scale: 1.4;
+  --card-image-origin: 0% 0%;
+}
+
+/* The head is taller than a full-width 16:9 crop; trim a little top and bottom rather than leave empty bars. */
+.project-card[data-project='got-an-amateur-ham-radio-technician-class-license-call-sign-k4agn'] {
+  --card-image-position: 50% 18%;
 }
 
 .project-card__body {
@@ -960,7 +1008,7 @@ body {
 }
 
 .article-prose {
-  color: rgba(210, 230, 225, 0.9);
+  color: var(--text-body);
   font-size: 1.02rem;
   line-height: 1.65;
   font-weight: 500;

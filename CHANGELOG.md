@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Dates, post summaries such as the Blackjack Royale and Roulette Royale descriptions, quotes, and other secondary text now use the same color as article text instead of a dimmed gray.
+- Home page cards for photos of Ron, such as the flying, boating, and ham radio posts, are now framed to show as much of his head as the photo allows, closer to the center, and every one fills its frame with no empty dark bars.
 - Home cards now show every button their article page shows, such as the View Code links on the neural network posts, in the same order.
 - The AAAx Vision post no longer has a View Video button, since the AIAA video site it pointed to has shut down.
 - Buttons that link to an outside news article now just say Article instead of repeating the story's headline; links to papers still say Paper.

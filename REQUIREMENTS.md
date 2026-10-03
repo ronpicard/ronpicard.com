@@ -20,6 +20,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The header MUST offer LinkedIn (in LinkedIn's brand blue and white), GitHub (its standard white mark), and Wyvern Systems (`https://wyvernsystems.com/`, drawn from the company logo in `public/wyvern-systems-logo.png`) icon links, in that order after the search control, drawn as bare logos without a button frame, each opening in a new tab with `rel="noopener noreferrer"`; the brand MUST stay on one line beside them at 375px-wide phone viewports.
 - Buttons that lead to GitHub (Code, Releases, repository and gist links) or a GitHub Pages site (`*.github.io`, including every Demo), the VS Code Marketplace, the Open VSX Registry, or wyvernsystems.com MUST show that destination's logo, in its official colors, before the label; buttons to a `.pdf` file MUST show a PDF logo; YouTube buttons MUST show YouTube's red logo. Buttons to other hosts MUST NOT show a logo.
 - Thumbnail framing MAY be adjusted per project using presentation styles; the original image files, formats, and references MUST be preserved.
+- Secondary text (dates, summaries, quotes, footer, and previous/next labels) MUST use the same color as article body text, not a dimmed variant; only input placeholders MAY be dimmer.
+- Card thumbnails of photos showing Ron SHOULD show as much of his head as the photo allows, as close to the center as the crop allows, and MUST fill the card frame with no empty or transparent bars.
 
 ### Background animation
 
