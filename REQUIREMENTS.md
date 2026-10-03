@@ -51,6 +51,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Blackjack Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Slots Royale project MUST include a local gameplay thumbnail, a short introduction, and playable demo and source code links; it MUST appear third among the September 26, 2026 additions, after Blackjack Royale.
 - The Slots Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
+- The Flight Simulator project MUST include a local cockpit thumbnail, a short introduction, and playable demo and source code links; it MUST appear first as the October 3, 2026 addition.
+- The Flight Simulator project MUST use a current local cockpit screenshot for its blog thumbnail and Open Graph image.
 - The AI Rulebook article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code, Releases (latest GitHub release), VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page, and be dated April 29, 2026, the extension's original release date.
 - The Auto Color article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code, Releases (latest GitHub release), VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page, and be dated April 13, 2026, the extension's original release date.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.

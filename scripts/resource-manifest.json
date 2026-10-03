@@ -662,5 +662,9 @@
   "local://auto-color-icon-2026-04-13.png": {
     "path": "resources/auto-color-icon-2026-04-13.png",
     "bytes": 8330
+  },
+  "local://flight-simulator-2026-10-03.jpg": {
+    "path": "resources/flight-simulator-2026-10-03.jpg",
+    "bytes": 112188
   }
 }

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "flight-simulator",
+    "title": "Flight Simulator &mdash; Home",
+    "date": "2026-10-03",
+    "summary": "Flight Simulator puts you in the left seat of a Cessna 172SP Skyhawk, lined up on runway 31 at New York LaGuardia with the engine running. The 3D steam-gauge cockpit has a yoke, rudder pedals, throttle, mixture, flap lever and trim wheel that all move with your inputs, and a working six-pack, tachometer, VOR, radio stack and transponder driven by a six-degree-of-freedom flight model with stalls, prop wash, left-turning tendencies, ground handling and fuel burn. Below you lie about 14,000 real building footprints from OpenStreetMap, the East River, Hudson, Verrazzano and George Washington bridges, the Statue of Liberty, Citi Field, and a LaGuardia with FAA runway markings, a control tower, PAPIs and airliners landing on runway 22. Scripted LaGuardia ATC plays through a VHF radio filter on whichever frequency COM1 is tuned to, an ATC menu lets you make your own calls, and a hint card walks you from the takeoff clearance to the straight-in back home. Fly with the keyboard, a gamepad, or touch controls on phones. Built with TypeScript and Three.js.",
+    "imageUrl": "resources/flight-simulator-2026-10-03.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": "https://ronpicard.github.io/flight-simulator/",
+    "demoUrl": "https://ronpicard.github.io/flight-simulator/",
+    "repoUrl": "https://github.com/ronpicard/flight-simulator",
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [],
+    "bodyPath": null
+  },
+  {
     "slug": "slots-royale",
     "title": "Slots Royale &mdash; Home",
     "date": "2026-09-26",
