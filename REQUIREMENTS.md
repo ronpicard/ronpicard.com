@@ -17,6 +17,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The grid MUST use three columns at viewport widths of 68rem and above, two from 40rem to below 68rem, and one below 40rem.
 - Card titles MUST use 1.25rem text; homepage dates and supporting text MUST remain readable against the dark background.
 - Phone-width homepage layouts MUST provide at least 1.25rem side padding, respect safe-area insets, and keep the brand and social controls within the viewport.
+- The header MUST offer LinkedIn, GitHub, and Wyvern Systems (`https://wyvernsystems.com/`, drawn from the company logo in `public/wyvern-systems-logo.png`) icon links, in that order after the search control, each opening in a new tab with `rel="noopener noreferrer"`; the brand MUST stay on one line beside them at 375px-wide phone viewports.
 - Thumbnail framing MAY be adjusted per project using presentation styles; the original image files, formats, and references MUST be preserved.
 
 ### Background animation

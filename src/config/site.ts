@@ -2,4 +2,5 @@
 export const SOCIAL = {
   linkedin: 'https://www.linkedin.com/in/ron-picard-8b7b3059',
   github: 'https://github.com/ronpicard',
+  wyvern: 'https://wyvernsystems.com/',
 } as const
