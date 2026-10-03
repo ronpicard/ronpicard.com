@@ -55,7 +55,7 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (239 tests) |
+| `npm test` | Run Vitest unit tests once (241 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
 | `npm run test:e2e` | Playwright browser smoke tests (17 tests × desktop and mobile projects; starts Vite dev server) |

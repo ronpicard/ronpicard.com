@@ -368,6 +368,26 @@ body {
   filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 120, 40, 0.45));
 }
 
+/* LinkedIn's own blue square with a white "in". */
+.site-top-bar__linkedin {
+  display: block;
+  transition: filter 0.2s ease;
+}
+
+.site-top-bar__icon:hover .site-top-bar__linkedin {
+  filter: brightness(1.2) drop-shadow(0 0 6px rgba(10, 102, 194, 0.55));
+}
+
+/* GitHub's standard white mark for dark backgrounds. */
+.site-top-bar__github {
+  display: block;
+  transition: filter 0.2s ease;
+}
+
+.site-top-bar__icon:hover .site-top-bar__github {
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+}
+
 .site-top-bar__icon:hover {
   color: var(--accent);
   border-color: rgba(0, 255, 200, 0.45);

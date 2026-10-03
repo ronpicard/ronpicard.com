@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The header's LinkedIn and GitHub icons now use their standard brand looks: LinkedIn's blue square with a white "in", and GitHub's white mark.
 - The header now has a Wyvern Systems button, showing the company's wyvern logo beside the LinkedIn and GitHub icons and linking to wyvernsystems.com in a new tab.
 - The Slots Royale card has a fresh screenshot of the whole machine with its new domed buttons and leather stool, and its introduction says the camera now opens wide on the cabinet.
 - The Mustang Showroom card shows the car's new gunmetal paint and five-spoke wheels.

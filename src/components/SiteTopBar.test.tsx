@@ -52,6 +52,17 @@ describe('SiteTopBar', () => {
     expect(logo?.getAttribute('alt')).toBe('')
   })
 
+  it('draws LinkedIn in its brand blue with a white "in"', () => {
+    const icon = container.querySelector('a[aria-label="LinkedIn"] svg')
+    expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#0a66c2')
+    expect(icon?.querySelector('rect')?.getAttribute('fill')).toBe('#fff')
+  })
+
+  it('draws GitHub as its standard white mark', () => {
+    const icon = container.querySelector('a[aria-label="GitHub"] svg')
+    expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#fff')
+  })
+
   it('shows the icons after the search control, with Wyvern Systems last', () => {
     const labels = Array.from(
       container.querySelectorAll('.site-top-bar__social > *'),
