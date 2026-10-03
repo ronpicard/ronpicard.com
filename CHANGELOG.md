@@ -44,7 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Flight Simulator joins the portfolio as the latest project, with a cockpit thumbnail, interactive embedded demo, source code link, and an introduction to its Cessna 172 cockpit, LaGuardia departure, 3D New York scenery, and scripted ATC radio.
+- Flight Simulator joins the portfolio as the latest project, with the same cockpit-over-Manhattan picture as the simulator's own link preview for its thumbnail and link preview, interactive embedded demo, source code link, and an introduction to its Cessna 172 cockpit, LaGuardia departure, 3D New York scenery, and scripted ATC radio.
 - A new article introduces AI Rulebook, my free VS Code and Open VSX extension from Wyvern Systems LLC that manages always-on rules for AI coding agents in `AGENTS.md`. It is dated April 29, 2026, when the extension was first released, and uses the extension's icon as its card image, with Code, Releases, VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page.
 - A new article introduces Auto Color, my free VS Code and Open VSX extension from Wyvern Systems LLC that gives every workspace its own color. It is dated April 13, 2026, when the extension was first released, and uses the extension's icon as its card image, with VS Code and Cursor screenshots in the article and Code, Releases, VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page.
 - Mustang Showroom joins the portfolio as the latest project, with a showroom thumbnail, interactive embedded demo, source code link, and an introduction to its 1969 Mustang on a turntable, opening panels, explode view, and parts catalogue.
