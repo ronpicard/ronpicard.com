@@ -17,7 +17,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The grid MUST use three columns at viewport widths of 68rem and above, two from 40rem to below 68rem, and one below 40rem.
 - Card titles MUST use 1.25rem text; homepage dates and supporting text MUST remain readable against the dark background.
 - Phone-width homepage layouts MUST provide at least 1.25rem side padding, respect safe-area insets, and keep the brand and social controls within the viewport.
-- The header MUST offer LinkedIn (in LinkedIn's brand blue and white), GitHub (its standard white mark), and Wyvern Systems (`https://wyvernsystems.com/`, drawn from the company logo in `public/wyvern-systems-logo.png`) icon links, in that order after the search control, each opening in a new tab with `rel="noopener noreferrer"`; the brand MUST stay on one line beside them at 375px-wide phone viewports.
+- The header MUST offer LinkedIn (in LinkedIn's brand blue and white), GitHub (its standard white mark), and Wyvern Systems (`https://wyvernsystems.com/`, drawn from the company logo in `public/wyvern-systems-logo.png`) icon links, in that order after the search control, drawn as bare logos without a button frame, each opening in a new tab with `rel="noopener noreferrer"`; the brand MUST stay on one line beside them at 375px-wide phone viewports.
+- Buttons that lead to GitHub (Code, Releases, repository and gist links) or a GitHub Pages site (`*.github.io`, including every Demo), the VS Code Marketplace, the Open VSX Registry, or wyvernsystems.com MUST show that destination's logo, in its official colors, before the label; buttons to a `.pdf` file MUST show a PDF logo; YouTube buttons MUST show YouTube's red logo. Buttons to other hosts MUST NOT show a logo.
 - Thumbnail framing MAY be adjusted per project using presentation styles; the original image files, formats, and references MUST be preserved.
 
 ### Background animation
@@ -57,7 +58,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Browser Back navigation from an article MUST restore the prior home catalog position without animating down from the top.
 - Mirrored assets MUST live under `public/resources/` and be referenced as `resources/...` in JSON, resolved with the Vite base URL at render time.
 - Posts MAY set `releasesUrl` (validated `https://github.com/<owner>/<repo>/releases/...` URL); when set, the home card and article page MUST show a Releases button immediately after Code linking to it, and MUST omit the button otherwise.
-- An `extraLinks` entry MAY set `card: true`; such links MUST appear as buttons on the home card, after Releases, as well as on the article page. PDF links MUST keep appearing on home cards without the flag.
+- A post's home card MUST show the same buttons as its article page, in the same order: Demo, Code, Releases, YouTube, then every `extraLinks` entry. The `card` flag on `extraLinks` entries no longer changes anything. Links to third-party articles MUST be labelled Article, except papers, which MUST be labelled Paper.
+- A post with no demo embed, YouTube video, other embed, or README MUST show its picture (`articleHeroUrl`, else `imageUrl`) at the top of the article page.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
 - Each blog post MUST share a generated 1200×630 card of its own image (`public/resources/og/`, built by `npm run generate:og`) as its Open Graph and Twitter image, showing portrait, square, and small images uncropped; a post MUST fall back to its original image when no card exists.

@@ -1,7 +1,7 @@
 export type SiteArticleLink = {
   label: string
   href: string
-  /** Also show this link as a button on the home card, not just the article page. */
+  /** Legacy flag with no effect: home cards now show every link the article page shows. */
   card?: boolean
 }
 

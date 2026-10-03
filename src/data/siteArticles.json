@@ -519,7 +519,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "Github Repo",
+        "label": "GitHub Repo",
         "href": "https://github.com/ronpicard/data-structures-visualizer-web-app"
       }
     ],
@@ -529,7 +529,7 @@
     "slug": "software-lessons-session-13-programming-in-python-object-oriented-oop-part-4-factory-pattern-ctkk7",
     "title": "Software Lessons Session 13: Visual Studio Docker Dev Containers and Protocol Buffers Part 1 &mdash; Home",
     "date": "2026-03-15",
-    "summary": "Software Lessons Session 13: Visual Studio Docker Dev Containers and Protocol Buffers Part 1   -Describing Visual Studio Code Docker Dev Containers  -Protocolor Buffers Installation and explanation",
+    "summary": "Software Lessons Session 13: Visual Studio Docker Dev Containers and Protocol Buffers Part 1   -Describing Visual Studio Code Docker Dev Containers  -Protocol Buffers Installation and explanation",
     "imageUrl": "resources/0ecc9b8601408b.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -604,7 +604,7 @@
     "slug": "software-lessons-session-13-programming-in-python-object-oriented-oop-part-4-factory-pattern-ctkk7-gg9ct-2cy4d-jc74s-nsrry-dfhsg",
     "title": "Software Lessons Session 18: Programming in C++: Pass by Reference, Pointer, &amp; Value Part 1 &mdash; Home",
     "date": "2026-03-15",
-    "summary": "Software Lessons Session 18: Programming in C++: Pass by Reference, Pointer, &amp;amp; Value Part 1   -Pass by Value, Pass by Pointer, Pass by Value.  -Legal and illegal variants of this.  -The 'why' behind the logic.",
+    "summary": "Software Lessons Session 18: Programming in C++: Pass by Reference, Pointer, &amp;amp; Value Part 1   -Pass by Reference, Pass by Pointer, Pass by Value.  -Legal and illegal variants of this.  -The 'why' behind the logic.",
     "imageUrl": "resources/7a3685491bc92d.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -619,7 +619,7 @@
     "slug": "software-lessons-session-13-programming-in-python-object-oriented-oop-part-4-factory-pattern-ctkk7-gg9ct-2cy4d-jc74s-nsrry-dfhsg-zx36j",
     "title": "Software Lessons Session 19: Programming in C++: Pass by Reference, Pointer, &amp; Value Part 2 &mdash; Home",
     "date": "2026-03-15",
-    "summary": "Software Lessons Session 19: Programming in C++: Pass by Reference, Pointer, &amp;amp; Value Part 2   -Pass by Value, Pass by Pointer, Pass by Value.  -Legal and illegal variants of this.  -The 'why' behind the logic.",
+    "summary": "Software Lessons Session 19: Programming in C++: Pass by Reference, Pointer, &amp;amp; Value Part 2   -Pass by Reference, Pass by Pointer, Pass by Value.  -Legal and illegal variants of this.  -The 'why' behind the logic.",
     "imageUrl": "resources/52b914f4e3d3d1.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -859,7 +859,7 @@
     "slug": "software-lessons-session-6-networking-103-binary-data-amp-operating-systems-intro",
     "title": "Software Lessons Session 6: Networking 103 – Binary Data &amp; Operating Systems Intro &mdash; Home",
     "date": "2026-01-09",
-    "summary": "Software Lessons Session 6: Networking 103 – Binary Data &amp;amp; Operating Systems Intro     IPv4 and IPv6 formats and package structure    Binary to ASCII and integers (and vice versa)    Bits and bytes explained    Ping vs Bandwidth    Introduction to Operating Systems: Windows, Linux, Unix, OSX",
+    "summary": "Software Lessons Session 6: Networking 103 – Binary Data &amp;amp; Operating Systems Intro     IPv4 and IPv6 formats and packet structure    Binary to ASCII and integers (and vice versa)    Bits and bytes explained    Ping vs Bandwidth    Introduction to Operating Systems: Windows, Linux, Unix, OSX",
     "imageUrl": "resources/7dc8a394870fe5.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -899,7 +899,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "Try on github",
+        "label": "Try on GitHub",
         "href": "https://ronpicard.github.io/stockfish-llm-chat/"
       }
     ],
@@ -907,7 +907,7 @@
   },
   {
     "slug": "try-my-websim-alien-escape-game-built-with-prompt-programming",
-    "title": "“Alien Escape Game” built with Websim LLMs &mdash; Home",
+    "title": "“Alien Escape Game” built with WebSim LLMs &mdash; Home",
     "date": "2025-04-27",
     "summary": "Introduction  The idea of designing your own video game without writing traditional code might have sounded like science fiction not too long ago. Yet today, with platforms like WebSim, it's becoming a reality. WebSim is a platform that lets you build fully functional web games simply through prompt",
     "imageUrl": "resources/5b8e16d88de0ff.png",
@@ -919,7 +919,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "Play on github",
+        "label": "Play on GitHub",
         "href": "https://ronpicard.github.io/alien-escape-game-websim/"
       },
       {
@@ -948,7 +948,7 @@
     "slug": "build-a-chess-engine-as-fast-as-possible",
     "title": "Build an AI Chess Engine As Fast As Possible using ChatGPT &mdash; Home",
     "date": "2024-06-02",
-    "summary": "The Problem  For a while now I have wondered how much faster it would be to build a C++ application with ChatGPT than without. So I set a goal to program a C++ chess engine with an AI player as fast as possible while heavily using Chat GPT. I have done this type of project without prompt programming",
+    "summary": "The Problem  For a while now I have wondered how much faster it would be to build a C++ application with ChatGPT than without. So I set a goal to program a C++ chess engine with an AI player as fast as possible while heavily using ChatGPT. I have done this type of project without prompt programming",
     "imageUrl": "resources/d5d56a05f8fbca.png",
     "articleHeroUrl": "resources/287e0c598d7237.jpg",
     "githubEmbed": null,
@@ -1033,7 +1033,7 @@
     "slug": "the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista",
     "title": "The AAAx Vision to Accelerate Autonomy Test &amp; Evaluation using the X-62A VISTA &mdash; Home",
     "date": "2023-01-20",
-    "summary": "The Autonomous Attritable Aircraft Experiment (AAAx) is an experimentation campaign that seeks to (1) Determine the competitive advantage of autonomous attributable aircraft to the U.S. Air Force, (2) Demonstrate the operational integration of autonomous attritable aircraft with crewed teammates, an",
+    "summary": "The Autonomous Attritable Aircraft Experiment (AAAx) is an experimentation campaign that seeks to (1) Determine the competitive advantage of autonomous attritable aircraft to the U.S. Air Force, (2) Demonstrate the operational integration of autonomous attritable aircraft with crewed teammates, an",
     "imageUrl": "resources/681b8c86ca60a8.jpg",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -1045,10 +1045,6 @@
       {
         "label": "Paper",
         "href": "https://arc.aiaa.org/doi/10.2514/6.2023-1925"
-      },
-      {
-        "label": "View Video",
-        "href": "https://video.aiaa.org/title/d543d467-9f77-4dbf-81fe-892505be6716"
       }
     ],
     "bodyPath": "article-bodies/the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista.html"
@@ -1072,7 +1068,7 @@
     "slug": "blog-post-title-four-7psnr",
     "title": "Got an Amateur (HAM) Radio Technician Class License! (Call sign: K4AGN) &mdash; Home",
     "date": "2022-05-17",
-    "summary": "A couple of weeks ago I decided to study and test for my amateur radio technician license. For those of you unfamiliar with art, HAM radio operators are licensed to access HF/VHF/UHF frequency bands not open to the general public to have general conversations with other HAMs around the world, spread",
+    "summary": "A couple of weeks ago I decided to study and test for my amateur radio technician license. For those of you unfamiliar with the art, HAM radio operators are licensed to access HF/VHF/UHF frequency bands not open to the general public to have general conversations with other HAMs around the world, spread",
     "imageUrl": "resources/71df86f038fe45.jpg",
     "articleHeroUrl": "resources/71df86f038fe45.jpg",
     "githubEmbed": null,
@@ -1132,7 +1128,7 @@
     "slug": "l07knayw7mg08n539osa9wrqujyh53",
     "title": "Flew a TB-10 with a retired T-38 pilot &mdash; Home",
     "date": "2022-05-17",
-    "summary": "Went flying with a retired T-38 pilot today. Did some lazy eights over the beach, and enjoyed the sunshine of Destin Florida! I had never flown a French aircraft (TB-10) before and it was a fun experience.   Cheers, Ron",
+    "summary": "Went flying with a retired T-38 pilot today. Did some lazy eights over the beach, and enjoyed the sunshine of Destin, Florida! I had never flown a French aircraft (TB-10) before and it was a fun experience.   Cheers, Ron",
     "imageUrl": "resources/9d2393ab726ddf.jpg",
     "articleHeroUrl": "resources/0ff762ca4d39da.jpg",
     "githubEmbed": null,
@@ -1207,7 +1203,7 @@
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf",
     "title": "Formal Methods 101: Set Theory &mdash; Home",
     "date": "2019-10-03",
-    "summary": "Introduction:   Set Theory involves sets which are unordered lists.  Ex. Set:&amp;nbsp;  S  = (a, b, c) Note:  S  is the set and a, b, c are the elements of the set.    All members of a set must be of the same type. (Note: because set can have complex types (sets themselves); this can be circumvente",
+    "summary": "Introduction:   Set Theory involves sets which are unordered lists.  Ex. Set:&amp;nbsp;  S  = (a, b, c) Note:  S  is the set and a, b, c are the elements of the set.    All members of a set must be of the same type. (Note: because a set can have complex types (sets themselves); this can be circumvente",
     "imageUrl": "resources/fm-stock-set-theory.jpg",
     "articleHeroUrl": "resources/fm-stock-set-theory.jpg",
     "githubEmbed": null,
@@ -1312,7 +1308,7 @@
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r",
     "title": "Formal Methods 101: Second-Order (and Higher-Order) Logic &mdash; Home",
     "date": "2019-10-05",
-    "summary": "Introduction:     Second-Order Logic extends First-Order Logic to Quantify Sets. Whereas first-order logic may only quantify Variables in a domain of discourse (set), Second-Order logic may also quantify of sets themselves.       Example SOL Expression:     (∃ T )(∀ Q )(∀D)(∃A)(( T ⊂  Q ) ∧ (A, D∈ T",
+    "summary": "Introduction:     Second-Order Logic extends First-Order Logic to Quantify Sets. Whereas first-order logic may only quantify Variables in a domain of discourse (set), Second-Order logic may also quantify over sets themselves.       Example SOL Expression:     (∃ T )(∀ Q )(∀D)(∃A)(( T ⊂  Q ) ∧ (A, D∈ T",
     "imageUrl": "resources/fm-stock-second-order.jpg",
     "articleHeroUrl": "resources/fm-stock-second-order.jpg",
     "githubEmbed": null,
@@ -1342,7 +1338,7 @@
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m",
     "title": "Formal Methods 101: Zero-Order (Propositional) Logic &mdash; Home",
     "date": "2019-10-04",
-    "summary": "Introductions:     Zero-Order Logic (also known as propositional logic or propositional calculus) is the foundation of most formal logic systems.    In Zero-Order Logic there is no notion of variables, but merely TRUE or FALSE propositions (statements), represented by symbols (usually A, B, C….), wi",
+    "summary": "Introduction:     Zero-Order Logic (also known as propositional logic or propositional calculus) is the foundation of most formal logic systems.    In Zero-Order Logic there is no notion of variables, but merely TRUE or FALSE propositions (statements), represented by symbols (usually A, B, C….), wi",
     "imageUrl": "resources/fm-stock-zero-order.jpg",
     "articleHeroUrl": "resources/fm-stock-zero-order.jpg",
     "githubEmbed": null,
@@ -1357,7 +1353,7 @@
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8",
     "title": "Formal Methods 101: Binary Relations &mdash; Home",
     "date": "2019-10-04",
-    "summary": "Introduction:     Relations (R) are a generalization of a functions (f), (such that f ⊂ R) and are used to specify sets; or more intuitively the relationship between a domain and codomain.    f is a strict subset of R because, though all functions are relations, not all relations are functions.",
+    "summary": "Introduction:     Relations (R) are a generalization of functions (f), (such that f ⊂ R) and are used to specify sets; or more intuitively the relationship between a domain and codomain.    f is a strict subset of R because, though all functions are relations, not all relations are functions.",
     "imageUrl": "resources/fm-stock-binary-relations.jpg",
     "articleHeroUrl": "resources/fm-stock-binary-relations.jpg",
     "githubEmbed": null,
@@ -1642,7 +1638,7 @@
     "slug": "build-your-own-ubuntu-linux-router",
     "title": "Build Your Own Ubuntu Linux Router &mdash; Home",
     "date": "2019-01-04",
-    "summary": "Building your own own bare-bones Linux router is not only educational but in this age of cyber-security threats, it is an excellent way to secure your home network. On top of this, you may see a significant performance boost on your internet speeds.  Most commercial routers these days are low qualit",
+    "summary": "Building your own bare-bones Linux router is not only educational but in this age of cyber-security threats, it is an excellent way to secure your home network. On top of this, you may see a significant performance boost on your internet speeds.  Most commercial routers these days are low qualit",
     "imageUrl": "resources/ed021d9a81e466.jpg",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -1657,7 +1653,7 @@
     "slug": "build-a-wordpress-website-from-scratch",
     "title": "Build A WordPress Website From Scratch &mdash; Home",
     "date": "2018-12-22",
-    "summary": "Step 1 – The Prep Work     When creating a WordPress website from scratch there are a couple of things we need to do upfront.  First, we need to purchase a domain name (e.g.  foo.com ) from a domain name an ICANN-Accredited registrar. This can be done on a registrar's website. First, search for the",
+    "summary": "Step 1 – The Prep Work     When creating a WordPress website from scratch there are a couple of things we need to do upfront.  First, we need to purchase a domain name (e.g.  foo.com ) from an ICANN-accredited registrar. This can be done on a registrar's website. First, search for the",
     "imageUrl": "resources/38710244b8805b.jpg",
     "articleHeroUrl": "resources/49eae7e6300160.png",
     "githubEmbed": null,

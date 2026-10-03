@@ -337,62 +337,51 @@ body {
   border: 0;
 }
 
+/* Bare brand logos: no frame, just a full-size invisible tap target. */
 .site-top-bar__icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: none;
   border-radius: 8px;
+  background: none;
   color: var(--accent-blue);
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.45);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 12px rgba(0, 212, 255, 0.06);
+  -webkit-tap-highlight-color: rgba(0, 255, 200, 0.2);
+  transition: color 0.2s ease;
+}
+
+.site-top-bar__icon svg,
+.site-top-bar__logo {
+  display: block;
+  width: 30px;
+  height: 30px;
   transition:
-    border-color 0.2s ease,
-    color 0.2s ease,
-    background 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 0.2s ease,
+    filter 0.2s ease;
 }
 
-/* Wyvern Systems' gradient logo keeps its own colors; brighten it on hover like the SVG icons. */
 .site-top-bar__wyvern {
-  display: block;
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
-  transition: filter 0.2s ease;
 }
 
-.site-top-bar__icon:hover .site-top-bar__wyvern {
-  filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 120, 40, 0.45));
-}
-
-/* LinkedIn's own blue square with a white "in". */
-.site-top-bar__linkedin {
-  display: block;
-  transition: filter 0.2s ease;
-}
-
-.site-top-bar__icon:hover .site-top-bar__linkedin {
-  filter: brightness(1.2) drop-shadow(0 0 6px rgba(10, 102, 194, 0.55));
-}
-
-/* GitHub's standard white mark for dark backgrounds. */
-.site-top-bar__github {
-  display: block;
-  transition: filter 0.2s ease;
-}
-
-.site-top-bar__icon:hover .site-top-bar__github {
-  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.45));
+.site-top-bar__icon.site-search__toggle svg {
+  width: 24px;
+  height: 24px;
 }
 
 .site-top-bar__icon:hover {
   color: var(--accent);
-  border-color: rgba(0, 255, 200, 0.45);
-  background: var(--accent-dim);
-  box-shadow: 0 0 18px rgba(0, 255, 200, 0.12);
+}
+
+.site-top-bar__icon:hover svg,
+.site-top-bar__icon:hover .site-top-bar__logo {
+  transform: translateY(-1px);
+  filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
 }
 
 .site-top-bar__brand:focus-visible,
@@ -630,6 +619,20 @@ body {
   color: #ffa0ec;
   background: rgba(255, 43, 214, 0.14);
   border-color: rgba(0, 255, 200, 0.4);
+}
+
+/* Brand logo in front of a button label (GitHub, VS Code, Open VSX, Wyvern Systems). */
+.project-card__btn:has(.btn-logo),
+.article-btn:has(.btn-logo) {
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-logo {
+  display: block;
+  flex-shrink: 0;
+  margin-right: 0.45rem;
+  object-fit: contain;
 }
 
 .project-card__btn__yt-icon {
@@ -1118,6 +1121,16 @@ body {
   line-height: 0;
 }
 
+.article-picture {
+  display: block;
+  max-width: 100%;
+  max-height: min(70dvh, 40rem);
+  margin: 0 auto 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
 .embed-frame {
   position: relative;
   width: 100%;
@@ -1375,6 +1388,22 @@ body {
   .site-top-bar__icon {
     width: 40px;
     height: 40px;
+  }
+
+  .site-top-bar__icon svg,
+  .site-top-bar__logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .site-top-bar__wyvern {
+    width: 30px;
+    height: 30px;
+  }
+
+  .site-top-bar__icon.site-search__toggle svg {
+    width: 22px;
+    height: 22px;
   }
 
   .page {

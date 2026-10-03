@@ -31,12 +31,11 @@ function item(overrides: Partial<ProjectListItem> = {}): ProjectListItem {
     imageUrl: 'resources/card.png',
     showDemo: false,
     showCode: false,
-    articleUrl: null,
     demoUrl: null,
     repoUrl: null,
     releasesUrl: null,
     videoUrl: null,
-    cardLinks: [],
+    extraLinks: [],
     ...overrides,
   }
 }
@@ -118,9 +117,9 @@ describe('ProjectCard actions', () => {
         showCode: true,
         repoUrl: 'https://github.com/wyvernsystems/x',
         releasesUrl: 'https://github.com/wyvernsystems/x/releases/latest',
-        cardLinks: [
-          { label: 'VS Code Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=A.x' },
-          { label: 'Open VSX Registry', href: 'https://open-vsx.org/extension/A/x' },
+        extraLinks: [
+          { label: 'VS Code Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=A.x', articleStyle: false },
+          { label: 'Open VSX Registry', href: 'https://open-vsx.org/extension/A/x', articleStyle: false },
         ],
       }),
     })
@@ -130,6 +129,44 @@ describe('ProjectCard actions', () => {
       'VS Code Marketplace',
       'Open VSX Registry',
     ])
+  })
+
+  it('puts the destination brand logo in front of the button label', () => {
+    renderCard({
+      item: item({
+        showDemo: true,
+        demoUrl: 'https://ronpicard.github.io/x/',
+        showCode: true,
+        repoUrl: 'https://github.com/wyvernsystems/x',
+        releasesUrl: 'https://github.com/wyvernsystems/x/releases/latest',
+        videoUrl: 'https://www.youtube.com/watch?v=abc',
+        extraLinks: [
+          { label: 'VS Code Marketplace', href: 'https://marketplace.visualstudio.com/items?itemName=A.x', articleStyle: false },
+          { label: 'Open VSX Registry', href: 'https://open-vsx.org/extension/A/x', articleStyle: false },
+          { label: 'Wyvern Systems', href: 'https://wyvernsystems.com/', articleStyle: false },
+          { label: 'Paper', href: 'resources/e55c259979a696.pdf', articleStyle: false },
+          { label: 'Play on WebSim.AI', href: 'https://websim.ai/@ronpicard/x', articleStyle: false },
+        ],
+      }),
+    })
+    const logoFor = (text: string) => {
+      const a = Array.from(container.querySelectorAll('.project-card__actions a')).find(
+        (el) => el.textContent === text,
+      )
+      return a?.firstElementChild ?? null
+    }
+    const fills = (el: Element | null) =>
+      Array.from(el?.querySelectorAll('path') ?? []).map((p) => p.getAttribute('fill'))
+
+    expect(fills(logoFor('Demo'))).toEqual(['#fff'])
+    expect(fills(logoFor('Code'))).toEqual(['#fff'])
+    expect(fills(logoFor('Releases'))).toEqual(['#fff'])
+    expect(fills(logoFor('VS Code Marketplace'))).toContain('#007ACC')
+    expect(fills(logoFor('Open VSX Registry'))).toEqual(['#c160ef', '#a60ee5'])
+    expect(logoFor('Wyvern Systems')?.getAttribute('src')).toMatch(/\/wyvern-systems-logo\.png$/)
+    expect(fills(logoFor('YouTube')?.querySelector('svg') ?? null)).toEqual(['#ff0000', '#fff'])
+    expect(fills(logoFor('Paper'))[0]).toBe('#e2231a')
+    expect(logoFor('Play on WebSim.AI')).toBeNull()
   })
 
   it('omits the Releases button when releasesUrl is missing or not a GitHub releases page', () => {

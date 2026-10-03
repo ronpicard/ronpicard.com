@@ -1,6 +1,6 @@
 <div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
   
-  <div class="sqs-html-content"><p class="">Building your own own bare-bones Linux router is not only educational but in this age of cyber-security threats, it is an excellent way to secure your home network. On top of this, you may see a significant performance boost on your internet speeds.</p><p class="">Most commercial routers these days are low quality, and the desire to build your own bare-bones version from scratch is completely understandable.</p><p class="">Without further ado, let’s get start!</p><p class=""><strong>What you will need:</strong></p><p class="">A Linux PC (I use a self build of the following components)</p><p class="">Mini ATX CPU integrated mother board</p><p class="">4 GB RAM</p><p class="">16 GB Flash drive to Run the Linux OSA</p><p class="">550 Watt Psu</p><p class="">Mini ATX case</p><p class="">With these components in mind lets get started.</p><p class=""><strong>Install Ubuntu and run the following commands:</strong></p><p class=""></p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get upgrade</p><p class="">$ sudo apt-get install netplan</p><p class="">$ sudo apt-get install ifupdown</p><p class="">$ sudo apt-get isc-dhcp-server</p><p class="">$ sudo apt-get iptables-persistent</p><p class="">$ sudo netfilter-persistent</p><p class="">$ sudo bind9</p><p class="">$ sudo nano /etc/sysctl.conf</p><p class="">Add the following line:</p><p class="">net.ipv4.ip_forward=1</p><p class="">$ sudo rm /etc/network/interfaces</p><p class="">$ sudo touch /etc/network/interfaces</p><p class="">$ sudo nano /etc/network/interfaces</p><p class="">Place the following lines in this file</p><pre><code># The loopback network interface
+  <div class="sqs-html-content"><p class="">Building your own bare-bones Linux router is not only educational but in this age of cyber-security threats, it is an excellent way to secure your home network. On top of this, you may see a significant performance boost on your internet speeds.</p><p class="">Most commercial routers these days are low quality, and the desire to build your own bare-bones version from scratch is completely understandable.</p><p class="">Without further ado, let’s get started!</p><p class=""><strong>What you will need:</strong></p><p class="">A Linux PC (I use a self-built set of the following components)</p><p class="">Mini ATX CPU integrated motherboard</p><p class="">4 GB RAM</p><p class="">16 GB Flash drive to Run the Linux OS</p><p class="">550 Watt PSU</p><p class="">Mini ATX case</p><p class="">With these components in mind let’s get started.</p><p class=""><strong>Install Ubuntu and run the following commands:</strong></p><p class=""></p><p class="">$ sudo apt-get update</p><p class="">$ sudo apt-get upgrade</p><p class="">$ sudo apt-get install netplan</p><p class="">$ sudo apt-get install ifupdown</p><p class="">$ sudo apt-get isc-dhcp-server</p><p class="">$ sudo apt-get iptables-persistent</p><p class="">$ sudo netfilter-persistent</p><p class="">$ sudo bind9</p><p class="">$ sudo nano /etc/sysctl.conf</p><p class="">Add the following line:</p><p class="">net.ipv4.ip_forward=1</p><p class="">$ sudo rm /etc/network/interfaces</p><p class="">$ sudo touch /etc/network/interfaces</p><p class="">$ sudo nano /etc/network/interfaces</p><p class="">Place the following lines in this file</p><pre><code># The loopback network interface
 auto lo
 iface lo inet loopback
 # The WAN interface, motherboard interface
@@ -12,8 +12,8 @@ iface enp1s0 inet static
 \taddress 10.0.0.1
 \tnetwork 10.0.0.0
 \tnetmask 255.0.0.0
-\tbroadcast 10.255.255.255</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo touch /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo chmod 775 /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">Place the following lines in this file.</p><pre><code>#!/bin/sh
-/sbin/iptables-restore &lt; /etc/iptables/rules.v4</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/default/isc-dhcp-server</p><p class="">$ sudo touch /etc/default/isc-dhcp-server</p><p class="">$ sudo nano /etc/default/isc-dhcp-server</p><p class="">Then place the following lines in this file.</p><pre><code>
+\tbroadcast 10.255.255.255</code></pre><p class="">Then press control-x, y, enter, to save the file.</p><p class="">$ sudo rm /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo touch /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo chmod 775 /etc/network/if-pre-up.d/iptables</p><p class="">$ sudo nano /etc/network/if-pre-up.d/iptables</p><p class="">Place the following lines in this file.</p><pre><code>#!/bin/sh
+/sbin/iptables-restore &lt; /etc/iptables/rules.v4</code></pre><p class="">Then press control-x, y, enter, to save the file.</p><p class="">$ sudo rm /etc/default/isc-dhcp-server</p><p class="">$ sudo touch /etc/default/isc-dhcp-server</p><p class="">$ sudo nano /etc/default/isc-dhcp-server</p><p class="">Then place the following lines in this file.</p><pre><code>
 # Defaults for isc-dhcp-server (sourced by /etc/init.d/isc-dhcp-server)
 
 # Path to dhcpd config file (default: /etc/dhcp/dhcpd.conf).
@@ -32,7 +32,7 @@ DHCPDv4_CONF=/etc/dhcp/dhcpd.conf
 #       Separate multiple interfaces with spaces, e.g. \"eth0 eth1\".
 INTERFACESv4=\"en1s0\"
 INTERFACESv6=\"\"
-</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo touch /etc/dhcp/dhcpd.conf</p><p class="">$ sudo nano /etc/dhcp/dhcpd.conf</p><p class="">Place the following lines in this file. (Note the spaces in the paragraph breaks must all be different as copied.)</p><pre><code>
+</code></pre><p class="">Then press control-x, y, enter, to save the file.</p><p class="">$ sudo touch /etc/dhcp/dhcpd.conf</p><p class="">$ sudo nano /etc/dhcp/dhcpd.conf</p><p class="">Place the following lines in this file. (Note the spaces in the paragraph breaks must all be different as copied.)</p><pre><code>
 default-lease-time 600;
 max-lease-time 7200;
 ddns-update-style none;
@@ -60,7 +60,7 @@ subnet 10.0.0.0 netmask 255.0.0.0 {
   option domain-name-servers 10.0.0.1;
   option domain-name \"example.local\";
   option broadcast-address 10.255.255.255;
-}   </code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/bind/named.conf.options</p><p class="">$ sudo touch /etc/bind/named.conf.options</p><p class="">$ sudo nano /etc/bind/named.conf.options</p><p class="">Place the following lines in this file. (Notes: The blank spaces in this file are required.)</p><pre><code>options {
+}   </code></pre><p class="">Then press control-x, y, enter, to save the file.</p><p class="">$ sudo rm /etc/bind/named.conf.options</p><p class="">$ sudo touch /etc/bind/named.conf.options</p><p class="">$ sudo nano /etc/bind/named.conf.options</p><p class="">Place the following lines in this file. (Notes: The blank spaces in this file are required.)</p><pre><code>options {
 \tdirectory \"/var/cache/bind\";
 
 \t// If there is a firewall between you and nameservers you want
@@ -95,7 +95,7 @@ subnet 10.0.0.0 netmask 255.0.0.0 {
       
 \tauth-nxdomain no;    # conform to RFC1035
 \tlisten-on-v6 { any; };
-};</code></pre><p class="">Then press control-z, y, enter, to save the file.</p><p class="">$ sudo rm /etc/iptables/rules.v4</p><p class="">$ sudo touch /etc/iptables/rules.v4</p><p class="">$ sudo nano /etc/iptables/rules.v4</p><pre><code>#####################
+};</code></pre><p class="">Then press control-x, y, enter, to save the file.</p><p class="">$ sudo rm /etc/iptables/rules.v4</p><p class="">$ sudo touch /etc/iptables/rules.v4</p><p class="">$ sudo nano /etc/iptables/rules.v4</p><pre><code>#####################
 ######## NAT ########
 ######################
 *nat
@@ -161,7 +161,7 @@ COMMIT
 -A FORWARD -j DROP
 
 COMMIT#
-</code></pre><p class="">Now reboot your router and it should be up and running!</p><p class="">One thing to note is that this router does not contain a wireless access point (WAP) to enable WiFi, but that is OK because nothing is stopping you front grabbing an excellent commercial-grade WAP such as a Unify-AC from Ubiquiti. These devices provide incredible WiFi speeds, which when paired with your new bare-bones Linux router will have you securely browsing the internet at lightning speed!</p></div>
+</code></pre><p class="">Now reboot your router and it should be up and running!</p><p class="">One thing to note is that this router does not contain a wireless access point (WAP) to enable WiFi, but that is OK because nothing is stopping you from grabbing an excellent commercial-grade WAP such as a UniFi AC from Ubiquiti. These devices provide incredible WiFi speeds, which when paired with your new bare-bones Linux router will have you securely browsing the internet at lightning speed!</p></div>
 
 
   

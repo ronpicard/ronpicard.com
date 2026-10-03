@@ -1,16 +1,16 @@
 export { ProjectCard } from '../../components/ProjectCard'
 export {
+  articleExtraLinks,
   articles,
   filterExtraLinks,
-  cardExtraLinks,
   getArticle,
   getArticleTitleList,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
-  thirdPartyArticleUrl,
   youtubeWatchUrl,
   type Article,
+  type ArticleExtraLink,
   type ArticleKind,
 } from '../../data/articles'
 export {

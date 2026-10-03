@@ -6,9 +6,8 @@ import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
 import { DynamicArticleBody } from '../components/DynamicArticleBody'
 import { SiteTopBar } from '../components/SiteTopBar'
 import {
-  filterExtraLinks,
+  articleExtraLinks,
   getArticle,
-  isThirdPartyArticleLink,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
@@ -35,19 +34,13 @@ import {
 } from '../lib/articleDisplay'
 import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
 import { EmbedFrame } from '../components/EmbedFrame'
-import { YoutubeIcon } from '../components/YoutubeIcon'
+import { GitHubIcon, LinkBrandIcon, YouTubeIcon } from '../components/BrandIcons'
 
 const DEFAULT_DEMO_SANDBOX =
   'allow-scripts allow-same-origin allow-pointer-lock allow-popups allow-popups-to-escape-sandbox'
 
 function stripQuery(url: string) {
   return url.split('?')[0]
-}
-
-function displayExtraLinkLabel(label: string): string {
-  const t = label.trim()
-  if (/^view paper$/i.test(t)) return 'Paper'
-  return label
 }
 
 export default function ArticlePage() {
@@ -77,7 +70,6 @@ export default function ArticlePage() {
     ? `${DEFAULT_DEMO_SANDBOX} allow-forms`
     : DEFAULT_DEMO_SANDBOX
 
-  const extras = filterExtraLinks(article)
   const demoHref = safeDemoUrl(article.demoUrl)
   const repoHref = safeGithubRepoUrl(article.repoUrl)
   const hasDemo = showDemoButton(article) && !!demoHref
@@ -87,9 +79,9 @@ export default function ArticlePage() {
   const videoUrl = youtubeWatchUrl(article.youtubeId)
   const readmeRawUrl = safeGithubReadmeRawUrl(article.readmeRawUrl)
   const otherEmbedSrc = article.otherEmbed ? safeHttpsEmbedUrl(stripQuery(article.otherEmbed)) : null
-  const safeExtras = extras.flatMap((link) => {
+  const safeExtras = articleExtraLinks(article).flatMap((link) => {
     const href = safeArticleLinkHref(link.href, resolveAssetUrl)
-    return href ? [{ link, href, articleStyle: isThirdPartyArticleLink(link) }] : []
+    return href ? [{ link, href }] : []
   })
   // Trailing slash matches the prerendered canonical (GitHub Pages 301s to it).
   const path = `/blog/${article.slug}/`
@@ -98,6 +90,9 @@ export default function ArticlePage() {
     `${article.title} — ${DEFAULT_TITLE}`
   const seoTitle = `${article.title} | Ron Picard`
   const shareImage = postShareImage(article)
+  // Text-only posts show their picture so the page is not just a few lines of text.
+  const pictureSrc =
+    !iframeSrc && !ytId && !otherEmbedSrc && !readmeRawUrl ? resolveAssetUrl(shareImage) : null
   const ogImage = resourceOgPath(shareImage) ?? shareImage
 
   const textBlock = readmeRawUrl ? (
@@ -126,6 +121,7 @@ export default function ArticlePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={16} />
               Demo
             </a>
           ) : null}
@@ -136,6 +132,7 @@ export default function ArticlePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={16} />
               Code
             </a>
           ) : null}
@@ -146,6 +143,7 @@ export default function ArticlePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={16} />
               Releases
             </a>
           ) : null}
@@ -157,16 +155,16 @@ export default function ArticlePage() {
               rel="noopener noreferrer"
             >
               <span className="article-btn__yt-icon" aria-hidden>
-                <YoutubeIcon size={18} />
+                <YouTubeIcon size={18} />
               </span>
               YouTube
             </a>
           ) : null}
-          {safeExtras.map(({ link, href, articleStyle }) => (
+          {safeExtras.map(({ link, href }) => (
             <a
               key={`${link.label}:${link.href}`}
               className={
-                articleStyle
+                link.articleStyle
                   ? 'project-card__btn project-card__btn--article'
                   : 'article-btn article-btn--secondary'
               }
@@ -174,11 +172,16 @@ export default function ArticlePage() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              {displayExtraLinkLabel(link.label)}
+              <LinkBrandIcon className="btn-logo" href={href} size={16} />
+              {link.label}
             </a>
           ))}
         </div>
       )}
+
+      {pictureSrc ? (
+        <img className="article-picture" src={pictureSrc} alt="" decoding="async" />
+      ) : null}
 
       {iframeSrc ? (
         <EmbedFrame

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { preload } from 'react-dom'
 import { Link } from 'react-router-dom'
-import type { ArticleKind } from '../data/articles'
+import type { ArticleExtraLink, ArticleKind } from '../data/articles'
 import {
   articleKindBadgeClass,
   articleKindLabel,
   formatArticleDate,
 } from '../lib/articleDisplay'
 import { resolveAssetUrl, resolveThumbAssetUrl } from '../lib/assetUrl'
-import { YoutubeIcon } from './YoutubeIcon'
+import { GitHubIcon, LinkBrandIcon, YouTubeIcon } from './BrandIcons'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -25,15 +25,13 @@ export type ProjectListItem = {
   imageUrl: string | null
   showDemo: boolean
   showCode: boolean
-  /** External article URL from `extraLinks` (e.g. journal / news), if any. */
-  articleUrl: string | null
   demoUrl: string | null
   repoUrl: string | null
   /** Latest GitHub release page, for repos that publish releases. */
   releasesUrl: string | null
   videoUrl: string | null
-  /** Extra link buttons: PDFs and links flagged for the card (e.g. extension stores). */
-  cardLinks: { label: string; href: string }[]
+  /** Extra link buttons, the same ones the article page shows. */
+  extraLinks: ArticleExtraLink[]
 }
 
 type Props = {
@@ -50,7 +48,6 @@ export function ProjectCard({ item, priority = false }: Props) {
   if (priority && thumbSrc) {
     preload(thumbSrc, { as: 'image', fetchPriority: 'high' })
   }
-  const articleHref = item.articleUrl ? safeHttpUrl(item.articleUrl) : null
   const demoHref = item.showDemo && item.demoUrl ? safeDemoUrl(item.demoUrl) : null
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
   const releasesHref = safeGithubReleasesUrl(item.releasesUrl)
@@ -81,16 +78,6 @@ export function ProjectCard({ item, priority = false }: Props) {
         </div>
         <h2 className="project-card__title">{item.title}</h2>
         <div className="project-card__actions">
-          {articleHref ? (
-            <a
-              className="project-card__btn project-card__btn--article"
-              href={articleHref}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Article
-            </a>
-          ) : null}
           {demoHref ? (
             <a
               className="project-card__btn project-card__btn--code"
@@ -98,6 +85,7 @@ export function ProjectCard({ item, priority = false }: Props) {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={14} />
               Demo
             </a>
           ) : null}
@@ -108,6 +96,7 @@ export function ProjectCard({ item, priority = false }: Props) {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={14} />
               Code
             </a>
           ) : null}
@@ -118,6 +107,7 @@ export function ProjectCard({ item, priority = false }: Props) {
               target="_blank"
               rel="noopener noreferrer"
             >
+              <GitHubIcon className="btn-logo" size={14} />
               Releases
             </a>
           ) : null}
@@ -129,24 +119,28 @@ export function ProjectCard({ item, priority = false }: Props) {
               rel="noopener noreferrer"
             >
               <span className="project-card__btn__yt-icon" aria-hidden>
-                <YoutubeIcon size={16} />
+                <YouTubeIcon size={16} />
               </span>
               YouTube
             </a>
           ) : null}
-          {item.cardLinks.map((p) => {
-            const href = safeArticleLinkHref(p.href, resolveAssetUrl)
+          {item.extraLinks.map((link) => {
+            const href = safeArticleLinkHref(link.href, resolveAssetUrl)
             if (!href) return null
-            const label = p.label?.trim() || 'PDF'
             return (
               <a
-                key={`${p.href}:${label}`}
-                className="project-card__btn project-card__btn--code"
+                key={`${link.href}:${link.label}`}
+                className={
+                  link.articleStyle
+                    ? 'project-card__btn project-card__btn--article'
+                    : 'project-card__btn project-card__btn--code'
+                }
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {label.length > 22 ? `${label.slice(0, 20)}…` : label}
+                <LinkBrandIcon className="btn-logo" href={href} size={14} />
+                {link.label.length > 22 ? `${link.label.slice(0, 20)}…` : link.label}
               </a>
             )
           })}

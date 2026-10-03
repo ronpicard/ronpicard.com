@@ -9,6 +9,7 @@ import {
   parseSiteArticleRows,
   type SiteArticleRow as IngestedSiteArticleRow,
 } from '../../shared/siteArticleSchema'
+import { isPdfHref } from '../lib/linkBrand'
 import { safeGithubReleasesUrl, safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
 
@@ -166,17 +167,6 @@ export function youtubeWatchUrl(youtubeId: string | null | undefined): string | 
   return `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`
 }
 
-function isPdfHref(href: string): boolean {
-  return /\.pdf$/i.test(href.split('?')[0].split('#')[0])
-}
-
-/** `extraLinks` shown as home card buttons: PDFs, plus links flagged `card: true`. */
-export function cardExtraLinks(a: Article): { label: string; href: string }[] {
-  return filterExtraLinks(a)
-    .filter((l) => l?.href && (isPdfHref(l.href) || l.card === true))
-    .map(({ label, href }) => ({ label, href }))
-}
-
 export function filterExtraLinks(a: Article) {
   const dk = a.demoUrl ? normalizeHrefKey(a.demoUrl) : null
   const rk = a.repoUrl ? normalizeHrefKey(a.repoUrl) : null
@@ -190,13 +180,32 @@ export function filterExtraLinks(a: Article) {
   })
 }
 
-/** First `extraLinks` URL that points at a third-party article (not on-site PDFs or demos). */
-export function thirdPartyArticleUrl(a: Article): string | null {
-  for (const l of filterExtraLinks(a)) {
-    if (!l?.href?.trim()) continue
-    if (isThirdPartyArticleLink(l)) return l.href.trim()
-  }
-  return null
+/**
+ * Button text for an extra link: papers read "Paper", other third-party articles (news stories
+ * and the like) read "Article", and a blank label falls back.
+ */
+function extraLinkLabel(label: string, href: string, articleStyle: boolean): string {
+  const t = label.trim()
+  if (/^view paper$/i.test(t)) return 'Paper'
+  if (articleStyle && !/\bpaper\b/i.test(t)) return 'Article'
+  return t || (isPdfHref(href) ? 'PDF' : 'Link')
+}
+
+export type ArticleExtraLink = {
+  label: string
+  href: string
+  /** Third-party article or paper, styled like an article link. */
+  articleStyle: boolean
+}
+
+/** Every extra link button a post shows, identically on its home card and its article page. */
+export function articleExtraLinks(a: Article): ArticleExtraLink[] {
+  return filterExtraLinks(a)
+    .filter((l) => l?.href?.trim())
+    .map((l) => {
+      const articleStyle = isThirdPartyArticleLink(l)
+      return { label: extraLinkLabel(l.label, l.href, articleStyle), href: l.href.trim(), articleStyle }
+    })
 }
 
 export function getArticleTitleList() {
@@ -208,11 +217,10 @@ export function getArticleTitleList() {
     imageUrl: a.imageUrl,
     showDemo: showDemoButton(a),
     showCode: showCodeButton(a),
-    articleUrl: thirdPartyArticleUrl(a),
     demoUrl: a.demoUrl,
     repoUrl: a.repoUrl,
     releasesUrl: showReleasesButton(a) ? a.releasesUrl : null,
     videoUrl: youtubeWatchUrl(a.youtubeId),
-    cardLinks: cardExtraLinks(a),
+    extraLinks: articleExtraLinks(a),
   }))
 }

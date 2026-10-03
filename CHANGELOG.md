@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Home cards now show every button their article page shows, such as the View Code links on the neural network posts, in the same order.
+- The AAAx Vision post no longer has a View Video button, since the AIAA video site it pointed to has shut down.
+- Buttons that link to an outside news article now just say Article instead of repeating the story's headline; links to papers still say Paper.
+- Posts with no demo, video, or README, such as Got My Boating License, now show their picture at the top of the article.
+- The header's LinkedIn, GitHub, and Wyvern Systems icons are now larger, bare logos without button frames, matching wyvernsystems.com, and the search icon is larger too.
+- Buttons now show the logo of where they lead in its official colors: GitHub on Demo (GitHub Pages), Code, Releases, and gist links, a red PDF logo on PDF papers, and the VS Code, Open VSX, and Wyvern Systems logos on the extension store buttons. The YouTube button's logo is now YouTube's red.
 - The header's LinkedIn and GitHub icons now use their standard brand looks: LinkedIn's blue square with a white "in", and GitHub's white mark.
 - The header now has a Wyvern Systems button, showing the company's wyvern logo beside the LinkedIn and GitHub icons and linking to wyvernsystems.com in a new tab.
 - The Slots Royale card has a fresh screenshot of the whole machine with its new domed buttons and leather stool, and its introduction says the camera now opens wide on the cabinet.
@@ -28,6 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Fixed spelling and grammar across many posts, their summaries, the page title, and a few button labels (for example GitHub and WebSim are now capitalized correctly). The router, VPN, and WordPress guides now say nano saves with control-x, and a few technical slips are corrected, such as disjunction versus conjunction in the logic posts.
 - Software Lessons Session 11 is labelled Lesson like the rest of the series instead of Article.
 - Corrected the titles "Linear Regression Using Gradient Descent" (was "Decent") and "Formal Methods 101: Satisfiability Modulo Theories (SMT)" (was "Satisfiable"); links to the old addresses still work.
 - Neon Pinball now appears ahead of Marble Tilt as the most recent project; the two share a date and were listed the wrong way round.

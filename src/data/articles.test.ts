@@ -2,14 +2,13 @@ import { describe, expect, it } from 'vitest'
 import {
   articles,
   filterExtraLinks,
+  articleExtraLinks,
   getArticle,
-  cardExtraLinks,
   getArticleTitleList,
   isThirdPartyArticleLink,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
-  thirdPartyArticleUrl,
   youtubeWatchUrl,
   type Article,
 } from './articles'
@@ -200,30 +199,38 @@ describe('filterExtraLinks', () => {
   })
 })
 
-describe('cardExtraLinks / thirdPartyArticleUrl / youtubeWatchUrl', () => {
-  it('keeps PDF extra links and links flagged for the card', () => {
+describe('articleExtraLinks / youtubeWatchUrl', () => {
+  it('lists every extra link, labelling third-party papers Paper and other articles Article', () => {
     const a = stubArticle({
       extraLinks: [
         { label: 'PDF', href: 'https://example.com/paper.pdf' },
-        { label: 'HTML', href: 'https://example.com/paper' },
+        { label: 'View paper', href: 'https://doi.org/10.1/x' },
         { label: 'Store', href: 'https://example.com/store', card: true },
-        { label: 'Other', href: 'https://example.com/other', card: false },
+        { label: 'Fighter jet flown by AI', href: 'https://www.aviationweek.com/story' },
+        { label: ' ', href: 'resources/e55c259979a696.pdf' },
+        { label: 'Empty', href: '' },
       ],
     })
-    expect(cardExtraLinks(a)).toEqual([
-      { label: 'PDF', href: 'https://example.com/paper.pdf' },
-      { label: 'Store', href: 'https://example.com/store' },
+    expect(articleExtraLinks(a)).toEqual([
+      { label: 'PDF', href: 'https://example.com/paper.pdf', articleStyle: false },
+      { label: 'Paper', href: 'https://doi.org/10.1/x', articleStyle: true },
+      { label: 'Store', href: 'https://example.com/store', articleStyle: false },
+      { label: 'Article', href: 'https://www.aviationweek.com/story', articleStyle: true },
+      { label: 'PDF', href: 'resources/e55c259979a696.pdf', articleStyle: false },
     ])
   })
 
-  it('returns first third-party article URL', () => {
+  it('drops extra links that repeat the demo or repo', () => {
     const a = stubArticle({
+      demoUrl: 'https://ronpicard.github.io/x/',
+      repoUrl: 'https://github.com/ronpicard/x',
       extraLinks: [
-        { label: 'Code', href: 'https://github.com/ronpicard/x' },
-        { label: 'Paper', href: 'https://doi.org/10.1/x' },
+        { label: 'Play', href: 'https://ronpicard.github.io/x/' },
+        { label: 'Repo', href: 'https://github.com/ronpicard/x' },
+        { label: 'Gist', href: 'https://gist.github.com/ronpicard/abc' },
       ],
     })
-    expect(thirdPartyArticleUrl(a)).toBe('https://doi.org/10.1/x')
+    expect(articleExtraLinks(a).map((l) => l.label)).toEqual(['Gist'])
   })
 
   it('builds YouTube watch URLs from safe ids only', () => {
@@ -267,12 +274,21 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     for (const sourceSlug of ['ai-rulebook-vscode-extension', 'auto-color-vscode-extension']) {
       const slug = articles.find((a) => a.sourceSlug === sourceSlug)?.slug
       const card = list.find((item) => item.slug === slug)
-      expect(card?.cardLinks.map((l) => l.label)).toEqual([
+      expect(card?.extraLinks.map((l) => l.label)).toEqual([
         'VS Code Marketplace',
         'Open VSX Registry',
         'Wyvern Systems',
       ])
     }
+  })
+
+  it('gives every card the same extra links as its article page', () => {
+    const list = getArticleTitleList()
+    for (const a of articles) {
+      expect(list.find((item) => item.slug === a.slug)?.extraLinks).toEqual(articleExtraLinks(a))
+    }
+    const cnn = list.find((item) => item.slug === 'convolutional-neural-networks')
+    expect(cnn?.extraLinks.map((l) => l.label)).toEqual(['View Code'])
   })
 
   it('lists one card item per article with matching slug', () => {
