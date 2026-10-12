@@ -11,6 +11,7 @@
 import { prerender } from 'react-dom/static.browser'
 import { createMemoryRouter } from 'react-router-dom'
 import { AppShell, routerBasename, routes } from './app/AppShell'
+import { primeArticleBody } from './lib/primedArticleBodies'
 
 export type RenderResult = {
   /** Markup for #root — starts at the app shell div, no hoisted head tags. */
@@ -22,13 +23,20 @@ export type RenderResult = {
 const APP_ROOT_MARKER = '<div class="app-content"'
 const PRELOAD_LINK_RE = /<link rel="preload"[^>]*\/?>/g
 
+export type RenderOptions = {
+  /** Raw article HTML by bodyPath, rendered in place of the client-side fetch. */
+  articleBodies?: Record<string, string>
+}
+
 /**
- * Render the app for one URL (waits for lazy chunks). React hoists
- * title/meta/link tags (from Helmet and priority images) to the front of the
- * stream; split them off so #root only receives body markup — the prerender
- * script owns the head tags.
+ * Render the app for one URL (waits for lazy chunks). React hoists preload
+ * links (priority card images) to the front of the stream; split them off so
+ * #root only receives body markup — the prerender script owns the head tags.
  */
-export async function render(url: string): Promise<RenderResult> {
+export async function render(url: string, options: RenderOptions = {}): Promise<RenderResult> {
+  for (const [bodyPath, html] of Object.entries(options.articleBodies ?? {})) {
+    primeArticleBody(bodyPath, html)
+  }
   const router = createMemoryRouter(routes, {
     basename: routerBasename(),
     initialEntries: [url],
@@ -37,7 +45,7 @@ export async function render(url: string): Promise<RenderResult> {
   // Above the default progressiveChunkSize (~12KB), React outlines Suspense
   // content into <template> + hidden segments swapped by inline scripts —
   // which the site CSP blocks. A huge chunk size keeps every boundary inline.
-  const { prelude } = await prerender(<AppShell router={router} helmetContext={{}} />, {
+  const { prelude } = await prerender(<AppShell router={router} />, {
     progressiveChunkSize: 64 * 1024 * 1024,
   })
   const html = await new Response(prelude).text()

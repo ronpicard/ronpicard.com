@@ -67,7 +67,7 @@ describe('prerender main', () => {
           slug: 'example-post',
           title: 'Example Post',
           date: '2026-08-22',
-          summary: 'Example summary',
+          summary: 'Stack &amp; Heap &quot;basics&quot;',
           bodyPath: null,
           imageUrl: 'resources/example.png',
           articleHeroUrl: null,
@@ -124,6 +124,11 @@ describe('prerender main', () => {
     expect(routeHtml).toContain('property="og:image:alt" content="Example Post"')
     expect(routeHtml).toContain('name="twitter:image:alt" content="Example Post"')
     expect(routeHtml).toContain('"@type":"BlogPosting"')
+    // Summaries are entity-decoded once, then attribute-escaped once.
+    expect(routeHtml).toContain('name="description" content="Stack &amp; Heap &quot;basics&quot;"')
+    expect(routeHtml).toContain('"description":"Stack & Heap \\"basics\\""')
+    expect(routeHtml).toContain('property="article:published_time" content="2026-08-22T12:00:00.000Z"')
+    expect(homeHtml).not.toContain('article:published_time')
 
     expect(legacyHtml).toContain('<title>Example App | Ron Picard</title>')
     expect(legacyHtml).toContain('property="og:url" content="https://ronpicard.com/blog/example-app/"')
@@ -135,6 +140,14 @@ describe('prerender main', () => {
     expect(sitemap).toContain('https://ronpicard.com/blog/example-app/')
     expect(sitemap).not.toContain('example-app-web-app')
     expect(robots).toContain('https://ronpicard.com/sitemap.xml')
+    // Home's lastmod is the newest post's date.
+    expect(sitemap).toContain('<loc>https://ronpicard.com/</loc>\n    <lastmod>2026-08-22</lastmod>')
+
+    const feed = await readFile(path.join(distDir, 'feed.xml'), 'utf8')
+    expect(feed).toContain('<atom:link href="https://ronpicard.com/feed.xml"')
+    expect(feed).toContain('<link>https://ronpicard.com/blog/example-post/</link>')
+    expect(feed).toContain('<description>Stack &amp; Heap &quot;basics&quot;</description>')
+    expect(feed).toContain('<link>https://ronpicard.com/blog/example-app/</link>')
   })
 
   it('shares the generated og card, with its dimensions, when one exists', async () => {
@@ -237,6 +250,52 @@ describe('prerender main', () => {
     // The 404 page has no route to render; its root stays empty.
     const notFoundHtml = await readFile(path.join(distDir, '404.html'), 'utf8')
     expect(notFoundHtml).toContain('<div id="root"></div>')
+  })
+
+  it('hands each post its article body file to render', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
+    temporaryDirectories.push(root)
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template:
+        '<!doctype html><html><head><title>Template</title></head><body><div id="root"></div></body></html>',
+    })
+    const { mkdir } = await import('node:fs/promises')
+    await mkdir(path.join(distDir, 'article-bodies'), { recursive: true })
+    await writeFile(path.join(distDir, 'article-bodies/with-body.html'), '<p>Body text</p>', 'utf8')
+    const row = {
+      date: '2026-08-22',
+      summary: 'Summary',
+      imageUrl: null,
+      articleHeroUrl: null,
+      githubEmbed: null,
+      demoUrl: null,
+      repoUrl: null,
+      youtubeId: null,
+      otherEmbed: null,
+      readmeRawUrl: null,
+      extraLinks: [],
+    }
+    await writeFile(
+      articlesPath,
+      JSON.stringify([
+        { ...row, slug: 'with-body', title: 'With Body', bodyPath: 'article-bodies/with-body.html' },
+        { ...row, slug: 'missing-body', title: 'Missing Body', bodyPath: 'article-bodies/missing.html' },
+      ]),
+      'utf8',
+    )
+
+    const calls = new Map()
+    const render = async (url, options) => {
+      calls.set(url, options)
+      return { appHtml: '<div class="app-content"></div>', preloadLinks: '' }
+    }
+    await main({ distDir, articlesPath, render })
+
+    expect(calls.get('/blog/with-body/')).toEqual({
+      articleBodies: { 'article-bodies/with-body.html': '<p>Body text</p>' },
+    })
+    // A missing body file is not fatal: the page falls back to the client fetch.
+    expect(calls.get('/blog/missing-body/')).toEqual({})
   })
 
   it('leaves the root div empty when no render function is given', async () => {

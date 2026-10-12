@@ -3,6 +3,13 @@ export const SITE_CANONICAL_ROOT = 'https://ronpicard.com'
 
 const SITE_NAME = 'Ron Picard'
 
+/** Matches ronpicard.com header social links (Squarespace). */
+export const SOCIAL = {
+  linkedin: 'https://www.linkedin.com/in/ron-picard-8b7b3059',
+  github: 'https://github.com/ronpicard',
+  wyvern: 'https://wyvernsystems.com/',
+} as const
+
 export const DEFAULT_TITLE = `${SITE_NAME} — My projects involving AI, software, aviation, and more`
 export const DEFAULT_DESCRIPTION =
   'Interactive web apps and games, a free software engineering lesson series, AI and formal methods research, and flying logs from pilot and engineer Ron Picard.'

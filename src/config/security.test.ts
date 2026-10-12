@@ -9,7 +9,8 @@ describe('buildProductionCsp', () => {
     expect(csp).toContain("font-src 'self' data:")
     expect(csp).not.toContain('fonts.gstatic.com')
     expect(csp).not.toContain('fonts.googleapis.com')
-    expect(csp).toContain("frame-ancestors 'self'")
+    // Header-only: ignored (with a console error) in the meta-delivered CSP.
+    expect(csp).not.toContain('frame-ancestors')
     expect(csp).not.toContain('youtube.com/embed')
   })
 })

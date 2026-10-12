@@ -13,6 +13,7 @@ export function decodeHtml(raw: string): string {
     .replace(/&#8212;/g, '—')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/gi, ' ')
     .replace(/\s*[—–]\s*Home\s*$/i, '')
     .trim()
 }

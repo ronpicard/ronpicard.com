@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test.describe('home', () => {
   test('loads project list and opens an article card', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects in AI, software & aviation' })).toBeVisible()
     const list = page.locator('.project-list')
     await expect(list.locator('.project-card').first()).toBeVisible()
 
@@ -37,7 +37,7 @@ test.describe('home', () => {
 
   test('offers a keyboard skip link on home and article pages', async ({ page }) => {
     await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects in AI, software & aviation' })).toBeVisible()
     await page.keyboard.press('Tab')
     const skipLink = page.getByRole('link', { name: 'Skip to main content' })
     await expect(skipLink).toBeFocused()
@@ -83,6 +83,40 @@ test.describe('home', () => {
     await card.locator('.project-card__overlay-link').click()
     const actions = page.locator('.article-actions--primary')
     await expect(actions.getByRole('link', { name: 'Releases' })).toHaveAttribute('href', releases)
+  })
+})
+
+test.describe('seo head', () => {
+  const countHead = (page: import('@playwright/test').Page) =>
+    page.evaluate(() => {
+      const count = (selector: string) => document.head.querySelectorAll(selector).length
+      return {
+        title: count('title'),
+        description: count('meta[name="description"]'),
+        canonical: count('link[rel="canonical"]'),
+        ogTitle: count('meta[property="og:title"]'),
+        jsonLd: count('script[type="application/ld+json"]'),
+        h1: document.querySelectorAll('h1').length,
+      }
+    })
+  const once = { title: 1, description: 1, canonical: 1, ogTitle: 1, jsonLd: 1, h1: 1 }
+
+  test('keeps one set of SEO tags and one h1 across client navigation', async ({ page }) => {
+    await page.goto('/')
+    await expect(page).toHaveTitle(/^Ron Picard/)
+    expect(await countHead(page)).toEqual(once)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://ronpicard.com/')
+
+    await page.getByRole('link', { name: /Open Periodic Table Element Visualizer/i }).click()
+    await expect(page).toHaveTitle('Periodic Table Element Visualizer | Ron Picard')
+    expect(await countHead(page)).toEqual(once)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://ronpicard.com/blog/periodic-table-element-visualizer/',
+    )
+    const jsonLd = await page.locator('script[type="application/ld+json"]').textContent()
+    expect(jsonLd).toContain('"BlogPosting"')
+    await expect(page.locator('main article h1')).toBeVisible()
   })
 })
 
@@ -151,7 +185,7 @@ test.describe('article routes', () => {
   test('keeps the home catalog and demo embeds usable on a phone viewport', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects in AI, software & aviation' })).toBeVisible()
     const homeOverflow = await page.evaluate(() => {
       return document.documentElement.scrollWidth - window.innerWidth
     })
@@ -215,7 +249,7 @@ test.describe('article routes', () => {
   test('redirects unknown and unsafe slugs to home', async ({ page }) => {
     await page.goto('/blog/not-a-real-slug-xyz')
     await expect(page).toHaveURL(/\/$/)
-    await expect(page.getByRole('heading', { level: 1, name: 'My projects' })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: 'Projects in AI, software & aviation' })).toBeVisible()
 
     await page.goto('/blog/not_a_safe_slug')
     await expect(page).toHaveURL(/\/$/)

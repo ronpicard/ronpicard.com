@@ -1,7 +1,7 @@
 import { Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
 import { getArticleTitleList, ProjectCard } from '../features/articles'
-import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from '../lib/siteMeta'
+import { homeSeoInput } from '../../shared/seoHead'
 
 const list = getArticleTitleList()
 
@@ -11,15 +11,14 @@ const PRIORITY_CARD_COUNT = 4
 export default function HomePage() {
   return (
     <div className="page page--home">
-      <Seo
-        title={DEFAULT_TITLE}
-        description={DEFAULT_DESCRIPTION}
-        path="/"
-        ogImage="resources/82f3c8eae802c3.jpg"
-      />
+      <Seo input={homeSeoInput()} />
 
       <SiteTopBar />
-      <h1 className="header__tagline">My projects</h1>
+      <h1 className="header__tagline">Projects in AI, software &amp; aviation</h1>
+      <p className="home-intro">
+        I&apos;m Ron Picard, a 10X engineer. This is where I post personal projects like apps, games, free
+        software engineering lessons, AI musings, and other topics I&apos;m interested in.
+      </p>
 
       <main id="main-content" className="main" tabIndex={-1}>
         <ul className="project-list" role="list">

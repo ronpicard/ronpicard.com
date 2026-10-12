@@ -400,13 +400,21 @@ body {
 }
 
 .header__tagline {
-  margin: 0 0 2.25rem;
+  margin: 0 0 0.75rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;
   color: var(--text-muted);
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.home-intro {
+  margin: 0 0 2.25rem;
+  max-width: 46rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-muted);
 }
 
 .main {
@@ -750,6 +758,25 @@ body {
   overflow: hidden;
 }
 
+.project-card__title:has(+ .project-card__summary) {
+  flex: 0 0 auto;
+  margin-bottom: 0.4rem;
+}
+
+/* Takes over the title's growth so buttons still line up across a row. */
+.project-card__summary {
+  flex: 1 1 auto;
+  margin: 0 0 0.85rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
 .project-card__link {
   font-family: var(--font-mono);
   font-size: clamp(0.76rem, 2vw, 0.8rem);
@@ -861,6 +888,11 @@ body {
   object-fit: cover;
   object-position: center;
   display: block;
+}
+
+.article-main {
+  flex: 1;
+  min-width: 0;
 }
 
 .article-body {

@@ -12,6 +12,7 @@ import {
 describe('decodeHtml', () => {
   it('decodes entities and strips trailing Home', () => {
     expect(decodeHtml('ClamAV Control &mdash; Home')).toBe('ClamAV Control')
+    expect(decodeHtml('Ex. Set:&nbsp;S')).toBe('Ex. Set: S')
   })
 })
 

@@ -9,6 +9,7 @@ import {
   parseSiteArticleRows,
   type SiteArticleRow as IngestedSiteArticleRow,
 } from '../../shared/siteArticleSchema'
+import { stripTagsForMeta, truncateMetaDescription } from '../../shared/siteMeta'
 import { isPdfHref } from '../lib/linkBrand'
 import { safeGithubReleasesUrl, safeYoutubeId } from '../lib/safeUrls'
 import siteArticlesData from './siteArticles.json'
@@ -214,6 +215,7 @@ export function getArticleTitleList() {
     title: a.title,
     date: a.date,
     kind: a.kind,
+    summary: a.summary ? truncateMetaDescription(stripTagsForMeta(a.summary), 160) : null,
     imageUrl: a.imageUrl,
     showDemo: showDemoButton(a),
     showCode: showCodeButton(a),

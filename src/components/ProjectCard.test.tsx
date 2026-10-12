@@ -28,6 +28,7 @@ function item(overrides: Partial<ProjectListItem> = {}): ProjectListItem {
     title: 'Demo',
     date: '2026-01-01',
     kind: 'app',
+    summary: null,
     imageUrl: 'resources/card.png',
     showDemo: false,
     showCode: false,
@@ -175,5 +176,25 @@ describe('ProjectCard actions', () => {
 
     renderCard({ item: item({ releasesUrl: 'https://example.com/releases/latest' }) })
     expect(links()).toEqual([])
+  })
+})
+
+describe('ProjectCard indexable text', () => {
+  it('renders the summary under the title when present', () => {
+    renderCard({ item: item({ summary: 'A short plain-text excerpt.' }) })
+    const summary = container.querySelector('.project-card__summary')
+    expect(summary?.tagName).toBe('P')
+    expect(summary?.textContent).toBe('A short plain-text excerpt.')
+    expect(summary?.previousElementSibling?.className).toBe('project-card__title')
+  })
+
+  it('omits the summary element when there is none', () => {
+    renderCard({ item: item({ summary: null }) })
+    expect(container.querySelector('.project-card__summary')).toBeNull()
+  })
+
+  it('uses the title as the thumbnail alt text', () => {
+    renderCard({ item: item({ title: 'Flight Simulator' }) })
+    expect(container.querySelector('img')?.getAttribute('alt')).toBe('Flight Simulator')
   })
 })

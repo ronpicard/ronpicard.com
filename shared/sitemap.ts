@@ -3,7 +3,7 @@ type SitemapEntry = {
   lastModified?: string | null
 }
 
-function escapeXml(value: string): string {
+export function escapeXml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')

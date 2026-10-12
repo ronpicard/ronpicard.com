@@ -296,4 +296,16 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     expect(list).toHaveLength(articles.length)
     expect(list[0]?.slug).toBe(articles[0]?.slug)
   })
+
+  it('gives cards plain-text summaries capped at 160 characters', () => {
+    const summaries = getArticleTitleList()
+      .map((item) => item.summary)
+      .filter((s): s is string => s !== null)
+    expect(summaries.length).toBeGreaterThan(0)
+    for (const s of summaries) {
+      expect(s).not.toMatch(/<[^>]+>/)
+      expect(s).not.toContain('&amp;')
+      expect(s.length).toBeLessThanOrEqual(160)
+    }
+  })
 })

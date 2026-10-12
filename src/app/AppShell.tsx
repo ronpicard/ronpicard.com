@@ -1,5 +1,4 @@
 import { Suspense, useLayoutEffect } from 'react'
-import { HelmetProvider } from 'react-helmet-async'
 import {
   createMemoryRouter,
   Outlet,
@@ -57,8 +56,6 @@ export function routerBasename(): string | undefined {
 
 type Props = {
   router: AppRouter
-  /** Server rendering collects react-helmet-async output here. */
-  helmetContext?: object
 }
 
 /**
@@ -66,18 +63,16 @@ type Props = {
  * prerender (entry-server.tsx). Both must render identical markup so
  * hydration matches the prerendered HTML.
  */
-export function AppShell({ router, helmetContext }: Props) {
+export function AppShell({ router }: Props) {
   return (
-    <HelmetProvider context={helmetContext}>
-      <div className="app-content">
-        <AmbientParticles />
-        <div className="app-content__surface">
-          <a className="skip-link" href="#main-content">
-            Skip to main content
-          </a>
-          <RouterProvider router={router} />
-        </div>
+    <div className="app-content">
+      <AmbientParticles />
+      <div className="app-content__surface">
+        <a className="skip-link" href="#main-content">
+          Skip to main content
+        </a>
+        <RouterProvider router={router} />
       </div>
-    </HelmetProvider>
+    </div>
   )
 }

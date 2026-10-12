@@ -1,10 +1,12 @@
 /** Shared limits and CSP used by Vite (production HTML) and runtime guards. */
 
+// Delivered in a <meta> tag (GitHub Pages cannot send headers), so header-only
+// directives such as frame-ancestors are left out: browsers ignore them there
+// and log a console error.
 const PRODUCTION_CSP_DIRECTIVES = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors 'self'",
   "object-src 'none'",
   "worker-src 'none'",
   "manifest-src 'self'",

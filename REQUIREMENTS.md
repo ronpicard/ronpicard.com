@@ -66,13 +66,16 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - A post with no demo embed, YouTube video, other embed, or README MUST show its picture (`articleHeroUrl`, else `imageUrl`) at the top of the article page.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
 - After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
+- Prerender and the client MUST build head tags from one shared builder (`shared/seoHead.ts`). Each page MUST carry exactly one title, description, canonical, and JSON-LD block, before and after client navigation; navigation MUST replace all of them, JSON-LD included.
+- Post meta and JSON-LD descriptions MUST be entity-decoded plain text. Blog routes MUST carry `article:published_time`. JSON-LD MUST describe the site owner as a Person with `sameAs` profile links, and each post as a BlogPosting with author, publisher, image, and a BreadcrumbList, plus a VideoObject for a valid YouTube ID and SoftwareSourceCode for a valid GitHub repo URL.
 - Each blog post MUST share a generated 1200×630 card of its own image (`public/resources/og/`, built by `npm run generate:og`) as its Open Graph and Twitter image, showing portrait, square, and small images uncropped; a post MUST fall back to its original image when no card exists.
 - Every Software Lessons session MUST carry the Lesson badge regardless of its source slug, and release-shipped desktop software MUST carry a Desktop app badge. A post with a written article body MUST keep the Article badge even when it sets `releasesUrl`.
 - Correcting a published post title MUST keep the post reachable at the URL derived from its old title.
 - Prerendered pages MUST include the route's app markup in `#root` (rendered by the SSR bundle) so first paint shows content before hydration; the markup MUST be static — no inline scripts or streaming placeholders, which the CSP would block.
+- A post with a `bodyPath` MUST have its sanitized article body in its prerendered HTML, and the client MUST hydrate that body without refetching it; a missing body file MUST NOT fail the build (the client fetch remains the fallback).
 - The homepage card grid MUST load generated WebP thumbnails (`public/resources/thumbs/`, built by `npm run generate:thumbs`) instead of full-size title images, falling back to the original when a thumbnail is missing; cards above the fold SHOULD load eagerly with preload hints while the rest stay lazy.
 - Blog canonical URLs, `og:url`, and sitemap entries MUST use the trailing-slash form (`/blog/<slug>/`) that GitHub Pages redirects to.
-- Production MUST include `sitemap.xml`, `robots.txt`, and a dedicated `404.html` with `noindex, nofollow`.
+- Production MUST include `sitemap.xml`, `robots.txt`, an RSS 2.0 feed at `feed.xml` (advertised by a `rel="alternate"` link in every page's head), and a dedicated `404.html` with `noindex, nofollow`. The home sitemap entry's `lastmod` MUST be the newest post date.
 
 ### Dynamic GitHub README posts
 
@@ -90,13 +93,14 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Pool Rooms demo iframe MUST allow its form-based Start Exploring action; `allow-forms` MUST be limited to the exact approved `https://ronpicard.github.io/pool-rooms-game-web-app/` demo URL.
 - Blog `:slug` route params MUST pass `isSafePublicSlug()` before loading an article.
 - Search input MUST be bounded (`SEARCH_QUERY_MAX_LEN`) and match titles and summaries after the same case and whitespace normalization.
-- Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, GitHub raw/API for README fetch).
+- Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, GitHub raw/API for README fetch). Because the CSP is delivered in a `<meta>` tag, it MUST NOT include header-only directives such as `frame-ancestors`, which browsers ignore there.
 - Web fonts MUST be self-hosted from `public/fonts/`; the CSP MUST NOT allow third-party font or stylesheet hosts.
 - YouTube embeds MUST use validated video IDs and the nocookie embed host where applicable.
 
 ### Accessibility
 
-- Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content.
+- Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content. Article pages MUST wrap the post's header and content in an `<article>` inside `<main>`.
+- Article body images MUST have descriptive `alt` text unless purely decorative.
 - Search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape.
 - Cards MUST NOT nest interactive elements inside a card-level link role; all interactive controls MUST have visible keyboard focus.
 - Narrow viewports (phone-width) MUST avoid horizontal page overflow on home and article routes.
@@ -109,8 +113,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 ### Testing
 
 - Security-sensitive helpers, tested components, and build-script boundaries MUST have unit or integration tests in Vitest.
-- Unit coverage MUST pass the thresholds in `vitest.config.ts` (94% statements, 85% branches, 98% functions, 97% lines) via `npm run test:coverage`.
-- Browser smoke coverage for home, keyboard navigation, search, slug redirects, demo links, phone-width embeds, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
+- Unit coverage MUST pass the thresholds in `vitest.config.ts` (92% statements, 84% branches, 94% functions, 95% lines) via `npm run test:coverage`.
+- Browser smoke coverage for home, keyboard navigation, SEO head tags across navigation, search, slug redirects, demo links, phone-width embeds, and dynamic README MUST live in Playwright (`npm run test:e2e`, `e2e/site.spec.ts`); README network calls MAY be mocked in e2e.
 - Playwright MUST run the suite on both a desktop project and an emulated mobile device project so touch-only behavior (like the embed tap-to-interact guard) is exercised.
 - Playwright does not contribute to Vitest coverage percentages; together they cover logic (unit) and critical user flows (e2e).
 - Pushes to `main` MUST enforce Vitest coverage thresholds and Playwright tests in CI before deploy; pull requests to `main` MUST run both without deploying.

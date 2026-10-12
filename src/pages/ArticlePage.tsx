@@ -15,7 +15,8 @@ import {
 } from '../data/articles'
 import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
-import { postShareImage, resourceOgPath } from '../../shared/resourceOgImages'
+import { postShareImage } from '../../shared/resourceOgImages'
+import { articleSeoInput } from '../../shared/seoHead'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -32,7 +33,6 @@ import {
   articleKindLabel,
   formatArticleDate,
 } from '../lib/articleDisplay'
-import { DEFAULT_TITLE, truncateMetaDescription } from '../lib/siteMeta'
 import { EmbedFrame } from '../components/EmbedFrame'
 import { GitHubIcon, LinkBrandIcon, YouTubeIcon } from '../components/BrandIcons'
 
@@ -83,17 +83,10 @@ export default function ArticlePage() {
     const href = safeArticleLinkHref(link.href, resolveAssetUrl)
     return href ? [{ link, href }] : []
   })
-  // Trailing slash matches the prerendered canonical (GitHub Pages 301s to it).
-  const path = `/blog/${article.slug}/`
-  const metaDesc =
-    article.summary?.replace(/&nbsp;/gi, ' ').replace(/<[^>]+>/g, '') ||
-    `${article.title} — ${DEFAULT_TITLE}`
-  const seoTitle = `${article.title} | Ron Picard`
   const shareImage = postShareImage(article)
   // Text-only posts show their picture so the page is not just a few lines of text.
   const pictureSrc =
     !iframeSrc && !ytId && !otherEmbedSrc && !readmeRawUrl ? resolveAssetUrl(shareImage) : null
-  const ogImage = resourceOgPath(shareImage) ?? shareImage
 
   const textBlock = readmeRawUrl ? (
     <DynamicGithubReadme
@@ -180,7 +173,7 @@ export default function ArticlePage() {
       )}
 
       {pictureSrc ? (
-        <img className="article-picture" src={pictureSrc} alt="" decoding="async" />
+        <img className="article-picture" src={pictureSrc} alt={article.title} decoding="async" />
       ) : null}
 
       {iframeSrc ? (
@@ -219,32 +212,30 @@ export default function ArticlePage() {
 
   return (
     <div className="page page--article" data-ambient-exclude>
-      <Seo
-        title={seoTitle}
-        description={truncateMetaDescription(metaDesc)}
-        path={path}
-        ogType="article"
-        ogImage={ogImage}
-      />
+      <Seo input={articleSeoInput(article)} />
 
       <SiteTopBar />
 
-      <header className="article-header">
-        <Link className="article-back" to="/">
-          ← Home
-        </Link>
-        <h1 className="article-header__title">{article.title}</h1>
-        <div className="article-header__meta">
-          <span className={`project-card__badge ${articleKindBadgeClass(article.kind)}`}>
-            {articleKindLabel(article.kind)}
-          </span>
-          <time dateTime={article.date}>{formatArticleDate(article.date)}</time>
-        </div>
-      </header>
+      <main id="main-content" className="article-main" tabIndex={-1}>
+        <article>
+          <header className="article-header">
+            <Link className="article-back" to="/">
+              ← Home
+            </Link>
+            <h1 className="article-header__title">{article.title}</h1>
+            <div className="article-header__meta">
+              <span className={`project-card__badge ${articleKindBadgeClass(article.kind)}`}>
+                {articleKindLabel(article.kind)}
+              </span>
+              <time dateTime={article.date}>{formatArticleDate(article.date)}</time>
+            </div>
+          </header>
 
-      <main id="main-content" className="article-body" tabIndex={-1}>
-        {embedBlock}
-        {textBlock}
+          <div className="article-body">
+            {embedBlock}
+            {textBlock}
+          </div>
+        </article>
       </main>
 
       <ArticleNav article={article} />

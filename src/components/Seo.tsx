@@ -1,50 +1,68 @@
-import { Helmet } from 'react-helmet-async'
+import { useEffect } from 'react'
 import {
-  absoluteAssetUrl,
-  canonicalUrl,
-  DEFAULT_DESCRIPTION,
-  truncateMetaDescription,
-} from '../lib/siteMeta'
+  buildSeoHeadTags,
+  MANAGED_HEAD_SELECTOR,
+  type HeadTag,
+  type SeoHeadInput,
+} from '../../shared/seoHead'
 
-type Props = {
-  title: string
-  description: string
-  /** History-router path, e.g. `/` or `/blog/my-slug` */
-  path: string
-  ogType?: 'website' | 'article'
-  ogImage?: string | null
+function createHeadElement(doc: Document, tag: HeadTag): HTMLElement {
+  switch (tag.tag) {
+    case 'title': {
+      const el = doc.createElement('title')
+      el.textContent = tag.text
+      return el
+    }
+    case 'meta': {
+      const el = doc.createElement('meta')
+      el.setAttribute(tag.attr, tag.key)
+      el.setAttribute('content', tag.content)
+      return el
+    }
+    case 'link': {
+      const el = doc.createElement('link')
+      el.setAttribute('rel', tag.rel)
+      el.setAttribute('href', tag.href)
+      return el
+    }
+    case 'jsonld': {
+      const el = doc.createElement('script')
+      el.setAttribute('type', 'application/ld+json')
+      el.textContent = tag.json
+      return el
+    }
+  }
 }
 
-// JSON-LD is not emitted here: inline <script> can't be hoisted to <head> by
-// React, so it would land in the prerendered body. scripts/prerender.mjs
-// injects the per-route JSON-LD (shared/jsonLd) into each page's head instead.
-export function Seo({ title, description, path, ogType = 'website', ogImage }: Props) {
-  const canonical = canonicalUrl(path === '/' ? '/' : path)
-  const desc = truncateMetaDescription(description || DEFAULT_DESCRIPTION)
-  const imageAbs = absoluteAssetUrl(ogImage ?? undefined)
-  const twitterCard = imageAbs ? 'summary_large_image' : 'summary'
+/** Replace every managed SEO tag in <head> (prerendered or from a previous route). */
+export function applySeoHead(doc: Document, input: SeoHeadInput) {
+  doc.head.querySelectorAll(MANAGED_HEAD_SELECTOR).forEach((el) => el.remove())
+  for (const tag of buildSeoHeadTags(input)) {
+    doc.head.appendChild(createHeadElement(doc, tag))
+  }
+}
 
-  return (
-    <Helmet prioritizeSeoTags>
-      <title>{title}</title>
-      <meta name="description" content={desc} />
-      <meta name="robots" content="index, follow" />
-      <meta name="author" content="Ron Picard" />
-      <link rel="canonical" href={canonical} />
+/** True until the first route's head is settled; later routes always apply. */
+let firstRoute = true
 
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={desc} />
-      <meta property="og:url" content={canonical} />
-      <meta property="og:type" content={ogType} />
-      <meta property="og:site_name" content="Ron Picard" />
-      <meta property="og:locale" content="en_US" />
-      {imageAbs ? <meta property="og:image" content={imageAbs} /> : null}
-      {imageAbs ? <meta property="og:image:secure_url" content={imageAbs} /> : null}
-
-      <meta name="twitter:card" content={twitterCard} />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={desc} />
-      {imageAbs ? <meta name="twitter:image" content={imageAbs} /> : null}
-    </Helmet>
-  )
+/**
+ * Keeps <head> in sync with the current route after client navigation.
+ * scripts/prerender.mjs writes the same tags (shared/seoHead) into each
+ * page's static HTML; this swaps them in place, so there is one set of tags,
+ * never a prerendered copy plus a client copy. On the first route, a
+ * prerendered head for this URL is kept as is: it knows things the client
+ * does not (real image sizes, whether the share card exists). Renders
+ * nothing, so the prerendered body markup carries no head tags.
+ */
+export function Seo({ input }: { input: SeoHeadInput }) {
+  const key = JSON.stringify(input)
+  useEffect(() => {
+    const next = JSON.parse(key) as SeoHeadInput
+    const canonical = document.head.querySelector('link[rel="canonical"]')?.getAttribute('href')
+    // The title check rules out 404.html, whose canonical is the home URL.
+    const keepPrerendered = firstRoute && canonical === next.url && document.title === next.title
+    firstRoute = false
+    if (!keepPrerendered) applySeoHead(document, next)
+  }, [key])
+  return null
 }

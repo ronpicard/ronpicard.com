@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import { fetchArticleBodyHtml } from '../lib/fetchArticleBody'
+import { primedArticleBody } from '../lib/primedArticleBodies'
 import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
 
 type Props = {
@@ -8,11 +9,25 @@ type Props = {
   fallbackSummary: string | null
 }
 
+function primedSafeHtml(bodyPath: string): string | null {
+  const raw = primedArticleBody(bodyPath)
+  return raw ? prepareArticleBodyHtml(raw) : null
+}
+
 export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
-  const [phase, setPhase] = useState<'loading' | 'error' | 'ready'>('loading')
-  const [html, setHtml] = useState<string | null>(null)
+  // A primed body (prerender, or hydrating its output) renders at once, unfetched.
+  const [html, setHtml] = useState<string | null>(() => primedSafeHtml(bodyPath))
+  const [phase, setPhase] = useState<'loading' | 'error' | 'ready'>(() =>
+    html ? 'ready' : 'loading',
+  )
 
   useEffect(() => {
+    const primed = primedSafeHtml(bodyPath)
+    if (primed) {
+      setHtml(primed)
+      setPhase('ready')
+      return
+    }
     const controller = new AbortController()
     const bodyUrl = resolveAssetUrl(bodyPath)
     setPhase('loading')
@@ -60,5 +75,11 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
     )
   }
 
-  return <div className="article-prose" dangerouslySetInnerHTML={{ __html: html }} />
+  return (
+    <div
+      className="article-prose"
+      data-body-path={bodyPath}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  )
 }

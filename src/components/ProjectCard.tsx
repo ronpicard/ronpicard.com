@@ -22,6 +22,8 @@ export type ProjectListItem = {
   title: string
   date: string
   kind: ArticleKind
+  /** Plain-text excerpt shown under the title. */
+  summary: string | null
   imageUrl: string | null
   showDemo: boolean
   showCode: boolean
@@ -61,7 +63,7 @@ export function ProjectCard({ item, priority = false }: Props) {
         {thumbSrc ? (
           <img
             src={thumbSrc}
-            alt=""
+            alt={item.title}
             loading={priority ? 'eager' : 'lazy'}
             fetchPriority={priority ? 'high' : undefined}
             decoding="async"
@@ -77,6 +79,7 @@ export function ProjectCard({ item, priority = false }: Props) {
           <time dateTime={item.date}>{formatArticleDate(item.date)}</time>
         </div>
         <h2 className="project-card__title">{item.title}</h2>
+        {item.summary ? <p className="project-card__summary">{item.summary}</p> : null}
         <div className="project-card__actions">
           {demoHref ? (
             <a

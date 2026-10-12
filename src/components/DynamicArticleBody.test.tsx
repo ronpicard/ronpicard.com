@@ -3,6 +3,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { primeArticleBody } from '../lib/primedArticleBodies'
 import { DynamicArticleBody } from './DynamicArticleBody'
 
 let container: HTMLDivElement
@@ -31,6 +32,29 @@ async function flushEffects() {
 }
 
 describe('DynamicArticleBody', () => {
+  it('renders a primed (prerendered) body at once, sanitized, without fetching', async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+    primeArticleBody(
+      'article-bodies/primed.html',
+      '<p>Primed article</p><img src="resources/a.png" alt="A"><script>alert(1)</script>',
+    )
+
+    act(() => {
+      root.render(
+        <DynamicArticleBody bodyPath="article-bodies/primed.html" fallbackSummary="Summary" />,
+      )
+    })
+    expect(container.textContent).toContain('Primed article')
+    expect(container.textContent).not.toContain('Loading article')
+    expect(container.querySelector('script')).toBeNull()
+    expect(container.querySelector('img')?.getAttribute('src')).toBe('/resources/a.png')
+    expect(container.querySelector('[data-body-path="article-bodies/primed.html"]')).not.toBeNull()
+
+    await flushEffects()
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
+
   it('shows loading state and then sanitized article HTML', async () => {
     vi.stubGlobal(
       'fetch',

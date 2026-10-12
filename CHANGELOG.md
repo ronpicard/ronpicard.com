@@ -33,9 +33,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The portfolio grid has larger project titles, brighter dates and supporting text, more room at the edges on phones, and subtle thumbnail framing adjustments. The compact header, neon theme, and three-column desktop layout remain.
 - The background uses sparse, slow teal circuit signals with occasional blue accents, short fading tails, subtle junction glows, and staggered quiet intervals. Signals favor card gaps and margins and dim beneath cards and the header; article content stays clear and reduced-motion users get a static frame.
 - The ClamAV Control post now describes the current Tauri 2 + Rust desktop app instead of the retired Electron build, and its repo link and live README point at the renamed `clamav-antivirus-ui` repository; its card image is a fresh v2.2.0 Status screen screenshot.
+- The home page now opens with a short introduction under a "Projects in AI, software & aviation" heading, and each card shows a two-line summary of its post.
+- Search engines and link previews now get each post's full article text, a publish date, and richer structured data (author profile links, breadcrumbs, and video and source-code details where a post has them), instead of a loading placeholder.
+- Article images, card thumbnails, and post pictures now carry descriptive alt text.
 
 ### Fixed
 
+- Link previews and search results for some Software Lessons posts no longer show stray "&amp;" or "&quot;" codes in their descriptions, and the lesson outlines show "&" where they showed "&amp;".
+- The browser console no longer shows a Content-Security-Policy error on every page load.
+- Pages no longer carry two copies of their title, description, and link-preview tags once the page loads, and moving between pages now updates the structured data too.
+- Twelve web app posts and two video posts that had no summary now have one, so their cards, search, and link previews describe them.
 - Fixed spelling and grammar across many posts, their summaries, the page title, and a few button labels (for example GitHub and WebSim are now capitalized correctly). The router, VPN, and WordPress guides now say nano saves with control-x, and a few technical slips are corrected, such as disjunction versus conjunction in the logic posts.
 - Software Lessons Session 11 is labelled Lesson like the rest of the series instead of Article.
 - Corrected the titles "Linear Regression Using Gradient Descent" (was "Decent") and "Formal Methods 101: Satisfiability Modulo Theories (SMT)" (was "Satisfiable"); links to the old addresses still work.
@@ -44,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- An RSS feed of every post at `/feed.xml`, advertised to feed readers from every page.
 - Flight Simulator joins the portfolio as the latest project, with the same cockpit-over-Manhattan picture as the simulator's own link preview for its thumbnail and link preview, interactive embedded demo, source code link, and an introduction to its Cessna 172 cockpit, LaGuardia departure, 3D New York scenery, and scripted ATC radio.
 - A new article introduces AI Rulebook, my free VS Code and Open VSX extension from Wyvern Systems LLC that manages always-on rules for AI coding agents in `AGENTS.md`. It is dated April 29, 2026, when the extension was first released, and uses the extension's icon as its card image, with Code, Releases, VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page.
 - A new article introduces Auto Color, my free VS Code and Open VSX extension from Wyvern Systems LLC that gives every workspace its own color. It is dated April 13, 2026, when the extension was first released, and uses the extension's icon as its card image, with VS Code and Cursor screenshots in the article and Code, Releases, VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page.

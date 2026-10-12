@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { getArticleTitleList } from './data/articles'
+import { getArticle, getArticleTitleList } from './data/articles'
 import { render } from './entry-server'
 
 describe('entry-server render', () => {
   it('renders the homepage card grid to HTML', async () => {
     const { appHtml } = await render('/')
-    expect(appHtml).toContain('My projects')
+    expect(appHtml).toContain('Projects in AI, software &amp; aviation')
     // Every article card is present in the prerendered markup.
     const cardCount = (appHtml.match(/class="project-card"/g) || []).length
     expect(cardCount).toBe(getArticleTitleList().length)
@@ -37,6 +37,19 @@ describe('entry-server render', () => {
     expect(appHtml.startsWith('<div class="app-content"')).toBe(true)
     expect(appHtml).toContain('page--article')
     expect(appHtml).toContain('article-header__title')
+  })
+
+  it('renders a supplied article body instead of the loading state', async () => {
+    const withBody = getArticleTitleList()
+      .map((item) => getArticle(item.slug)!)
+      .find((article) => article.bodyPath && !article.readmeRawUrl)!
+    const { appHtml } = await render(`/blog/${withBody.slug}/`, {
+      articleBodies: { [withBody.bodyPath!]: '<p>Prerendered body text</p><script>x()</script>' },
+    })
+    expect(appHtml).toContain('Prerendered body text')
+    expect(appHtml).toContain(`data-body-path="${withBody.bodyPath}"`)
+    expect(appHtml).not.toContain('Loading article')
+    expect(appHtml).not.toContain('<script')
   })
 
   it('allows form-based startup only in the Pool Rooms demo', async () => {
