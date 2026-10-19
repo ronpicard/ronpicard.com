@@ -781,7 +781,7 @@ body {
   font-family: var(--font-mono);
   font-size: clamp(0.76rem, 2vw, 0.8rem);
   font-weight: 500;
-  color: var(--accent);
+  color: var(--accent-blue);
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -791,7 +791,7 @@ body {
 }
 
 .project-card:hover .project-card__link {
-  color: var(--accent-blue);
+  color: var(--accent);
 }
 
 .project-card__arrow {
