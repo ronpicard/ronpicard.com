@@ -16,7 +16,7 @@ export default function HomePage() {
       <SiteTopBar />
       <h1 className="header__tagline">Projects in AI, software &amp; aviation</h1>
       <p className="home-intro">
-        I&apos;m Ron Picard, a 10X engineer. This is where I post personal projects like apps, games, free
+        I&apos;m Ron Picard, a 10X engineer. This is where I post my projects like apps, games, free
         software engineering lessons, AI musings, and other topics I&apos;m interested in.
       </p>
 
