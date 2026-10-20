@@ -4,7 +4,7 @@ import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { createMemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { getArticleTitleList } from '../data/articles'
+import { getArticlesByTopic, getArticleTitleList } from '../data/articles'
 import { AppShell, routerBasename, routes } from './AppShell'
 
 let container: HTMLDivElement
@@ -70,5 +70,41 @@ describe('AppShell', () => {
     expect(container.querySelector('.page--article')).not.toBeNull()
     // Marks the article column so the ambient pulses stay out from under the text.
     expect(container.querySelector('.page--article')?.hasAttribute('data-ambient-exclude')).toBe(true)
+  })
+
+  async function renderAt(path: string) {
+    const router = createMemoryRouter(routes, {
+      basename: routerBasename(),
+      initialEntries: [path],
+    })
+    await act(async () => {
+      root.render(<AppShell router={router} />)
+    })
+    for (let i = 0; i < 40 && !container.querySelector('h1'); i++) {
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 50))
+      })
+    }
+    return router
+  }
+
+  it('renders a topic hub with only that topic\'s cards', async () => {
+    await renderAt('/topics/aviation/')
+    expect(container.querySelector('h1')?.textContent).toBe('Aviation & Hobbies')
+    expect(container.querySelectorAll('.project-card').length).toBe(
+      getArticlesByTopic('aviation').length,
+    )
+  })
+
+  it('redirects an unknown topic to the homepage', async () => {
+    const router = await renderAt('/topics/nope/')
+    expect(router.state.location.pathname).toBe('/')
+  })
+
+  it('links the homepage to each topic hub', async () => {
+    await renderAt('/')
+    const nav = container.querySelector('nav[aria-label="Topics"]')
+    expect(nav).not.toBeNull()
+    expect(nav?.querySelector('a[href="/topics/aviation/"]')).not.toBeNull()
   })
 })

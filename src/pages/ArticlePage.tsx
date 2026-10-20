@@ -1,5 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArticleNav } from '../components/ArticleNav'
+import { RelatedPosts } from '../components/RelatedPosts'
 import { LessonOutline } from '../components/LessonOutline'
 import { Seo } from '../components/Seo'
 import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
@@ -16,7 +17,9 @@ import {
 import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
 import { postShareImage } from '../../shared/resourceOgImages'
+import { getArticleTopic, topicPath } from '../../shared/articleTopics'
 import { articleSeoInput } from '../../shared/seoHead'
+import { articlePath } from '../../shared/siteArticlesRouting'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -55,7 +58,7 @@ export default function ArticlePage() {
   }
 
   if (slug !== article.slug) {
-    return <Navigate to={`/blog/${article.slug}`} replace />
+    return <Navigate to={articlePath(article.slug)} replace />
   }
 
   const cleanGithubEmbed = article.githubEmbed ? stripQuery(article.githubEmbed) : null
@@ -84,6 +87,7 @@ export default function ArticlePage() {
     return href ? [{ link, href }] : []
   })
   const shareImage = postShareImage(article)
+  const topic = getArticleTopic(article.topic)
   // Text-only posts show their picture so the page is not just a few lines of text.
   const pictureSrc =
     !iframeSrc && !ytId && !otherEmbedSrc && !readmeRawUrl ? resolveAssetUrl(shareImage) : null
@@ -228,6 +232,11 @@ export default function ArticlePage() {
                 {articleKindLabel(article.kind)}
               </span>
               <time dateTime={article.date}>{formatArticleDate(article.date)}</time>
+              {topic ? (
+                <Link className="article-header__topic" to={topicPath(topic.slug)}>
+                  {topic.label}
+                </Link>
+              ) : null}
             </div>
           </header>
 
@@ -237,6 +246,8 @@ export default function ArticlePage() {
           </div>
         </article>
       </main>
+
+      <RelatedPosts article={article} />
 
       <ArticleNav article={article} />
 

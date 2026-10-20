@@ -59,6 +59,38 @@ describe('parseSiteArticleRows', () => {
     )
   })
 
+  it('keeps topic, trimmed seoTitle, and noindex when present', () => {
+    const parsed = parseSiteArticleRows([
+      { ...validRow(), topic: 'aviation', seoTitle: '  Better Title  ', noindex: true },
+    ])[0]
+    expect(parsed?.topic).toBe('aviation')
+    expect(parsed?.seoTitle).toBe('Better Title')
+    expect(parsed?.noindex).toBe(true)
+  })
+
+  it('omits topic, seoTitle, and noindex when absent or noindex is false', () => {
+    const plain = parseSiteArticleRows([validRow()])[0]
+    expect(plain).not.toHaveProperty('topic')
+    expect(plain).not.toHaveProperty('seoTitle')
+    expect(plain).not.toHaveProperty('noindex')
+
+    expect(parseSiteArticleRows([{ ...validRow(), noindex: false }])[0]).not.toHaveProperty(
+      'noindex',
+    )
+  })
+
+  it('rejects an unknown topic, a non-boolean noindex, and a blank seoTitle', () => {
+    expect(() => parseSiteArticleRows([{ ...validRow(), topic: 'nope' }])).toThrow(
+      /topic must be a known topic slug/,
+    )
+    expect(() => parseSiteArticleRows([{ ...validRow(), noindex: 'yes' }])).toThrow(
+      /noindex must be a boolean/,
+    )
+    expect(() => parseSiteArticleRows([{ ...validRow(), seoTitle: '  ' }])).toThrow(
+      /seoTitle must not be blank/,
+    )
+  })
+
   it('rejects malformed rows with field context', () => {
     expect(() => parseSiteArticleRows({})).toThrow('must be an array')
     expect(() => parseSiteArticleRows([{ ...validRow(), slug: '../escape' }])).toThrow(

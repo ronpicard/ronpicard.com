@@ -1,6 +1,12 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
+import {
+  ARTICLE_TOPICS,
+  deriveArticleKind,
+  resolveArticleTopic,
+  topicPath,
+} from '../shared/articleTopics.ts'
 import { buildRssFeed } from '../shared/feed.ts'
 import { postShareImage, resourceOgPath } from '../shared/resourceOgImages.ts'
 import {
@@ -10,11 +16,13 @@ import {
   homeSeoInput,
   notFoundSeoInput,
   serializeHeadTag,
+  topicSeoInput,
 } from '../shared/seoHead.ts'
 import { parseSiteArticleRows } from '../shared/siteArticleSchema.ts'
 import { buildRobotsTxt, buildSitemapXml } from '../shared/sitemap.ts'
 import { canonicalUrl, DEFAULT_DESCRIPTION } from '../shared/siteMeta.ts'
 import {
+  articlePath,
   buildArticleRouteSlugs,
   decodeHtml,
   sortIndexedArticles,
@@ -129,6 +137,7 @@ export async function main({
     slug: routeSlugs[i],
     title: decodeHtml(row.title),
     summary: row.summary ? decodeHtml(row.summary) : null,
+    topic: resolveArticleTopic(row, deriveArticleKind(row)),
   }))
 
   for (let i = 0; i < sorted.length; i++) {
@@ -153,7 +162,7 @@ export async function main({
     await writeOut(
       distDir,
       path.join('blog', slug, 'index.html'),
-      await renderRoute(html, `/blog/${slug}/`, options),
+      await renderRoute(html, articlePath(slug), options),
     )
 
     const leg = legacyRouteSlugs[i]
@@ -162,18 +171,34 @@ export async function main({
       await writeOut(
         distDir,
         path.join('blog', leg, 'index.html'),
-        await renderRoute(html, `/blog/${leg}/`, options),
+        await renderRoute(html, articlePath(leg), options),
       )
     }
   }
 
-  const newestDate = decoded.reduce((max, a) => (a.date > max ? a.date : max), '')
+  const newest = (list) => list.reduce((max, a) => (a.date > max ? a.date : max), '') || null
+  const topicEntries = []
+  for (const topic of ARTICLE_TOPICS) {
+    const inTopic = decoded.filter((a) => a.topic === topic.slug)
+    if (inTopic.length === 0) continue
+    await writeOut(
+      distDir,
+      path.join('topics', topic.slug, 'index.html'),
+      await renderRoute(injectSeoHead(template, topicSeoInput(topic, inTopic)), topicPath(topic.slug)),
+    )
+    topicEntries.push({ url: canonicalUrl(topicPath(topic.slug)), lastModified: newest(inTopic) })
+  }
+
+  // Thin posts stay reachable but are noindex, so the sitemap leaves them out.
   const sitemapEntries = [
-    { url: canonicalUrl('/'), lastModified: newestDate || null },
-    ...decoded.map((article) => ({
-      url: canonicalUrl(`/blog/${article.slug}/`),
-      lastModified: article.date,
-    })),
+    { url: canonicalUrl('/'), lastModified: newest(decoded) },
+    ...topicEntries,
+    ...decoded
+      .filter((article) => !article.noindex)
+      .map((article) => ({
+        url: canonicalUrl(articlePath(article.slug)),
+        lastModified: article.date,
+      })),
   ]
   await writeFile(
     path.join(distDir, 'sitemap.xml'),

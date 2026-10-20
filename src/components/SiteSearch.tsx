@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SEARCH_QUERY_MAX_LEN } from '../config/security'
 import { articleKindShortLabel, articles } from '../features/articles'
 import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
+import { articlePath } from '../../shared/siteArticlesRouting'
 
 export function SiteSearch() {
   const id = useId()
@@ -62,7 +63,7 @@ export function SiteSearch() {
       if (!result) return
       event.preventDefault()
       close()
-      void navigate(`/blog/${result.slug}`)
+      void navigate(articlePath(result.slug))
     }
   }
 
@@ -137,7 +138,7 @@ export function SiteSearch() {
                     role="option"
                     aria-selected={index === activeIndex}
                     tabIndex={-1}
-                    to={`/blog/${a.slug}`}
+                    to={articlePath(a.slug)}
                     onMouseEnter={() => setActiveIndex(index)}
                     onClick={close}
                   >

@@ -140,3 +140,8 @@ export function buildArticleRouteSlugs(
   const legacyRouteSlugs = uniqueSlugsFromTitles(titlesForLegacy)
   return { routeSlugs, legacyRouteSlugs }
 }
+
+/** Public path of a post, trailing slash included: the URL GitHub Pages serves, so links skip its 301. */
+export function articlePath(slug: string): string {
+  return `/blog/${slug}/`
+}

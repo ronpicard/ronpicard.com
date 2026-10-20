@@ -2,7 +2,7 @@
 /**
  * Downloads static assets from siteArticles.json, rewrites their URLs, and
  * extracts article HTML into public/article-bodies/ so it is not bundled with
- * homepage metadata. Run after sync:articles. Skips YouTube, github.io, etc.
+ * homepage metadata. Run after editing siteArticles.json. Skips YouTube, github.io, etc.
  */
 import * as cheerio from 'cheerio'
 import { createHash } from 'node:crypto'

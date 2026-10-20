@@ -63,17 +63,6 @@ export function requireAllowedHttpsUrl(url, allowedHosts) {
   }
 }
 
-export function parseRonPicardBlogUrl(rawUrl) {
-  const url = validateRequestUrl(rawUrl, (candidate) => {
-    requireAllowedHttpsUrl(candidate, new Set(['ronpicard.com', 'www.ronpicard.com']))
-  })
-  if (!/^\/blog\/[a-z0-9][a-z0-9._~-]*\/?$/i.test(url.pathname)) {
-    throw contextualError('URL must target one blog slug', url.toString())
-  }
-  url.hash = ''
-  return url
-}
-
 export async function fetchBytes(
   rawUrl,
   {

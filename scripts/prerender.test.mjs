@@ -2,6 +2,7 @@ import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
+import { escapeHtml } from '../shared/htmlEscape.ts'
 import { DEFAULT_TITLE } from '../shared/siteMeta.ts'
 import { injectSeoHead, main, stripExistingSeoHead } from './prerender.mjs'
 
@@ -111,7 +112,7 @@ describe('prerender main', () => {
     const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8')
     const robots = await readFile(path.join(distDir, 'robots.txt'), 'utf8')
 
-    expect(homeHtml).toContain(`<title>${DEFAULT_TITLE}</title>`)
+    expect(homeHtml).toContain(`<title>${escapeHtml(DEFAULT_TITLE)}</title>`)
     expect(homeHtml).toContain('property="og:type" content="website"')
     expect(homeHtml).toContain('"@type":"WebSite"')
 
@@ -148,6 +149,86 @@ describe('prerender main', () => {
     expect(feed).toContain('<link>https://ronpicard.com/blog/example-post/</link>')
     expect(feed).toContain('<description>Stack &amp; Heap &quot;basics&quot;</description>')
     expect(feed).toContain('<link>https://ronpicard.com/blog/example-app/</link>')
+  })
+
+  it('writes topic hub pages, links posts to their topic, and keeps noindex posts out of the sitemap', async () => {
+    const root = await mkdtemp(path.join(tmpdir(), 'ronpicard-prerender-'))
+    temporaryDirectories.push(root)
+    const { distDir, articlesPath } = await writeFixture(root, {
+      template:
+        '<!doctype html><html><head><title>Template</title></head><body><main></main></body></html>',
+    })
+    const row = {
+      summary: 'Summary',
+      bodyPath: null,
+      imageUrl: null,
+      articleHeroUrl: null,
+      githubEmbed: null,
+      demoUrl: null,
+      repoUrl: null,
+      youtubeId: null,
+      otherEmbed: null,
+      readmeRawUrl: null,
+      extraLinks: [],
+    }
+    await writeFile(
+      articlesPath,
+      JSON.stringify([
+        {
+          ...row,
+          slug: 'flying-post',
+          title: 'Flying Post',
+          date: '2026-05-01',
+          topic: 'aviation',
+          seoTitle: 'Flying Post: Search Title',
+        },
+        {
+          ...row,
+          slug: 'thin-post',
+          title: 'Thin Post',
+          date: '2026-06-01',
+          topic: 'aviation',
+          noindex: true,
+        },
+        {
+          ...row,
+          slug: 'example-app',
+          title: 'Example App',
+          date: '2026-03-22',
+          githubEmbed: 'https://ronpicard.github.io/example-app/',
+        },
+      ]),
+      'utf8',
+    )
+
+    await main({ distDir, articlesPath })
+
+    const { access } = await import('node:fs/promises')
+    const topicHtml = await readFile(path.join(distDir, 'topics/aviation/index.html'), 'utf8')
+    expect(topicHtml).toContain('<title>Aviation &amp; Hobbies | Ron Picard</title>')
+    expect(topicHtml).toContain('<link rel="canonical" href="https://ronpicard.com/topics/aviation/" />')
+    expect(topicHtml).toContain('"@type":"CollectionPage"')
+    expect(topicHtml).toContain('https://ronpicard.com/blog/flying-post/')
+    expect(topicHtml).toContain('https://ronpicard.com/blog/thin-post/')
+
+    await access(path.join(distDir, 'topics/web-apps-and-games/index.html'))
+    await expect(
+      access(path.join(distDir, 'topics/formal-methods-and-research/index.html')),
+    ).rejects.toThrow()
+
+    const flyingHtml = await readFile(path.join(distDir, 'blog/flying-post/index.html'), 'utf8')
+    expect(flyingHtml).toContain('<title>Flying Post: Search Title | Ron Picard</title>')
+    expect(flyingHtml).toContain('"item":"https://ronpicard.com/topics/aviation/"')
+
+    const thinHtml = await readFile(path.join(distDir, 'blog/thin-post/index.html'), 'utf8')
+    expect(thinHtml).toContain('name="robots" content="noindex, follow"')
+
+    const sitemap = await readFile(path.join(distDir, 'sitemap.xml'), 'utf8')
+    expect(sitemap).toContain(
+      '<loc>https://ronpicard.com/topics/aviation/</loc>\n    <lastmod>2026-06-01</lastmod>',
+    )
+    expect(sitemap).toContain('https://ronpicard.com/blog/flying-post/')
+    expect(sitemap).not.toContain('thin-post')
   })
 
   it('shares the generated og card, with its dimensions, when one exists', async () => {

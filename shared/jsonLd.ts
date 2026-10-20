@@ -53,6 +53,8 @@ export function articleJsonLd(input: {
   imageAbs?: string | null
   youtubeId?: string | null
   repoUrl?: string | null
+  /** The post's topic hub, as the middle breadcrumb. */
+  topic?: { name: string; path: string } | null
 }) {
   const url = canonicalUrl(input.path)
   const description = truncateMetaDescription(input.description)
@@ -76,12 +78,14 @@ export function articleJsonLd(input: {
     isPartOf: { '@id': WEBSITE_ID },
     ...(videoId ? { video: { '@id': `${url}#video` } } : {}),
   }
+  const crumbs = [
+    { name: 'Home', item: canonicalUrl('/') },
+    ...(input.topic ? [{ name: input.topic.name, item: canonicalUrl(input.topic.path) }] : []),
+    { name: input.title, item: url },
+  ]
   const breadcrumbs = {
     '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Home', item: canonicalUrl('/') },
-      { '@type': 'ListItem', position: 2, name: input.title, item: url },
-    ],
+    itemListElement: crumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, ...c })),
   }
   // The data has no upload date, so the post date (when the video was shared) stands in.
   const video = videoId
@@ -110,5 +114,46 @@ export function articleJsonLd(input: {
   return {
     '@context': 'https://schema.org',
     '@graph': [posting, breadcrumbs, personJsonLd(), ...(video ? [video] : []), ...(code ? [code] : [])],
+  }
+}
+
+/** A topic hub: the page itself, its posts in order, and its breadcrumb trail. */
+export function topicJsonLd(input: {
+  name: string
+  description: string
+  path: string
+  items: { title: string; path: string }[]
+}) {
+  const url = canonicalUrl(input.path)
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'CollectionPage',
+        '@id': `${url}#page`,
+        name: input.name,
+        description: truncateMetaDescription(input.description),
+        url,
+        inLanguage: 'en-US',
+        isPartOf: { '@id': WEBSITE_ID },
+        author: personRef(),
+        mainEntity: {
+          '@type': 'ItemList',
+          itemListElement: input.items.map((item, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: item.title,
+            url: canonicalUrl(item.path),
+          })),
+        },
+      },
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Home', item: canonicalUrl('/') },
+          { '@type': 'ListItem', position: 2, name: input.name, item: url },
+        ],
+      },
+    ],
   }
 }

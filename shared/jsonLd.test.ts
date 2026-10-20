@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { articleJsonLd, homeJsonLd } from './jsonLd'
+import { articleJsonLd, homeJsonLd, topicJsonLd } from './jsonLd'
 import { SOCIAL } from './siteMeta'
 
 type Node = Record<string, unknown>
@@ -78,5 +78,39 @@ describe('JSON-LD builders', () => {
     })
     const other = articleJsonLd({ ...base, repoUrl: 'https://evil.example/ronpicard/example' })
     expect(byType(other, 'SoftwareSourceCode')).toBeUndefined()
+  })
+
+  it('adds the topic as the middle breadcrumb of a posting', () => {
+    const data = articleJsonLd({ ...base, topic: { name: 'T', path: '/topics/t/' } })
+    expect(byType(data, 'BreadcrumbList')).toMatchObject({
+      itemListElement: [
+        { position: 1, name: 'Home' },
+        { position: 2, name: 'T', item: 'https://ronpicard.com/topics/t/' },
+        { position: 3, name: 'Example' },
+      ],
+    })
+  })
+
+  it('builds a topic hub with its posts and breadcrumb trail', () => {
+    const data = topicJsonLd({
+      name: 'T',
+      description: 'D',
+      path: '/topics/t/',
+      items: [{ title: 'X', path: '/blog/x/' }],
+    })
+    expect(byType(data, 'CollectionPage')).toMatchObject({
+      '@id': 'https://ronpicard.com/topics/t/#page',
+      isPartOf: { '@id': 'https://ronpicard.com/#website' },
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: [{ position: 1, name: 'X', url: 'https://ronpicard.com/blog/x/' }],
+      },
+    })
+    expect(byType(data, 'BreadcrumbList')).toMatchObject({
+      itemListElement: [
+        { position: 1, name: 'Home', item: 'https://ronpicard.com/' },
+        { position: 2, name: 'T', item: 'https://ronpicard.com/topics/t/' },
+      ],
+    })
   })
 })

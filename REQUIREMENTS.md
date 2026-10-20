@@ -9,7 +9,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The site MUST be a static SPA (HTML/CSS/JS only); this repo MUST NOT require an application server or database at runtime.
 - Production MUST deploy to GitHub Pages with custom domain `ronpicard.com` through the GitHub Actions workflow on pushes to `main`.
 - Production asset base URL MUST be `/` for the apex domain; project Pages hosting MUST be supported by changing `prodBase` in `vite.config.ts` and `homepage` in `package.json`.
-- Blog routes MUST use history URLs (`/blog/:slug`), not hash routing.
+- Blog routes MUST use history URLs (`/blog/:slug`), not hash routing. Topic hubs MUST live at `/topics/:topic`; an unknown topic MUST redirect home.
 
 ### Portfolio presentation
 
@@ -53,8 +53,8 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Slots Royale project MUST use a current local gameplay screenshot for its blog thumbnail and Open Graph image.
 - The Flight Simulator project MUST include a local cockpit thumbnail, a short introduction, and playable demo and source code links; it MUST appear first as the October 3, 2026 addition.
 - The Flight Simulator project MUST use a local copy of the flight simulator repository's own Open Graph image (the cockpit over Manhattan) for its blog thumbnail and Open Graph image.
-- The AI Rulebook article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code, Releases (latest GitHub release), VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page, and be dated April 29, 2026, the extension's original release date.
-- The Auto Color article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code, Releases (latest GitHub release), VS Code Marketplace, Open VSX Registry, and Wyvern Systems buttons on both its home card and article page, and be dated April 13, 2026, the extension's original release date.
+- The AI Rulebook article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code (`wyvernsystems/ai-rulebook`), Releases (latest GitHub release), Open VSX Registry, VS Code Marketplace, and Wyvern Systems buttons, in that order, on both its home card and article page, and be dated April 29, 2026, the extension's original release date.
+- The Auto Color article MUST use the extension's local icon, uncropped, for its blog thumbnail and Open Graph image, include a written article body, show Code (`wyvernsystems/auto-color`), Releases (latest GitHub release), Open VSX Registry, VS Code Marketplace, and Wyvern Systems buttons, in that order, on both its home card and article page, and be dated April 13, 2026, the extension's original release date.
 - Article metadata MUST pass the shared runtime schema before the app or build scripts consume it.
 - Article HTML MUST be extracted to per-article files under `public/article-bodies/`; the homepage catalog MUST load metadata only.
 - Public blog slugs MUST be derived from post titles (not legacy storage slugs); legacy slugs from the pre–Mar 2026 naming scheme MUST still resolve for bookmarks and prerendered paths.
@@ -65,7 +65,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - A post's home card MUST show the same buttons as its article page, in the same order: Demo, Code, Releases, YouTube, then every `extraLinks` entry. The `card` flag on `extraLinks` entries no longer changes anything. Links to third-party articles MUST be labelled Article, except papers, which MUST be labelled Paper.
 - A post with no demo embed, YouTube video, other embed, or README MUST show its picture (`articleHeroUrl`, else `imageUrl`) at the top of the article page.
 - Remote mirrored assets MUST come from explicit HTTPS hosts, pass redirect and query validation, remain under 20 MiB, match a passive file signature, and MUST NOT include SVG.
-- After `vite build`, prerender MUST emit static `index.html` per home and blog route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
+- After `vite build`, prerender MUST emit static `index.html` per home, blog, and topic route with real `<title>`, Open Graph tags, and JSON-LD; Open Graph images MUST include pixel dimensions and alt text when the image is a mirrored local file.
 - Prerender and the client MUST build head tags from one shared builder (`shared/seoHead.ts`). Each page MUST carry exactly one title, description, canonical, and JSON-LD block, before and after client navigation; navigation MUST replace all of them, JSON-LD included.
 - Post meta and JSON-LD descriptions MUST be entity-decoded plain text. Blog routes MUST carry `article:published_time`. JSON-LD MUST describe the site owner as a Person with `sameAs` profile links, and each post as a BlogPosting with author, publisher, image, and a BreadcrumbList, plus a VideoObject for a valid YouTube ID and SoftwareSourceCode for a valid GitHub repo URL.
 - Each blog post MUST share a generated 1200×630 card of its own image (`public/resources/og/`, built by `npm run generate:og`) as its Open Graph and Twitter image, showing portrait, square, and small images uncropped; a post MUST fall back to its original image when no card exists.
@@ -74,8 +74,10 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Prerendered pages MUST include the route's app markup in `#root` (rendered by the SSR bundle) so first paint shows content before hydration; the markup MUST be static — no inline scripts or streaming placeholders, which the CSP would block.
 - A post with a `bodyPath` MUST have its sanitized article body in its prerendered HTML, and the client MUST hydrate that body without refetching it; a missing body file MUST NOT fail the build (the client fetch remains the fallback).
 - The homepage card grid MUST load generated WebP thumbnails (`public/resources/thumbs/`, built by `npm run generate:thumbs`) instead of full-size title images, falling back to the original when a thumbnail is missing; cards above the fold SHOULD load eagerly with preload hints while the rest stay lazy.
-- Blog canonical URLs, `og:url`, and sitemap entries MUST use the trailing-slash form (`/blog/<slug>/`) that GitHub Pages redirects to.
-- Production MUST include `sitemap.xml`, `robots.txt`, an RSS 2.0 feed at `feed.xml` (advertised by a `rel="alternate"` link in every page's head), and a dedicated `404.html` with `noindex, nofollow`. The home sitemap entry's `lastmod` MUST be the newest post date.
+- Blog canonical URLs, `og:url`, sitemap entries, and every in-app link to a post or topic MUST use the trailing-slash form (`/blog/<slug>/`, `/topics/<topic>/`) that GitHub Pages redirects to.
+- Every post MUST belong to one topic (`shared/articleTopics.ts`): its JSON `topic`, else its kind's default. Topic pages MUST carry a CollectionPage with an ItemList of their posts; a post's BreadcrumbList MUST run Home → topic → post. Article pages MUST link to their topic and list up to three nearby posts from it; the home page MUST link to every topic page.
+- A row's optional `seoTitle` MUST replace the visible title in `<title>`, `og:title`, and `twitter:title` only. A row with `noindex: true` MUST carry `noindex, follow` and be left out of the sitemap, while staying listed and reachable on the site.
+- Production MUST include `sitemap.xml`, `robots.txt`, an RSS 2.0 feed at `feed.xml` (advertised by a `rel="alternate"` link in every page's head), and a dedicated `404.html` with `noindex, nofollow`. The home sitemap entry's `lastmod` MUST be the newest post date, and each topic entry's the newest date in that topic.
 
 ### Dynamic GitHub README posts
 
@@ -128,8 +130,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 
 ### Content maintenance (optional workflows)
 
-- While Squarespace remains a source, `npm run sync:articles` and `npm run mirror:resources` MAY refresh JSON, `public/article-bodies/`, and `public/resources/`; resulting files SHOULD be committed intentionally.
-- Single-post merges MAY use `npm run merge:blog-post` per `scripts/merge-blog-post.mjs`.
+- `src/data/siteArticles.json` MUST be edited by hand; no script may regenerate it from scratch. `npm run mirror:resources` MAY refresh `public/article-bodies/` and `public/resources/` and rewrite asset URLs in place; resulting files SHOULD be committed intentionally.
 - `npm run optimize:resources` MAY recompress mirrored images in `public/resources/` in place; it MUST keep filenames and formats so JSON references and the resource manifest stay valid.
 
 ## Non-goals

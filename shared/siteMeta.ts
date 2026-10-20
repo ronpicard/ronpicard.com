@@ -10,7 +10,7 @@ export const SOCIAL = {
   wyvern: 'https://wyvernsystems.com/',
 } as const
 
-export const DEFAULT_TITLE = `${SITE_NAME} — My projects involving AI, software, aviation, and more`
+export const DEFAULT_TITLE = `${SITE_NAME} — AI, Software & Aviation Projects and Coding Lessons`
 export const DEFAULT_DESCRIPTION =
   'Interactive web apps and games, a free software engineering lesson series, AI and formal methods research, and flying logs from pilot and engineer Ron Picard.'
 

@@ -16,8 +16,6 @@
     "test:e2e:ui": "playwright test --ui",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
-    "sync:articles": "node --experimental-strip-types scripts/fetch-site-articles.mjs",
-    "merge:blog-post": "node --experimental-strip-types scripts/merge-blog-post.mjs",
     "mirror:resources": "node --experimental-strip-types scripts/mirror-resources.mjs",
     "mirror:readmes": "node --experimental-strip-types scripts/mirror-readmes.mjs",
     "optimize:resources": "node --experimental-strip-types scripts/optimize-resources.mjs",

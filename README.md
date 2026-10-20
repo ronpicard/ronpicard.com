@@ -10,7 +10,7 @@ npm install
 npm run dev
 ```
 
-The project uses Node.js 22.23.2. Open the URL Vite prints (usually `http://localhost:5173/`). Routes: `/` (project list), `/blog/:slug` (article).
+The project uses Node.js 22.23.2. Open the URL Vite prints (usually `http://localhost:5173/`). Routes: `/` (project list), `/blog/:slug` (article), `/topics/:topic` (topic hub).
 
 ## What’s in the repo
 
@@ -55,22 +55,20 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (290 tests) |
+| `npm test` | Run Vitest unit tests once (326 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (18 tests × desktop and mobile projects; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (19 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + thumbnails + share cards + Vite + SSR bundle + prerender (use before deploy) |
 | `npm run preview` | Serve production build locally |
-| `npm run sync:articles` | Scrape/update `siteArticles.json` from legacy Squarespace |
 | `npm run mirror:resources` | Fetch assets and extract HTML into `public/article-bodies/` |
 | `npm run mirror:readmes` | Snapshot GitHub READMEs into `public/readme-snapshots/` (offline fallback for article pages) |
 | `npm run optimize:resources` | Recompress `public/resources/` images in place (run after mirroring new assets) |
 | `npm run generate:thumbs` | Write card-sized WebP thumbnails into `public/resources/thumbs/` |
 | `npm run generate:og` | Write 1200×630 social share cards into `public/resources/og/` |
 | `npm run build:ssr` | Build the SSR bundle (`dist-server/entry-server.js`) used by prerender |
-| `npm run merge:blog-post` | Merge one post from Squarespace (see `scripts/merge-blog-post.mjs`) |
 
 `build:full` may rewrite `siteArticles.json` and fetch files — commit intentional changes after it runs.
 
@@ -91,7 +89,8 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `src/lib/safeUrls.test.ts` | Outbound URL and embed validation |
 | `src/config/security.test.ts` | CSP string and public slug guards |
 | `src/lib/sanitizeArticleHtml.test.ts` | Article body pipeline |
-| `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection |
+| `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection, topics and related posts |
+| `shared/articleTopics.test.ts`, `src/components/RelatedPosts.test.tsx` | Topic hubs, kind defaults, and related-post links |
 | `src/lib/githubReadme.test.ts`, `src/lib/fetchGithubReadme.test.ts`, `src/lib/fetchArticleBody.test.ts` | Dynamic content rendering + fetch limits |
 | `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
 | `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
@@ -99,7 +98,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `src/components/Seo.test.tsx` | One set of head tags, swapped on client navigation |
 | `src/components/EmbedFrame.test.tsx` | Demo iframe sandboxing and Full view / Escape toggle |
 | `scripts/lib/fetchText.test.mjs`, `scripts/mirror-resources.test.mjs` | Bounded fetches, redirect/host controls, and passive asset signatures |
-| `scripts/prerender.test.mjs` | Route metadata, app-markup and article-body injection, sitemap, RSS feed, robots, and 404 output |
+| `scripts/prerender.test.mjs` | Route metadata, topic hub pages, app-markup and article-body injection, sitemap (noindex posts left out), RSS feed, robots, and 404 output |
 | `src/entry-server.test.tsx` | Build-time page rendering: card grid markup, preload hoisting, CSP-safe static output |
 | `shared/resourceThumbs.test.ts`, `scripts/generate-thumbs.test.mjs` | Thumbnail path mapping and generation |
 | `shared/resourceOgImages.test.ts`, `scripts/generate-og-images.test.mjs` | Social share card path mapping and generation |
@@ -113,8 +112,8 @@ npm run test:coverage   # terminal summary + optional HTML under coverage/
 
 | Metric | Coverage |
 |--------|----------|
-| Statements | ~95% |
-| Branches | ~91% |
+| Statements | ~96% |
+| Branches | ~92% |
 | Functions | ~97% |
 | Lines | ~98% |
 
@@ -151,24 +150,21 @@ Run coverage + e2e before deploy or when changing `shared/`, URL validation, sec
 npm run test:coverage && npm run test:e2e
 ```
 
-## Refreshing content from the legacy Squarespace site
+## Adding and editing posts
 
-While that site is still the source of truth for scraping:
+Posts are edited by hand in `src/data/siteArticles.json`, which `shared/siteArticleSchema.ts` validates. Besides the display fields, a row may set:
+
+- `topic` — its topic hub (a slug from `shared/articleTopics.ts`); without one, web apps, desktop apps, and lessons get their kind's default topic.
+- `seoTitle` — a search-friendly title for `<title>` and link previews; the page heading keeps `title`.
+- `noindex` — `true` keeps a thin post on the site but out of search results and the sitemap.
+
+After adding remote images or bodies, mirror them and commit the results:
 
 ```bash
-npm run sync:articles
 npm run mirror:resources
 ```
 
 Then commit `src/data/siteArticles.json`, `public/article-bodies/`, `public/resources/`, and `scripts/resource-manifest.json` as needed.
-
-To merge a single new post without a full sync:
-
-```bash
-npm run merge:blog-post
-```
-
-See `scripts/merge-blog-post.mjs` for usage.
 
 ## Deploy
 

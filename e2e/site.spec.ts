@@ -52,6 +52,30 @@ test.describe('home', () => {
     await expect(page.locator('#main-content')).toBeFocused()
   })
 
+  test('links home, topic hubs, and related posts with trailing-slash URLs', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('navigation', { name: 'Topics' }).getByRole('link', { name: /Aviation & Hobbies/ }).click()
+    await expect(page).toHaveURL(/\/topics\/aviation\/$/)
+    await expect(page.getByRole('heading', { level: 1, name: 'Aviation & Hobbies' })).toBeVisible()
+    await expect(page).toHaveTitle('Aviation & Hobbies | Ron Picard')
+    await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://ronpicard.com/topics/aviation/',
+    )
+
+    await page.locator('.project-card').filter({ hasText: 'Officially a Private Pilot!' }).locator('.project-card__overlay-link').click()
+    await expect(page).toHaveURL(/\/blog\/officially-a-private-pilot\/$/)
+    const related = page.getByRole('region', { name: 'More in Aviation & Hobbies' })
+    await expect(related.getByRole('link')).toHaveCount(4)
+    for (const href of await related.getByRole('link').evaluateAll((els) => els.map((el) => el.getAttribute('href')))) {
+      expect(href).toMatch(/^\/(blog|topics)\/[a-z0-9-]+\/$/)
+    }
+    await expect(page.getByRole('link', { name: 'Aviation & Hobbies', exact: true })).toHaveAttribute(
+      'href',
+      '/topics/aviation/',
+    )
+  })
+
   test('shows AI Chess demo and code actions on its card and article', async ({ page }) => {
     await page.goto('/')
     const card = page.locator('.project-card').filter({ hasText: 'AI Chess Web App V2' })
@@ -108,7 +132,7 @@ test.describe('seo head', () => {
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://ronpicard.com/')
 
     await page.getByRole('link', { name: /Open Periodic Table Element Visualizer/i }).click()
-    await expect(page).toHaveTitle('Periodic Table Element Visualizer | Ron Picard')
+    await expect(page).toHaveTitle('Interactive Periodic Table with 3D Atom Models | Ron Picard')
     expect(await countHead(page)).toEqual(once)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',

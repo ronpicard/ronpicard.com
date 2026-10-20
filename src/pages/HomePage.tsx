@@ -1,9 +1,12 @@
 import { Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
-import { getArticleTitleList, ProjectCard } from '../features/articles'
+import { Link } from 'react-router-dom'
+import { getArticlesByTopic, getArticleTitleList, ProjectCard } from '../features/articles'
+import { ARTICLE_TOPICS, topicPath } from '../../shared/articleTopics'
 import { homeSeoInput } from '../../shared/seoHead'
 
 const list = getArticleTitleList()
+const topics = ARTICLE_TOPICS.map((t) => ({ ...t, count: getArticlesByTopic(t.slug).length }))
 
 /** Cards likely in the first viewport (grid is 1–3 columns) load eagerly. */
 const PRIORITY_CARD_COUNT = 4
@@ -19,6 +22,18 @@ export default function HomePage() {
         I&apos;m Ron Picard, a 10X engineer. This is where I post my projects like apps, games, free
         software engineering lessons, AI musings, and other topics I&apos;m interested in.
       </p>
+
+      <nav className="topic-nav" aria-label="Topics">
+        <ul className="topic-nav__list" role="list">
+          {topics.map((t) => (
+            <li key={t.slug}>
+              <Link className="topic-nav__link" to={topicPath(t.slug)}>
+                {t.label} <span className="topic-nav__count">{t.count}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
 
       <main id="main-content" className="main" tabIndex={-1}>
         <ul className="project-list" role="list">

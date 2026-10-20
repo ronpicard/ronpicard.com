@@ -1,3 +1,5 @@
+import { isArticleTopicSlug, type ArticleTopicSlug } from './articleTopics.ts'
+
 export type SiteArticleLink = {
   label: string
   href: string
@@ -23,6 +25,12 @@ export type SiteArticleRow = {
   /** GitHub releases page (e.g. `.../releases/latest`) for posts whose repo publishes releases. */
   releasesUrl?: string | null
   extraLinks: SiteArticleLink[]
+  /** Topic hub; omitted rows use their kind's default topic. */
+  topic?: ArticleTopicSlug
+  /** Search-friendly title for <title> and share tags; the visible title stays `title`. */
+  seoTitle?: string
+  /** Thin post: kept on the site but marked noindex and left out of the sitemap. */
+  noindex?: boolean
 }
 
 const SLUG_RE = /^[a-z0-9][a-z0-9._-]*$/i
@@ -95,6 +103,7 @@ export function parseSiteArticleRows(
     const bodyPath = optionalNullableString(row, 'bodyPath', path)
     const readmeRawUrl = optionalNullableString(row, 'readmeRawUrl', path)
     const releasesUrl = optionalNullableString(row, 'releasesUrl', path)
+    const seoTitle = optionalNullableString(row, 'seoTitle', path)
 
     if (!SLUG_RE.test(slug)) throw new Error(`${path}.slug contains unsupported characters`)
     if (!DATE_RE.test(date) || Number.isNaN(Date.parse(`${date}T00:00:00Z`))) {
@@ -102,6 +111,15 @@ export function parseSiteArticleRows(
     }
     if (bodyPath != null && !ARTICLE_BODY_PATH_RE.test(bodyPath)) {
       throw new Error(`${path}.bodyPath must reference an article-bodies HTML file`)
+    }
+    if ('topic' in row && !isArticleTopicSlug(row.topic)) {
+      throw new Error(`${path}.topic must be a known topic slug`)
+    }
+    if ('noindex' in row && typeof row.noindex !== 'boolean') {
+      throw new Error(`${path}.noindex must be a boolean`)
+    }
+    if (seoTitle != null && !seoTitle.trim()) {
+      throw new Error(`${path}.seoTitle must not be blank`)
     }
 
     return {
@@ -121,6 +139,9 @@ export function parseSiteArticleRows(
       ...(readmeRawUrl !== undefined ? { readmeRawUrl } : {}),
       ...(releasesUrl !== undefined ? { releasesUrl } : {}),
       ...(bodyPath !== undefined ? { bodyPath } : {}),
+      ...(isArticleTopicSlug(row.topic) ? { topic: row.topic } : {}),
+      ...(seoTitle ? { seoTitle: seoTitle.trim() } : {}),
+      ...(row.noindex === true ? { noindex: true } : {}),
     }
   })
 }

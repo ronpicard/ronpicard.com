@@ -6,7 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Six topic pages group the posts: Web Apps & Games; Software, Tools & Tutorials; Software Engineering Lessons; AI, Machine Learning & Autonomy; Formal Methods & Research; and Aviation & Hobbies. Each has its own address (such as `/topics/aviation/`), a short introduction, and the cards for every post in it. The home page links to all six below its introduction.
+- Every article shows its topic beside its date, linking to that topic page, and ends with a More in … list of up to three nearby posts from the same topic.
+
 ### Changed
+
+- Links between pages now go straight to each post's final address (ending in `/`) instead of passing through a redirect first.
+- Browser tabs and search results now show more descriptive titles for the web apps, games, and some flying posts, such as "Flight Simulator: Fly a Cessna 172 in Your Browser", and the home page's title now names its topics. The headings on the pages are unchanged.
+- The Stockfish Chatbot, AI Chess Web App V2, Super Decathlon, First Solo, and Second Solo posts have real summaries on their cards and in search results instead of a date or a placeholder line.
+- Six very short posts (Got My Boating License, X-62 VISTA Laureate Award Dinner, the Cherokee 6, Super Decathlon, and TB-10 flights, and WebGME: Railway Network Design Studio) stay on the site but ask search engines not to index them, and are left out of the sitemap.
+- The AI Rulebook and Auto Color Code and Releases buttons, and the source links in their articles, point to the renamed `wyvernsystems/ai-rulebook` and `wyvernsystems/auto-color` repositories.
+- On the AI Rulebook and Auto Color cards and articles, the Open VSX Registry button now comes before the VS Code Marketplace button.
+
+### Removed
+
+- The `sync:articles` and `merge:blog-post` commands, which scraped posts from the old Squarespace site. That site is gone, and rerunning them would have overwritten hand-edited post data.
 
 - Home page cards' Read more links are now blue, and turn green to match the card's green outline when you hover over the card.
 - Dates, post summaries such as the Blackjack Royale and Roulette Royale descriptions, quotes, and other secondary text now use the same color as article text instead of a dimmed gray.

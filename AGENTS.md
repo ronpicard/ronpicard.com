@@ -14,7 +14,7 @@ Facts an AI agent (or new contributor) needs before changing this repo. For full
 
 ## Architecture facts
 
-- Static SPA, no server: React 19 + React Router history URLs (`/`, `/blog/:slug`), deployed to GitHub Pages by `.github/workflows/deploy.yml` on push to `main`.
+- Static SPA, no server: React 19 + React Router history URLs (`/`, `/blog/:slug`, `/topics/:topic`), deployed to GitHub Pages by `.github/workflows/deploy.yml` on push to `main`.
 - Logic shared between the app and Node scripts lives in `shared/`; scripts import TypeScript directly via `node --experimental-strip-types`.
 - Code outside the articles feature imports it only through `src/features/articles/index.ts`.
 - Article content is data: metadata in `src/data/siteArticles.json`, bodies in `public/article-bodies/`, mirrored assets in `public/resources/` (hash-named, committed), README snapshots in `public/readme-snapshots/`, self-hosted fonts in `public/fonts/`.

@@ -4,7 +4,9 @@ export {
   articles,
   filterExtraLinks,
   getArticle,
+  getArticlesByTopic,
   getArticleTitleList,
+  getRelatedArticles,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
@@ -20,3 +22,4 @@ export {
   formatArticleDate,
 } from '../../lib/articleDisplay'
 export { default as ArticlePage } from '../../pages/ArticlePage'
+export { default as TopicPage } from '../../pages/TopicPage'

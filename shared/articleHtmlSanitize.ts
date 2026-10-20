@@ -1,5 +1,5 @@
 /**
- * DOMPurify rules shared by `src/lib/sanitizeArticleHtml.ts` and `scripts/fetch-site-articles.mjs`.
+ * DOMPurify rules shared by `src/lib/sanitizeArticleHtml.ts` and the build scripts.
  */
 import DOMPurify from 'isomorphic-dompurify'
 import type { UponSanitizeAttributeHook } from 'dompurify'

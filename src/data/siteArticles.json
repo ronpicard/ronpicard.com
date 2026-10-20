@@ -12,7 +12,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Flight Simulator: Fly a Cessna 172 in Your Browser"
   },
   {
     "slug": "slots-royale",
@@ -27,7 +28,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Slots Royale: 3D Slot Machine Browser Game"
   },
   {
     "slug": "blackjack-royale",
@@ -42,7 +44,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Blackjack Royale: 3D Blackjack Browser Game"
   },
   {
     "slug": "mustang-showroom",
@@ -57,7 +60,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Mustang Showroom: 3D 1969 Ford Mustang Mach 1"
   },
   {
     "slug": "domino-topple",
@@ -72,7 +76,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Domino Topple: 3D Chain-Reaction Puzzle Game"
   },
   {
     "slug": "roulette-royale",
@@ -87,7 +92,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Roulette Royale: 3D European Roulette Browser Game"
   },
   {
     "slug": "marble-tilt",
@@ -102,7 +108,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Marble Tilt: 3D Wooden Labyrinth Marble Game"
   },
   {
     "slug": "neon-pinball",
@@ -117,7 +124,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Neon Pinball: 3D Retro Arcade Pinball Game"
   },
   {
     "slug": "orbit-golf",
@@ -132,7 +140,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Orbit Golf: 18 Holes of 3D Mini-Golf in Space"
   },
   {
     "slug": "pool-rooms-game-web-app",
@@ -147,7 +156,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Pool Rooms: First-Person Poolrooms Exploration Game"
   },
   {
     "slug": "fish-tank-simulator",
@@ -162,7 +172,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Fish Tank Simulator: 3D Saltwater Reef Aquarium"
   },
   {
     "slug": "infinite-library-game-web-app",
@@ -177,7 +188,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "The Infinite Library: Borges-Inspired 3D Exploration"
   },
   {
     "slug": "periodic-table-element-visualizor",
@@ -192,7 +204,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Interactive Periodic Table with 3D Atom Models"
   },
   {
     "slug": "ai-rulebook-vscode-extension",
@@ -203,18 +216,18 @@
     "articleHeroUrl": null,
     "githubEmbed": null,
     "demoUrl": null,
-    "repoUrl": "https://github.com/wyvernsystems/ai-rulebook-vscode-extension",
+    "repoUrl": "https://github.com/wyvernsystems/ai-rulebook",
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "VS Code Marketplace",
-        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.ai-rulebook",
+        "label": "Open VSX Registry",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/ai-rulebook",
         "card": true
       },
       {
-        "label": "Open VSX Registry",
-        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/ai-rulebook",
+        "label": "VS Code Marketplace",
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.ai-rulebook",
         "card": true
       },
       {
@@ -223,8 +236,9 @@
         "card": true
       }
     ],
-    "releasesUrl": "https://github.com/wyvernsystems/ai-rulebook-vscode-extension/releases/latest",
-    "bodyPath": "article-bodies/ai-rulebook-vscode-extension.html"
+    "releasesUrl": "https://github.com/wyvernsystems/ai-rulebook/releases/latest",
+    "bodyPath": "article-bodies/ai-rulebook-vscode-extension.html",
+    "topic": "software-and-tools"
   },
   {
     "slug": "clamav-antivirus-control-gui",
@@ -241,7 +255,8 @@
     "extraLinks": [],
     "readmeRawUrl": "https://raw.githubusercontent.com/ronpicard/clamav-antivirus-ui/main/README.md",
     "releasesUrl": "https://github.com/ronpicard/clamav-antivirus-ui/releases/latest",
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "ClamAV Control: Desktop GUI for ClamAV Antivirus"
   },
   {
     "slug": "auto-color-vscode-extension",
@@ -252,18 +267,18 @@
     "articleHeroUrl": null,
     "githubEmbed": null,
     "demoUrl": null,
-    "repoUrl": "https://github.com/wyvernsystems/auto-color-vscode-extension",
+    "repoUrl": "https://github.com/wyvernsystems/auto-color",
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "VS Code Marketplace",
-        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.auto-color",
+        "label": "Open VSX Registry",
+        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/auto-color",
         "card": true
       },
       {
-        "label": "Open VSX Registry",
-        "href": "https://open-vsx.org/extension/WyvernSystemsLLC/auto-color",
+        "label": "VS Code Marketplace",
+        "href": "https://marketplace.visualstudio.com/items?itemName=WyvernSystemsLLC.auto-color",
         "card": true
       },
       {
@@ -272,8 +287,9 @@
         "card": true
       }
     ],
-    "releasesUrl": "https://github.com/wyvernsystems/auto-color-vscode-extension/releases/latest",
-    "bodyPath": "article-bodies/auto-color-vscode-extension.html"
+    "releasesUrl": "https://github.com/wyvernsystems/auto-color/releases/latest",
+    "bodyPath": "article-bodies/auto-color-vscode-extension.html",
+    "topic": "software-and-tools"
   },
   {
     "slug": "daily-tech-brief-web-app",
@@ -288,7 +304,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Daily Tech Brief: Tech and World News Dashboard"
   },
   {
     "slug": "back-rooms-game-web-app",
@@ -303,7 +320,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Back Rooms: First-Person Backrooms Horror Game"
   },
   {
     "slug": "nasa-artemis-2-mission-tracker-web-app",
@@ -318,7 +336,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Artemis II Mission Tracker: 3D Earth-Moon Trajectory"
   },
   {
     "slug": "the-quest-for-agi-why-the-future-of-intelligence-may-lie-in-the-human-brain",
@@ -333,7 +352,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/the-quest-for-agi-why-the-future-of-intelligence-may-lie-in-the-human-brain.html"
+    "bodyPath": "article-bodies/the-quest-for-agi-why-the-future-of-intelligence-may-lie-in-the-human-brain.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "rebuilding-portfolio-squarespace-to-react-github-pages",
@@ -348,7 +368,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/rebuilding-portfolio-squarespace-to-react-github-pages.html"
+    "bodyPath": "article-bodies/rebuilding-portfolio-squarespace-to-react-github-pages.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "software-lessons-session-25-cursor-and-claude-agentic-coding-workflow",
@@ -378,7 +399,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Encryption Explorer: Interactive Ciphers from Caesar to AES"
   },
   {
     "slug": "xhxvbfexo4u2jr9wex5aa6c4iwjl23-m4krt-jjspw",
@@ -393,7 +415,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Slime Soccer Remake: Classic Slime Soccer in the Browser"
   },
   {
     "slug": "xhxvbfexo4u2jr9wex5aa6c4iwjl23",
@@ -408,7 +431,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Escape the Matrix: 3D First-Person Escape Room Game"
   },
   {
     "slug": "uhcf1dmaxe5gie1lyj2qutsh5rji2c",
@@ -428,7 +452,8 @@
         "href": "https://github.com/ronpicard/megaminx-12-sided-rubiks-cube-web-app/tree/main"
       }
     ],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Megaminx Simulator: 3D 12-Sided Rubik’s Cube Puzzle"
   },
   {
     "slug": "sorting-algorithm-visualizer-web-app",
@@ -443,7 +468,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Sorting Algorithms Visualizer: Bubble, Merge, Quick Sort"
   },
   {
     "slug": "sorting-algorithm-visualizer-web-app-e9d3p",
@@ -458,7 +484,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Search Algorithms Visualizer: Interactive Maze Pathfinding"
   },
   {
     "slug": "sorting-algorithm-visualizer-web-app-e9d3p-jhz4b",
@@ -473,7 +500,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "AI Algorithms Visualizer: A*, Neural Networks, Decision Trees"
   },
   {
     "slug": "sorting-algorithm-visualizer-web-app-e9d3p-jhz4b-ehwhc",
@@ -488,7 +516,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Control Systems Visualizer: PID, LQR, MPC Inverted Pendulum"
   },
   {
     "slug": "sorting-algorithm-visualizer-web-app-e9d3p-jhz4b-ehwhc-t7g66",
@@ -518,7 +547,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Alien Planet Chaos Sandbox: Black Holes, Suns, Tornadoes"
   },
   {
     "slug": "zvykgocnl39ktqucbhg6z93cendbrg",
@@ -538,7 +568,8 @@
         "href": "https://github.com/ronpicard/data-structures-visualizer-web-app"
       }
     ],
-    "bodyPath": null
+    "bodyPath": null,
+    "seoTitle": "Data Structures Visualizer: Arrays, Linked Lists, Stacks"
   },
   {
     "slug": "software-lessons-session-13-programming-in-python-object-oriented-oop-part-4-factory-pattern-ctkk7",
@@ -904,7 +935,7 @@
     "slug": "building-a-stockfish-chatbot-with-a-mistral-llm",
     "title": "Stockfish Chatbot with a Mistral LLM &mdash; Home",
     "date": "2025-09-02",
-    "summary": "Last Updated: 09/01/25",
+    "summary": "A chatbot for the Stockfish chess engine’s C++ source code: it uses retrieval-augmented generation (RAG) with a Mistral LLM to answer questions like “Where is the UCI loop implemented?” with explanations and copyable code snippets. Includes a live demo.",
     "imageUrl": "resources/278d32435e786a.png",
     "articleHeroUrl": null,
     "githubEmbed": "https://ronpicard.github.io/stockfish-llm-chat/",
@@ -918,7 +949,8 @@
         "href": "https://ronpicard.github.io/stockfish-llm-chat/"
       }
     ],
-    "bodyPath": "article-bodies/building-a-stockfish-chatbot-with-a-mistral-llm.html"
+    "bodyPath": "article-bodies/building-a-stockfish-chatbot-with-a-mistral-llm.html",
+    "seoTitle": "Stockfish Chatbot: Ask the Chess Engine’s Code with a Mistral LLM"
   },
   {
     "slug": "try-my-websim-alien-escape-game-built-with-prompt-programming",
@@ -948,7 +980,7 @@
     "slug": "wasmj8db1br3ksr00ivvmyju8gniym",
     "title": "AI Chess Web App V2 with Stockfish &mdash; Home",
     "date": "2025-04-18",
-    "summary": "Try it out below!  Last Updated: 04/18/25",
+    "summary": "Version 2 of my AI chess web app: play against Stockfish 17 running in the browser through WebAssembly, or against Minimax with alpha-beta pruning, Greedy, and Random bots. Built with React and Node.js.",
     "imageUrl": "resources/0895b25c0f50cf.png",
     "articleHeroUrl": null,
     "githubEmbed": "https://ronpicard.github.io/chess-web-app/",
@@ -957,7 +989,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/wasmj8db1br3ksr00ivvmyju8gniym.html"
+    "bodyPath": "article-bodies/wasmj8db1br3ksr00ivvmyju8gniym.html",
+    "seoTitle": "AI Chess Web App: Play Stockfish 17 in the Browser"
   },
   {
     "slug": "build-a-chess-engine-as-fast-as-possible",
@@ -972,7 +1005,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/build-a-chess-engine-as-fast-as-possible.html"
+    "bodyPath": "article-bodies/build-a-chess-engine-as-fast-as-possible.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "boating-license-achieved",
@@ -987,7 +1021,9 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/boating-license-achieved.html"
+    "bodyPath": "article-bodies/boating-license-achieved.html",
+    "topic": "aviation",
+    "noindex": true
   },
   {
     "slug": "navigating-the-skies-ai-and-autonomous-robotics",
@@ -1002,7 +1038,8 @@
     "youtubeId": "E4ljbSuGt6c",
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "x-62-vista-laureate-award-dinner",
@@ -1022,7 +1059,9 @@
         "href": "https://aviationweek.com/aerospace/manufacturing-supply-chain/aviation-week-presents-2024-grand-laureate-award-winners"
       }
     ],
-    "bodyPath": "article-bodies/x-62-vista-laureate-award-dinner.html"
+    "bodyPath": "article-bodies/x-62-vista-laureate-award-dinner.html",
+    "topic": "aviation",
+    "noindex": true
   },
   {
     "slug": "mqcf4tyegpkj1s9t9iinkllcox5nbh",
@@ -1042,7 +1081,8 @@
         "href": "https://www.edwards.af.mil/News/Article/3297083/dod-artificial-intelligence-agents-successfully-pilot-fighter-jet/"
       }
     ],
-    "bodyPath": "article-bodies/mqcf4tyegpkj1s9t9iinkllcox5nbh.html"
+    "bodyPath": "article-bodies/mqcf4tyegpkj1s9t9iinkllcox5nbh.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista",
@@ -1062,7 +1102,8 @@
         "href": "https://arc.aiaa.org/doi/10.2514/6.2023-1925"
       }
     ],
-    "bodyPath": "article-bodies/the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista.html"
+    "bodyPath": "article-bodies/the-aaax-vision-to-accelerate-autonomy-test-amp-evaluation-using-the-x-62a-vista.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "9mtr355z1hox6u0pqikr9p81bwv6ic",
@@ -1077,7 +1118,9 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/9mtr355z1hox6u0pqikr9p81bwv6ic.html"
+    "bodyPath": "article-bodies/9mtr355z1hox6u0pqikr9p81bwv6ic.html",
+    "topic": "aviation",
+    "noindex": true
   },
   {
     "slug": "blog-post-title-four-7psnr",
@@ -1092,13 +1135,14 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/blog-post-title-four-7psnr.html"
+    "bodyPath": "article-bodies/blog-post-title-four-7psnr.html",
+    "topic": "aviation"
   },
   {
     "slug": "blog-post-title-one-5lssd",
     "title": "Flew a Super Decathlon Today &mdash; Home",
     "date": "2022-05-17",
-    "summary": "It all begins with an idea.",
+    "summary": "Flew a Super Decathlon today: the first center-stick, tailwheel, and aerobatic airplane I have flown.",
     "imageUrl": "resources/6a0ae3ea54de81.jpg",
     "articleHeroUrl": "resources/e58c066ba859b6.jpg",
     "githubEmbed": null,
@@ -1107,7 +1151,9 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/blog-post-title-one-5lssd.html"
+    "bodyPath": "article-bodies/blog-post-title-one-5lssd.html",
+    "topic": "aviation",
+    "noindex": true
   },
   {
     "slug": "blog-post-title-three-a922t",
@@ -1122,7 +1168,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/blog-post-title-three-a922t.html"
+    "bodyPath": "article-bodies/blog-post-title-three-a922t.html",
+    "topic": "aviation"
   },
   {
     "slug": "blog-post-title-two-wwzbn",
@@ -1137,7 +1184,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/blog-post-title-two-wwzbn.html"
+    "bodyPath": "article-bodies/blog-post-title-two-wwzbn.html",
+    "topic": "aviation"
   },
   {
     "slug": "l07knayw7mg08n539osa9wrqujyh53",
@@ -1152,7 +1200,9 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/l07knayw7mg08n539osa9wrqujyh53.html"
+    "bodyPath": "article-bodies/l07knayw7mg08n539osa9wrqujyh53.html",
+    "topic": "aviation",
+    "noindex": true
   },
   {
     "slug": "iqi42ovhwvqv9optoofq9mf0123zp9",
@@ -1167,7 +1217,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/iqi42ovhwvqv9optoofq9mf0123zp9.html"
+    "bodyPath": "article-bodies/iqi42ovhwvqv9optoofq9mf0123zp9.html",
+    "topic": "aviation"
   },
   {
     "slug": "4th-solo",
@@ -1182,13 +1233,15 @@
     "youtubeId": "idmsdgX5hJQ",
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": null
+    "bodyPath": null,
+    "topic": "aviation",
+    "seoTitle": "4th Solo Flight in a Piper Archer II (PA-28-181)"
   },
   {
     "slug": "96qsfjpi933lw3gnvlghecaq0nhyz5",
     "title": "Second Solo &mdash; Home",
     "date": "2020-11-08",
-    "summary": "Starting The Engine",
+    "summary": "Videos from my second solo flight as a student pilot: starting the engine, making the radio call, and living the dream.",
     "imageUrl": "resources/4e79dbd665ddf1.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -1197,13 +1250,15 @@
     "youtubeId": "36TubFnxUHs",
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/96qsfjpi933lw3gnvlghecaq0nhyz5.html"
+    "bodyPath": "article-bodies/96qsfjpi933lw3gnvlghecaq0nhyz5.html",
+    "topic": "aviation",
+    "seoTitle": "Second Solo Flight as a Student Pilot"
   },
   {
     "slug": "first-solo",
     "title": "First Solo &mdash; Home",
     "date": "2020-11-08",
-    "summary": "First Solo Landing",
+    "summary": "Videos from my first solo flight as a student pilot: the first solo landing and the celebration afterward.",
     "imageUrl": "resources/9b909bd2a3aa73.png",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -1212,7 +1267,9 @@
     "youtubeId": "qV-ewRNT7jg",
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/first-solo.html"
+    "bodyPath": "article-bodies/first-solo.html",
+    "topic": "aviation",
+    "seoTitle": "First Solo Flight as a Student Pilot"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf",
@@ -1227,7 +1284,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8-3l4gf.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-induction",
@@ -1242,7 +1300,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-induction.html"
+    "bodyPath": "article-bodies/formal-methods-101-induction.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems",
@@ -1257,7 +1316,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3",
@@ -1272,7 +1332,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet",
@@ -1287,7 +1348,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b",
@@ -1302,7 +1364,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-cj35h",
@@ -1317,7 +1380,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-cj35h.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-cj35h.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r",
@@ -1332,7 +1396,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz",
@@ -1347,7 +1412,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m",
@@ -1362,7 +1428,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8",
@@ -1377,7 +1444,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8.html"
+    "bodyPath": "article-bodies/formal-methods-101-formal-systems-lgnl3-2fbet-xx62b-lb46r-ghkzz-58k7m-4phj8.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "action-schema-neural-networks-generalized-policies-for-stochastic-planning-problems-in-the-wargaming-domain",
@@ -1397,7 +1465,8 @@
         "href": "resources/e55c259979a696.pdf"
       }
     ],
-    "bodyPath": "article-bodies/action-schema-neural-networks-generalized-policies-for-stochastic-planning-problems-in-the-wargaming-domain.html"
+    "bodyPath": "article-bodies/action-schema-neural-networks-generalized-policies-for-stochastic-planning-problems-in-the-wargaming-domain.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "je6yciwoumw9cilktx9i9hz8qko3nx",
@@ -1417,7 +1486,8 @@
         "href": "resources/d68e191b7efe36.pdf"
       }
     ],
-    "bodyPath": "article-bodies/je6yciwoumw9cilktx9i9hz8qko3nx.html"
+    "bodyPath": "article-bodies/je6yciwoumw9cilktx9i9hz8qko3nx.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "analysis-of-n-queens-stochastic-algorithms-using-probabilistic-model-checking",
@@ -1437,7 +1507,8 @@
         "href": "resources/b518b62378d858.pdf"
       }
     ],
-    "bodyPath": "article-bodies/analysis-of-n-queens-stochastic-algorithms-using-probabilistic-model-checking.html"
+    "bodyPath": "article-bodies/analysis-of-n-queens-stochastic-algorithms-using-probabilistic-model-checking.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "particle-filter-speed-controller-for-a-closed-loop-vehicle-system",
@@ -1457,7 +1528,8 @@
         "href": "resources/dc044af5e4b9be.pdf"
       }
     ],
-    "bodyPath": "article-bodies/particle-filter-speed-controller-for-a-closed-loop-vehicle-system.html"
+    "bodyPath": "article-bodies/particle-filter-speed-controller-for-a-closed-loop-vehicle-system.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "xsia3u01xjmn0u8jo4hbm6wyqxtovv",
@@ -1477,7 +1549,8 @@
         "href": "resources/91f8dd54e4f41a.pdf"
       }
     ],
-    "bodyPath": "article-bodies/xsia3u01xjmn0u8jo4hbm6wyqxtovv.html"
+    "bodyPath": "article-bodies/xsia3u01xjmn0u8jo4hbm6wyqxtovv.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "convolutional-neural-networks",
@@ -1497,7 +1570,8 @@
         "href": "https://gist.github.com/ronpicard/ac44d6e16a8ac47593a416c8369f0ce5"
       }
     ],
-    "bodyPath": "article-bodies/convolutional-neural-networks.html"
+    "bodyPath": "article-bodies/convolutional-neural-networks.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "neural-networks-with-minibatch-stochastic-gradient-descent-and-adaptive-moments-adam",
@@ -1517,7 +1591,8 @@
         "href": "https://gist.github.com/ronpicard/5935a6477c06e408c605c1b8ceb78b68"
       }
     ],
-    "bodyPath": "article-bodies/neural-networks-with-minibatch-stochastic-gradient-descent-and-adaptive-moments-adam.html"
+    "bodyPath": "article-bodies/neural-networks-with-minibatch-stochastic-gradient-descent-and-adaptive-moments-adam.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "neural-networks-with-minibatch-stochastic-gradient-descent-and-momentum",
@@ -1537,7 +1612,8 @@
         "href": "https://gist.github.com/ronpicard/e739f6b5022e15e309368e86c773f14d"
       }
     ],
-    "bodyPath": "article-bodies/neural-networks-with-minibatch-stochastic-gradient-descent-and-momentum.html"
+    "bodyPath": "article-bodies/neural-networks-with-minibatch-stochastic-gradient-descent-and-momentum.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "2d-linear-regression-using-gradient-descent-implementation",
@@ -1557,7 +1633,8 @@
         "href": "https://gist.github.com/ronpicard/de067bb96629a75122dc9d12c2ad03af"
       }
     ],
-    "bodyPath": "article-bodies/2d-linear-regression-using-gradient-descent-implementation.html"
+    "bodyPath": "article-bodies/2d-linear-regression-using-gradient-descent-implementation.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "3d-linear-regression-using-gradient-descent-implementation",
@@ -1577,7 +1654,8 @@
         "href": "https://gist.github.com/ronpicard/40ebb20e2b0311ec04642441b2cf193e"
       }
     ],
-    "bodyPath": "article-bodies/3d-linear-regression-using-gradient-descent-implementation.html"
+    "bodyPath": "article-bodies/3d-linear-regression-using-gradient-descent-implementation.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "neural-networks-of-l-layers-n-neurons-with-dropout-and-l2-regularization",
@@ -1597,7 +1675,8 @@
         "href": "https://gist.github.com/ronpicard/0324d1bddb9f4325a53e13e42a1d5c2f"
       }
     ],
-    "bodyPath": "article-bodies/neural-networks-of-l-layers-n-neurons-with-dropout-and-l2-regularization.html"
+    "bodyPath": "article-bodies/neural-networks-of-l-layers-n-neurons-with-dropout-and-l2-regularization.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "neural-networks-with-single-neuron-implementation",
@@ -1617,7 +1696,8 @@
         "href": "https://gist.github.com/ronpicard/ecbbd196f032c1aba9463c2b2e2e7902"
       }
     ],
-    "bodyPath": "article-bodies/neural-networks-with-single-neuron-implementation.html"
+    "bodyPath": "article-bodies/neural-networks-with-single-neuron-implementation.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "linear-regression-using-gradient-decent",
@@ -1632,7 +1712,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/linear-regression-using-gradient-decent.html"
+    "bodyPath": "article-bodies/linear-regression-using-gradient-decent.html",
+    "topic": "ai-and-machine-learning"
   },
   {
     "slug": "build-a-home-vpn-with-openvpn-nzjy9",
@@ -1647,7 +1728,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/build-a-home-vpn-with-openvpn-nzjy9.html"
+    "bodyPath": "article-bodies/build-a-home-vpn-with-openvpn-nzjy9.html",
+    "topic": "software-and-tools"
   },
   {
     "slug": "build-your-own-ubuntu-linux-router",
@@ -1662,7 +1744,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/build-your-own-ubuntu-linux-router.html"
+    "bodyPath": "article-bodies/build-your-own-ubuntu-linux-router.html",
+    "topic": "software-and-tools"
   },
   {
     "slug": "build-a-wordpress-website-from-scratch",
@@ -1677,7 +1760,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/build-a-wordpress-website-from-scratch.html"
+    "bodyPath": "article-bodies/build-a-wordpress-website-from-scratch.html",
+    "topic": "software-and-tools"
   },
   {
     "slug": "aircraft-automated-collision-avoidance",
@@ -1697,7 +1781,8 @@
         "href": "resources/b03d107cb06876.pdf"
       }
     ],
-    "bodyPath": "article-bodies/aircraft-automated-collision-avoidance.html"
+    "bodyPath": "article-bodies/aircraft-automated-collision-avoidance.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "computer-vision-security-system",
@@ -1717,7 +1802,8 @@
         "href": "resources/a06374f2234703.pdf"
       }
     ],
-    "bodyPath": "article-bodies/computer-vision-security-system.html"
+    "bodyPath": "article-bodies/computer-vision-security-system.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "e-puck-robot-control-and-a-navigation",
@@ -1737,7 +1823,8 @@
         "href": "resources/c148d6467a131a.pdf"
       }
     ],
-    "bodyPath": "article-bodies/e-puck-robot-control-and-a-navigation.html"
+    "bodyPath": "article-bodies/e-puck-robot-control-and-a-navigation.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "webgme-colored-petri-net-design-studio",
@@ -1757,7 +1844,8 @@
         "href": "resources/294c29531067fd.pdf"
       }
     ],
-    "bodyPath": "article-bodies/webgme-colored-petri-net-design-studio.html"
+    "bodyPath": "article-bodies/webgme-colored-petri-net-design-studio.html",
+    "topic": "formal-methods-and-research"
   },
   {
     "slug": "webgme-railway-network-design-studio",
@@ -1772,6 +1860,8 @@
     "youtubeId": null,
     "otherEmbed": null,
     "extraLinks": [],
-    "bodyPath": "article-bodies/webgme-railway-network-design-studio.html"
+    "bodyPath": "article-bodies/webgme-railway-network-design-studio.html",
+    "topic": "formal-methods-and-research",
+    "noindex": true
   }
 ]

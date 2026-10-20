@@ -5,8 +5,10 @@
  * two from drifting apart.
  */
 import { escapeHtml, escapeHtmlAttr } from './htmlEscape.ts'
-import { articleJsonLd, homeJsonLd } from './jsonLd.ts'
+import { getArticleTopic, topicPath, type ArticleTopic } from './articleTopics.ts'
+import { articleJsonLd, homeJsonLd, topicJsonLd } from './jsonLd.ts'
 import { OG_HEIGHT, OG_WIDTH, postShareImage, RESOURCE_OG_DIR, resourceOgPath } from './resourceOgImages.ts'
+import { articlePath } from './siteArticlesRouting.ts'
 import {
   absoluteAssetUrl,
   canonicalUrl,
@@ -138,6 +140,11 @@ export type ArticleSeoSource = {
   articleHeroUrl?: string | null
   youtubeId?: string | null
   repoUrl?: string | null
+  /** Search-friendly title for the head tags; the page heading stays `title`. */
+  seoTitle?: string | null
+  /** Thin post: noindex, follow. */
+  noindex?: boolean
+  topic?: string | null
 }
 
 const LOCAL_SHARE_IMAGE_RE = /^resources\/(?:og\/)?[a-z0-9][a-z0-9._-]*\.(?:png|jpe?g|webp|gif|avif)$/i
@@ -171,15 +178,15 @@ export function articleSeoInput(
   article: ArticleSeoSource,
   image?: { rel: string | null; width?: number | null; height?: number | null },
 ): SeoHeadInput {
-  // Trailing slash matches the URL GitHub Pages 301s to, so scrapers skip a hop.
-  const path = `/blog/${article.slug}/`
+  const path = articlePath(article.slug)
   const shareImage = postShareImage(article)
   const imageRel = safeShareImage(image ? image.rel : (resourceOgPath(shareImage) ?? shareImage))
   const isCard = !image && !!imageRel?.startsWith(`${RESOURCE_OG_DIR}/`)
   const imageAbs = absoluteAssetUrl(imageRel) ?? null
   const description = articleDescription(article)
+  const topic = getArticleTopic(article.topic)
   return {
-    title: `${article.title} | Ron Picard`,
+    title: `${article.seoTitle || article.title} | Ron Picard`,
     description,
     url: canonicalUrl(path),
     ogType: 'article',
@@ -187,6 +194,7 @@ export function articleSeoInput(
     imageWidth: image?.width ?? (isCard ? OG_WIDTH : null),
     imageHeight: image?.height ?? (isCard ? OG_HEIGHT : null),
     imageAlt: article.title,
+    ...(article.noindex ? { robots: 'noindex, follow' } : {}),
     publishedDate: article.date,
     jsonLd: articleJsonLd({
       title: article.title,
@@ -196,6 +204,29 @@ export function articleSeoInput(
       imageAbs,
       youtubeId: article.youtubeId,
       repoUrl: article.repoUrl,
+      topic: topic ? { name: topic.label, path: topicPath(topic.slug) } : null,
+    }),
+  }
+}
+
+/** Head input for a topic hub; `items` are its posts in page order. */
+export function topicSeoInput(
+  topic: ArticleTopic,
+  items: { title: string; slug: string }[],
+): SeoHeadInput {
+  const path = topicPath(topic.slug)
+  return {
+    title: `${topic.label} | Ron Picard`,
+    description: truncateMetaDescription(topic.description),
+    url: canonicalUrl(path),
+    ogType: 'website',
+    imageAbs: absoluteAssetUrl(HOME_SEO_IMAGE) ?? null,
+    imageAlt: topic.label,
+    jsonLd: topicJsonLd({
+      name: topic.label,
+      description: topic.description,
+      path,
+      items: items.map((item) => ({ title: item.title, path: articlePath(item.slug) })),
     }),
   }
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { getArticle, type Article } from '../data/articles'
+import { articlePath } from '../../shared/siteArticlesRouting'
 
 type Props = {
   article: Article
@@ -23,7 +24,7 @@ export function ArticleNav({ article }: Props) {
     <nav className="article-nav" aria-label="Adjacent posts">
       <div className="article-nav__half">
         {prev ? (
-          <Link className="article-nav__link" to={`/blog/${prev.slug}`}>
+          <Link className="article-nav__link" to={articlePath(prev.slug)}>
             <span className="article-nav__dir">{prev.word}</span>
             <span className="article-nav__title">{prev.title}</span>
           </Link>
@@ -31,7 +32,7 @@ export function ArticleNav({ article }: Props) {
       </div>
       <div className="article-nav__half article-nav__half--end">
         {next ? (
-          <Link className="article-nav__link article-nav__link--end" to={`/blog/${next.slug}`}>
+          <Link className="article-nav__link article-nav__link--end" to={articlePath(next.slug)}>
             <span className="article-nav__dir">{next.word}</span>
             <span className="article-nav__title">{next.title}</span>
           </Link>

@@ -9,6 +9,7 @@ import {
 } from '../lib/articleDisplay'
 import { resolveAssetUrl, resolveThumbAssetUrl } from '../lib/assetUrl'
 import { GitHubIcon, LinkBrandIcon, YouTubeIcon } from './BrandIcons'
+import { articlePath } from '../../shared/siteArticlesRouting'
 import {
   safeArticleLinkHref,
   safeDemoUrl,
@@ -54,7 +55,7 @@ export function ProjectCard({ item, priority = false }: Props) {
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
   const releasesHref = safeGithubReleasesUrl(item.releasesUrl)
   const videoHref = item.videoUrl ? safeHttpUrl(item.videoUrl) : null
-  const to = `/blog/${item.slug}`
+  const to = articlePath(item.slug)
 
   return (
     <article className="project-card" data-project={item.slug}>

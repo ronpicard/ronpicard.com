@@ -8,7 +8,7 @@ import {
   type RouteObject,
 } from 'react-router-dom'
 import { AmbientParticles } from '../components/AmbientParticles'
-import { ArticlePage } from '../features/articles'
+import { ArticlePage, TopicPage } from '../features/articles'
 import HomePage from '../pages/HomePage'
 
 /** Router instance type shared by createBrowserRouter/createMemoryRouter. */
@@ -45,6 +45,7 @@ export const routes: RouteObject[] = [
     children: [
       { path: '/', element: <HomePage /> },
       { path: '/blog/:slug', element: <ArticlePage /> },
+      { path: '/topics/:topic', element: <TopicPage /> },
     ],
   },
 ]

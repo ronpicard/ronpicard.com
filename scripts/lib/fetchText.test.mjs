@@ -2,29 +2,21 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   fetchBytes,
   fetchText,
-  parseRonPicardBlogUrl,
   requireAllowedHttpsUrl,
 } from './fetchText.mjs'
 
 const ALLOWED_HOSTS = new Set(['www.ronpicard.com'])
 const validateUrl = (url) => requireAllowedHttpsUrl(url, ALLOWED_HOSTS)
 
-describe('parseRonPicardBlogUrl', () => {
-  it('requires an exact host and one valid blog slug', () => {
-    expect(parseRonPicardBlogUrl('https://www.ronpicard.com/blog/example').pathname).toBe(
-      '/blog/example',
+describe('requireAllowedHttpsUrl', () => {
+  it('accepts only HTTPS URLs on an exact allowed host, without credentials', () => {
+    expect(() => validateUrl(new URL('https://www.ronpicard.com/blog/example'))).not.toThrow()
+    expect(() => validateUrl(new URL('https://evil.example/?next=www.ronpicard.com'))).toThrow(
+      'host is not allowed',
     )
-    expect(() =>
-      parseRonPicardBlogUrl('https://evil.example/?next=ronpicard.com/blog/example'),
-    ).toThrow('host is not allowed')
-    expect(() => parseRonPicardBlogUrl('http://www.ronpicard.com/blog/example')).toThrow(
-      'Only HTTPS',
-    )
-    expect(() => parseRonPicardBlogUrl('https://user@www.ronpicard.com/blog/example')).toThrow(
+    expect(() => validateUrl(new URL('http://www.ronpicard.com/blog/example'))).toThrow('Only HTTPS')
+    expect(() => validateUrl(new URL('https://user@www.ronpicard.com/blog/example'))).toThrow(
       'credentials',
-    )
-    expect(() => parseRonPicardBlogUrl('https://www.ronpicard.com/blog/../private')).toThrow(
-      'one blog slug',
     )
   })
 })

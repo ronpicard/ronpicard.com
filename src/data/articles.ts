@@ -1,3 +1,9 @@
+import {
+  deriveArticleKind,
+  resolveArticleTopic,
+  type ArticleKind,
+  type ArticleTopicSlug,
+} from '../../shared/articleTopics'
 import { githubRepoPairKey } from '../../shared/githubRepo'
 import { normalizeHrefKey } from '../../shared/hrefKey'
 import {
@@ -23,19 +29,6 @@ type SiteArticleRow = Omit<
   releasesUrl: string | null
 }
 
-function deriveKind(
-  row: Pick<SiteArticleRow, 'slug' | 'title' | 'githubEmbed' | 'releasesUrl' | 'bodyPath'>,
-): ArticleKind {
-  if (row.githubEmbed) return 'app'
-  // A written article about released software stays an article.
-  if (row.releasesUrl && !row.bodyPath) return 'software'
-  // Some lessons keep Squarespace storage slugs, so the title decides too.
-  if (/software-lessons-session/i.test(row.slug) || /^Software Lessons Session\b/i.test(row.title)) {
-    return 'lesson'
-  }
-  return 'post'
-}
-
 const normalizedRows: SiteArticleRow[] = parseSiteArticleRows(siteArticlesData).map(
   ({ bodyHtml: _bodyHtml, ...row }) => ({
     ...row,
@@ -56,14 +49,14 @@ const indexed: IndexedArticle[] = normalizedRows.map((row, sourceIndex) => ({
 
 const sorted = sortIndexedArticles(indexed)
 
-/** `app` = embedded web app; `software` = downloadable app shipped as GitHub releases, without a written article. */
-export type ArticleKind = 'app' | 'software' | 'lesson' | 'post'
+export type { ArticleKind }
 
 /** `slug` is the public URL segment (from title). `sourceSlug` is the id from `siteArticles.json`. */
-export type Article = Omit<SiteArticleRow, 'slug'> & {
+export type Article = Omit<SiteArticleRow, 'slug' | 'topic'> & {
   slug: string
   sourceSlug: string
   kind: ArticleKind
+  topic: ArticleTopicSlug | null
   prevSlug: string | null
   nextSlug: string | null
 }
@@ -73,11 +66,13 @@ const { routeSlugs, legacyRouteSlugs } = buildArticleRouteSlugs(sorted, { titles
 export const articles: Article[] = sorted.map((row, i) => {
   const { slug: sourceSlug, ...rest } = row
   const slug = routeSlugs[i]!
+  const kind = deriveArticleKind(row)
   return {
     ...rest,
     sourceSlug,
     slug,
-    kind: deriveKind(row),
+    kind,
+    topic: resolveArticleTopic(row, kind),
     prevSlug: i > 0 ? routeSlugs[i - 1]! : null,
     nextSlug: i < sorted.length - 1 ? routeSlugs[i + 1]! : null,
   }
@@ -103,6 +98,27 @@ for (let i = 0; i < articles.length; i++) {
 
 export function getArticle(slug: string): Article | undefined {
   return bySlug.get(slug)
+}
+
+/** Posts in a topic, in site order (newest first). */
+export function getArticlesByTopic(topic: string): Article[] {
+  return articles.filter((a) => a.topic === topic)
+}
+
+/**
+ * Up to `limit` other posts from the same topic, nearest in site order first
+ * (ties go to the newer post), so each post links to its closest neighbors.
+ */
+export function getRelatedArticles(article: Article, limit = 3): Article[] {
+  if (!article.topic) return []
+  const peers = getArticlesByTopic(article.topic)
+  const at = peers.findIndex((a) => a.slug === article.slug)
+  return peers
+    .map((a, i) => ({ a, distance: Math.abs(i - at) }))
+    .filter(({ a }) => a.slug !== article.slug)
+    .sort((x, y) => x.distance - y.distance)
+    .slice(0, limit)
+    .map(({ a }) => a)
 }
 
 export function showDemoButton(a: Article): boolean {
@@ -209,12 +225,13 @@ export function articleExtraLinks(a: Article): ArticleExtraLink[] {
     })
 }
 
-export function getArticleTitleList() {
-  return articles.map((a) => ({
+export function getArticleTitleList(list: Article[] = articles) {
+  return list.map((a) => ({
     slug: a.slug,
     title: a.title,
     date: a.date,
     kind: a.kind,
+    topic: a.topic,
     summary: a.summary ? truncateMetaDescription(stripTagsForMeta(a.summary), 160) : null,
     imageUrl: a.imageUrl,
     showDemo: showDemoButton(a),

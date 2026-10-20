@@ -198,3 +198,11 @@ describe('ProjectCard indexable text', () => {
     expect(container.querySelector('img')?.getAttribute('alt')).toBe('Flight Simulator')
   })
 })
+
+describe('ProjectCard link', () => {
+  it('points the overlay link at the trailing-slash post URL', () => {
+    renderCard({ item: item({ slug: 'demo' }) })
+    const link = container.querySelector('.project-card__overlay-link')
+    expect(link?.getAttribute('href')).toBe('/blog/demo/')
+  })
+})

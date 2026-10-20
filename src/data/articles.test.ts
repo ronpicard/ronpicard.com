@@ -4,6 +4,8 @@ import {
   filterExtraLinks,
   articleExtraLinks,
   getArticle,
+  getArticlesByTopic,
+  getRelatedArticles,
   getArticleTitleList,
   isThirdPartyArticleLink,
   showCodeButton,
@@ -32,6 +34,7 @@ function stubArticle(overrides: Partial<Article>): Article {
     sourceSlug: 'stub',
     slug: 'stub',
     kind: 'post',
+    topic: null,
     prevSlug: null,
     nextSlug: null,
     ...overrides,
@@ -275,8 +278,8 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
       const slug = articles.find((a) => a.sourceSlug === sourceSlug)?.slug
       const card = list.find((item) => item.slug === slug)
       expect(card?.extraLinks.map((l) => l.label)).toEqual([
-        'VS Code Marketplace',
         'Open VSX Registry',
+        'VS Code Marketplace',
         'Wyvern Systems',
       ])
     }
@@ -306,6 +309,52 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
       expect(s).not.toMatch(/<[^>]+>/)
       expect(s).not.toContain('&amp;')
       expect(s.length).toBeLessThanOrEqual(160)
+    }
+  })
+})
+
+describe('topics', () => {
+  it('assigns every article a topic', () => {
+    for (const a of articles) expect(a.topic).not.toBeNull()
+  })
+
+  it('lists only posts of the requested topic', () => {
+    const list = getArticlesByTopic('aviation')
+    expect(list.length).toBeGreaterThan(0)
+    for (const a of list) expect(a.topic).toBe('aviation')
+  })
+
+  it('returns the three nearest same-topic posts, never the post itself', () => {
+    const lesson = articles.find((a) => a.kind === 'lesson')!
+    const related = getRelatedArticles(lesson)
+    expect(related).toHaveLength(3)
+    for (const a of related) {
+      expect(a.topic).toBe(lesson.topic)
+      expect(a.slug).not.toBe(lesson.slug)
+    }
+  })
+
+  it('puts the immediate topic neighbours first', () => {
+    const peers = getArticlesByTopic(articles.find((a) => a.kind === 'lesson')!.topic!)
+    const mid = peers[Math.floor(peers.length / 2)]!
+    const i = peers.indexOf(mid)
+    const related = getRelatedArticles(mid)
+    expect(new Set(related.slice(0, 2).map((a) => a.slug))).toEqual(
+      new Set([peers[i - 1]!.slug, peers[i + 1]!.slug]),
+    )
+  })
+
+  it('returns nothing for a post without a topic', () => {
+    expect(getRelatedArticles(stubArticle({ topic: null }))).toEqual([])
+  })
+
+  it('links the extension posts to their repositories', () => {
+    const repos: Record<string, string> = {
+      'ai-rulebook-vscode-extension': 'https://github.com/wyvernsystems/ai-rulebook',
+      'auto-color-vscode-extension': 'https://github.com/wyvernsystems/auto-color',
+    }
+    for (const [sourceSlug, repoUrl] of Object.entries(repos)) {
+      expect(articles.find((a) => a.sourceSlug === sourceSlug)?.repoUrl).toBe(repoUrl)
     }
   })
 })

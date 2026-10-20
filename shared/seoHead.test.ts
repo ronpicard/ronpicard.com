@@ -6,10 +6,12 @@ import {
   homeSeoInput,
   notFoundSeoInput,
   safeShareImage,
+  topicSeoInput,
   serializeHeadTag,
   serializeJsonLd,
   type HeadTag,
 } from './seoHead'
+import { getArticleTopic } from './articleTopics'
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE } from './siteMeta'
 
 const article = {
@@ -50,6 +52,69 @@ describe('article SEO input', () => {
   it('falls back to a site-level description when a post has no summary', () => {
     expect(articleDescription({ title: 'Untitled', summary: null })).toMatch(/^Untitled\. Interactive/)
     expect(articleDescription({ title: 'Untitled', summary: null }).length).toBeLessThanOrEqual(158)
+  })
+})
+
+type GraphNode = Record<string, any>
+const graph = (input: { jsonLd?: object | null }) => (input.jsonLd as { '@graph': GraphNode[] })['@graph']
+const crumbs = (input: { jsonLd?: object | null }) =>
+  graph(input).find((n) => n['@type'] === 'BreadcrumbList')!.itemListElement as GraphNode[]
+
+describe('article SEO input: search title, noindex, topic', () => {
+  it('uses seoTitle for the head while image alt and headline keep the article title', () => {
+    const input = articleSeoInput({ ...article, seoTitle: 'Search Title' })
+    expect(input.title).toBe('Search Title | Ron Picard')
+    expect(input.imageAlt).toBe(article.title)
+    expect(graph(input).find((n) => n['@type'] === 'BlogPosting')!.headline).toBe(article.title)
+  })
+
+  it('falls back to the article title without seoTitle', () => {
+    expect(articleSeoInput(article).title).toBe(`${article.title} | Ron Picard`)
+  })
+
+  it('marks thin posts noindex, follow and defaults to index, follow', () => {
+    const thin = articleSeoInput({ ...article, noindex: true })
+    expect(thin.robots).toBe('noindex, follow')
+    expect(metaContent(buildSeoHeadTags(thin), 'robots')).toBe('noindex, follow')
+    const normal = articleSeoInput(article)
+    expect(normal.robots).toBeUndefined()
+    expect(metaContent(buildSeoHeadTags(normal), 'robots')).toBe('index, follow')
+  })
+
+  it('adds the topic hub as the middle breadcrumb only when the post has a topic', () => {
+    const withTopic = crumbs(articleSeoInput({ ...article, topic: 'aviation' }))
+    expect(withTopic).toHaveLength(3)
+    expect(withTopic[0].name).toBe('Home')
+    expect(withTopic[1]).toMatchObject({
+      name: 'Aviation & Hobbies',
+      item: 'https://ronpicard.com/topics/aviation/',
+    })
+    expect(withTopic[2].name).toBe(article.title)
+    expect(crumbs(articleSeoInput(article))).toHaveLength(2)
+  })
+
+  it('uses the trailing-slash blog URL', () => {
+    expect(articleSeoInput(article).url).toBe('https://ronpicard.com/blog/example-post/')
+  })
+})
+
+describe('topic SEO input', () => {
+  it('builds a website-type hub with a CollectionPage listing absolute post URLs', () => {
+    const topic = getArticleTopic('aviation')!
+    const input = topicSeoInput(topic, [
+      { title: 'A', slug: 'a' },
+      { title: 'B', slug: 'b' },
+    ])
+    expect(input.title).toBe('Aviation & Hobbies | Ron Picard')
+    expect(input.url).toBe('https://ronpicard.com/topics/aviation/')
+    expect(input.ogType).toBe('website')
+    expect(input.description).toBe(topic.description)
+    const page = graph(input)[0]
+    expect(page['@type']).toBe('CollectionPage')
+    expect(page.mainEntity.itemListElement).toMatchObject([
+      { position: 1, url: 'https://ronpicard.com/blog/a/' },
+      { position: 2, url: 'https://ronpicard.com/blog/b/' },
+    ])
   })
 })
 
