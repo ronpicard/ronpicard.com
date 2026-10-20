@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- New logo: a rounded "rp" monogram now sits before the name in the header and is the browser-tab icon, and the name is set in the rounder Outfit typeface to match it. On page load the name types out letter by letter behind a mint block cursor, which then keeps blinking.
 - Links between pages now go straight to each post's final address (ending in `/`) instead of passing through a redirect first.
 - Browser tabs and search results now show more descriptive titles for the web apps, games, and some flying posts, such as "Flight Simulator: Fly a Cessna 172 in Your Browser", and the home page's title now names its topics. The headings on the pages are unchanged.
 - The Stockfish Chatbot, AI Chess Web App V2, Super Decathlon, First Solo, and Second Solo posts have real summaries on their cards and in search results instead of a date or a placeholder line.

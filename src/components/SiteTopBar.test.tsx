@@ -3,7 +3,7 @@
 import { act } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
 import { MemoryRouter } from 'react-router-dom'
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { SOCIAL } from '../config/site'
 import { SiteTopBar } from './SiteTopBar'
 
@@ -31,6 +31,40 @@ afterEach(() => {
 })
 
 describe('SiteTopBar', () => {
+  it('shows the rp monogram before the name in the home link', () => {
+    const brand = container.querySelector<HTMLAnchorElement>('a.site-top-bar__brand')
+    expect(brand?.getAttribute('href')).toBe('/')
+    expect(brand?.textContent).toBe('Ron Picard')
+    expect(brand?.getAttribute('aria-label')).toBe('Ron Picard')
+    const mark = brand?.firstElementChild
+    expect(mark?.tagName.toLowerCase()).toBe('svg')
+    expect(mark?.getAttribute('aria-hidden')).toBe('true')
+  })
+
+  it('types the name out on the first mount only', async () => {
+    vi.resetModules()
+    const { SiteTopBar: FreshTopBar } = await import('./SiteTopBar')
+    const host = document.createElement('div')
+    const freshRoot = createRoot(host)
+    const mount = () =>
+      act(() => {
+        freshRoot.render(
+          <MemoryRouter>
+            <FreshTopBar key={Math.random()} />
+          </MemoryRouter>,
+        )
+      })
+    const brandClass = () => host.querySelector('a.site-top-bar__brand')?.className
+
+    mount()
+    expect(brandClass()).toContain('site-top-bar__brand--typing')
+    expect(host.querySelectorAll('.site-top-bar__char')).toHaveLength('Ron Picard'.length)
+
+    mount()
+    expect(brandClass()).not.toContain('site-top-bar__brand--typing')
+    act(() => freshRoot.unmount())
+  })
+
   it.each([
     ['LinkedIn', SOCIAL.linkedin],
     ['GitHub', SOCIAL.github],
