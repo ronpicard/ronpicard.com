@@ -480,7 +480,8 @@ body {
     filter 0.2s ease;
 }
 
-.site-top-bar__wyvern {
+.site-top-bar__wyvern,
+.site-top-bar__botlegger {
   width: 32px;
   height: 32px;
   object-fit: contain;
@@ -1706,7 +1707,8 @@ body {
     height: 28px;
   }
 
-  .site-top-bar__wyvern {
+  .site-top-bar__wyvern,
+  .site-top-bar__botlegger {
     width: 30px;
     height: 30px;
   }
@@ -1846,6 +1848,17 @@ body {
     overflow-wrap: anywhere;
     word-break: break-word;
     font-size: 0.9rem;
+  }
+}
+
+/* Narrow phones: five header icons plus the brand only fit with slimmer tap boxes and no gaps. */
+@media (max-width: 26.25rem) {
+  .site-top-bar__social {
+    gap: 0;
+  }
+
+  .site-top-bar__icon {
+    width: 34px;
   }
 }
 

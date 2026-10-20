@@ -62,6 +62,12 @@ describe('prerender main', () => {
         .toBuffer(),
     )
     await writeFile(
+      path.join(distDir, 'og-image.png'),
+      await sharp({ create: { width: 12, height: 6, channels: 3, background: '#000' } })
+        .png()
+        .toBuffer(),
+    )
+    await writeFile(
       articlesPath,
       JSON.stringify([
         {
@@ -115,6 +121,9 @@ describe('prerender main', () => {
     expect(homeHtml).toContain(`<title>${escapeHtml(DEFAULT_TITLE)}</title>`)
     expect(homeHtml).toContain('property="og:type" content="website"')
     expect(homeHtml).toContain('"@type":"WebSite"')
+    expect(homeHtml).toContain('property="og:image" content="https://ronpicard.com/og-image.png"')
+    expect(homeHtml).toContain('property="og:image:width" content="12"')
+    expect(homeHtml).toContain('property="og:image:height" content="6"')
 
     expect(routeHtml).toContain('<title>Example Post | Ron Picard</title>')
     expect(routeHtml).toContain('property="og:type" content="article"')

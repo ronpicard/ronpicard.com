@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- A BotLegger icon in the header, after Wyvern Systems, links to botlegger.com.
+- Links to the home and topic pages now preview with a branded card showing the rp logo, name, and tagline, and iPhones and iPads use the rp logo when the site is saved to the home screen.
 - Six topic pages group the posts: Web Apps & Games; Software, Tools & Tutorials; Software Engineering Lessons; AI, Machine Learning & Autonomy; Formal Methods & Research; and Aviation & Hobbies. Each has its own address (such as `/topics/aviation/`), a short introduction, and the cards for every post in it. The home page links to all six below its introduction.
 - Every article shows its topic beside its date, linking to that topic page, and ends with a More in … list of up to three nearby posts from the same topic.
 

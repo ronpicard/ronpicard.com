@@ -69,6 +69,7 @@ describe('SiteTopBar', () => {
     ['LinkedIn', SOCIAL.linkedin],
     ['GitHub', SOCIAL.github],
     ['Wyvern Systems', SOCIAL.wyvern],
+    ['BotLegger', SOCIAL.botlegger],
   ])('links the %s icon to its site in a new, isolated tab', (label, href) => {
     const link = container.querySelector<HTMLAnchorElement>(`a[aria-label="${label}"]`)
     expect(link).not.toBeNull()
@@ -86,6 +87,14 @@ describe('SiteTopBar', () => {
     expect(logo?.getAttribute('alt')).toBe('')
   })
 
+  it('draws the BotLegger icon from its robot mark image', () => {
+    const logo = container.querySelector<HTMLImageElement>(
+      'a[aria-label="BotLegger"] img.site-top-bar__botlegger',
+    )
+    expect(logo?.getAttribute('src')).toMatch(/\/botlegger-logo\.png$/)
+    expect(logo?.getAttribute('alt')).toBe('')
+  })
+
   it('draws LinkedIn in its brand blue with a white "in"', () => {
     const icon = container.querySelector('a[aria-label="LinkedIn"] svg')
     expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#0a66c2')
@@ -97,10 +106,10 @@ describe('SiteTopBar', () => {
     expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#fff')
   })
 
-  it('shows the icons after the search control, with Wyvern Systems last', () => {
+  it('shows the icons after the search control, with Wyvern Systems then BotLegger last', () => {
     const labels = Array.from(
       container.querySelectorAll('.site-top-bar__social > *'),
     ).map((el) => el.getAttribute('aria-label'))
-    expect(labels.slice(-3)).toEqual(['LinkedIn', 'GitHub', 'Wyvern Systems'])
+    expect(labels.slice(-4)).toEqual(['LinkedIn', 'GitHub', 'Wyvern Systems', 'BotLegger'])
   })
 })

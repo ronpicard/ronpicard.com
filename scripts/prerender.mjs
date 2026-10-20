@@ -90,7 +90,7 @@ async function writeOut(distDir, relPath, html) {
  */
 async function localImageDims(distDir, imageRel) {
   const rel = String(imageRel || '').replace(/^\/+/, '')
-  if (!/^resources\/(?:og\/)?[a-z0-9][a-z0-9._-]*$/i.test(rel)) return null
+  if (!/^(?:resources\/(?:og\/)?[a-z0-9][a-z0-9._-]*|og-image\.png)$/i.test(rel)) return null
   try {
     const { default: sharp } = await import('sharp')
     const meta = await sharp(path.join(distDir, rel)).metadata()

@@ -105,6 +105,20 @@ export function WyvernIcon({ size = 22, className }: IconProps) {
   )
 }
 
+/** BotLegger's robot-head mark, shipped as a transparent PNG. */
+export function BotleggerIcon({ size = 22, className }: IconProps) {
+  return (
+    <img
+      className={className}
+      src={`${getViteBasePath()}/botlegger-logo.png`}
+      alt=""
+      width={size}
+      height={size}
+      decoding="async"
+    />
+  )
+}
+
 /** Generic PDF file mark: white "PDF" on a red page with a folded corner. */
 export function PdfIcon({ size = 22, className }: IconProps) {
   return (

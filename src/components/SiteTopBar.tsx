@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { SOCIAL } from '../config/site'
-import { GitHubIcon, LinkedInIcon, WyvernIcon } from './BrandIcons'
+import { BotleggerIcon, GitHubIcon, LinkedInIcon, WyvernIcon } from './BrandIcons'
 import { SiteSearch } from './SiteSearch'
 
 /** The rp monogram: a lowercase r whose arm runs into the p's stem and bowl. */
@@ -82,6 +82,15 @@ export function SiteTopBar() {
           aria-label="Wyvern Systems"
         >
           <WyvernIcon className="site-top-bar__logo site-top-bar__wyvern" size={28} />
+        </a>
+        <a
+          className="site-top-bar__icon"
+          href={SOCIAL.botlegger}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="BotLegger"
+        >
+          <BotleggerIcon className="site-top-bar__logo site-top-bar__botlegger" size={28} />
         </a>
       </nav>
     </div>

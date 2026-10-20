@@ -112,8 +112,8 @@ export function serializeHeadTag(tag: HeadTag): string {
   }
 }
 
-/** The home page's share image (also used by one post). */
-export const HOME_SEO_IMAGE = 'resources/82f3c8eae802c3.jpg'
+/** The home and topic pages' share card: the rp logo, name, and tagline at 1200×630. */
+export const HOME_SEO_IMAGE = 'og-image.png'
 
 export function homeSeoInput(dims?: { width: number; height: number } | null): SeoHeadInput {
   return {

@@ -8,6 +8,7 @@ export const SOCIAL = {
   linkedin: 'https://www.linkedin.com/in/ron-picard-8b7b3059',
   github: 'https://github.com/ronpicard',
   wyvern: 'https://wyvernsystems.com/',
+  botlegger: 'https://botlegger.com/',
 } as const
 
 export const DEFAULT_TITLE = `${SITE_NAME} — AI, Software & Aviation Projects and Coding Lessons`
