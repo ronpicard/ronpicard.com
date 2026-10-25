@@ -145,6 +145,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Security
 
+- The HTML cleaner for embedded GitHub READMEs (DOMPurify) is updated to 3.4.17 for a critical advisory.
 - Content-Security-Policy no longer allows Google Fonts hosts; fonts and stylesheets load only from the site's own origin.
 - Stricter validation for outbound links, embeds, GitHub raw README URLs, and public blog slugs (`src/lib/safeUrls.ts`, `src/config/security.ts`).
 - Article and README HTML sanitized with DOMPurify rules in `shared/articleHtmlSanitize.ts`; external links hardened with `rel="noopener noreferrer"`.
