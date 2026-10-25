@@ -95,15 +95,16 @@ describe('SiteTopBar', () => {
     expect(logo?.getAttribute('alt')).toBe('')
   })
 
-  it('draws LinkedIn in its brand blue with a white "in"', () => {
-    const icon = container.querySelector('a[aria-label="LinkedIn"] svg')
-    expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#0a66c2')
-    expect(icon?.querySelector('rect')?.getAttribute('fill')).toBe('#fff')
+  it("shows LinkedIn's own white [in] bug, unaltered", () => {
+    const icon = container.querySelector('a[aria-label="LinkedIn"] img')
+    expect(icon?.getAttribute('src')).toMatch(/\/social\/linkedin-in-bug-white\.png$/)
+    expect(icon?.getAttribute('alt')).toBe('')
   })
 
-  it('draws GitHub as its standard white mark', () => {
-    const icon = container.querySelector('a[aria-label="GitHub"] svg')
-    expect(icon?.querySelector('path')?.getAttribute('fill')).toBe('#fff')
+  it("shows GitHub's own white Invertocat, unaltered", () => {
+    const icon = container.querySelector('a[aria-label="GitHub"] img')
+    expect(icon?.getAttribute('src')).toMatch(/\/social\/github-invertocat-white\.svg$/)
+    expect(icon?.getAttribute('alt')).toBe('')
   })
 
   it('shows the icons after the search control, with Wyvern Systems then BotLegger last', () => {

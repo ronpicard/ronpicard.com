@@ -159,9 +159,9 @@ describe('ProjectCard actions', () => {
     const fills = (el: Element | null) =>
       Array.from(el?.querySelectorAll('path') ?? []).map((p) => p.getAttribute('fill'))
 
-    expect(fills(logoFor('Demo'))).toEqual(['#fff'])
-    expect(fills(logoFor('Code'))).toEqual(['#fff'])
-    expect(fills(logoFor('Releases'))).toEqual(['#fff'])
+    for (const name of ['Demo', 'Code', 'Releases']) {
+      expect(logoFor(name)?.getAttribute('src')).toMatch(/\/social\/github-invertocat-white\.svg$/)
+    }
     expect(fills(logoFor('VS Code Marketplace'))).toContain('#007ACC')
     expect(fills(logoFor('Open VSX Registry'))).toEqual(['#c160ef', '#a60ee5'])
     expect(logoFor('Wyvern Systems')?.getAttribute('src')).toMatch(/\/wyvern-systems-logo\.png$/)

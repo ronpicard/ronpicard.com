@@ -475,6 +475,7 @@ body {
   display: block;
   width: 30px;
   height: 30px;
+  object-fit: contain;
   transition:
     transform 0.2s ease,
     filter 0.2s ease;
@@ -499,6 +500,10 @@ body {
 .site-top-bar__icon:hover svg,
 .site-top-bar__icon:hover .site-top-bar__logo {
   transform: translateY(-1px);
+}
+
+/* GitHub and LinkedIn forbid effects on their marks, so only the site's own logos glow. */
+.site-top-bar__icon:hover .site-top-bar__logo:not(.brand-logo) {
   filter: brightness(1.15) drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
 }
 
