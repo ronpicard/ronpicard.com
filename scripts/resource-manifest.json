@@ -666,5 +666,17 @@
   "local://flight-simulator-og-2026-10-03.jpg": {
     "path": "resources/flight-simulator-og-2026-10-03.jpg",
     "bytes": 198527
+  },
+  "local://instrument-tuner-2026-11-07.jpg": {
+    "path": "resources/instrument-tuner-2026-11-07.jpg",
+    "bytes": 32784
+  },
+  "local://frequency-player-2026-11-07.jpg": {
+    "path": "resources/frequency-player-2026-11-07.jpg",
+    "bytes": 56749
+  },
+  "local://pitch-tracker-2026-11-07.jpg": {
+    "path": "resources/pitch-tracker-2026-11-07.jpg",
+    "bytes": 67305
   }
 }
