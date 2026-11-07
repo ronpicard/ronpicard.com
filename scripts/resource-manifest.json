@@ -669,14 +669,14 @@
   },
   "local://instrument-tuner-2026-11-07.jpg": {
     "path": "resources/instrument-tuner-2026-11-07.jpg",
-    "bytes": 32784
+    "bytes": 63857
   },
   "local://frequency-player-2026-11-07.jpg": {
     "path": "resources/frequency-player-2026-11-07.jpg",
-    "bytes": 56749
+    "bytes": 76376
   },
   "local://pitch-tracker-2026-11-07.jpg": {
     "path": "resources/pitch-tracker-2026-11-07.jpg",
-    "bytes": 67305
+    "bytes": 63989
   }
 }

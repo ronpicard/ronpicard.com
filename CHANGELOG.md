@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Instrument Tuner, Frequency Player, and Pitch Tracker show their new desktop layouts in their blog thumbnails and link previews, captured November 7, 2026.
 - The LinkedIn and GitHub icons are now each company's own white logo files, unaltered, and they no longer glow on hover.
 - New logo: a rounded "rp" monogram now sits before the name in the header and is the browser-tab icon, and the name is set in the rounder Outfit typeface to match it. On page load the name types out letter by letter behind a mint block cursor, which then keeps blinking.
 - Links between pages now go straight to each post's final address (ending in `/`) instead of passing through a redirect first.
