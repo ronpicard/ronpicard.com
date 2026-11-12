@@ -1,9 +1,9 @@
 [
   {
     "slug": "botlegger",
-    "title": "BotLegger: Your Own Team of AI Bots &mdash; Home",
+    "title": "BotLegger™: Your Own Team of AI Bots &mdash; Home",
     "date": "2026-11-12",
-    "summary": "BotLegger is a free desktop app from Wyvern Systems for running your own team of AI bots that chat, research, write, and use your apps, with any AI model and your data kept on your own devices. Version 0.7.0 is a Mac beta.",
+    "summary": "BotLegger™ is a free desktop app from Wyvern Systems for running your own team of AI bots that chat, research, write, and use your apps, with any AI model and your data kept on your own devices. Version 0.7.0 is a Mac beta.",
     "imageUrl": "resources/botlegger-tour-2026-11-12.webp",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -26,13 +26,14 @@
     "releasesUrl": "https://github.com/wyvernsystems/botlegger-releases/releases/latest",
     "bodyPath": "article-bodies/botlegger.html",
     "topic": "ai-and-machine-learning",
-    "seoTitle": "BotLegger: A Free App for Your Own Team of AI Bots",
+    "seoTitle": "BotLegger™: A Free App for Your Own Team of AI Bots",
     "video": {
       "src": "https://botlegger.com/video/hero_dark.mp4",
       "poster": "resources/botlegger-tour-2026-11-12.webp",
       "label": "A tour of BotLegger: a team of bots working together, a bot browsing the web with permission, an email waiting for approval, scheduled tasks, teaching a task, plugins, a cloud computer, and adding an API key."
     },
-    "pinned": true
+    "pinned": true,
+    "pinnedTitle": "Download BotLegger™: free AI agents that work for you 24/7"
   },
   {
     "slug": "pitch-tracker",

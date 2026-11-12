@@ -54,7 +54,9 @@ test.describe('home', () => {
 
   test('links home, topic hubs, and related posts with trailing-slash URLs', async ({ page }) => {
     await page.goto('/')
-    await page.getByRole('navigation', { name: 'Topics' }).getByRole('link', { name: /Aviation & Hobbies/ }).click()
+    await expect(page.getByRole('navigation', { name: 'Topics' })).toHaveCount(0)
+    await page.locator('.project-card').filter({ hasText: 'Officially a Private Pilot!' }).locator('.project-card__overlay-link').click()
+    await page.locator('.article-header__topic').click()
     await expect(page).toHaveURL(/\/topics\/aviation\/$/)
     await expect(page.getByRole('heading', { level: 1, name: 'Aviation & Hobbies' })).toBeVisible()
     await expect(page).toHaveTitle('Aviation & Hobbies | Ron Picard')
@@ -111,8 +113,11 @@ test.describe('home', () => {
 
   test('leads the BotLegger post with its site link and shows the tour video', async ({ page }) => {
     await page.goto('/')
-    const card = page.locator('.project-card').filter({ hasText: 'BotLegger: Your Own Team of AI Bots' })
+    const card = page.locator('.project-card').filter({ hasText: 'BotLegger™: Your Own Team of AI Bots' })
     await expect(page.locator('.project-list__item').first()).toHaveClass(/project-list__item--pinned/)
+    await expect(page.locator('.pinned-feature__title')).toHaveText('Download BotLegger™: free AI agents that work for you 24/7')
+    const box = await card.boundingBox()
+    if (box && (page.viewportSize()?.width ?? 0) >= 960) expect(box.width / box.height).toBeCloseTo(16 / 9, 1)
     await expect(card).toHaveClass(/project-card--featured/)
     await expect(card.locator('.project-card__actions a').first()).toHaveText('BotLegger')
     await card.locator('.project-card__overlay-link').click()

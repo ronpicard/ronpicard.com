@@ -37,6 +37,8 @@ export type ProjectListItem = {
   extraLinks: ArticleExtraLink[]
   /** Featured on the home page as a large card. */
   pinned?: boolean
+  /** Headline above a pinned card. */
+  pinnedTitle?: string | null
 }
 
 function renderExtraLink(link: ArticleExtraLink) {

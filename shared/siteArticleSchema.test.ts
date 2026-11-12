@@ -74,6 +74,14 @@ describe('parseSiteArticleRows', () => {
     expect(() => parseSiteArticleRows([{ ...validRow(), pinned: 'yes' }])).toThrow('site article data[0].pinned')
   })
 
+  it('keeps a trimmed pinnedTitle and rejects blank or overlong ones', () => {
+    expect(parseSiteArticleRows([{ ...validRow(), pinnedTitle: '  Download X  ' }])[0]?.pinnedTitle).toBe('Download X')
+    expect(parseSiteArticleRows([validRow()])[0]).not.toHaveProperty('pinnedTitle')
+    for (const pinnedTitle of ['   ', 'x'.repeat(121), 42]) {
+      expect(() => parseSiteArticleRows([{ ...validRow(), pinnedTitle }])).toThrow('site article data[0].pinnedTitle')
+    }
+  })
+
   it('keeps a valid video and rejects malformed ones', () => {
     const video = {
       src: 'https://botlegger.com/video/hero_dark.mp4',

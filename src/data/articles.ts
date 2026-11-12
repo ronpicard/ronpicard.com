@@ -302,5 +302,6 @@ export function getArticleTitleList(list: Article[] = articles) {
     videoUrl: youtubeWatchUrl(a.youtubeId),
     extraLinks: articleExtraLinks(a),
     pinned: a.pinned === true,
+    pinnedTitle: a.pinned ? (a.pinnedTitle ?? null) : null,
   }))
 }

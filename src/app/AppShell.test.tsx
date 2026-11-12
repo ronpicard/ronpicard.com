@@ -101,10 +101,9 @@ describe('AppShell', () => {
     expect(router.state.location.pathname).toBe('/')
   })
 
-  it('links the homepage to each topic hub', async () => {
+  it('keeps the homepage free of a topic button list', async () => {
     await renderAt('/')
-    const nav = container.querySelector('nav[aria-label="Topics"]')
-    expect(nav).not.toBeNull()
-    expect(nav?.querySelector('a[href="/topics/aviation/"]')).not.toBeNull()
+    expect(container.querySelector('nav[aria-label="Topics"]')).toBeNull()
+    expect(container.querySelector('main a[href^="/topics/"]')).toBeNull()
   })
 })

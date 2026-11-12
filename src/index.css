@@ -579,7 +579,6 @@ body {
 .article-btn:focus-visible,
 .article-nav__link:focus-visible,
 .article-header__topic:focus-visible,
-.topic-nav__link:focus-visible,
 .related-posts a:focus-visible,
 .article-prose a:focus-visible,
 .footer a:focus-visible {
@@ -603,44 +602,6 @@ body {
   max-width: 46rem;
   font-size: 0.95rem;
   line-height: 1.6;
-  color: var(--text-muted);
-}
-
-.topic-nav {
-  margin: -1rem 0 2.25rem;
-}
-
-.topic-nav__list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.topic-nav__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.35rem 0.8rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--bg-card);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--accent-blue);
-  text-decoration: none;
-}
-
-.topic-nav__link:hover {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.topic-nav__count {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
   color: var(--text-muted);
 }
 
@@ -767,9 +728,42 @@ body {
   background: #030508;
 }
 
-/* A pinned post: the full grid width, image beside a larger title and summary. */
+/*
+ * A pinned post: a 16:9 (1080p-shaped) showcase card, centered above the grid.
+ * The picture fills the card and the text sits on a fade along its bottom.
+ * Phones are too short for that, so there the text stacks under the picture.
+ */
 .project-list__item--pinned {
   grid-column: 1 / -1;
+  justify-self: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 72rem;
+  /* Extra room below, on top of the grid gap, sets it apart from the posts. */
+  margin-bottom: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.pinned-feature__head {
+  margin: 0 0 1rem;
+}
+
+.pinned-feature__eyebrow {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.pinned-feature__title {
+  margin: 0;
+  font-size: clamp(1.35rem, 1rem + 1.5vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text);
 }
 
 .project-card--featured {
@@ -778,51 +772,52 @@ body {
 }
 
 .project-card--featured .project-card__title {
-  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+  font-size: clamp(1.4rem, 1rem + 1.4vw, 2.1rem);
 }
 
 .project-card--featured .project-card__summary {
   font-size: 0.98rem;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
-/* The image keeps the 1080p (16:9) frame at every width. */
-.project-card--featured .project-card__media {
-  aspect-ratio: 16 / 9;
-}
-
-/* Stacked, the card stays a readable size instead of filling a wide grid. */
-@media (max-width: 83.99rem) {
-  .project-list__item--pinned {
-    justify-self: center;
-    width: 100%;
-    max-width: 48rem;
-  }
-}
-
-/* Side by side only where the text column fits beside a 16:9 image; narrower screens stack. */
-@media (min-width: 84rem) {
+@media (min-width: 60rem) {
   .project-card--featured {
-    flex-direction: row;
-    align-items: center;
+    display: block;
+    aspect-ratio: 16 / 9;
   }
 
   .project-card--featured .project-card__media {
-    width: 62%;
-    align-self: flex-start;
+    position: absolute;
+    inset: 0;
+    aspect-ratio: auto;
+    height: 100%;
   }
 
   .project-card--featured .project-card__body {
-    width: 38%;
-    align-self: stretch;
-    justify-content: center;
-    padding: clamp(1.25rem, 2.2vw, 2.25rem);
+    position: absolute;
+    inset: auto 0 0;
+    padding: 6rem clamp(1.25rem, 3vw, 2.5rem) clamp(0.75rem, 2vw, 1.75rem);
+    background: linear-gradient(
+      to top,
+      rgba(1, 4, 6, 0.97) 0%,
+      rgba(1, 4, 6, 0.9) 55%,
+      rgba(1, 4, 6, 0) 100%
+    );
   }
 
   .project-card--featured .project-card__title,
   .project-card--featured .project-card__summary {
     flex: 0 0 auto;
+    max-width: 46rem;
+  }
+
+  .project-card--featured .project-card__summary {
+    color: var(--text);
+  }
+
+  .project-card--featured .project-card__actions {
+    margin-bottom: 0.5rem;
   }
 }
 

@@ -39,6 +39,8 @@ export type SiteArticleRow = {
   video?: SiteArticleVideo
   /** Featured: shown first on the home page as a large, full-width card. */
   pinned?: boolean
+  /** Headline shown above a pinned post's card, e.g. "Download BotLegger: …". */
+  pinnedTitle?: string
 }
 
 export type SiteArticleVideo = {
@@ -56,6 +58,7 @@ export type SiteArticleSeries = {
 }
 
 const SERIES_NAME_MAX = 80
+const PINNED_TITLE_MAX = 120
 
 const VIDEO_POSTER_RE = /^resources\/[a-z0-9][a-z0-9._-]*\.(?:webp|png|jpe?g)$/i
 
@@ -175,6 +178,10 @@ export function parseSiteArticleRows(
     if ('pinned' in row && typeof row.pinned !== 'boolean') {
       throw new Error(`${path}.pinned must be a boolean`)
     }
+    const pinnedTitle = optionalNullableString(row, 'pinnedTitle', path)
+    if (pinnedTitle != null && (!pinnedTitle.trim() || pinnedTitle.trim().length > PINNED_TITLE_MAX)) {
+      throw new Error(`${path}.pinnedTitle must be non-blank and at most ${PINNED_TITLE_MAX} characters`)
+    }
     if (seoTitle != null && !seoTitle.trim()) {
       throw new Error(`${path}.seoTitle must not be blank`)
     }
@@ -204,6 +211,7 @@ export function parseSiteArticleRows(
       ...(series ? { series } : {}),
       ...(video ? { video } : {}),
       ...(row.pinned === true ? { pinned: true } : {}),
+      ...(pinnedTitle ? { pinnedTitle: pinnedTitle.trim() } : {}),
     }
   })
 }

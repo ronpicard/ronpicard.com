@@ -2,19 +2,12 @@ import { useMemo } from 'react'
 import { Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
 import { SEARCH_PARAM } from '../components/SiteSearch'
-import { Link, useSearchParams } from 'react-router-dom'
-import {
-  articles,
-  getArticlesByTopic,
-  getArticleTitleList,
-  ProjectCard,
-} from '../features/articles'
+import { useSearchParams } from 'react-router-dom'
+import { articles, getArticleTitleList, ProjectCard } from '../features/articles'
 import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
-import { ARTICLE_TOPICS, topicPath } from '../../shared/articleTopics'
 import { homeSeoInput } from '../../shared/seoHead'
 
 const list = getArticleTitleList()
-const topics = ARTICLE_TOPICS.map((t) => ({ ...t, count: getArticlesByTopic(t.slug).length }))
 
 /** Cards likely in the first viewport (grid is 1–3 columns) load eagerly. */
 const PRIORITY_CARD_COUNT = 4
@@ -58,18 +51,6 @@ export default function HomePage() {
         software engineering lessons, AI musings, and other topics I&apos;m interested in.
       </p>
 
-      <nav className="topic-nav" aria-label="Topics">
-        <ul className="topic-nav__list" role="list">
-          {topics.map((t) => (
-            <li key={t.slug}>
-              <Link className="topic-nav__link" to={topicPath(t.slug)}>
-                {t.label} <span className="topic-nav__count">{t.count}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
       <main id="main-content" className="main" tabIndex={-1}>
         <p className="post-filter__status" role="status">
           {filtering ? `${shown.length} of ${list.length} posts match “${query.trim()}”` : ''}
@@ -90,6 +71,12 @@ export default function HomePage() {
                 key={item.slug}
                 className={featured ? 'project-list__item project-list__item--pinned' : 'project-list__item'}
               >
+                {featured ? (
+                  <div className="pinned-feature__head">
+                    <p className="pinned-feature__eyebrow">Featured</p>
+                    <h2 className="pinned-feature__title">{item.pinnedTitle ?? item.title}</h2>
+                  </div>
+                ) : null}
                 <ProjectCard item={item} priority={index < PRIORITY_CARD_COUNT} featured={featured} />
               </li>
             )
