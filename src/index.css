@@ -1741,6 +1741,116 @@ body {
   color: var(--accent);
 }
 
+.series-nav {
+  margin-top: 2.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.series-nav__label {
+  margin: 0 0 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.series-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  justify-content: space-between;
+}
+
+.series-nav__link {
+  flex: 1 1 200px;
+  min-width: min(100%, 220px);
+  text-decoration: none;
+}
+
+.series-nav__link--next {
+  text-align: right;
+}
+
+.series-nav__link--next:only-child {
+  margin-left: auto;
+}
+
+.series-nav__dir {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.series-nav__title {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+
+.series-nav__link:hover .series-nav__title {
+  color: var(--accent);
+}
+
+.article-header__series {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.article-toc {
+  margin: 0 0 2rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.article-toc__heading {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.article-toc__time {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.article-toc__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.92rem;
+}
+
+.article-toc__list a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.article-toc__list a:hover {
+  color: var(--accent);
+}
+
+.article-prose h2[id] {
+  scroll-margin-top: 5rem;
+}
+
 .article-nav {
   display: flex;
   flex-wrap: wrap;

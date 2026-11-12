@@ -31,6 +31,28 @@ export type SiteArticleRow = {
   seoTitle?: string
   /** Thin post: kept on the site but marked noindex and left out of the sitemap. */
   noindex?: boolean
+  /** Membership in a numbered series, e.g. Formal Methods 101 part 4. */
+  series?: SiteArticleSeries
+}
+
+export type SiteArticleSeries = {
+  name: string
+  part: number
+}
+
+const SERIES_NAME_MAX = 80
+
+function parseSeries(value: unknown, path: string): SiteArticleSeries {
+  const series = recordAt(value, path)
+  const name = series.name
+  const part = series.part
+  if (typeof name !== 'string' || !name.trim() || name.trim().length > SERIES_NAME_MAX) {
+    throw new Error(`${path}.name must be a non-blank string of at most ${SERIES_NAME_MAX} characters`)
+  }
+  if (typeof part !== 'number' || !Number.isInteger(part) || part < 1) {
+    throw new Error(`${path}.part must be a positive integer`)
+  }
+  return { name: name.trim(), part }
 }
 
 const SLUG_RE = /^[a-z0-9][a-z0-9._-]*$/i
@@ -121,6 +143,7 @@ export function parseSiteArticleRows(
     if (seoTitle != null && !seoTitle.trim()) {
       throw new Error(`${path}.seoTitle must not be blank`)
     }
+    const series = row.series == null ? undefined : parseSeries(row.series, `${path}.series`)
 
     return {
       slug,
@@ -142,6 +165,7 @@ export function parseSiteArticleRows(
       ...(isArticleTopicSlug(row.topic) ? { topic: row.topic } : {}),
       ...(seoTitle ? { seoTitle: seoTitle.trim() } : {}),
       ...(row.noindex === true ? { noindex: true } : {}),
+      ...(series ? { series } : {}),
     }
   })
 }

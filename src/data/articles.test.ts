@@ -8,6 +8,7 @@ import {
   getRelatedArticles,
   getArticleTitleList,
   isThirdPartyArticleLink,
+  linkSeries,
   showCodeButton,
   showDemoButton,
   showReleasesButton,
@@ -37,6 +38,7 @@ function stubArticle(overrides: Partial<Article>): Article {
     topic: null,
     prevSlug: null,
     nextSlug: null,
+    series: null,
     ...overrides,
   }
 }
@@ -118,6 +120,24 @@ describe('articles catalog', () => {
 
     const card = getArticleTitleList().find((item) => item.slug === chess?.slug)
     expect(card).toMatchObject({ showDemo: true, showCode: true })
+  })
+})
+
+describe('linkSeries', () => {
+  it('orders each series by part and links neighbours, ignoring posts outside a series', () => {
+    const map = linkSeries([
+      { slug: 'b', title: 'B', series: { name: 'S', part: 2 } },
+      { slug: 'x', title: 'X' },
+      { slug: 'c', title: 'C', series: { name: 'S', part: 3 } },
+      { slug: 'a', title: 'A', series: { name: 'S', part: 1 } },
+      { slug: 'z', title: 'Z', series: { name: 'Other', part: 1 } },
+    ])
+    expect(map.has('x')).toBe(false)
+    expect(map.get('a')).toEqual({ name: 'S', part: 1, total: 3, prev: null, next: { slug: 'b', title: 'B', part: 2 } })
+    expect(map.get('b')?.prev?.slug).toBe('a')
+    expect(map.get('b')?.next?.slug).toBe('c')
+    expect(map.get('c')?.next).toBeNull()
+    expect(map.get('z')).toEqual({ name: 'Other', part: 1, total: 1, prev: null, next: null })
   })
 })
 

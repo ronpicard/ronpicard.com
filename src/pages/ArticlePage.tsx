@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ArticleNav } from '../components/ArticleNav'
 import { RelatedPosts } from '../components/RelatedPosts'
+import { SeriesNav, seriesPartLabel } from '../components/SeriesNav'
 import { LessonOutline } from '../components/LessonOutline'
 import { Seo } from '../components/Seo'
 import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
@@ -237,6 +238,11 @@ export default function ArticlePage() {
                   {topic.label}
                 </Link>
               ) : null}
+              {article.series ? (
+                <span className="article-header__series">
+                  {article.series.name}, {seriesPartLabel(article.series)}
+                </span>
+              ) : null}
             </div>
           </header>
 
@@ -244,6 +250,8 @@ export default function ArticlePage() {
             {embedBlock}
             {textBlock}
           </div>
+
+          {article.series ? <SeriesNav series={article.series} /> : null}
         </article>
       </main>
 

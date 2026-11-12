@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Formal Methods 101 and Software Lessons posts now show which part of the series they are ("Part 4 of 11") under the title, and link to the previous and next parts at the end.
+- Long articles open with an "On this page" list of their sections and a reading time; each entry jumps to its section.
 - Searching on the home page narrows the posts live as you type, matching titles and summaries, with a count of how many posts match. Escape or Show all posts clears it, and the search is kept in the address (`?q=`), so it's still there when you come back from an article.
 - Three music tools join the portfolio as the latest projects, each with a screenshot thumbnail, an embedded demo, source code and demo links, and an introduction: Instrument Tuner, a chromatic and per-string tuner with a cents needle; Frequency Player, a 20 Hz–20 kHz tone generator with a note dial and piano keys; and Pitch Tracker, which draws your singing pitch on a live piano roll. The embedded Tuner and Pitch Tracker demos can't use the microphone inside the page, so they offer a link to open in their own tab.
 - A BotLegger icon in the header, after Wyvern Systems, links to botlegger.com.

@@ -55,7 +55,7 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (354 tests) |
+| `npm test` | Run Vitest unit tests once (366 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
 | `npm run test:e2e` | Playwright browser smoke tests (20 tests × desktop and mobile projects; starts Vite dev server) |
@@ -80,7 +80,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 
 | Test file | Focus |
 |-----------|--------|
-| `shared/siteArticlesRouting.test.ts`, `shared/siteArticleSchema.test.ts` | Runtime article validation, slugs, sort order, legacy titles |
+| `shared/siteArticlesRouting.test.ts`, `shared/siteArticleSchema.test.ts` | Runtime article validation (including series), slugs, sort order, legacy titles |
 | `shared/jsonLd.test.ts`, `shared/seoHead.test.ts`, `shared/sitemap.test.ts`, `shared/feed.test.ts` | Structured data, head tags, and crawler files |
 | `shared/articleHtmlSanitize.test.ts` | DOMPurify rules and link hardening |
 | `shared/githubRawContentUrls.test.ts` | Raw GitHub URL → blob/viewer URLs |
@@ -89,14 +89,16 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `src/lib/safeUrls.test.ts` | Outbound URL and embed validation |
 | `src/config/security.test.ts` | CSP string and public slug guards |
 | `src/lib/sanitizeArticleHtml.test.ts` | Article body pipeline |
-| `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection, topics and related posts |
+| `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection, topics, related posts, and series order |
 | `shared/articleTopics.test.ts`, `src/components/RelatedPosts.test.tsx` | Topic hubs, kind defaults, and related-post links |
 | `src/lib/githubReadme.test.ts`, `src/lib/fetchGithubReadme.test.ts`, `src/lib/fetchArticleBody.test.ts` | Dynamic content rendering + fetch limits |
 | `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
 | `src/components/SiteSearch.test.tsx`, `src/pages/HomePage.test.tsx` | Header search box: phone toggle, dropdown keyboard navigation, live home-grid filtering (including fast typing), empty state, Escape, and the `?q=` URL parameter |
 | `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
 | `src/lib/animatedFigures.test.ts` | Animated figures loop while in view, reset when they leave, pause on click or Enter/Space, and stay still under reduced motion |
-| `src/components/DynamicArticleBody.test.tsx` | Article loading, prerendered bodies, sanitization, and fallback UI |
+| `src/components/DynamicArticleBody.test.tsx` | Article loading, prerendered bodies, sanitization, fallback UI, and the table of contents |
+| `src/lib/articleToc.test.ts` | Section ids, table of contents entries, and reading time for long bodies |
+| `src/components/SeriesNav.test.tsx` | Series part label and previous/next part links |
 | `src/components/Seo.test.tsx` | One set of head tags, swapped on client navigation |
 | `src/components/EmbedFrame.test.tsx` | Demo iframe sandboxing and Full view / Escape toggle |
 | `scripts/lib/fetchText.test.mjs`, `scripts/mirror-resources.test.mjs` | Bounded fetches, redirect/host controls, and passive asset signatures |

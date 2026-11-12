@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import { playAnimatedFigures } from '../lib/animatedFigures'
+import { outlineArticleHtml, showsTableOfContents, type ArticleOutline } from '../lib/articleToc'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import { fetchArticleBodyHtml } from '../lib/fetchArticleBody'
 import { primedArticleBody } from '../lib/primedArticleBodies'
@@ -8,6 +9,35 @@ import { prepareArticleBodyHtml } from '../lib/sanitizeArticleHtml'
 type Props = {
   bodyPath: string
   fallbackSummary: string | null
+}
+
+/** Jumps to a section without a router navigation, keeping the address shareable. */
+function jumpToSection(event: MouseEvent<HTMLAnchorElement>, id: string) {
+  const target = document.getElementById(id)
+  if (!target) return
+  event.preventDefault()
+  const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+  target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+  window.history.replaceState(window.history.state, '', `#${id}`)
+}
+
+function TableOfContents({ outline }: { outline: ArticleOutline }) {
+  return (
+    <nav className="article-toc" aria-labelledby="article-toc-heading">
+      <p className="article-toc__heading" id="article-toc-heading">
+        On this page <span className="article-toc__time">· {outline.minutes} min read</span>
+      </p>
+      <ol className="article-toc__list">
+        {outline.toc.map((entry) => (
+          <li key={entry.id}>
+            <a href={`#${entry.id}`} onClick={(event) => jumpToSection(event, entry.id)}>
+              {entry.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
 }
 
 function primedSafeHtml(bodyPath: string): string | null {
@@ -22,6 +52,7 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
     html ? 'ready' : 'loading',
   )
   const proseRef = useRef<HTMLDivElement>(null)
+  const outline = useMemo(() => (html ? outlineArticleHtml(html) : null), [html])
 
   useEffect(() => {
     const prose = proseRef.current
@@ -84,11 +115,14 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
   }
 
   return (
-    <div
-      ref={proseRef}
-      className="article-prose"
-      data-body-path={bodyPath}
-      dangerouslySetInnerHTML={{ __html: html }}
-    />
+    <>
+      {outline && showsTableOfContents(outline) ? <TableOfContents outline={outline} /> : null}
+      <div
+        ref={proseRef}
+        className="article-prose"
+        data-body-path={bodyPath}
+        dangerouslySetInnerHTML={{ __html: outline?.html ?? html }}
+      />
+    </>
   )
 }

@@ -68,6 +68,25 @@ describe('parseSiteArticleRows', () => {
     expect(parsed?.noindex).toBe(true)
   })
 
+  it('keeps a valid series and rejects malformed ones', () => {
+    const parsed = parseSiteArticleRows([
+      { ...validRow(), series: { name: '  Formal Methods 101 ', part: 4 } },
+    ])[0]
+    expect(parsed?.series).toEqual({ name: 'Formal Methods 101', part: 4 })
+    expect(parseSiteArticleRows([{ ...validRow(), series: null }])[0]).not.toHaveProperty('series')
+
+    for (const series of [
+      'Formal Methods 101',
+      { name: '', part: 1 },
+      { name: 'x'.repeat(81), part: 1 },
+      { name: 'Series', part: 0 },
+      { name: 'Series', part: 1.5 },
+      { name: 'Series', part: '2' },
+    ]) {
+      expect(() => parseSiteArticleRows([{ ...validRow(), series }])).toThrow('site article data[0].series')
+    }
+  })
+
   it('omits topic, seoTitle, and noindex when absent or noindex is false', () => {
     const plain = parseSiteArticleRows([validRow()])[0]
     expect(plain).not.toHaveProperty('topic')

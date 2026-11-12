@@ -14,6 +14,7 @@ export {
   type Article,
   type ArticleExtraLink,
   type ArticleKind,
+  type ArticleSeries,
 } from '../../data/articles'
 export {
   articleKindBadgeClass,

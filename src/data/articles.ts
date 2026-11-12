@@ -52,23 +52,70 @@ const sorted = sortIndexedArticles(indexed)
 export type { ArticleKind }
 
 /** `slug` is the public URL segment (from title). `sourceSlug` is the id from `siteArticles.json`. */
-export type Article = Omit<SiteArticleRow, 'slug' | 'topic'> & {
+/** A neighbouring part of the same series. */
+export type SeriesNeighbor = { slug: string; title: string; part: number }
+
+/** Where a post sits in its series, with the parts before and after it. */
+export type ArticleSeries = {
+  name: string
+  part: number
+  total: number
+  prev: SeriesNeighbor | null
+  next: SeriesNeighbor | null
+}
+
+export type Article = Omit<SiteArticleRow, 'slug' | 'topic' | 'series'> & {
   slug: string
   sourceSlug: string
   kind: ArticleKind
   topic: ArticleTopicSlug | null
   prevSlug: string | null
   nextSlug: string | null
+  series: ArticleSeries | null
+}
+
+/**
+ * Groups posts by series name and orders each series by part number, so every
+ * member knows its position, the series length, and its neighbours. Posts
+ * without a series are left out of the map.
+ */
+export function linkSeries(
+  items: { slug: string; title: string; series?: { name: string; part: number } }[],
+): Map<string, ArticleSeries> {
+  const groups = new Map<string, SeriesNeighbor[]>()
+  for (const item of items) {
+    if (!item.series) continue
+    const members = groups.get(item.series.name) ?? []
+    members.push({ slug: item.slug, title: item.title, part: item.series.part })
+    groups.set(item.series.name, members)
+  }
+  const out = new Map<string, ArticleSeries>()
+  for (const [name, members] of groups) {
+    members.sort((x, y) => x.part - y.part)
+    members.forEach((m, i) => {
+      out.set(m.slug, {
+        name,
+        part: m.part,
+        total: members.length,
+        prev: members[i - 1] ?? null,
+        next: members[i + 1] ?? null,
+      })
+    })
+  }
+  return out
 }
 
 const { routeSlugs, legacyRouteSlugs } = buildArticleRouteSlugs(sorted, { titlesDecoded: true })
 
+const seriesBySlug = linkSeries(sorted.map((row, i) => ({ ...row, slug: routeSlugs[i]! })))
+
 export const articles: Article[] = sorted.map((row, i) => {
-  const { slug: sourceSlug, ...rest } = row
+  const { slug: sourceSlug, series: _series, ...rest } = row
   const slug = routeSlugs[i]!
   const kind = deriveArticleKind(row)
   return {
     ...rest,
+    series: seriesBySlug.get(slug) ?? null,
     sourceSlug,
     slug,
     kind,
