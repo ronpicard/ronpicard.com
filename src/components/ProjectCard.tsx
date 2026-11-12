@@ -37,6 +37,27 @@ export type ProjectListItem = {
   extraLinks: ArticleExtraLink[]
 }
 
+function renderExtraLink(link: ArticleExtraLink) {
+  const href = safeArticleLinkHref(link.href, resolveAssetUrl)
+  if (!href) return null
+  return (
+    <a
+      key={`${link.href}:${link.label}`}
+      className={
+        link.articleStyle
+          ? 'project-card__btn project-card__btn--article'
+          : 'project-card__btn project-card__btn--code'
+      }
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <LinkBrandIcon className="btn-logo" href={href} size={14} />
+      {link.label.length > 22 ? `${link.label.slice(0, 20)}…` : link.label}
+    </a>
+  )
+}
+
 type Props = {
   item: ProjectListItem
   /** Above the fold: load eagerly at high priority instead of lazily. */
@@ -82,6 +103,7 @@ export function ProjectCard({ item, priority = false }: Props) {
         <h2 className="project-card__title">{item.title}</h2>
         {item.summary ? <p className="project-card__summary">{item.summary}</p> : null}
         <div className="project-card__actions">
+          {item.extraLinks.filter((link) => link.lead).map(renderExtraLink)}
           {demoHref ? (
             <a
               className="project-card__btn project-card__btn--code"
@@ -128,26 +150,7 @@ export function ProjectCard({ item, priority = false }: Props) {
               YouTube
             </a>
           ) : null}
-          {item.extraLinks.map((link) => {
-            const href = safeArticleLinkHref(link.href, resolveAssetUrl)
-            if (!href) return null
-            return (
-              <a
-                key={`${link.href}:${link.label}`}
-                className={
-                  link.articleStyle
-                    ? 'project-card__btn project-card__btn--article'
-                    : 'project-card__btn project-card__btn--code'
-                }
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <LinkBrandIcon className="btn-logo" href={href} size={14} />
-                {link.label.length > 22 ? `${link.label.slice(0, 20)}…` : link.label}
-              </a>
-            )
-          })}
+          {item.extraLinks.filter((link) => !link.lead).map(renderExtraLink)}
         </div>
         <span className="project-card__link" aria-hidden>
           Read more

@@ -260,6 +260,8 @@ export type ArticleExtraLink = {
   href: string
   /** Third-party article or paper, styled like an article link. */
   articleStyle: boolean
+  /** The product's own site, shown before every other button. */
+  lead?: boolean
 }
 
 /** Every extra link button a post shows, identically on its home card and its article page. */
@@ -268,7 +270,12 @@ export function articleExtraLinks(a: Article): ArticleExtraLink[] {
     .filter((l) => l?.href?.trim())
     .map((l) => {
       const articleStyle = isThirdPartyArticleLink(l)
-      return { label: extraLinkLabel(l.label, l.href, articleStyle), href: l.href.trim(), articleStyle }
+      return {
+        label: extraLinkLabel(l.label, l.href, articleStyle),
+        href: l.href.trim(),
+        articleStyle,
+        ...(l.lead === true ? { lead: true } : {}),
+      }
     })
 }
 

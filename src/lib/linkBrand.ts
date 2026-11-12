@@ -1,4 +1,4 @@
-export type LinkBrand = 'github' | 'vscode' | 'openvsx' | 'wyvern' | 'pdf'
+export type LinkBrand = 'github' | 'vscode' | 'openvsx' | 'wyvern' | 'botlegger' | 'pdf'
 
 const BRAND_BY_HOST: Record<string, LinkBrand> = {
   'github.com': 'github',
@@ -6,6 +6,7 @@ const BRAND_BY_HOST: Record<string, LinkBrand> = {
   'marketplace.visualstudio.com': 'vscode',
   'open-vsx.org': 'openvsx',
   'wyvernsystems.com': 'wyvern',
+  'botlegger.com': 'botlegger',
 }
 
 /** Whether `href` points at a PDF file, ignoring any query or fragment. */

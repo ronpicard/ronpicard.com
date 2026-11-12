@@ -68,6 +68,37 @@ describe('parseSiteArticleRows', () => {
     expect(parsed?.noindex).toBe(true)
   })
 
+  it('keeps a valid video and rejects malformed ones', () => {
+    const video = {
+      src: 'https://botlegger.com/video/hero_dark.mp4',
+      poster: 'resources/botlegger-tour.webp',
+      label: '  A tour  ',
+    }
+    expect(parseSiteArticleRows([{ ...validRow(), video }])[0]?.video).toEqual({ ...video, label: 'A tour' })
+    expect(parseSiteArticleRows([validRow()])[0]).not.toHaveProperty('video')
+    for (const bad of [
+      'https://botlegger.com/video/hero_dark.mp4',
+      { ...video, src: 'http://botlegger.com/video/hero_dark.mp4' },
+      { ...video, src: 'https://botlegger.com/video/hero_dark.webm' },
+      { ...video, poster: 'https://example.com/poster.webp' },
+      { ...video, poster: 'resources/../poster.webp' },
+      { ...video, label: '   ' },
+      { src: video.src, poster: video.poster },
+    ]) {
+      expect(() => parseSiteArticleRows([{ ...validRow(), video: bad }])).toThrow('site article data[0].video')
+    }
+  })
+
+  it('keeps a lead flag on links and rejects non-booleans', () => {
+    const extraLinks = [{ label: 'Site', href: 'https://botlegger.com/', lead: true }, { label: 'B', href: 'https://b.example/', lead: false }]
+    const links = parseSiteArticleRows([{ ...validRow(), extraLinks }])[0]?.extraLinks
+    expect(links?.[0]).toEqual({ label: 'Site', href: 'https://botlegger.com/', lead: true })
+    expect(links?.[1]).not.toHaveProperty('lead')
+    expect(() =>
+      parseSiteArticleRows([{ ...validRow(), extraLinks: [{ label: 'x', href: 'https://x.example/', lead: 'yes' }] }]),
+    ).toThrow('site article data[0].extraLinks[0].lead')
+  })
+
   it('keeps a valid series and rejects malformed ones', () => {
     const parsed = parseSiteArticleRows([
       { ...validRow(), series: { name: '  Formal Methods 101 ', part: 4 } },

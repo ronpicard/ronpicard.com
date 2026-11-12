@@ -55,7 +55,7 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (366 tests) |
+| `npm test` | Run Vitest unit tests once (372 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
 | `npm run test:e2e` | Playwright browser smoke tests (20 tests × desktop and mobile projects; starts Vite dev server) |
@@ -86,7 +86,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `shared/githubRawContentUrls.test.ts` | Raw GitHub URL → blob/viewer URLs |
 | `shared/htmlEscape.test.ts` | CSP meta escaping |
 | `shared/hrefKey.test.ts`, `shared/githubRepo.test.ts` | Link dedup and repo URL parsing |
-| `src/lib/safeUrls.test.ts` | Outbound URL and embed validation |
+| `src/lib/safeUrls.test.ts` | Outbound URL, embed, and article video validation |
 | `src/config/security.test.ts` | CSP string and public slug guards |
 | `src/lib/sanitizeArticleHtml.test.ts` | Article body pipeline |
 | `src/data/articles.test.ts` | Catalog lookup, link filtering, third-party article detection, topics, related posts, and series order |

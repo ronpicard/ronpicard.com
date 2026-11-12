@@ -23,6 +23,7 @@ import { articleSeoInput } from '../../shared/seoHead'
 import { articlePath } from '../../shared/siteArticlesRouting'
 import {
   safeArticleLinkHref,
+  safeArticleVideoUrl,
   safeDemoUrl,
   safeGithubPagesUrl,
   safeGithubReadmeRawUrl,
@@ -89,9 +90,13 @@ export default function ArticlePage() {
   })
   const shareImage = postShareImage(article)
   const topic = getArticleTopic(article.topic)
+  const videoSrc = safeArticleVideoUrl(article.video?.src)
+  const videoPoster = videoSrc ? resolveAssetUrl(article.video?.poster) : null
   // Text-only posts show their picture so the page is not just a few lines of text.
   const pictureSrc =
-    !iframeSrc && !ytId && !otherEmbedSrc && !readmeRawUrl ? resolveAssetUrl(shareImage) : null
+    !iframeSrc && !ytId && !otherEmbedSrc && !readmeRawUrl && !videoSrc
+      ? resolveAssetUrl(shareImage)
+      : null
 
   const textBlock = readmeRawUrl ? (
     <DynamicGithubReadme
@@ -112,6 +117,20 @@ export default function ArticlePage() {
     <>
       {(hasDemo || hasCode || releasesHref || videoUrl || safeExtras.length > 0) && (
         <div className="article-actions article-actions--primary">
+          {safeExtras
+            .filter(({ link }) => link.lead)
+            .map(({ link, href }) => (
+              <a
+                key={`${link.label}:${link.href}`}
+                className="article-btn article-btn--secondary"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <LinkBrandIcon className="btn-logo" href={href} size={16} />
+                {link.label}
+              </a>
+            ))}
           {hasDemo && demoHref ? (
             <a
               className="article-btn article-btn--secondary"
@@ -158,7 +177,7 @@ export default function ArticlePage() {
               YouTube
             </a>
           ) : null}
-          {safeExtras.map(({ link, href }) => (
+          {safeExtras.filter(({ link }) => !link.lead).map(({ link, href }) => (
             <a
               key={`${link.label}:${link.href}`}
               className={
@@ -176,6 +195,22 @@ export default function ArticlePage() {
           ))}
         </div>
       )}
+
+      {videoSrc ? (
+        <figure className="article-video">
+          <video
+            controls
+            muted
+            loop
+            playsInline
+            preload="none"
+            poster={videoPoster ?? undefined}
+            aria-label={article.video?.label}
+          >
+            <source src={videoSrc} type="video/mp4" />
+          </video>
+        </figure>
+      ) : null}
 
       {pictureSrc ? (
         <img className="article-picture" src={pictureSrc} alt={article.title} decoding="async" />

@@ -1512,6 +1512,21 @@ body {
   box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
 }
 
+.article-video {
+  margin: 0 0 1.5rem;
+}
+
+.article-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1920 / 1204;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #000;
+  box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
 .embed-frame {
   position: relative;
   width: 100%;

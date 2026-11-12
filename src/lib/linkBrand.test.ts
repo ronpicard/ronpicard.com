@@ -10,6 +10,7 @@ describe('linkBrandForHref', () => {
     ['https://marketplace.visualstudio.com/items?itemName=A.x', 'vscode'],
     ['https://open-vsx.org/extension/A/x', 'openvsx'],
     ['https://wyvernsystems.com/', 'wyvern'],
+    ['https://botlegger.com/', 'botlegger'],
     ['https://ronpicard.github.io/game/', 'github'],
     ['/resources/paper.pdf', 'pdf'],
     ['resources/paper.PDF?download=1#page=2', 'pdf'],

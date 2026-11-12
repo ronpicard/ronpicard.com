@@ -132,6 +132,23 @@ describe('ProjectCard actions', () => {
     ])
   })
 
+  it('puts a lead link (the product site) before every other button', () => {
+    renderCard({
+      item: item({
+        showCode: true,
+        repoUrl: 'https://github.com/wyvernsystems/x',
+        releasesUrl: 'https://github.com/wyvernsystems/x/releases/latest',
+        extraLinks: [
+          { label: 'Wyvern Systems', href: 'https://wyvernsystems.com/', articleStyle: false },
+          { label: 'BotLegger', href: 'https://botlegger.com/', articleStyle: false, lead: true },
+        ],
+      }),
+    })
+    expect(links().map((l) => l.text)).toEqual(['BotLegger', 'Code', 'Releases', 'Wyvern Systems'])
+    const logo = container.querySelector('.project-card__actions a')?.firstElementChild
+    expect(logo?.getAttribute('src')).toMatch(/botlegger-logo\.png$/)
+  })
+
   it('puts the destination brand logo in front of the button label', () => {
     renderCard({
       item: item({

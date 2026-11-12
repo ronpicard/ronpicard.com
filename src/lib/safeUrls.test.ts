@@ -9,6 +9,7 @@ import {
   safeHttpUrl,
   safeHttpsEmbedUrl,
   safeYoutubeId,
+  safeArticleVideoUrl,
 } from './safeUrls'
 
 afterEach(() => {
@@ -173,5 +174,28 @@ describe('safeArticleLinkHref', () => {
     expect(safeArticleLinkHref('/resources/file.pdf', resolveAsset)).toBeNull()
     expect(safeArticleLinkHref('resources/../file.pdf', resolveAsset)).toBeNull()
     expect(safeArticleLinkHref('  ', resolveAsset)).toBeNull()
+  })
+})
+
+describe('safeArticleVideoUrl', () => {
+  it('allows https MP4s on allowlisted hosts only', () => {
+    expect(safeArticleVideoUrl('https://botlegger.com/video/hero_dark.mp4')).toBe(
+      'https://botlegger.com/video/hero_dark.mp4',
+    )
+    for (const bad of [
+      null,
+      '',
+      'not a url',
+      'http://botlegger.com/video/hero_dark.mp4',
+      'https://evil.example/video.mp4',
+      'https://botlegger.com.evil.example/video.mp4',
+      'https://user:pw@botlegger.com/video/hero_dark.mp4',
+      'https://botlegger.com/video/hero_dark.mp4?x=1',
+      'https://botlegger.com/video/hero_dark.mp4#t=5',
+      'https://botlegger.com/video/hero_dark.webm',
+      'javascript:alert(1)//.mp4',
+    ]) {
+      expect(safeArticleVideoUrl(bad)).toBeNull()
+    }
   })
 })

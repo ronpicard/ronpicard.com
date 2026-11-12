@@ -144,6 +144,7 @@ const ICON_BY_BRAND = {
   vscode: VSCodeIcon,
   openvsx: OpenVsxIcon,
   wyvern: WyvernIcon,
+  botlegger: BotleggerIcon,
   pdf: PdfIcon,
 } as const
 

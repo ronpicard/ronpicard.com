@@ -108,6 +108,21 @@ test.describe('home', () => {
     const actions = page.locator('.article-actions--primary')
     await expect(actions.getByRole('link', { name: 'Releases' })).toHaveAttribute('href', releases)
   })
+
+  test('leads the BotLegger post with its site link and shows the tour video', async ({ page }) => {
+    await page.goto('/')
+    const card = page.locator('.project-card').filter({ hasText: 'BotLegger: Your Own Team of AI Bots' })
+    await expect(card.locator('.project-card__actions a').first()).toHaveText('BotLegger')
+    await card.locator('.project-card__overlay-link').click()
+    const actions = page.locator('.article-actions--primary a')
+    await expect(actions.first()).toHaveText('BotLegger')
+    await expect(actions.first()).toHaveAttribute('href', 'https://botlegger.com/')
+    await expect(actions.nth(1)).toHaveText('Releases')
+    const video = page.locator('.article-video video')
+    await expect(video).toHaveAttribute('poster', /botlegger-tour-2026-11-12\.webp$/)
+    await expect(video.locator('source')).toHaveAttribute('src', 'https://botlegger.com/video/hero_dark.mp4')
+    await expect(page.locator('.article-picture')).toHaveCount(0)
+  })
 })
 
 test.describe('seo head', () => {

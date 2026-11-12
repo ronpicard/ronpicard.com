@@ -123,6 +123,18 @@ describe('articles catalog', () => {
   })
 })
 
+describe('BotLegger article', () => {
+  it('leads with a BotLegger site link and plays the tour video from botlegger.com', () => {
+    const botlegger = articles.find((a) => a.sourceSlug === 'botlegger')!
+    expect(articles[0]).toBe(botlegger)
+    const links = articleExtraLinks(botlegger)
+    expect(links[0]).toMatchObject({ label: 'BotLegger', href: 'https://botlegger.com/', lead: true })
+    expect(links.filter((l) => l.lead)).toHaveLength(1)
+    expect(botlegger.video?.src).toBe('https://botlegger.com/video/hero_dark.mp4')
+    expect(botlegger.video?.poster).toBe(botlegger.imageUrl)
+  })
+})
+
 describe('linkSeries', () => {
   it('orders each series by part and links neighbours, ignoring posts outside a series', () => {
     const map = linkSeries([

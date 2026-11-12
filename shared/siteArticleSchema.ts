@@ -5,6 +5,8 @@ export type SiteArticleLink = {
   href: string
   /** Legacy flag with no effect: home cards now show every link the article page shows. */
   card?: boolean
+  /** The product's own site: its button comes first, before Demo, Code, and Releases. */
+  lead?: boolean
 }
 
 export type SiteArticleRow = {
@@ -33,6 +35,17 @@ export type SiteArticleRow = {
   noindex?: boolean
   /** Membership in a numbered series, e.g. Formal Methods 101 part 4. */
   series?: SiteArticleSeries
+  /** A video shown at the top of the article in place of its picture. */
+  video?: SiteArticleVideo
+}
+
+export type SiteArticleVideo = {
+  /** https MP4 on an allowlisted host (checked again at render time). */
+  src: string
+  /** Local poster image, `resources/...`. */
+  poster: string
+  /** What the video shows, for screen readers. */
+  label: string
 }
 
 export type SiteArticleSeries = {
@@ -41,6 +54,19 @@ export type SiteArticleSeries = {
 }
 
 const SERIES_NAME_MAX = 80
+
+const VIDEO_POSTER_RE = /^resources\/[a-z0-9][a-z0-9._-]*\.(?:webp|png|jpe?g)$/i
+
+function parseVideo(value: unknown, path: string): SiteArticleVideo {
+  const video = recordAt(value, path)
+  const src = requiredString(video, 'src', path).trim()
+  const poster = requiredString(video, 'poster', path).trim()
+  const label = requiredString(video, 'label', path).trim()
+  if (!/^https:\/\/[^\s"'<>]+\.mp4$/i.test(src)) throw new Error(`${path}.src must be an https MP4 URL`)
+  if (!VIDEO_POSTER_RE.test(poster)) throw new Error(`${path}.poster must be a local resources image`)
+  if (!label) throw new Error(`${path}.label must not be blank`)
+  return { src, poster, label }
+}
 
 function parseSeries(value: unknown, path: string): SiteArticleSeries {
   const series = recordAt(value, path)
@@ -102,10 +128,14 @@ function parseExtraLinks(value: unknown, path: string): SiteArticleLink[] {
     if ('card' in link && typeof link.card !== 'boolean') {
       throw new Error(`${linkPath}.card must be a boolean`)
     }
+    if ('lead' in link && typeof link.lead !== 'boolean') {
+      throw new Error(`${linkPath}.lead must be a boolean`)
+    }
     return {
       label: requiredString(link, 'label', linkPath),
       href: requiredString(link, 'href', linkPath),
       ...(typeof link.card === 'boolean' ? { card: link.card } : {}),
+      ...(link.lead === true ? { lead: true } : {}),
     }
   })
 }
@@ -144,6 +174,7 @@ export function parseSiteArticleRows(
       throw new Error(`${path}.seoTitle must not be blank`)
     }
     const series = row.series == null ? undefined : parseSeries(row.series, `${path}.series`)
+    const video = row.video == null ? undefined : parseVideo(row.video, `${path}.video`)
 
     return {
       slug,
@@ -166,6 +197,7 @@ export function parseSiteArticleRows(
       ...(seoTitle ? { seoTitle: seoTitle.trim() } : {}),
       ...(row.noindex === true ? { noindex: true } : {}),
       ...(series ? { series } : {}),
+      ...(video ? { video } : {}),
     }
   })
 }

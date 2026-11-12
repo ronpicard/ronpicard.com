@@ -89,6 +89,24 @@ export function safeHttpsEmbedUrl(raw: string | null | undefined): string | null
   return u.toString()
 }
 
+/** Hosts article videos may stream from (the site's CSP allows https media). */
+const ALLOWED_VIDEO_HOSTS = new Set(['botlegger.com'])
+
+/** An https MP4 on an allowlisted host, with no credentials, query, or fragment; else null. */
+export function safeArticleVideoUrl(raw: string | null | undefined): string | null {
+  if (!raw?.trim()) return null
+  let u: URL
+  try {
+    u = new URL(raw.trim())
+  } catch {
+    return null
+  }
+  if (u.protocol !== 'https:' || u.username || u.password || u.search || u.hash) return null
+  if (!ALLOWED_VIDEO_HOSTS.has(u.hostname.toLowerCase())) return null
+  if (!/\.mp4$/i.test(u.pathname)) return null
+  return u.toString()
+}
+
 /**
  * Resolves asset-relative links and allows https navigation targets for extra link buttons.
  */
