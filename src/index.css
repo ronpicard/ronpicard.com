@@ -1856,14 +1856,23 @@ body {
   }
 }
 
-/* Narrow phones: five header icons plus the brand only fit with slimmer tap boxes and no gaps. */
+/* Narrow phones: six header icons plus the brand only fit with slimmer tap boxes (30px, above
+   WCAG 2.2's 24px minimum), no icon gaps, and slightly tighter brand spacing. */
 @media (max-width: 26.25rem) {
+  .site-top-bar {
+    gap: 0.35rem;
+  }
+
+  .site-top-bar__brand {
+    letter-spacing: 0.02em;
+  }
+
   .site-top-bar__social {
     gap: 0;
   }
 
   .site-top-bar__icon {
-    width: 34px;
+    width: 30px;
   }
 }
 

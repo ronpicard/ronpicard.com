@@ -69,6 +69,7 @@ describe('SiteTopBar', () => {
     ['LinkedIn', SOCIAL.linkedin],
     ['GitHub', SOCIAL.github],
     ['Wyvern Systems', SOCIAL.wyvern],
+    ['Wyvern Systems on GitHub', 'https://github.com/wyvernsystems'],
     ['BotLegger', SOCIAL.botlegger],
   ])('links the %s icon to its site in a new, isolated tab', (label, href) => {
     const link = container.querySelector<HTMLAnchorElement>(`a[aria-label="${label}"]`)
@@ -107,10 +108,22 @@ describe('SiteTopBar', () => {
     expect(icon?.getAttribute('alt')).toBe('')
   })
 
-  it('shows the icons after the search control, with Wyvern Systems then BotLegger last', () => {
+  it("shows GitHub's Invertocat for the Wyvern Systems organization too", () => {
+    const icon = container.querySelector('a[aria-label="Wyvern Systems on GitHub"] img')
+    expect(icon?.getAttribute('src')).toMatch(/\/social\/github-invertocat-white\.svg$/)
+    expect(icon?.getAttribute('alt')).toBe('')
+  })
+
+  it('shows the icons after the search control, with the Wyvern Systems GitHub between Wyvern Systems and BotLegger', () => {
     const labels = Array.from(
       container.querySelectorAll('.site-top-bar__social > *'),
     ).map((el) => el.getAttribute('aria-label'))
-    expect(labels.slice(-4)).toEqual(['LinkedIn', 'GitHub', 'Wyvern Systems', 'BotLegger'])
+    expect(labels.slice(-5)).toEqual([
+      'LinkedIn',
+      'GitHub',
+      'Wyvern Systems',
+      'Wyvern Systems on GitHub',
+      'BotLegger',
+    ])
   })
 })

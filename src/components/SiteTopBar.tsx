@@ -85,6 +85,15 @@ export function SiteTopBar() {
         </a>
         <a
           className="site-top-bar__icon"
+          href={SOCIAL.wyvernGithub}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Wyvern Systems on GitHub"
+        >
+          <GitHubIcon className="site-top-bar__logo" size={26} />
+        </a>
+        <a
+          className="site-top-bar__icon"
           href={SOCIAL.botlegger}
           target="_blank"
           rel="noopener noreferrer"
