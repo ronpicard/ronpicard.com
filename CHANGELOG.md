@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- BotLegger, my company's free desktop app for running your own team of AI bots, joins the portfolio as the latest project, with a written introduction, a screenshot of botlegger.com, and links to its releases and website.
 - Formal Methods 101 and Software Lessons posts now show which part of the series they are ("Part 4 of 11") under the title, and link to the previous and next parts at the end.
 - Long articles open with an "On this page" list of their sections and a reading time; each entry jumps to its section.
 - Searching on the home page narrows the posts live as you type, matching titles and summaries, with a count of how many posts match. Escape or Show all posts clears it, and the search is kept in the address (`?q=`), so it's still there when you come back from an article.

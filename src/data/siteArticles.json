@@ -1,5 +1,34 @@
 [
   {
+    "slug": "botlegger",
+    "title": "BotLegger: Your Own Team of AI Bots &mdash; Home",
+    "date": "2026-11-12",
+    "summary": "BotLegger is a free desktop app from Wyvern Systems for running your own team of AI bots that chat, research, write, and use your apps, with any AI model and your data kept on your own devices. Version 0.7.0 is a Mac beta.",
+    "imageUrl": "resources/botlegger-2026-11-12.jpg",
+    "articleHeroUrl": null,
+    "githubEmbed": null,
+    "demoUrl": null,
+    "repoUrl": null,
+    "youtubeId": null,
+    "otherEmbed": null,
+    "extraLinks": [
+      {
+        "label": "botlegger.com",
+        "href": "https://botlegger.com/",
+        "card": true
+      },
+      {
+        "label": "Wyvern Systems",
+        "href": "https://wyvernsystems.com/",
+        "card": true
+      }
+    ],
+    "releasesUrl": "https://github.com/wyvernsystems/botlegger-releases/releases/latest",
+    "bodyPath": "article-bodies/botlegger.html",
+    "topic": "ai-and-machine-learning",
+    "seoTitle": "BotLegger: A Free App for Your Own Team of AI Bots"
+  },
+  {
     "slug": "pitch-tracker",
     "title": "Pitch Tracker &mdash; Home",
     "date": "2026-11-07",

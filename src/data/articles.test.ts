@@ -289,7 +289,8 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     expect(card?.releasesUrl).toBe('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest')
     const withReleases = articles.filter((a) => a.releasesUrl).map((a) => a.slug)
     expect(list.filter((item) => item.releasesUrl).map((item) => item.slug)).toEqual(withReleases)
-    expect(withReleases).toHaveLength(3)
+    // ClamAV, Auto-Color, AI Rulebook, and BotLegger ship releases.
+    expect(withReleases).toHaveLength(4)
   })
 
   it('puts the extension store and company links on the extension cards', () => {
