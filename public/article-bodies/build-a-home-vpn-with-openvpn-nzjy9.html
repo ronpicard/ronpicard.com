@@ -1,6 +1,58 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">First, let’s talk about what VPNs are and why I recommend everyone have one. VPN stands for Virtual Private Network, but the name can sometimes be confusing. Essentially, a VPN is a protocol that allows a client to join a non-local network through an encrypted connection and pretend that a non-local network is their local network. Let’s break that down.</p><p class="">A VPN is essentially made up of two basic components: a server and a client. The server is the host of the VPN, while the client is a user of the VPN. When a client wants access to resources on the VPN, the client will initiate an encrypted connection to the VPN using common TCP or UDP protocols. Once connected, the client will be assigned an IP address by the server and have access to all the resources of the VPN. In our case, the client will also push all its network traffic through the encrypted connection to the VPN. This means that when a client accesses a web page with a browser, the client machine sends a request through an encrypted connection to the VPN, and the VPN sends this request out to the website on the public internet. Then, the website sends its response to the VPN, and the VPN then returns the response over an encrypted connection to the client machine’s web browser. With this in place, it becomes safe for a client to browse private information from a shared-public WiFi network (such as coffee shops, hotels, etc…).</p><p class="">To illustrate the usefulness of this encrypted connection let's look at the following example. Suppose that <em>Bob </em>is sitting at a coffee shop. Bob realizes he needs to check his bank account using the coffee shop’s WiFi. But wait, Bob can’t type in his password on a public WiFi network; that is not safe. Well, Bob was smart enough to have his own home VPN server. So Bob initiates a connection to the VPN, and then uses the VPN to access his bank account information through his secured home network. Because his connection to the VPN is encrypted, and his home network is secure, Bob’s login information remains safe!</p><p class="">Today, we are going to embark on a journey of how to build our own home VPN! Let’s get started!</p><p class=""><strong>To build and test our VPN, we are going to need three primary pieces of hardware.</strong></p><ol><li><p class="">A Linux-based computer OS. (I recommend a Raspberry Pi 3B, as that is what I utilize for mine. It’s a cheap Linux-based machine, that can be totally dedicated as a VPN server.)</p></li><li><p class="">Access to your home router’s port forwarding and firewall options.</p></li><li><p class="">A client for testing. (You can use any laptop; Windows, OSX, or Linux. Or you may use an Android phone. I have not tested any iOS clients, but I’m fairly confident that you could find a good OpenVPN client iOS app out there somewhere.)</p></li></ol><p class=""><strong>As for software, we need the following:</strong></p><ol><li><p class="">A Linux-based OS for our server. (If you are using a Raspberry Pi like me, I recommend using Raspbian.)</p></li><li><p class="">Whatever client software you wish to use.</p><ol><li><p class="">For Windows: <em>OpenVPN GUI</em> is a good option:</p></li><li><p class="">For Androids: I was able to use the <em>OpenVPN for Android</em> app</p></li><li><p class="">For OSX: A free client software like TunnelBear will work. Alternatively, you could run it via the terminal by <em>OpenVPN PathToDirectory/client.conf&nbsp;</em></p></li></ol></li></ol><p class="">With these items in mind, let’s get started!</p><p class=""><strong>Setting up the VPN server:</strong></p><p class="">Once you install Raspbian, run the following terminal commands in order:</p><p class="">$ sudo apt-get update -y</p><p class="">$ sudo apt-get upgrade -y</p><p class="">$ sudo apt-get install python-pip -y</p><p class="">$ sudo yes | pip install pexpect &amp;&amp; apt-get install libssl-dev -y</p><p class="">$ sudo apt-get install openvpn</p><p class=""><strong>Now we build the VPN itself:</strong></p><p class="">$ sudo cp -r /usr/share/easy-rsa /etc/openvpn/easy-rsa</p><p class="">$ sudo cp openssl-1.0.0.cnf openssl.cnf</p><p class="">$ sudo source ./vars &amp;&amp; ./clean-all &amp;&amp; ./build-ca</p><p class="">$ sudo source ./vars &amp;&amp; ./pkitool –server server</p><p class="">$ sudo source ./vars &amp;&amp; ./pkitool client1 &amp;&amp; ./pkitool client2 &amp;&amp; ./pkitool client3 &amp;&amp; ./pkitool client3 &amp;&amp; ./pkitool client4 &amp;&amp; ./pkitool client5 &amp;&amp; ./pkitool client6 &amp;&amp; ./pkitool client7 &amp;&amp; ./pkitool client8 &amp;&amp; ./pkitool client9 &amp;&amp; ./pkitool client10</p><p class="">$ sudo source ./vars &amp;&amp; ./build-dh</p><p class="">$ sudo openvpn –genkey –secret ta.key</p><p class="">And ta-da! We are done with the server!</p><p class=""><strong>Now let’s create the server configuration file:</strong></p><p class="">$ sudo touch /etc/openvpn/easy-rsa/keys/server.conf</p><p class="">$ sudo nano /etc/openvpn/easy-rsa/keys/server.conf</p><p class="">Copy the following in:</p><pre><code>port 1194
+<p>VPN stands for Virtual Private Network, but the name can be confusing. A VPN is a protocol that lets a client join a non-local network through an encrypted connection and act as if that network were its local one. I recommend that everyone have one, and this tutorial shows how to build your own at home with OpenVPN.</p>
+
+<h2>What a VPN does</h2>
+<p>A VPN has two parts: a server, which hosts the VPN, and a client, which uses it. When a client wants access to resources on the VPN, it starts an encrypted connection to the server over ordinary TCP or UDP. Once connected, the server assigns the client an IP address and the client can reach everything on the VPN.</p>
+<p>In our case the client also pushes all of its network traffic through the encrypted connection. When the client opens a web page, its browser sends the request through the encrypted connection to the VPN, the VPN sends the request out to the website on the public internet, the website replies to the VPN, and the VPN returns the response to the client over the encrypted connection. This makes it safe to browse private information from shared public WiFi in coffee shops, hotels and the like.</p>
+<p>Suppose Bob is sitting in a coffee shop and needs to check his bank account over the shop's WiFi. Typing his password into a public network is not safe. But Bob has his own home VPN server, so he connects to it first and reaches his bank through his secure home network. His connection to the VPN is encrypted and his home network is secure, so his login stays safe.</p>
+
+<h2>What you will build</h2>
+<figure>
+<img class="article-animated" alt="A remote client, for example on public WiFi, connects through an encrypted tunnel on TCP port 1194. The home router forwards that port to the VPN server inside the home network, which gives the client an address in 10.8.0.x and sends its requests out to a website on the public internet, returning the response through the tunnel." src="resources/vpn-tunnel.svg">
+<figcaption>The VPN this tutorial builds. The client's traffic enters the home network through the forwarded port 1194, and the VPN server sends it on to the internet and brings the reply back through the tunnel.</figcaption>
+</figure>
+
+<h2>What you need</h2>
+<p>For hardware:</p>
+<ul>
+<li>A Linux-based computer for the server. I recommend a Raspberry Pi 3B, which is what I use. It is a cheap Linux machine that can be dedicated to being the VPN server.</li>
+<li>Access to your home router's port forwarding and firewall options.</li>
+<li>A client for testing. Any Windows, OSX or Linux laptop will do, or an Android phone. I have not tested any iOS clients, but I am fairly confident a good OpenVPN client app exists for iOS.</li>
+</ul>
+<p>For software:</p>
+<ul>
+<li>A Linux-based OS for the server. On a Raspberry Pi I recommend Raspbian.</li>
+<li>A client of your choice. On Windows, OpenVPN GUI is a good option. On Android I used the OpenVPN for Android app. On OSX a free client such as TunnelBear will work, or you can run <code>openvpn PathToDirectory/client.conf</code> from the terminal.</li>
+</ul>
+
+<h2>Step 1: Install the server software</h2>
+<p>Once Raspbian is installed, run these commands on the server in order:</p>
+<pre><code>$ sudo apt-get update -y
+$ sudo apt-get upgrade -y
+$ sudo apt-get install python-pip -y
+$ sudo yes | pip install pexpect &amp;&amp; apt-get install libssl-dev -y
+$ sudo apt-get install openvpn</code></pre>
+
+<h2>Step 2: Build the certificates and keys</h2>
+<p>Now we build the VPN itself: a certificate authority, a server certificate, client certificates, Diffie-Hellman parameters and a TLS authentication key. These lines are run from the Easy-RSA directory, so copy it into place and change into it first.</p>
+<pre><code>$ sudo cp -r /usr/share/easy-rsa /etc/openvpn/easy-rsa
+$ cd /etc/openvpn/easy-rsa</code></pre>
+<p>Then run the following, in order:</p>
+<pre><code>$ sudo cp openssl-1.0.0.cnf openssl.cnf
+$ sudo source ./vars &amp;&amp; ./clean-all &amp;&amp; ./build-ca
+$ sudo source ./vars &amp;&amp; ./pkitool --server server
+$ sudo source ./vars &amp;&amp; ./pkitool client1 &amp;&amp; ./pkitool client2 &amp;&amp; ./pkitool client3 &amp;&amp; ./pkitool client3 &amp;&amp; ./pkitool client4 &amp;&amp; ./pkitool client5 &amp;&amp; ./pkitool client6 &amp;&amp; ./pkitool client7 &amp;&amp; ./pkitool client8 &amp;&amp; ./pkitool client9 &amp;&amp; ./pkitool client10
+$ sudo source ./vars &amp;&amp; ./build-dh
+$ cd keys
+$ sudo openvpn --genkey --secret ta.key</code></pre>
+<p><code>build-ca</code> asks a series of questions about the certificate authority. The playbook in the repository linked at the end accepts the default answer to each. In the original post the double-dash options were typeset as en dashes; the lines above use the plain <code>--</code> that the shell expects, as in the playbook. The <code>cd</code> lines come from the playbook too, which runs each command in the directory shown. Because <code>source</code> is a shell builtin, <code>sudo source</code> may fail on your system. If it does, open a root shell with <code>sudo -s</code> and run the same lines without <code>sudo</code>, which is how the playbook runs them.</p>
+<p>That is all for the keys. Each <code>pkitool</code> call creates a certificate and key for one client, so you get <code>client1</code> through <code>client10</code> and can give each device its own.</p>
+
+<h2>Step 3: Write the server configuration</h2>
+<p>Create the server configuration file:</p>
+<pre><code>$ sudo touch /etc/openvpn/easy-rsa/keys/server.conf
+$ sudo nano /etc/openvpn/easy-rsa/keys/server.conf</code></pre>
+<p>Copy the following in, then press control-x, y, enter to save:</p>
+<pre><code>port 1194
 proto tcp
 dev tun
 ca ca.crt
@@ -19,12 +71,44 @@ cipher AES-256-CBC
 persist-key
 persist-tun
 status openvpn-status.log
-verb 3</code></pre><p class="">Press control-x, y, and enter to save.</p><p class="">We are all done with the server side! Now onto the router configuration.</p><p class=""><strong>Router setup:</strong></p><p class="">This is a short two-step process.</p><ol><li><p class="">Set up a static IP for your VPN server.</p></li><li><p class="">Enable port forwarding to port 1194 for the static IP you just set</p></li></ol><p class="">Note, if you are having problems and this appears to be set correctly, temporarily disable your router firewall to see if the firewall is still blocking the port. Sometimes you have to set the firewall setting to low in order for this to work.</p><p class="">Now onto the client setup.</p><p class=""><strong>Client setup:</strong></p><p class="">Depending on which client you are using, you may or may not need to manually write a server configuration file:</p><p class="">For Android:</p><p class="">Use SFTP to download the following four files from the /etc/openvpn/easy-rsa/keys directory to your computer. (Note you may need to adjust the permissions of the files with <em>sudo ugo+rw file</em> to download them.)</p><p class="">ta.key</p><p class="">ca.crt</p><p class="">client1.crt</p><p class="">client1.key</p><p class="">Now plug in your Android to your computer, make a folder on the Android named OpenVPN, and place the 4 files there.</p><p class="">Now open the <em>OpenVPN for Android</em> app and add a profile.</p><p class="">Name the profile, and then select the CA Certification (it’s the ca.crt), Client Certificate (it’s the client1.crt), and the Client Certificate Key (it’s the client1.key file) by using the select button and navigating the files in the OpenVPN folder you just created.</p><p class="">Next, click over to the server list tab. For the server address place your public IP (google what is my IP if you can’t find it) address (unless you have your own domain name linked to your public IP like foo.com, then put that). The port number should be 1194. Select the TCP protocol (assuming you used the server config that I provided earlier. If you switched to UDP then select UDP here.)</p><p class="">Next, click over to the IP and DNS tab. Scroll to the bottom and place the following DNS IPs (these are Google’s, which I prefer, but feel free to use others that you trust.) in the following fields:</p><p class="">DNS Server: 8.8.8.8</p><p class="">Backup DNS Server: 8.8.4.4</p><p class="">Also check the box that says, “Override DNS Settings by Server.”</p><p class="">Next, click over to routing, and check the IPv4 box that says Use Default Route.</p><p class="">Next, click over to Authentication/encryption. Check the box that says, “Expect TLS server certificate”. Scroll the bottom, enable “Use TLS Authentication”, and the TLS Auth File to be the TA.Key file that you copied.</p><p class="">Finally, click over to the Allowed Apps tab, and ensure that “VPN is used for all apps but exclude selected” is enabled. Also, ensure that none of the boxes are checked.</p><p class="">Now we are ready to test! Jump on LTE or a different WiFi network and click the one you just created. Assuming everything is set correctly it should say that the VPN is activated. To test that you are on your home network, Google What is my IP, and see if it matches the public IP of your home network. If it does, congratulations, you have successfully created your own home VPN!</p></div>
+verb 3</code></pre>
+<p>A few of these lines matter for what we are building. The server listens on TCP port 1194 and gives each client an address in <code>10.8.0.0/24</code>. The <code>redirect-gateway</code> line is what pushes all of the client's traffic through the tunnel, and the two <code>dhcp-option</code> lines give the client Google's DNS servers. The server side is now done.</p>
 
+<h2>Step 4: Set up your home router</h2>
+<p>This is a short two-step process on the router:</p>
+<ol>
+<li>Set up a static IP for your VPN server.</li>
+<li>Enable port forwarding to port 1194 for the static IP you just set.</li>
+</ol>
+<p>If things do not work and this looks correctly set, temporarily disable your router's firewall to see whether it is still blocking the port. Sometimes the firewall setting has to be set to low for this to work.</p>
 
-  
+<h2>Step 5: Set up a client</h2>
+<p>Depending on the client, you may or may not need to write a configuration file by hand. Here is the Android client, which I used.</p>
+<h3>Copy the files to the phone</h3>
+<p>Use SFTP to download these four files from <code>/etc/openvpn/easy-rsa/keys</code> to your computer:</p>
+<pre><code>ta.key
+ca.crt
+client1.crt
+client1.key</code></pre>
+<p>You may need to adjust the permissions so you can download them:</p>
+<pre><code>$ sudo chmod ugo+rw file</code></pre>
+<p>Plug the Android into your computer, make a folder on it named <code>OpenVPN</code>, and put the four files there.</p>
+<h3>Create the profile in OpenVPN for Android</h3>
+<ol>
+<li>Open the OpenVPN for Android app and add a profile. Name it, then use the select buttons to choose the CA certificate (<code>ca.crt</code>), the client certificate (<code>client1.crt</code>) and the client certificate key (<code>client1.key</code>) from the <code>OpenVPN</code> folder you made.</li>
+<li>On the server list tab, enter your public IP address (search for "what is my IP" if you cannot find it), or your own domain name if you have one linked to your public IP. Set the port to <code>1194</code> and select the TCP protocol, which matches the server configuration above. If you switched the server to UDP, select UDP.</li>
+<li>On the IP and DNS tab, scroll to the bottom and set the DNS server to <code>8.8.8.8</code> and the backup DNS server to <code>8.8.4.4</code>. These are Google's, which I prefer, but use others you trust if you like. Check "Override DNS Settings by Server".</li>
+<li>On the routing tab, check the IPv4 box "Use Default Route".</li>
+<li>On the authentication/encryption tab, check "Expect TLS server certificate". Scroll to the bottom, enable "Use TLS Authentication", and set the TLS Auth File to the <code>ta.key</code> you copied.</li>
+<li>On the allowed apps tab, make sure "VPN is used for all apps but exclude selected" is enabled and that none of the boxes are checked.</li>
+</ol>
 
+<h2>Step 6: Test it</h2>
+<p>Switch the phone to LTE or a different WiFi network and tap the profile you just created. If everything is set correctly, it will report that the VPN is activated.</p>
+<p>To check that you are really coming out of your home network, search for "what is my IP" and see whether the address matches the public IP of your home network. If it does, you have built your own home VPN.</p>
 
+<h2>A note from 2026</h2>
+<p>This tutorial is from 2019, and several parts have moved on. Easy-RSA has been rewritten: its current version uses a single <code>easyrsa</code> command instead of the <code>vars</code>, <code>clean-all</code> and <code>pkitool</code> scripts used here. Python 2 and its <code>pip</code> package are gone from current systems, and Raspbian is now called Raspberry Pi OS. OpenVPN itself has also changed how it sets cipher options and the syntax of some commands, so check its current documentation before copying the configuration. WireGuard has also become a popular and much simpler alternative to OpenVPN, with far less to configure. The steps above are unchanged from the original, so treat them as a record of how I built it at the time.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Source</h2>
+<p>The commands are also automated as an Ansible playbook in the <a href="https://github.com/ronpicard/raspberrypi-openvpn">raspberrypi-openvpn</a> repository.</p>

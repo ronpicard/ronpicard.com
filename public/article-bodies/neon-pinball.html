@@ -1,0 +1,20 @@
+<p>Neon Pinball is a 3D pinball machine in retro arcade neon: a full cabinet with a lacquered playfield, a steel ball, lamps under the glass, and a dot-matrix scoreboard, standing in an arcade among rows of glowing cabinets. You pull the plunger, work the flippers, and nudge the table, carefully, because it can tilt.</p>
+<p>The table has three pop bumpers, slingshots, lane-change top lanes, drop and standup targets, a spinner, a saucer with mystery awards, and a ramp that starts a three-ball multiball with 25,000-point jackpots. You play with the keyboard, or on a phone by tapping either side of the screen, from three camera views. The five best scores are saved with your initials. An autoplayer proves in the test suite that the table never traps a ball, and it plays the attract mode behind the menu.</p>
+
+<h2>How it works</h2>
+<p>As in the other games, the logic is separate from the rendering: <code>src/game/</code> holds the table layout, physics, rules, scoring, and autoplayer with no DOM or Three.js, and <code>src/render/</code> holds the Three.js engine, playfield, cabinet, and arcade room.</p>
+<p>The ball is simulated in two dimensions on the sloped playfield, 480 steps a second, so at full speed it never moves more than a third of its own radius between collision checks. Walls, posts, targets, and the one-way shooter gate are line segments and circles with their own bounce. The flippers are rotating capsules, and the ball takes the speed of the point it touches, so a shot off the tip is faster than one off the base and a held flipper can cradle a ball. The ramp lifts the ball onto a rail where it slows against the climb, then either rolls back out or crests and runs down to the left inlane. Balls collide with each other in multiball. Nothing in the simulation is random, so the same inputs always play the same game, and a ball that sits still for four seconds with no flipper held is kicked free, like a real machine's ball search.</p>
+<p>The autoplayer drives the real physics and rules: it pulls the plunger and flips when a ball comes into reach. The tests play full games with it and fail if a ball leaves the table, gets stuck, or never reaches the playfield, or if a game fails to exercise the bumpers, slingshots, rollovers, flippers, and drain.</p>
+<p>All textures are drawn in code at start-up, from the playfield art and backglass to the dot-matrix scoreboard and wear maps, and sounds are synthesised at runtime. The ball and lacquer reflect the arcade room itself. The engine watches its frame rate and steps rendering cost down when frames stay slow, and <code>?quality=high</code> or <code>?quality=low</code> pins it.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Left flipper: <code>Left Arrow</code>, <code>Left Shift</code>, <code>Z</code>, or <code>A</code>. Right flipper: <code>Right Arrow</code>, <code>Right Shift</code>, <code>/</code>, <code>M</code>, or <code>D</code>.</li>
+<li>Plunger: hold <code>Space</code>, <code>Enter</code>, or <code>Down Arrow</code> and let go to launch. A full pull sends the ball around the top arch and down the left orbit, and a soft one drops it into the top lanes.</li>
+<li>Nudge: <code>Q</code> shoves left, <code>E</code> right, and <code>W</code> or <code>Up Arrow</code> up. The third warning tilts the machine, which kills the flippers and the ball's bonus.</li>
+<li>Touch: hold the left or right side of the screen to flip. Hold the <code>HOLD TO LAUNCH</code> button, or the right side, and release to launch. <code>NUDGE</code> shoves the table up.</li>
+<li><code>C</code> or the camera button cycles the three views, and <code>P</code> or <code>Escape</code> pauses.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, and Three.js with a bloom pass for the neon, built with Vite. Sound is synthesised with Web Audio, tests use Node's built-in test runner, and high scores are kept in <code>localStorage</code> with no backend.</p>

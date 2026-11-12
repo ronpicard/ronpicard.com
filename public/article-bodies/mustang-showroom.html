@@ -1,0 +1,19 @@
+<p>Mustang Showroom is a 1969 Ford Mustang Mach 1 SportsRoof, in the style of the John Wick film car, on a turntable in a dark polished showroom: physically based paint with clearcoat, chrome, tinted glass, a reflective floor, and spotlights and long soft light panels streaking along the bodywork.</p>
+<p>Orbit and zoom around the car or jump between nine fixed views, open the hood, doors and trunk on their hinges, and drag the explode slider to pull all sixty parts apart, from the body panels and trim down to the wheels, chassis and engine. Click any part to read what it is and its specs while the rest of the car turns to faint glass around it, choose from eight paints including the film car's charcoal and seven genuine 1969 Ford colours, switch on the headlights and amber turn signals, and start a V8 built from real engine recordings that shakes the engine bay and revs on demand. An About panel covers the 1969 restyle, the Mach 1, the Boss 429, the year's engine line-up and the film car. Keyboard control runs throughout, with touch controls for phones.</p>
+
+<h2>How it works</h2>
+<p>There is no 3D model file. The car is built in code from named dimensions: body panels, quad headlights, taillights, wheels, the floor and suspension underneath, a V8 in the engine bay, and the interior. The body is a stand-in for the real car, with some mechanical detail simplified so the whole car stays light enough to explode and orbit smoothly, and the film-car finish is inspired by the movie rather than a factory-correct restoration.</p>
+<p>The parts catalogue, dimensions, paint rack and explode and hinge maths live in <code>src/car/</code>, with no three.js and no DOM, so they are unit tested without a browser. The explode slider moves every piece along its own path, staggered so the outer panels move first. Clicking a part flies the camera to it and fades the rest of the car to glass.</p>
+<p>The engine plays four short field recordings, a start, an idle loop and two rev blips, pitch-shifted through Web Audio to follow an rpm model, with a 1969 Mustang 302 recording layered on hard revs. If the recordings fail to load, the same model drives a V8 synthesised at start-up. The latch, explode and light sounds are synthesised.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Drag to orbit and scroll or pinch to zoom; keys 1 to 9 jump between the fixed camera views.</li>
+<li>E toggles explode, H the hood, D both doors, T the trunk, and L the headlights.</li>
+<li>S starts or stops the engine, and holding Space revs it while it runs.</li>
+<li>R toggles the turntable, P picks the next paint, M mutes, and ? or I opens the About panel.</li>
+<li>Escape closes About, or otherwise deselects the part.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React and TypeScript for the panels, plain three.js for the showroom and the car, Web Audio for the engine, and Vite. Paint, mute and turntable settings are kept in your browser. The engine recordings are credited in the repository.</p>

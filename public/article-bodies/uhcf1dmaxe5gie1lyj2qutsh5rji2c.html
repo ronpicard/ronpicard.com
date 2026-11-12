@@ -1,0 +1,19 @@
+<p>This is a browser-based 3D simulator of the 12-sided Megaminx puzzle, built with React and Three.js. You can shuffle it, turn any face, and watch it solve itself.</p>
+<p>It also includes a Learn mode and a how-to-solve guide, along with a move counter and timer.</p>
+
+<h2>How it works</h2>
+<p>The puzzle state is simple: twelve faces, each an array of eleven tile colors (a center and ten tiles around the rim). Turning a face rotates that array and cycles the three-tile strips on its five neighboring faces, using a hand-written adjacency table in <code>App.js</code>. Shuffle applies 30 random turns and records them. The Solve button replays that history in reverse with each turn inverted, speeding up as it goes. The puzzle counts as solved when every face is a single color.</p>
+<p>For rendering, the puzzle is built from the 20 vertices of a dodecahedron, computed with the golden ratio. Each face is a pentagon that is cut into tiles and triangulated for Three.js. A turn is animated by attaching the face's pieces to a pivot and rotating it with an eased quaternion, and then the logical state is updated. Raycasting finds which face you touched.</p>
+<p>The Learn mode steps through the main stages, such as building the star, inserting corners and pairing edges, drawing arc arrows on the face to turn. Demo buttons play each technique's move sequence on the puzzle.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Drag on empty space to orbit the puzzle.</li>
+<li>Drag across a face to turn it clockwise or counterclockwise, depending on the drag direction.</li>
+<li>Click or tap a face to select it, then use the left and right arrow buttons to turn it.</li>
+<li>Shuffle scrambles, Solve reverses your moves, Learn starts the tutorial, and Reset restores the solved state.</li>
+<li>How to solve opens the written guide.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19 and Three.js, bundled with Create React App. The source is on <a href="https://github.com/ronpicard/megaminx-12-sided-rubiks-cube-web-app">GitHub</a>.</p>

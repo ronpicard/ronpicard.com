@@ -1,0 +1,18 @@
+<p>Orbit Golf is 18 holes of 3D mini-golf in space. A green alien golfer putts along walled neon courses that bend, zigzag, and spiral, while real Newtonian gravity from planets, moons, and black holes curves every shot. The ball banks off walls, rolls to a stop, and you play it where it lies, with flying saucers, satellites, and a cheering alien crowd looking on. A solver proves every hole can be finished, and the game works with touch, mouse, and keyboard.</p>
+
+<h2>How it works</h2>
+<p>At every point on the course, the ball's acceleration is the sum of the pull from every massive body, <code>mu · r / |r|³</code>, where <code>mu</code> is the body's gravitational parameter and <code>r</code> the vector from the ball to it. This is plain planar Newtonian gravity with no scripted paths. The simulation runs at a fixed 1/240 second step: velocity-Verlet integration of gravity, then rolling resistance and linear drag, then wall collision that reflects off the nearest edge while keeping part of the speed. Friction is deliberate, so every putt eventually settles. The ball counts as resting only when it is slow and the local gravity is too weak to restart it, and a ball crossing the cup too fast lips out.</p>
+<p>The rubber-sheet fairway under the ball is the gravitational potential, computed live in the vertex shader from the same body positions and masses the physics uses. The same clamped function runs in TypeScript, so the ball and bodies sit exactly on the surface the grid shows. It is only a visualisation and does not change the physics.</p>
+<p>Moons, saucers, and moving cups ride fixed rails with a set period and phase, driven by one course clock, so a stroke is determined by its lie, its aim, and the clock, and the aim preview is exact. Black holes, saucer beams, and leaving the course are hazards that replay the stroke from where it started. A wormhole carries the ball between two mouths at the same speed and heading.</p>
+<p>Every hole is proven finishable. <code>scripts/solve.ts</code> runs a beam search over the same headless <code>simulate</code> function the game uses, sweeping angles and powers and ranking results by a walking-distance field over the fairway. The winning shots are stored in <code>src/game/solutions.ts</code> and replayed by the test suite, which asserts all 18 holes finish at or under par. A Sandbox mode lets you place planets and black holes in a walled room.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Drag left or right to turn the golfer and the view, drag up to add power, and release to putt. A sideways-only drag just looks around.</li>
+<li>Angle and power nudge buttons fine-tune the aim, and <code>FIRE</code> putts.</li>
+<li>Keyboard: arrow keys adjust angle and power (hold <code>Shift</code> for 5 times the step), <code>Space</code> or <code>Enter</code> swings, <code>R</code> restarts the hole, and <code>Escape</code> opens the menu.</li>
+<li>Ten strokes is the limit per hole. Progress and best scores are saved in your browser.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, and Three.js with custom shaders, built with Vite. Sound is synthesised with Web Audio, and tests use Node's built-in test runner.</p>

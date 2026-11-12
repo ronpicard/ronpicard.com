@@ -1,0 +1,21 @@
+<p>Domino Topple is a 3D chain-reaction puzzle set on tabletops in three furnished rooms: a study with a desk lamp and bookshelf, a garage workshop with a pegboard of tools, and a pastel playroom strewn with toys. Every level has a trigger, such as a swinging pendulum, a wind-up car or a marble chute, and a goal, such as a bell, a flag or a cup. You build the chain between them from dominoes, stairs, bridges, levers, marbles, ramps and springs, then press GO and watch the physics play out.</p>
+<p>Drag across the table to lay a whole row of glossy ivory dominoes at once, turn or remove pieces from the buttons that appear above them, and replay a run in slow motion. Fifteen levels award up to three stars each for reaching the goal, beating par and knocking over the bonus star, and a sandbox hands you the full set of pieces. It works with mouse, keyboard and touch on desktops and phones.</p>
+
+<h2>How it works</h2>
+<p>Every run is a real rigid-body simulation with Rapier, in centimetres and seconds, stepped at a fixed 120 steps a second. Dominoes are solid blocks with real mass and friction. The pendulum, lever and bridge swing on hinges, and marbles use continuous collision detection so they never tunnel through a thin domino. A run succeeds the moment the goal is reached, and fails once everything has come to rest without reaching it, or after 40 seconds.</p>
+<p>The browser and the test suite use the same simulation code, and a run with the same layout always plays out the same way. Every level ships with a reference solution, and the tests run it headlessly and check that it earns all three stars and that the level cannot be finished from an empty table.</p>
+<p>Game logic is kept apart from rendering and input. The piece catalogue, levels, editor, placement rules and scoring are in <code>src/game/</code>, and the react-three-fiber scene is in <code>src/scene/</code>, using instanced dominoes so a long row costs one draw call. Graphics come in three tiers, and on Auto the game measures its own frame time when a level opens and picks one. Sound effects are synthesised in code at runtime.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Tap the table to place a piece, or drag across it to lay a row. Tap a placed piece to select it, then turn or remove it from the buttons above it or drag it to move it.</li>
+<li>GO runs the physics, STOP returns to building with your layout intact, and the half-speed button plays the run in slow motion.</li>
+<li>Keys 1 to 8 select a dock piece, V is the Hand tool, and 0 or Esc deselects.</li>
+<li>Arrow keys nudge the preview or selected piece, Enter places it, Q and E rotate by 15 degrees, R rotates by 90, and Delete removes it.</li>
+<li>Ctrl or Cmd with Z undoes, with Shift redoes. Space is GO or STOP, S is slow motion.</li>
+<li>Bracket keys turn the view, plus and minus zoom, T is the top view, C resets the camera, and H opens help.</li>
+<li>On a touch screen, drag with two fingers to slide the view and pinch to zoom.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React, TypeScript, react-three-fiber, drei and Three.js, with postprocessing for ambient occlusion and bloom, Rapier for physics, Web Audio, and Vite. Progress and settings are kept in your browser.</p>

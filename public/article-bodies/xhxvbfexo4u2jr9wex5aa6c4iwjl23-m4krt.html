@@ -1,0 +1,16 @@
+<p>Encryption Explorer is an interactive walkthrough of classical and modern ciphers, from Caesar to AES, RSA, and post-quantum ideas. It includes visuals, editable sample code with live output, and a 3D invention globe.</p>
+<p>Each topic gives a short history (who, where and when), a math summary, implementation steps, and plain-language notes on classical versus quantum attacks. It is educational only. The rough break-time figures are teaching aids, not security proofs, and real systems should use Web Crypto and well-vetted libraries.</p>
+
+<h2>How it works</h2>
+<p>The app covers eight topics: Caesar, monoalphabetic substitution, Vigenère, the one-time pad, DES, AES, RSA and public-key ideas, and post-quantum cryptography. The topic text, code samples and metadata live in <code>src/cryptoTopics.js</code>. You can sort the list by time or by strength.</p>
+<p>The visuals in <code>CryptoDemos.jsx</code> animate individual steps such as a Feistel round or an AES round, and <code>CryptoInternetVisuals.jsx</code> explains RSA and the quantum and post-quantum ideas. The live code panels run real functions from <code>codeRunners.js</code>, which are the same logic as the sample snippets. The panels do not evaluate arbitrary code; you change the inputs and the result updates. Examples are Caesar shifts, a fixed substitution alphabet, Vigenère, XOR for the one-time pad, a toy Feistel half-round, and modular exponentiation for RSA.</p>
+<p>The invention globe is a lazy-loaded component that shows geographic context for each topic, with labeled cities such as Rome, Baghdad and Gaithersburg (NIST).</p>
+
+<h2>Controls</h2>
+<ul>
+<li>By time and By strength sort the topic list.</li>
+<li>Text and number fields in each live panel (message, shift, key) update the result as you type.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19 and Vite 8, with Three.js through React Three Fiber and drei for the globe, and Vitest and Testing Library for tests. The source is on <a href="https://github.com/ronpicard/encryption-explorer-web-app">GitHub</a>.</p>

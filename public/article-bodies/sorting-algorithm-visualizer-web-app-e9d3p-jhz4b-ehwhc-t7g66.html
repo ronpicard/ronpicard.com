@@ -1,0 +1,33 @@
+<p>This is an interactive visualizer for aircraft aerodynamics, stability, and navigation. You can adjust angle of attack, control surfaces, thrust, and wind, and see what each change does to the aircraft.</p>
+<p>The page is organized into three groups of topics, and each topic has its own animated canvas with sliders and a short explanation.</p>
+
+<h2>How it works</h2>
+<p>Aerodynamics 101 has three topics:</p>
+<ul>
+<li><strong>Four forces:</strong> lift, weight, thrust, and drag, with sliders for thrust and angle of attack. In steady flight lift equals weight and thrust equals drag, and any imbalance accelerates the aircraft.</li>
+<li><strong>Axes and controls:</strong> the longitudinal, lateral, and vertical axes with ailerons (roll), elevator (pitch), and rudder (yaw), shown on a 3D aircraft model.</li>
+<li><strong>Airfoil:</strong> a particle flow over a wing section based on Bernoulli's principle. Past about 16 degrees of angle of attack the flow separates, the particles turn red and chaotic, and lift collapses in a stall.</li>
+</ul>
+<p>Stability Analysis has one topic per axis, each with a Perturb button that disturbs the aircraft so you can watch whether it recovers:</p>
+<ul>
+<li><strong>Pitch:</strong> static margin as a percentage of mean aerodynamic chord, from -10% to 100%, with notes on the short-period and phugoid modes.</li>
+<li><strong>Roll:</strong> the dihedral effect, with dihedral and wing sweep sliders.</li>
+<li><strong>Yaw:</strong> weathercock stability, with fin size and tail arm sliders.</li>
+</ul>
+<p>Atmosphere and Navigation has three topics:</p>
+<ul>
+<li><strong>Types of direction:</strong> true and magnetic north, course versus heading, and GPS track, with sliders for true course, magnetic variance, wind direction and speed, and true airspeed.</li>
+<li><strong>Types of altitude:</strong> indicated, pressure, density, true, absolute, GPS, and flight level, driven by indicated altitude, barometer setting, temperature, and terrain height.</li>
+<li><strong>Types of airspeed:</strong> IAS, CAS, EAS, TAS, ground speed, and Mach, driven by indicated airspeed, altitude, temperature, and headwind.</li>
+</ul>
+
+<h2>Controls</h2>
+<ul>
+<li>Pick a topic from the three groups at the top.</li>
+<li>Each topic has its own sliders: thrust, angle of attack, aileron, elevator, and rudder deflection, static margin, perturbation size, dihedral, sweep, fin size, tail arm, wind, and the altitude and airspeed inputs.</li>
+<li>Neutral returns the control surfaces to zero. Perturb! disturbs the aircraft in the stability topics, and Reset restores it.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>A single HTML page with plain JavaScript and canvas drawing, including a simple 3D projection for the aircraft model. There are no libraries.</p>
+<p>The source is on <a href="https://github.com/ronpicard/aircraft-aerodynamics-stability-navigation-visualizer-web-app">GitHub</a>.</p>

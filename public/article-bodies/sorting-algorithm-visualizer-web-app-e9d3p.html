@@ -1,0 +1,26 @@
+<p>This is an interactive visualizer for search and pathfinding algorithms. You pick an algorithm and watch it find a route through a maze, with live statistics for steps, path length, and cells visited. The 14 algorithms are grouped as uninformed, informed, memory-bounded, and probabilistic.</p>
+<p>The task is the same each time: get from the green start to the red goal on a grid of open cells and walls, where each step costs 1. Because the maze is shared, you can compare how each strategy shapes the region it explores, the quality of the path, and the speed.</p>
+
+<h2>How it works</h2>
+<p>The maze is a 40 by 24 grid drawn on a canvas, with about 27% of cells made walls at random. Each algorithm is its own function that animates one step at a time on a short timer, coloring visited cells, the frontier, and the final path. The side panel shows the active algorithm, its type, and its time and space complexity, and a description panel explains how it works and what to watch for.</p>
+<p>The algorithms, by group:</p>
+<ul>
+<li><strong>Uninformed:</strong> depth-first search (a stack), breadth-first search (a queue), and bidirectional BFS, which grows one wavefront from the start and one from the goal.</li>
+<li><strong>Informed:</strong> branch and bound, Dijkstra, A*, bidirectional A*, greedy best-first, weighted A*, jump point search, and beam search (k = 8).</li>
+<li><strong>Memory-bounded and iterative:</strong> IDA*, and D* Lite, which replans when the maze changes.</li>
+<li><strong>Probabilistic:</strong> RRT*, which grows a tree from random samples in continuous space and rewires nearby nodes to lower their cost.</li>
+</ul>
+<p>Two controls show trade-offs directly. The weighted A* slider sets ε from 1 (plain A*, optimal) to 5 (faster, but the path can be longer). D* Lite is the one algorithm that responds to the maze while it runs: draw new walls and it repairs only the part of its search that the change affects.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Click an algorithm button to run it on the current maze.</li>
+<li>Click or drag on the grid to toggle walls. The start and goal cannot be edited.</li>
+<li>During a D* Lite run, drawing walls triggers a replan.</li>
+<li>The Weighted A* ε slider runs from 1 to 5.</li>
+<li>Reset Maze generates a new random maze.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>A single HTML page with plain JavaScript and the canvas API. There are no libraries.</p>
+<p>The source is on <a href="https://github.com/ronpicard/search-algorithms-visualizer-web-app">GitHub</a>.</p>

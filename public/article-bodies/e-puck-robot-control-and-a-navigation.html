@@ -1,11 +1,63 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">A common problem in autonomous route planning and controls is to implement efficient motor control, sensor feedback, and route planning algorithms to allow a robot to successfully navigate and traverse a line grid maze from a start point to a different destination point in an efficient manner. We present an E-Puck controller that utilizes ground sensor feedback to perform a variety of functions; detect nodes (cross-sections), detect lines just past nodes, provide Braitenberg line tracking functionality, and allow for left and right turns on a line grid. In addition, we present an AStar algorithm that is utilized to efficiently solve for a route from a start node to an end node in a line grid maze. Finally, we present tuned parameters for node detection, line just past node detection, line following, turning logic, and ground sensor threshold parameters resulting in a stable system.</p></div>
+<p>A common problem in autonomous route planning and controls is to implement efficient motor control, sensor feedback, and route planning algorithms to allow a robot to successfully navigate and traverse a line grid maze from a start point to a different destination point in an efficient manner. We present an E-Puck controller that utilizes ground sensor feedback to perform a variety of functions: detect nodes (cross-sections), detect lines just past nodes, provide Braitenberg line tracking functionality, and allow for left and right turns on a line grid. In addition, we present an A* algorithm that is utilized to efficiently solve for a route from a start node to an end node in a line grid maze. Finally, we present tuned parameters for node detection, line just past node detection, line following, turning logic, and ground sensor threshold parameters resulting in a stable system.</p>
+<p>This was the project for EECE 5257, Control Systems 1, at Vanderbilt University. I wrote the controller in C and developed it in Webots, a robot simulator, before running it on a real E-Puck on a taped grid.</p>
 
+<h2>The robot and the setup</h2>
+<p>The E-Puck 1.0 is a small differential-wheel robot. Its ground sensor extension pack puts three infrared sensors side by side across the front, which gives a left, a centre, and a right reading, enough to tell where a line is.</p>
+<p>The task was a 12 by 12 line grid. I built two copies of it. The virtual one is a texture drawn in Paint3D from pixel calculations that mirror the real board, imported into Webots next to a virtual E-Puck. The physical one is a smooth wooden board, roughly 4 ft by 4 ft, with double strips of 3/8 inch black painters tape forming 6/8 inch lines. In Webots the same C controller can run in the simulation or, by switching to a Bluetooth port, on the real robot.</p>
 
-  
+<h2>Following a line</h2>
+<p>Line following is a simple Braitenberg controller. It takes the difference between the left and right ground sensor readings, multiplies it by a gain between 0 and 1, subtracts that from a fixed standard speed for one wheel and adds it to the other. If the robot drifts off to one side, the difference changes sign and speeds up the opposite wheel, so it always steers back. The result is a gentle sweeping motion along the line.</p>
+<p class="article-math">LeftWheelSpeed = Standard_Speed − Gain × (LeftSensor − RightSensor)<br>RightWheelSpeed = Standard_Speed + Gain × (LeftSensor − RightSensor)</p>
+<figure>
+<img class="article-animated" alt="Block diagram. The left and right ground sensors feed a difference block, multiplied by a gain between 0 and 1 (0.3 in the final tuning). The left wheel gets the standard speed minus gain times the difference, and the right wheel the standard speed plus gain times the difference. The centre sensor is used for node detection." src="resources/ep-astar-braitenberg.svg">
+<figcaption>One difference signal drives both wheels in opposite directions. The centre sensor takes no part in the steering; it matters for finding nodes.</figcaption>
+</figure>
 
+<h2>Nodes, turns and thresholds</h2>
+<p>Because black tape absorbs infrared light, a sensor reads a lower value over tape than over the board. Each sensor compares its reading to two thresholds, one for a line and one for the board. The lines are narrow enough that only two sensors are ever over one at a time, so when all three read a line the robot is at a node. It checks several consecutive readings to be sure, then drives straight until it is back on a line just past the node. A flag set at the node is flipped when the three sensors no longer see a node together, and line following resumes.</p>
+<p>To turn, the robot waits until it is just past the node, runs line following briefly to move away from it, then locks into a turning mode with fixed wheel speeds for the direction. While locked it ignores the sensors, which keeps the line it started on from being confused with the line it will finish on. Part way through the turn it unlocks, and as soon as the ground sensors find a new line it returns to line following. The turn is nearly, but not completely, a rotation in place.</p>
+<figure>
+<img class="article-animated" alt="State diagram. Line following leads to On a node when all three ground sensors see a line, then to Just past the node when they no longer do. With no turn needed it returns to line following. For a turn it pauses and steps off the node, locks into fixed turning wheel speeds while ignoring sensors, unlocks mid-turn, and returns to line following when a new line is detected." src="resources/ep-astar-states.svg">
+<figcaption>The path through one node. The upper route is a straight pass, the lower loop is a turn. The turn lock is the step that separates the old line from the new one.</figcaption>
+</figure>
+<p>The thresholds differ between the simulation and the real board, and using one set for the other caused significant line-tracking errors. These values were the most stable:</p>
+<table>
+<thead>
+<tr><th>Environment</th><th>Board detected</th><th>Line detected</th></tr>
+</thead>
+<tbody>
+<tr><td>Simulation</td><td>above 700</td><td>below 600</td></tr>
+<tr><td>Physical board</td><td>above 550</td><td>below 400</td></tr>
+</tbody>
+</table>
+<p>A reading between the two thresholds counts as neither. The guideline is to overestimate being on the board and underestimate being on the line.</p>
 
+<h2>Planning a route with A*</h2>
+<p>A user describes the maze as a two-dimensional array in which 1 is a drivable node and 0 is a wall. The code parses it into a graph of the directions available at each node and runs A* over it with a push-pop queue. The heuristic is the Manhattan distance from a neighbour to the goal, and the search stops when it reaches the goal. The solution is stored as a chain of references from the goal back to the start, so it is extracted recursively and then reversed.</p>
+<p class="article-math">h(node) = |NeighborNodeX − GoalNodeX| + |NeighborNodeY − GoalNodeY|</p>
+<figure>
+<img class="article-animated" alt="An illustrative 12 by 12 grid maze with walls. A* starts at S at the bottom left and expands 59 of 87 drivable nodes, always taking the lowest cost plus Manhattan distance to the goal, until it reaches G at the top right. The route found is 25 moves long." src="resources/ep-astar-search.svg">
+<figcaption>An illustrative maze I made for this figure, not the one in the paper, searched with standard A* and the paper's heuristic. Blue nodes are expanded in order, then the route is traced.</figcaption>
+</figure>
+<p>The plan is in global directions (up, down, left, right), but the robot needs commands relative to its own heading. A control-flow function walks the solution and converts it, merging repeated steps into commands for the high-level wrapper <code>drive(nodes, direction)</code>, where the direction is left, right, or straight. A call such as <code>drive(5, left)</code> goes to the next node, turns left, and drives 5 nodes.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Results on the real robot</h2>
+<p>On the real board results are not deterministic as they are in simulation, so I tested each of the three basic maneuvers 25 times. For straight lines the robot followed a line across the whole board. A turn counted as successful if it left the line just past a node and picked up the line on the new side.</p>
+<table>
+<thead>
+<tr><th>Maneuver</th><th>Successes</th><th>Failures</th><th>Success rate</th></tr>
+</thead>
+<tbody>
+<tr><td>Straight line</td><td>25</td><td>0</td><td>100%</td></tr>
+<tr><td>Left turn</td><td>25</td><td>0</td><td>100%</td></tr>
+<tr><td>Right turn</td><td>23</td><td>2</td><td>96%</td></tr>
+</tbody>
+</table>
+<p>Complicated routes under A* exposed more errors. Two changes made them rare. I scaled the Braitenberg gain down to 0.3 to narrow the sweeping motion, and I added a short pause when the robot returns to a line after a node, followed by a brief burst of line following to move away from the node before a turn. With both, the E-Puck rarely fails on complex routes.</p>
+
+<h2>Conclusions</h2>
+<p>The controller uses the ground sensors to detect nodes and the line just past them, to track lines with Braitenberg control, and to turn left or right on a 12 by 12 line grid. A* finds the route and the E-Puck drives it. Error testing tuned the line following, turn logic, and thresholds into a stable system.</p>
+
+<h3>A note from 2026</h3>
+<p>The paper calls the E-Puck holonomic because it can rotate without moving forward. A differential-drive robot is in fact non-holonomic, since it cannot move sideways, and what the paper describes is turning in place. The right-turn figure of 96% comes from 25 trials, which is too few to say it differs from the 100% of the other maneuvers. The paper does not report how long the complex routes were or how many were run, so "rarely fails" is an observation, not a measured rate.</p>
+<p>The paper is available as a <a href="resources/c148d6467a131a.pdf">PDF</a>, and the controller and Webots world are in the <a href="https://github.com/ronpicard/e-puck-robot-control-and-a-star-navigation">GitHub repository</a>.</p>

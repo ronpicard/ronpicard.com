@@ -1,0 +1,19 @@
+<p>Slime Soccer Remake is a browser version of the classic two-slime soccer game. It uses canvas physics and keyboard controls, offers one- or two-player modes, and includes several gameplay variations.</p>
+<p>Pick a match length of 1, 2, 4 or 8 minutes, choose a gameplay mode, then play against the computer or a friend on the same keyboard. The left slime plays as Argentina and the right as Spain.</p>
+
+<h2>How it works</h2>
+<p>The whole game lives in <code>SlimeSoccerApp.jsx</code>. A React component owns the match state and draws every frame to a canvas, including the field, goal nets, scoreboard and goal banner. The simulation runs in fixed steps of 1/120 second, with up to 12 steps per animation frame, so the physics behaves the same regardless of frame rate.</p>
+<p>Slimes are half-circles and the ball is a circle. Slime-ball contact is a circle overlap test: the code finds the contact normal, applies an impulse along it that also carries some of the slime's velocity, and pushes the ball out of the slime. The ball bounces off the ground and walls with damping, and it can leave the top of the screen because there is no ceiling, as in the original. Jump gravity is derived from a chosen jump duration of half a second and a fixed apex height, so the jump feels the same.</p>
+<p>The four gameplay modes are presets returned by <code>getGameplayPhysics()</code>. Classic is the baseline. Moon gravity lowers gravity on slimes and ball and softens serves. Fast mode raises gravity, speeds and serve strength. Ice hockey makes slimes accelerate and coast with drag, and lets the ball slide and bounce livelier off walls. In one-player mode the right slime is a simple AI: it runs toward the ball's predicted position and sometimes jumps when the ball is high and close.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Left slime (cyan): A or the left arrow to move left, D or the right arrow to move right, W or the up arrow to jump.</li>
+<li>Right slime (red, two players only): J left, L right, I jump.</li>
+<li>Start a game with the Start game button, or click the field, or focus it and press Enter or Space.</li>
+<li>Pause game stops play and the clock. New game returns to the menu.</li>
+<li>On touch screens, on-screen left, right and jump buttons appear.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19 and Vite 8, drawing to an HTML canvas. The source is on <a href="https://github.com/ronpicard/slime-soccer-remake-web-app">GitHub</a>.</p>

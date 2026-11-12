@@ -1,0 +1,42 @@
+<p>This is an interactive sorting visualizer that covers six algorithms: bubble, insertion, selection, merge, quick, and heap sort. You can change the array size and the animation speed, and watch each algorithm work through the same kind of unsorted array.</p>
+<p>The goal of the page is to show not just that an array ends up sorted, but how each algorithm gets there. Each one has its own strategy, so the app offers three views of the same run.</p>
+
+<h2>How it works</h2>
+<p>Every algorithm is written as a JavaScript generator that yields after each comparison or swap. Each yield carries the current array, which elements to highlight, a status message, and the pseudocode line being executed. A timer pulls one step at a time, so the speed slider only changes the delay between steps. Comparison and swap (or write) counters update as the run progresses.</p>
+<p>The six algorithms covered are:</p>
+<ul>
+<li><strong>Bubble sort:</strong> compares adjacent elements and swaps them when out of order, so large values drift to the end each pass.</li>
+<li><strong>Selection sort:</strong> finds the minimum of the unsorted region and places it at the front. It does many comparisons but few swaps.</li>
+<li><strong>Insertion sort:</strong> grows a sorted region by inserting each element into its place.</li>
+<li><strong>Merge sort:</strong> splits the array recursively, then merges the sorted halves.</li>
+<li><strong>Quick sort:</strong> picks a pivot, partitions around it, and recurses on each side.</li>
+<li><strong>Heap sort:</strong> builds a max-heap, then repeatedly extracts the largest element.</li>
+</ul>
+<p>The three views are Bar View (the array as colored bars: comparing, swapping, selected minimum, pivot, sorted), Algorithm View (the structure behind the algorithm), and Code View (the pseudocode with the current line highlighted). The Algorithm View is different for each family: a pass history grid for bubble and selection sort, a sorted and unsorted rail for insertion sort, a live call tree for merge and quick sort (with pivot values for quick sort), and the binary heap drawn as a tree for heap sort.</p>
+<p>Choosing an algorithm also shows a short description and a table of best, average, and worst-case time and space:</p>
+<table>
+<thead>
+<tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th></tr>
+</thead>
+<tbody>
+<tr><td>Bubble</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td></tr>
+<tr><td>Selection</td><td>O(n²)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td></tr>
+<tr><td>Insertion</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td></tr>
+<tr><td>Merge</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n)</td></tr>
+<tr><td>Quick</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td><td>O(log n)</td></tr>
+<tr><td>Heap</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td><td>O(1)</td></tr>
+</tbody>
+</table>
+
+<h2>Controls</h2>
+<ul>
+<li>Algorithm buttons (Bubble, Selection, Insertion, Merge, Quick, Heap) start a run.</li>
+<li>New Array shuffles a fresh array, and Reset stops the current run.</li>
+<li>The Array Size slider runs from 5 to 55 elements (18 by default).</li>
+<li>The Speed slider sets the delay between steps, from Very Slow to Turbo.</li>
+<li>The Bar View, Algorithm View, and Code View tabs switch between the three views.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>A single HTML page with plain JavaScript, using the DOM for the bar view and canvas for the algorithm view. There are no libraries.</p>
+<p>The source is on <a href="https://github.com/ronpicard/sorting-algorithms-visualizer-web-app">GitHub</a>.</p>

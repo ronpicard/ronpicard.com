@@ -1,11 +1,41 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Abstract</p><p class="">The use of security systems is becoming more prevalent in this modern age. With the advent of machine learning algorithms, there is a unique opportunity to integrate machine learning algorithms into modern camera-based security systems. We present an inexpensive, lightweight computer vision security system with an integrated deep neural network. The security system uses active image classification to detect intruders and provide notification and a video to the owner over email. In addition, the system maintains an integrated graphical user interface controller as well as an Android application controller.</p></div>
+<p>The use of security systems is becoming more prevalent in this modern age. With the advent of machine learning algorithms, there is a unique opportunity to integrate machine learning into modern camera-based security systems. We present an inexpensive, lightweight computer vision security system with an integrated deep neural network. The security system uses active image classification to detect intruders and provide notification and a video to the owner over email. In addition, the system maintains an integrated graphical user interface controller as well as an Android application controller.</p>
+<p>The demo video above shows the system running. This post summarises the paper, written for a course on intelligent systems and robotics at Vanderbilt University, and covers the hardware, the software, and the limits we measured on a small computer.</p>
 
+<h2>The problem</h2>
+<p>Deep neural networks have become good at image classification, and the obvious use for them in a home is to watch a room and say when a person walks in. The difficulty is cost and size. A system that classifies video needs real computation, and we wanted it to run on a Raspberry Pi 3 Model B, a low-cost Linux computer with a 1.2 GHz quad-core ARM Cortex A53 CPU and 1 GB of memory. The question was how much a device like that can do, and what has to give.</p>
 
-  
+<h2>The hardware</h2>
+<p>The build is a Raspberry Pi 3 B with a 16 GB microSD card, the Raspberry Pi camera, and the official 7-inch touchscreen in a case with a camera holder. The case angle is adjustable, which lets the camera be aimed. The camera is mounted sideways on top of the case, so every frame has to be rotated before it is used. A heatsink and fan sit on the processor; why they are there is the main finding of the paper. An Android device (4.0.3 or later) acts as a remote control.</p>
 
+<h2>The software</h2>
+<p>The control program is written in Python and uses OpenCV for video handling. Detection uses a pretrained Caffe network, with the frame-processing code adapted from a published Raspberry Pi object detection tutorial by A. Rosebrock, who also provided the pretrained model. The paper does not train a network of its own; its contribution is making one run usefully on this hardware and wrapping it in a complete system. The program is started from the terminal with arguments for the Caffe model files, the minimum detection probability, the clip length in seconds, the output video path, and the type of object to look for.</p>
 
+<h2>How detection works</h2>
+<p>Once switched on, the system sits in an idle state. It pulls one frame per second from the camera, rotates it to correct the sideways mounting, and resizes it to a square. The frame is converted to a cv2 network input, passed through the network, and any detection below the probability threshold is discarded. A box with a label and a confidence value is drawn around each detected human.</p>
+<figure>
+<img class="article-animated" alt="Two rows of boxes. Idle state: pull a frame, run the Caffe network, filter by confidence, ask whether a human was found. Run state: collect frames every 0.05 seconds, process each in about 1.5 seconds, write an AVI, email the owner." src="resources/cvs-pipeline.svg">
+<figcaption>The detection pipeline. Everything in the top row runs once a second; everything in the bottom row happens after a person is seen.</figcaption>
+</figure>
+<p>When a human is found, the program moves to a run state. It collects frames at an interval of 0.05 seconds until the requested clip length has passed, then processes and stores them one by one, about 1.5 seconds per frame. The processed frames are written to an AVI file, and an email with a local-time timestamp and the clip attached is sent to the owner.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Controlling it</h2>
+<p>There are two controllers. The touchscreen shows a single Tkinter button that reads OFF by default and toggles to ON. The Android app, written in Java, has one button too. When pressed, it opens a TCP socket to the Pi's address and port on the local network, sends a message, and then listens for a reply. A thread on the Pi listens for that message, flips a global on/off switch shared with the touchscreen button, and answers with the string ON or OFF, which the app uses to relabel its button.</p>
+<figure>
+<img class="article-animated" alt="The Android app sends a TCP message to a listener thread on the Raspberry Pi. The listener and the touchscreen button both set a global switch, which starts or stops the detection loop. The Pi replies ON or OFF to the app." src="resources/cvs-control.svg">
+<figcaption>Both controllers act on one shared switch, so the touchscreen and the phone always agree about the state of the system.</figcaption>
+</figure>
+
+<h2>What the Pi could sustain</h2>
+<p>We tested on 20 second clips, which is 400 frames. The network processes a frame in about 1.0 second at best, but running flat out keeps the processor above 90% and the Pi overheats and crashes. We tried two remedies. Adding a delay after each frame lets the processor cool: the best delay was 0.5 seconds, which dropped usage from about 80% to about 60% between frames. A heatsink and fan alone left usage at 80% to 90%, still with a risk of a crash. The final system uses both, with usage falling from about 80% to about 40% between frames.</p>
+<figure>
+<img class="article-animated" alt="Range bars of processor usage between frames: no delay and no fan above 90%, heatsink and fan only 80 to 90%, 0.5 second delay only about 60 to 80%, delay plus heatsink and fan about 40 to 80%." src="resources/cvs-thermal.svg">
+<figcaption>Cooling hardware and a deliberate pause each help; together they leave the most headroom. Values are the ranges quoted in the paper.</figcaption>
+</figure>
+<p>The cost is speed. At about 1.5 seconds per frame, a 400-frame clip takes roughly 10 minutes to process before it can be emailed. The same limit affects reaction: a person who stays in view for at least 1.5 seconds will be detected, but a shorter pass may fall during a frame that is already being processed. We settled on 20 second clips because they give the owner something useful and still arrive in about ten minutes.</p>
+
+<h2>Results and conclusions</h2>
+<p>We demonstrated an inexpensive computer vision security system that classifies frames with a pretrained deep network, records and annotates a clip when it sees a person, and emails it with a timestamp, with both a local touchscreen controller and an Android controller. The example use case is a home with nobody in it: the device sits unobtrusively in a room facing the door, the owner turns it on from the phone when leaving, and the alert and clip arrive on the same phone. The paper reports a working demonstration and the timing and thermal measurements above, not detection accuracy figures.</p>
+
+<h3>A note from 2026</h3>
+<p>The system detects people, but the paper does not measure how well; there are no false positive or missed detection rates, so it should be read as an engineering demonstration. The paper also lists 0.05 seconds between collected frames in one place and 0.5 FPS as the optimum in another, which do not agree with 400 frames in a 20 second clip. The 400-frame figure matches the 10 minute processing time, so I trust that one. Today, a newer model on a newer board would change the thermal story considerably.</p>
+<p>The paper is available as a <a href="resources/a06374f2234703.pdf">PDF</a>, and the code is in the <a href="https://github.com/ronpicard/computer-vision-security-system">GitHub repository</a>.</p>

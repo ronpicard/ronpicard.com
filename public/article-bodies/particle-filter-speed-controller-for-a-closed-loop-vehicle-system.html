@@ -1,11 +1,64 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Particle filters provide an effective stochastic method for predicting an unknown distribution; this makes them suitable for predicting the underlying properties of dynamical systems. Utilizing these predicted properties in combination with Ackermann’s formula can provide the ideal control law for producing the desired system response. We present a particle filter speed controller for predicting the underlying properties of a vehicle system and then providing the appropriate control law to set the steady-state system response equal to the reference value.</p></div>
+<p>Particle filters provide an effective stochastic method for predicting an unknown distribution; this makes them suitable for predicting the underlying properties of dynamical systems. Utilizing these predicted properties in combination with Ackermann’s formula can provide the ideal control law for producing the desired system response. We present a particle filter speed controller for predicting the underlying properties of a vehicle system and then providing the appropriate control law to set the steady-state system response equal to the reference value.</p>
 
+<h2>The problem</h2>
+<p>Cruise control matters in modern vehicles, but a controller designed for one vehicle needs that vehicle's properties: its mass and its damping coefficient from friction and wind drag. With a particle filter, those values do not need to be known up front. They can be estimated and converged upon rapidly, and the same approach generalizes to similar classes of dynamical systems. It is also easy to verify, because we can run a closed-loop simulation with a plant whose true properties the filter never sees.</p>
 
-  
+<h2>The vehicle model</h2>
+<p>Summing the horizontal forces on a vehicle on flat ground gives Newton's second law with an engine force u, a friction and drag term b·v, and the inertia m·v̇. That is a first-order state-space system with x = v:</p>
+<p class="article-math">m v̇ + b v = u<br>ẋ = −(b/m) x + (1/m) u<br>y = x</p>
+<p>The controllability matrix of this one-state system is just 1/m, so Ackermann's formula reduces to a symbolic control law. We place the closed-loop pole at the stable value −1.5:</p>
+<p class="article-math">u = m · ( −b/m + 1.5 ) · e</p>
+<p>Here e is the error between the reference and the measured speed. The control law is only as good as the m and b put into it, which is the job of the particle filter. A discretized form of the state equation, x(t+1) = x(t) + (−(b/m) x(t) + u/m)·Δt, lets each candidate (m, b) predict the speed it would have produced.</p>
 
+<h2>The particle filter</h2>
+<p>Each particle is a guess of the pair (m, b) together with a weight. The filter works as follows.</p>
+<ol>
+<li>Initialize N particles uniformly between bounds: 453.592 to 2267.962 kg (1,000 to 5,000 lb) for mass and 1 to 150 N·s/m for damping.</li>
+<li>For each particle, compute the control law from its m and b, predict the next speed with the discretized equation, and set its weight to the absolute difference between the predicted and the measured speed. A smaller weight means a more probable guess.</li>
+<li>Sort the particles by weight and keep the best K, a fixed keep percentage of N.</li>
+<li>Replace the other N − K by sampling a kept particle at random and drawing a new one from a Gaussian around it, with a per-property kernel sigma.</li>
+<li>Repeat.</li>
+</ol>
+<figure>
+<img class="article-animated" alt="Four steps in a row: initialize N particles uniformly, use each particle to set the control law and predict the speed, keep the best K by weight, and resample the rest from Gaussians around the kept particles. An arrow returns from resampling to the use step." src="resources/pf-algorithm.svg">
+<figcaption>One resampling step of the filter. The weight is a prediction error, so selection pulls the particles toward the true mass and damping.</figcaption>
+</figure>
+<p>The key assumptions are that the true m and b lie inside the initial bounds, that the time step in the discretized model matches the simulation's fixed step, that the saturation bounds are reasonable, and that compared trials use the same random seed.</p>
 
+<h2>The simulation</h2>
+<p>The loop is built in Simulink with MATLAB function blocks. A reference of 60 (26.8224 m/s) minus the measured speed forms the error, the particle filter controller outputs a force, a saturation block limits it to between −4570 N and 4000 N, and the state-space plant produces the speed. The limits come from typical car acceleration of about 4 m/s² and a common safety figure for braking deceleration of 4.572 m/s², each multiplied by a 1,000 kg car. Uniform random sensor noise is added to the measured speed.</p>
+<figure>
+<img class="article-animated" alt="Block diagram: a reference of 60 minus the measured speed gives an error that feeds the particle filter controller, then a saturation block from -4570 to 4000 newtons, then the vehicle plant. Uniform sensor noise of plus or minus 0.1 is added to the speed, which is fed back." src="resources/pf-loop.svg">
+<figcaption>The closed loop. The controller sees only the speed error; the plant's true values of 1,000 kg and 50 N·s/m are hidden from it.</figcaption>
+</figure>
 
-</div>
-</div></div></div></div></div>
+<h2>The trials</h2>
+<p>Six trials all use the same plant, 1,000 kg and 50 N·s/m, a time step of 1 and a pole of −1.5. They vary the number of particles (50, 200, 1,000) and the keep percentage (10% or 5%). Each trial is run twice, once without sensor noise and once with uniform noise between −0.1 and 0.1.</p>
+<table>
+<thead>
+<tr><th>Trial</th><th>Particles</th><th>Keep</th><th>Mass accuracy</th><th>Damping accuracy</th><th>Mass std. (kg), no noise</th><th>Mass std. (kg), noise</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>50</td><td>10%</td><td>99.84%</td><td>99.97%</td><td>20.4</td><td>13.32</td></tr>
+<tr><td>2</td><td>50</td><td>5%</td><td>99.82%</td><td>100%</td><td>24.91</td><td>11.73</td></tr>
+<tr><td>3</td><td>200</td><td>10%</td><td>99.98%</td><td>100%</td><td>20.62</td><td>178.3</td></tr>
+<tr><td>4</td><td>200</td><td>5%</td><td>99.98%</td><td>100%</td><td>23.44</td><td>81.17</td></tr>
+<tr><td>5</td><td>1,000</td><td>10%</td><td>99.98%</td><td>100%</td><td>36.27</td><td>77.78</td></tr>
+<tr><td>6</td><td>1,000</td><td>5%</td><td>99.96%</td><td>100%</td><td>56.89</td><td>108.8</td></tr>
+</tbody>
+</table>
+
+<h2>Results</h2>
+<p>After 10 resampling steps, the mass and damping estimates are accurate to about 99% or better in every trial, with or without noise, and the closed-loop speed settles at the reference of 26.8224 m/s. The accuracy table above shows the no-noise runs; with noise the accuracies are within a few hundredths of a percent (mass 99.82% to 99.97%, damping 99.97% to 100%).</p>
+<p>The standard deviation of the converged particle set tells a subtler story. With noise, the 50-particle trials have a lower mass spread than without it, while the 200 and 1,000-particle trials have a higher one. The paper reasons that a smaller keep percentage leaves a tighter set of particles, and with noise that holds for trials 1 to 4 (13.32 to 11.73, and 178.3 to 81.17) but reverses at 1,000 particles (77.78 to 108.8).</p>
+<figure>
+<img class="article-animated" alt="Standard deviation of the converged mass particles per trial, without noise then with noise: trial 1 20.4 then 13.32; trial 2 24.91 then 11.73; trial 3 20.62 then 178.3; trial 4 23.44 then 81.17; trial 5 36.27 then 77.78; trial 6 56.89 then 108.8. Noise lowers the spread for the 50-particle trials and raises it for the others." src="resources/pf-noise-spread.svg">
+<figcaption>Spread of the converged mass particles. Accuracy is nearly the same everywhere, but the spread grows with sensor noise once there are 200 or more particles.</figcaption>
+</figure>
+
+<h2>Conclusions</h2>
+<p>We built a particle filter cruise controller that finds a vehicle's mass and damping coefficient while it runs and uses them in a symbolic Ackermann control law to drive the speed to the reference. All six trials converged on the properties. Sensor noise widened the converged particle set once there were 200 or more particles, and the keep percentage changed the spread in ways that depend on the particle count and the noise. Future work includes models with more properties and non-linear dynamics, non-Gaussian sensor noise, and changing references such as steps at different times or a ramp, to test how quickly the filter responds.</p>
+
+<h3>A note from 2026</h3>
+<p>Treat the trial comparisons as single runs. Each trial was run once with one random seed, so differences in spread may not hold across seeds. The paper's text also says that without noise the 5% keep trials have the lower mass spread, but its own table shows the opposite (for example 20.4 at 10% against 24.91 at 5% in trials 1 and 2), and its conclusion says the estimates were accurate to above 99.9% when the tables show mass accuracy as low as 99.82%. The kernel sigma for mass is 2 in the parameter table and 10 in the text. I follow the tables where they disagree with the prose.</p>
+<p>The paper is available as a <a href="resources/dc044af5e4b9be.pdf">PDF</a>, and the Simulink and MATLAB code is in the <a href="https://github.com/ronpicard/particle-filter-state-estimate-cruise-control">GitHub repository</a>.</p>

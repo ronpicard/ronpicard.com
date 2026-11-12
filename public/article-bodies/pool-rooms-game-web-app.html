@@ -1,0 +1,17 @@
+<p>Pool Rooms is a first-person exploration of a connected pool complex in the browser, with no enemies, scores, or level transitions. You begin in the Sun Pavilion, follow the blue arcade into Rain Hall, explore the Sunken Baths and Column Sea, and climb toward a Sky Pool overlooking the ocean. Along the way are sunlit arcades, rain halls, sunken baths, a golden slide, and floating beach balls. You walk, swim, and rest, with atmospheric audio.</p>
+
+<h2>How it works</h2>
+<p>The game is a React shell around a Three.js engine. <code>src/game/engine.js</code> owns the renderer, the state machine, saving, and a fixed-timestep loop. <code>journey.js</code> defines the connected rooms with their geometry, terrain, and collision, while <code>player.js</code> and <code>input.js</code> handle movement and input, and <code>audio.js</code> the sound. All textures and audio are generated locally, so nothing is downloaded at runtime.</p>
+<p>Rooms have their own lighting and haze that blend as you move between them. Water ripples where you wade or swim, Rain Hall's pools show falling-water impacts, and the ocean has swells that the ocean sound follows. Sound is positioned in space: walls muffle distant water while open doorways let it through. Walks save at safe checkpoints and remember interactions and discoveries.</p>
+<p>The quiet extras include slides you walk into, pushable beach balls, a lazy river with a gentle current, seats, small interactive objects, and optional discoveries, with a Reduced motion setting. Playwright browser tests check the game.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Desktop: click <strong>Start Exploring</strong>, then move with <code>W</code> <code>A</code> <code>S</code> <code>D</code> or the arrow keys and look with the mouse.</li>
+<li><code>Shift</code> sprints, <code>Space</code> jumps or swims up, and <code>Ctrl</code> or <code>C</code> swims down.</li>
+<li><code>E</code> sits and uses objects, <code>H</code> hides the controls, and <code>Esc</code> opens the pause menu.</li>
+<li>Touch: a floating joystick on the left half, drag the right half to look, and labeled <strong>Sprint</strong>, <strong>Jump / up</strong>, and <strong>Dive</strong> buttons. Portrait and landscape both work.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, Three.js, and Vite, deployed on GitHub Pages, with Playwright for tests. There is no backend or external assets.</p>

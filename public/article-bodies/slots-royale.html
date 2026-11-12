@@ -1,0 +1,19 @@
+<p>Slots Royale is a 3D five-reel, twenty-line slot machine on a casino floor: a black lacquered cabinet with a gold bezel and glass reel window, a backlit marquee with chasing bulbs, and a chrome pull lever, among other machines with live lounge music in the background. The reels blur as they spin and flash as each one stops behind glass that reflects the room, and a light sweeps the window on a win.</p>
+<p>Pick a coin value from 1 to 25 credits per line, pull the lever or press spin, and watch wilds substitute, scatters award doubled free spins, and five sevens pay the 1000-coin jackpot; max bet and autoplay do what they say. A floor attendant and casino guests cheer your wins under a shower of confetti and groan at your losses. The camera stands back to show the whole cabinet, its domed backlit buttons and the leather stool in front, or moves close on the reel window or along the row of machines, with touch controls for phones. It plays for credits only.</p>
+
+<h2>How it works</h2>
+<p>The game logic is kept apart from the rendering. Everything under <code>src/game/</code> is plain TypeScript with no DOM and no three.js, so the reels, paylines, paytable, session, crowd reactions and autoplay all run in Node tests without a browser. The three.js engine, the cabinet, the reel views and the casino room sit under <code>src/render/</code>, and React draws the controls.</p>
+<p>Each spin draws a random 32-bit seed and turns it into a stop on every reel. Nothing else in the game logic calls <code>Math.random</code> or the clock, so the same seed always plays out the same spin. Each reel is its own strip of 30 to 34 symbols, no two alike: low-paying symbols are common, sevens are rare, wilds sit only on the three middle reels, and every strip carries a single scatter.</p>
+<p>Winning lines pay left to right, every winning line pays, and only the highest matching count on a line counts. The wild substitutes for every symbol but scatter. Three or more scatters anywhere award free spins at the triggering bet with every win doubled, and can retrigger. The strips are tuned so the return to player lands at about 96%, measured over hundreds of thousands of simulated spins by a headless script in the repository. The rendering cost steps itself down when frames stay slow.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Space or Enter spins; the on-screen Spin button and the chrome lever do the same.</li>
+<li>Arrow Up or plus raises the bet, Arrow Down or minus lowers it, and X sets max bet.</li>
+<li>The number keys 1 to 5 set the coin value to 1, 2, 5, 10 or 25.</li>
+<li>A toggles autoplay, C changes the camera, Q toggles quick spin, M mutes, and Escape opens the menu.</li>
+<li>On phones, the same actions are on-screen buttons.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React, TypeScript, Three.js and Vite. Sound is Web Audio, and credits and settings are kept in your browser.</p>

@@ -1,0 +1,21 @@
+<p>Escape The Matrix is a 3D first-person, Matrix-themed escape room game built with React and Three.js.</p>
+<p>You explore five interconnected rooms, find three colored keys to unlock doors, grab a gun from the glass case in the hub, and fight your way past agents in the Exit Hall to reach the way out. There are Easter eggs hidden around, including a floating spoon, red and blue pills, a white rabbit, a phone booth and black cats.</p>
+
+<h2>How it works</h2>
+<p>The game is one large React component, <code>MatrixGame</code> in <code>src/App.jsx</code>, that sets up the Three.js scene, runs the game loop and draws the HUD. Level data such as rooms, walls, doors, keys and agent spawns lives in <code>constants.js</code>, and the pure helpers in <code>logic.js</code> handle room lookup, joystick clamping and collision against walls, closed doors and furniture. Both have unit tests, including consistency checks on the level data.</p>
+<p>The agents avoid obstacles as they come for you. Matrix Time is bullet-time: pressing the button slows the simulation to 20% speed for seven seconds, followed by a ten-second cooldown. The time scale eases in and out rather than snapping, and the code-rain textures slow down with it. Sprinting widens the field of view, damage shows a vignette, and hits pulse the crosshair marker.</p>
+<p>Sound effects are synthesized with Web Audio rather than loaded from files, and Matrix Time has its own pad and arpeggio. On desktop, losing pointer lock really pauses the game and silences audio. Dynamic resolution scaling steps the render resolution down under sustained load. Overlay screens use a canvas code-rain background, and speech bubbles carry quotes from the characters.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>W A S D or the arrow keys: move.</li>
+<li>Mouse: look around.</li>
+<li>Click: shoot, once the gun is equipped.</li>
+<li>Shift: sprint.</li>
+<li>Space: Matrix Time.</li>
+<li>Esc: pause. The options menu covers sensitivity, brightness, enemy speed, field of view, invert-Y and sound.</li>
+<li>On mobile, touch the left side of the screen for a floating joystick, drag elsewhere to look, and use the Fire, Sprint and Matrix Time buttons.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 18, Three.js and Vite, with Vitest for tests and ESLint and Prettier for code quality. The source is on <a href="https://github.com/ronpicard/escape-the-matrix-game-web-app">GitHub</a>.</p>

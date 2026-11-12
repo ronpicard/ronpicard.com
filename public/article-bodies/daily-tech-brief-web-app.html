@@ -1,0 +1,18 @@
+<p>Daily Tech Brief is a dark-mode news dashboard. It shows clocks for several time zones, category feeds covering tech, economy, politics and more, local weather, and outbound links to read each story at its source.</p>
+<p>I built it as a single page you can leave open: pick a topic tab, glance at the headlines, and click through to the original article.</p>
+
+<h2>How it works</h2>
+<p>The app is a React single-page app with no backend of its own. Each topic tab (tech, economy, housing, land, US news, politics, health, finance, global) maps to a list of RSS or Atom feed URLs in <code>src/lib/rssFeeds.js</code>, plus a Google News search for breadth. Feeds are fetched through the rss2json service first. If that fails or is rate-limited, the app falls back to fetching the XML directly and then through a public CORS proxy. Each attempt has a seven-second timeout, and results are cached for two minutes so switching tabs does not refetch.</p>
+<p>In Settings you can switch the news source from Feeds to GDELT, which scans global news but is slower and rate-limited, so requests are spaced about three seconds apart. GDELT headlines in other languages are machine-translated to English with the MyMemory API. A country filter (26 countries, default United States, or worldwide) limits stories by the source's country of origin, and you can show 5, 10, 15 or 25 stories per topic. On the politics tab each story carries a rough left-to-right label for its outlet, based on a small domain lookup table. It is an outlet-only heuristic, and unknown outlets default to the middle.</p>
+<p>The clock bar formats the current time with <code>Intl.DateTimeFormat</code> for Eastern, Central, Mountain and Pacific time and UTC, updating every second. Weather comes from Open-Meteo using the browser's geolocation, with an optional BigDataCloud reverse-geocoding call for the place name. It shows the current temperature, feels-like, humidity and wind, and opens into a full-screen 10-day forecast. Your topic, story count, source and country choices are saved in <code>localStorage</code>. The pure helpers (feed parsing, regions, translation, weather) have Vitest unit tests.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Topic tabs switch between news categories.</li>
+<li>Settings opens a panel for the news source (Feeds or GDELT), the number of stories, worldwide mode, and the country list.</li>
+<li>The weather button opens the 10-day forecast.</li>
+<li>Each story links out to its original article.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19 and Vite 8, with Vitest for tests. Weather data is from Open-Meteo. The source is on <a href="https://github.com/ronpicard/daily-tech-brief-web-app">GitHub</a>.</p>

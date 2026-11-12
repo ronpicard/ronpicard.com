@@ -1,0 +1,19 @@
+<p>Pitch Tracker draws your voice or instrument as a live line on a piano roll. Sing, hum or play and your pitch scrolls across lanes labelled with every note. The line is green within 10 cents of a note, yellow within 25 and red beyond, while the header shows the note, its frequency and how many cents off you are.</p>
+<p>Tap any lane to hear that note and make it your target; a drone can hold it while you sing. The roll follows your voice or shows a fixed bass, baritone, tenor, alto, soprano or wide range over the last 5, 10 or 20 seconds, and a score shows how much of the last 10 seconds you spent on pitch. Pause to study a phrase. Audio never leaves your device, and the app works on phones and desktops. A Sing along mode can also draw a singer's notes from a song for you to follow.</p>
+
+<h2>How it works</h2>
+<p>Pitch detection uses the McLeod Pitch Method over a 2048-sample window, which keeps latency low and still reaches down to about 55 Hz. Each animation frame records one sample, a time and a fractional MIDI note. A three-reading median filter removes single-frame octave slips, and silence breaks the line so separate phrases stay separate.</p>
+<p>The roll is drawn on a canvas at the screen's pixel density, and range changes glide rather than jump. The microphone is opened with echo cancellation, noise suppression and auto gain turned off, since voice processing smears pitch. Everything is analysed on your device.</p>
+<p>In Sing along mode the singer's line is found in a full mix by predominant-melody extraction, after Salamon and Gómez's Melodia. Spectral peaks of a 4096-sample window are weighted by an A-weighting curve, every candidate pitch from 75 to 1100 Hz is scored by the harmonics that line up above it, and a tracker follows one line through the candidates, preferring small moves so a loud chord or bass note does not pull it away. With a YouTube video, each pitch is stamped with the video's playback time and stored per video in your browser, so a part you have heard once is known from then on.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Tap a lane to hear that note and make it the target; tap it again to clear it, or use the minus and plus buttons to move the target by a semitone.</li>
+<li>Play target repeats the reference note, and Drone holds it while you sing. Use headphones so the microphone hears only you.</li>
+<li>Follow my voice or a fixed range (bass, baritone, tenor, alto, soprano or wide C2 to C6), and a time window of 5, 10 or 20 seconds.</li>
+<li>Pause freezes the roll and Clear wipes it.</li>
+<li>The reference pitch for A4 can be set to 415, 432, 440 or 442 Hz.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React, TypeScript, Vite and the Web Audio API, with no other runtime dependencies. The YouTube player script loads only when a video link is added.</p>

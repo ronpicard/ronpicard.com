@@ -1,0 +1,34 @@
+<p>This is an interactive lab for stabilizing an inverted pendulum on a cart with controllers such as PID, LQR, model predictive control (MPC), and fuzzy logic. It also covers Kalman filters and includes control-theory lessons.</p>
+<p>An inverted pendulum is unstable on its own, which makes it a good test of a controller. Each mode lets you tune a controller, push the system, and watch the response, so you can see how the methods differ in how they keep the pendulum balanced.</p>
+
+<h2>How it works</h2>
+<p>All modes share one plant: a 2 kg cart carrying a 1 kg pendulum on a 1.5 m rod, under 9.81 m/s² of gravity. The simulator integrates the full nonlinear equations of motion at a fixed time step, with an adjustable friction on the cart (0 to 3 Ns/m). Each mode adds its own controller, state graphs, and, where it applies, a pole plot and a Bode plot.</p>
+<p>The modes are:</p>
+<ul>
+<li><strong>PID:</strong> adjustable Kp, Ki, and Kd gains.</li>
+<li><strong>LQR (optimal):</strong> state feedback with weights on angle, cart position, and control effort.</li>
+<li><strong>LQR with a Kalman filter:</strong> LQR driven by a state estimate, using either an extended (EKF) or unscented (UKF) Kalman filter, with adjustable sensor and process noise.</li>
+<li><strong>LQR with a particle filter:</strong> the same idea with a particle-based estimator and an adjustable particle count.</li>
+<li><strong>Bang-bang:</strong> switching control in a sliding-mode style, with a deadband.</li>
+<li><strong>MPC:</strong> at each step it simulates many candidate force sequences over a horizon and applies the cheapest, using weights on angle, position, and force.</li>
+<li><strong>Fuzzy logic:</strong> membership functions on angle and angular velocity feed a rule table, and the output is defuzzified into a force.</li>
+<li><strong>Dynamic inversion:</strong> cancels the nonlinear dynamics and applies a linear controller to what is left.</li>
+<li><strong>MRAC (adaptive):</strong> a reference model sets the desired behavior, and the gains adapt online at a rate you choose.</li>
+<li><strong>Manual:</strong> you act as the controller.</li>
+</ul>
+<p>Most modes have an Auto-Tune button, which searches for good parameters by running short simulations. The Lessons mode steps through 14 topics: feedback loops, stability and poles, Bode plots and margins, PID, state space and LQR, Kalman filters, particle filters, bang-bang, MPC, fuzzy logic, dynamic inversion, MRAC, a method comparison, and real-world use.</p>
+<p>The simulator is written as one large block of plain JavaScript embedded in an HTML template, and a small React shell mounts that markup and starts it.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Pick a mode from the button row.</li>
+<li>Sliders set each controller's parameters and the friction.</li>
+<li>Reset restarts the current mode, and Auto-Tune searches for good parameters.</li>
+<li>The Push buttons apply a force to the cart, and the longer you hold one the stronger the push. On a keyboard, the left and right arrow keys do the same.</li>
+<li>In Manual mode, the arrow keys or Push buttons are your only control.</li>
+<li>Touch works on the buttons.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19 and Vite, with the simulation in plain JavaScript on canvas. Vitest and Playwright provide unit and browser tests.</p>
+<p>The source is on <a href="https://github.com/ronpicard/control-system-techniques-visualizer-web-app">GitHub</a>.</p>

@@ -1,11 +1,16 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">Second-Order Logic extends First-Order Logic to Quantify Sets. Whereas first-order logic may only quantify Variables in a domain of discourse (set), Second-Order logic may also quantify over sets themselves.</p></li></ul><ul><li><p class=""><strong>Example SOL Expression:</strong></p><ul><li><p class="">(∃<strong>T</strong>)(∀<strong>Q</strong>)(∀D)(∃A)((<strong>T</strong>⊂ <strong>Q</strong>) ∧ (A, D∈<strong>T</strong>) ∧ ((C(x,y) ∧<strong> ¬</strong>D) → ((A ∧ E(t,z)) ∨ F)))</p></li><li><p class="">This is read there exists a set <strong>T</strong>, for all sets <strong>Q</strong>, for all D, there exists an A, such that set <strong>T</strong> is a proper subset of a set from <strong>Q</strong>, and A and D are elements of set <strong>T</strong>, and C and not D, implies A and E or F.</p></li></ul></li></ul><ul><li><p class="">Second-Order Logic is even MORE expressive. This can be used to build even MORE extensive complex models of the domains of discourse.</p></li></ul><ul><li><p class="">Note: Higher-order logics (3rd, 4th, 5th, etc.) extend the quantification operators to quantifications over quantifications over quantifications…this is analogous to types of types of types… in type-theory. Hence the connection to programming languages types.</p></li></ul></div>
+<p>This is part 5 of the Formal Methods 101 series. Second-order logic extends first-order logic so that it can quantify over sets. First-order logic may only quantify over the variables in a domain of discourse (a set); second-order logic may also quantify over sets themselves.</p>
 
+<h2>What second-order logic adds</h2>
+<p>In first-order logic a quantifier picks out single elements of the domain. In second-order logic a quantifier can also pick out whole sets of those elements, so we can state properties of sets and not only of individual elements. Second-order logic is even more expressive than first-order logic, and it can be used to build more extensive and complex models of a domain of discourse.</p>
+<figure>
+<img class="article-animated" alt="Three rows. First-order logic quantifies over single elements of the domain D: one dot is picked out. Second-order logic quantifies over sets of elements: a group of three dots is circled. Third-order logic quantifies over sets of sets: three overlapping groups of dots are circled together." src="resources/fm-sol-orders.svg">
+<figcaption>Each order of logic quantifies over what the order below it ranges over: elements, then sets of elements, then sets of sets.</figcaption>
+</figure>
 
-  
+<h2>An example expression</h2>
+<p>Here is an example second-order expression, with the set variables T and Q written in the same way as the element variables:</p>
+<p class="article-math">(∃T)(∀Q)(∀D)(∃A)((T ⊂ Q) ∧ (A, D ∈ T) ∧ ((C(x, y) ∧ ¬D) → ((A ∧ E(t, z)) ∨ F)))</p>
+<p>This is read: there exists a set T, for all sets Q, for all D, there exists an A, such that the set T is a proper subset of a set from Q, and A and D are elements of the set T, and C and not D implies A and E, or F.</p>
 
-
-
-</div>
-</div></div></div></div></div>
+<h2>Higher-order logics</h2>
+<p>Higher-order logics (third, fourth, fifth order, and so on) extend the quantification operators to quantifications over quantifications over quantifications, and so on. This is analogous to types of types of types in type theory, which is the connection to the types of programming languages.</p>

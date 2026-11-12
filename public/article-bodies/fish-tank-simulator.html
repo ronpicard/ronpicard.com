@@ -1,0 +1,16 @@
+<p>Pelagic brings a small saltwater reef to the browser: nine distinct fish species, a cleaner shrimp, snail, hermit crab, and starfish inside a glass aquarium. You choose daylight, golden hour, or moonlight, adjust the current and fish population, and relax with gentle aquarium audio.</p>
+
+<h2>How it works</h2>
+<p>React and TypeScript handle the interface, and Three.js renders solid 3D animals inside a photographic glass tank and coral aquascape. Each fish has a rounded body, paired eyes and fins, a flexible tail, and species-specific markings. The simulation in <code>src/aquarium/simulation.ts</code> uses elapsed time with small integration steps and capped frame deltas, so it stays stable and independent of frame rate.</p>
+<p>Fish alternate between hovering, exploring, inspecting, and short darts, with different cruising speeds and preferred levels per species. Movement has three velocity components in one fixed tank volume, so fish turn toward their real direction, recede into the water, and grow in perspective near the glass. They steer around approximate rock envelopes, and a static depth mask of the photographed reef hides distant fish behind it.</p>
+<p>The rocks, plants, and corals are still photographs. The shrimp, snail, and hermit crab creep over an approximation of the sand and rock contours, with orientation and shadows following the slope. This is a fixed-view visual simulation, not a biological model. Tests cover long-running bounds, numerical stability, pause, and frame-rate independence. The tank starts paused if your system requests reduced motion.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Choose the lighting from the menu, and set current, ambient light, and fish population (three to twelve) with the sliders. Reset restores the defaults.</li>
+<li>Text and controls start hidden. Use the eye icon or <code>H</code> to show or hide them.</li>
+<li><code>Space</code> pauses, <code>M</code> toggles sound, <code>F</code> toggles fullscreen, and <code>Escape</code> closes a panel.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, Three.js, and Vite, with lucide-react icons. The sound is a bundled recording of a real aquarium filter by DudeAwesome, licensed CC BY 4.0, and the artwork was generated for the project.</p>

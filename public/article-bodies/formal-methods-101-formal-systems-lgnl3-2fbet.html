@@ -1,526 +1,124 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">Complexity Theory deals with how ‘complex’ a problem is to solve. That is, how many steps it takes to solve a problem.</p></li></ul><ul><li><p class="">This topic is one of the most profound and consequential topics in all of computer science and mathematics.</p></li></ul><p class=""><strong>Big-O Notation:</strong></p><ul><li><p class="">Big-O notation is a notation that computer scientists use to describe the complexity of algorithms. This notation helps to describe how many steps an algorithm will take to complete a task at runtime.</p></li></ul><ul><li><p class="">Big-O notation attempts to capture these algorithms’ “scale” (i.e. their growth rate) as the problem sizes grow.</p></li></ul><ul><li><p class="">Types:</p><ul><li><p class="">O(1) – Constant</p></li><li><p class="">O(n) – Linear</p></li><li><p class="">O(log(n)) – Logarithmic</p></li><li><p class="">O(n2) – Quadratic</p></li><li><p class="">O(n3) – Cubic</p></li><li><p class="">O(n^c) – Polynomial, C is a constant</p></li><li><p class="">O(c^n) – Exponential , C is a constant</p></li><li><p class="">O(n!) – Factorial</p></li></ul></li></ul><p class=""><strong>Example O(1):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">x = x + 1 <strong>(step 1)</strong></p></li><li><p class="">return x</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has Big-O of O(1) runtime, since no matter how big the input x is, it always takes the same number of steps (or amount of time) to compute things.</p></li></ul><p class=""><strong>Example O(1)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">x = x + 1<strong> (step 1)</strong></p></li><li><p class="">y = x + 1 <strong>(step 2)</strong></p></li><li><p class="">z = x + 1 <strong>(step 3)</strong></p></li><li><p class="">return x</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has Big-O of O(1) runtime, since no matter how big the input x is, it always takes the same number of steps (or amount of time) to compute things.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(3) runtime, this is also equivalent to O(1) runtime. This is because O(1) and O(3) both have an equivalent growth rate; that is constant. Therefore, we usually just say this function has an O(1) runtime. (i.e. O(3) = O(1) = O(C), where C is a constant Integer).</strong></p></li></ul><ul><li><p class=""><strong>Notice how this would still be a constant runtime even if we add more arbitrary steps because the number of steps does not increase based on the input size.</strong></p></li></ul><p class=""><strong>Example O(n):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1)</p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">y = y + 1<strong> (steps 2 to n+1)</strong></p></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale linearly with x.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(n + 1) runtime, this is also equivalent to O(n) runtime. This is because O(n+1) and O(n) both have an equivalent growth rate; that is linear. Therefore, we usually just say this function has an O(n) runtime. (i.e. O(n+1) = O(n) = O(n + C), where C is a constant Integer).</strong></p></li></ul><p class=""><strong>Example O(n)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 <strong>(step 1)</strong></p></li><li><p class="">z = 1 <strong>(step 2)</strong></p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">y = y + 1<strong> (step 3 to n+2)</strong></p></li><li><p class="">For 1 to size_of(x):</p></li><li><p class="">z = z + 1 <strong>(step n+3 to 2n+2)</strong></p></li><li><p class="">return y, z</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale linearly with x.</p></li></ul><ul><li><p class=""><strong>Note: Even though this is technically O(2n+2) runtime, this is also equivalent to O(n) runtime. This is because O(2n+2) and O(n) both have an equivalent growth rate; that is constant. Therefore, we usually just say this function has an O(n) runtime. (i.e. O(2n+2) = O(n) = O(Bn+C), where B &amp; C are constant integers).</strong></p></li></ul><ul><li><p class=""><strong>Notice how this would still be a linear runtime even if we add more non-nested for loops because the number of steps does not increase based on the input size.</strong></p></li></ul><p class=""><strong>Example O(n^2)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 <strong>(step 1)</strong></p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">y = y + 1 <strong>(steps 2 to n^2+1)</strong></p></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n^2) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale quadratically with x.</p></li></ul><p class=""><strong>Example O(n</strong> <strong>^</strong> <strong>3)</strong>:</p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1) (step 1)</p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">y = y + 1 (steps 2 to n<strong>^</strong>3+1)</p></li></ul></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n<strong>^</strong>3) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale cubically with x.</p></li></ul><p class=""><strong>Example O(n^c):</strong></p><ul><li><p class="">function foo(int x):</p><ul><li><p class="">y = 1 (step 1) (step 1)</p></li><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">For 1 to size_of(x):</p><ul><li><p class="">……</p><ul><li><p class="">…….</p><ul><li><p class="">….…….</p><ul><li><p class="">y = y + 1 (steps 2 to n^c+1)</p></li></ul></li></ul></li></ul></li></ul></li></ul></li></ul></li><li><p class="">return y</p></li></ul></li></ul><ul><li><p class="">The function ‘foo’ has a Big-O of O(n^c) runtime, because depending on how big the input x is, the number of steps (or amount of time) to compute things will scale to the power of c with x.</p></li></ul><p class=""><strong>Complexity Classes:</strong></p><ul><li><p class="">In general, algorithms that have a polynomial runtime or lower are considered computationally friendly, and can be solved in a reasonable amount of time by a computer due to scaling polynomially. The class of problems that can be solved by deterministic polynomial runtime algorithms are known as the P-class problems. In other words, they are<strong> Polynomial-time problems</strong> that belong to the polynomial-time complexity class.</p></li></ul><ul><li><p class="">In contrast, algorithms that have an exponential runtime, prove to be very computationally challenging for computers as they scale. Computers often cannot solve these in a reasonable amount of time because they scale exponentially. This class of problems that require algorithms with exponential or greater runtimes are known as NP-hard class problems. Here, NP stands for <strong>Nondeterministic Polynomial-Time Problems. </strong>This essentially means that if we could search all paths of the problem at one time (simultaneously), we could find a polynomial-time solution.</p></li></ul><ul><li><p class=""><strong>NP-Complete class problems</strong> are a subclass of NP-Hard problems and a subclass of NP problems (however: NP class ≠ NP-Hard class) for which it is difficult to find a solution (takes an exponential time algorithm) but if the solution is known, it can be verified in Polynomial-time (by a polynomial-time algorithm). The de facto NP-Complete problem is SAT. It is very easy to verify a solution once it’s given, but it is very hard to find a solution. NP-Complete problems are the hardest problems in the NP class. In fact, if a Polynomial-time algorithm is found (none have been found yet) to solve an NP-Complete problem, then all NP problems can be solved using it.</p></li></ul><ul><li><p class=""><strong>NP class problems sit in between P and NP-Complete class problems and are a class of problems that can be reduced to NP-Complete problems (such as being converted to a SAT problem) by a polynomial-time</strong> algorithm.</p></li></ul></div>
-
-
-  
-
-
-
-</div>
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Diagram of complexity classes: P inside NP, NP-Complete overlapping NP, and NP-Hard extending beyond" src="resources/83b02b54803618.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><ul><li><p class=""><strong>coNP class problems</strong> are a subclass of NP-Hard problems which, rather than being easy to verify a solution, it is easy to exclude non-solutions. In other words, you can exclude non-solutions in polynomial time. The de facto coNP-Complete problem is UNSAT (proving that a Boolean formula is unsatisfiable).</p></li></ul><ul><li><p class=""><strong>coNP-Complete class problems</strong> are the hardest problems in coNP. coNP problems are both NP-hard and coNP.</p></li></ul></div>
-
-
-  
-
-
-
-</div>
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Venn diagram of NP, coNP, NP-Complete, coNP-Complete, and P inside their intersection, all within NP-Hard" src="resources/22a365d0ec6a1c.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Annotated Venn diagram of P, NP, coNP, and their complete and hard classes, with callouts explaining each region" src="resources/296c35d71e0bff.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Every once in a while we find an efficient polynomial time algorithm for a problem in NP, and realize that it is actually a P problem; we just never realized it.</p><ul><li><p class="">This leads us to one of the biggest unsolved questions in all of computer science and mathematics:</p></li><li><p class="">P = NP? Or P ≠ NP?</p></li></ul><ul><li><p class="">If P = NP, then all of the NP-Complete &amp; coNP-Complete problems (including SAT/UNSAT) are really P problems, and many of the computational challenges we have today will disappear.</p></li></ul><ul><li><p class="">The general suspicion is that P ≠ NP, but no one has been able to prove it.</p></li></ul></div>
-
-
-  
-
-
-
-</div>
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Diagram showing that if P = NP, then P, NP, and NP-Complete are the same class inside NP-Hard" src="resources/090249f8bbcd87.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Diagram showing that if P = NP, then P, NP, coNP, NP-Complete, and coNP-Complete all coincide inside NP-Hard" src="resources/78afbb3b5713f4.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div></div></div></div>
+<p>This is part 8 of the Formal Methods 101 series. Complexity theory deals with how complex a problem is to solve: that is, how many steps it takes to solve it. It is one of the most profound and consequential topics in all of computer science and mathematics.</p>
+
+<h2>Big-O notation</h2>
+<p>Big-O notation is what computer scientists use to describe the complexity of algorithms. It describes how many steps an algorithm will take to complete a task at run time, and it tries to capture the algorithm's scale (its growth rate) as the problem size grows. The common types are:</p>
+<table>
+<thead>
+<tr><th>Notation</th><th>Name</th></tr>
+</thead>
+<tbody>
+<tr><td>O(1)</td><td>Constant</td></tr>
+<tr><td>O(log n)</td><td>Logarithmic</td></tr>
+<tr><td>O(n)</td><td>Linear</td></tr>
+<tr><td>O(n²)</td><td>Quadratic</td></tr>
+<tr><td>O(n³)</td><td>Cubic</td></tr>
+<tr><td>O(nᶜ)</td><td>Polynomial, c is a constant</td></tr>
+<tr><td>O(cⁿ)</td><td>Exponential, c is a constant</td></tr>
+<tr><td>O(n!)</td><td>Factorial</td></tr>
+</tbody>
+</table>
+<figure>
+<img class="article-animated" alt="Growth curves for input sizes 1 to 10 on a chart whose steps axis stops at 100. log base 2 of n stays below 4 and n reaches 10. n squared reaches 100 at n of 10. n cubed passes 100 before n of 5, n factorial passes 100 at n of 5, and 2 to the n passes 100 at n of 7, so those curves leave the chart while the slower ones are still near the bottom." src="resources/fm-cx-growth.svg">
+<figcaption>The classes drawn as curves. The polynomial curves stay on the chart while n³, n! and 2ⁿ shoot off the top by n = 7 or sooner. The curves are the functions themselves, not measurements of any program.</figcaption>
+</figure>
+<p>For a sense of scale, here are the step counts at three input sizes:</p>
+<table>
+<thead>
+<tr><th>n</th><th>log₂ n</th><th>n²</th><th>n³</th><th>2ⁿ</th><th>n!</th></tr>
+</thead>
+<tbody>
+<tr><td>10</td><td>3.3</td><td>100</td><td>1,000</td><td>1,024</td><td>3,628,800</td></tr>
+<tr><td>20</td><td>4.3</td><td>400</td><td>8,000</td><td>1,048,576</td><td>about 2.4 × 10¹⁸</td></tr>
+<tr><td>50</td><td>5.6</td><td>2,500</td><td>125,000</td><td>about 1.1 × 10¹⁵</td><td>about 3.0 × 10⁶⁴</td></tr>
+</tbody>
+</table>
+
+<h2>Examples</h2>
+<h3>O(1): constant</h3>
+<pre><code>function foo(int x):
+    x = x + 1          (step 1)
+    return x</code></pre>
+<p>The function foo has a Big-O of O(1) runtime, since no matter how big the input x is, it always takes the same number of steps (or amount of time) to compute.</p>
+<pre><code>function foo(int x):
+    x = x + 1          (step 1)
+    y = x + 1          (step 2)
+    z = x + 1          (step 3)
+    return x</code></pre>
+<p>This function also has an O(1) runtime. Even though it is technically O(3), O(1) and O(3) have the same growth rate, which is constant, so we usually just say the function has an O(1) runtime. That is, O(3) = O(1) = O(c), where c is a constant integer. Notice that the runtime would still be constant if we added more arbitrary steps, because the number of steps does not increase with the input size.</p>
+
+<h3>O(n): linear</h3>
+<pre><code>function foo(int x):
+    y = 1                          (step 1)
+    for 1 to size_of(x):
+        y = y + 1                  (steps 2 to n + 1)
+    return y</code></pre>
+<p>This function has an O(n) runtime, because the number of steps (or amount of time) scales linearly with the size of the input x. Even though it is technically O(n + 1), O(n + 1) and O(n) have the same growth rate, which is linear, so we usually just say O(n). That is, O(n + 1) = O(n) = O(n + c), where c is a constant integer.</p>
+<pre><code>function foo(int x):
+    y = 1                          (step 1)
+    z = 1                          (step 2)
+    for 1 to size_of(x):
+        y = y + 1                  (steps 3 to n + 2)
+    for 1 to size_of(x):
+        z = z + 1                  (steps n + 3 to 2n + 2)
+    return y, z</code></pre>
+<p>This function is O(n) as well. It is technically O(2n + 2), but O(2n + 2) and O(n) have the same growth rate, which is linear. That is, O(2n + 2) = O(n) = O(bn + c), where b and c are constant integers. Notice that the runtime would still be linear if we added more non-nested loops, because the number of steps per loop does not change with the input size.</p>
+
+<h3>O(n²): quadratic</h3>
+<pre><code>function foo(int x):
+    y = 1                          (step 1)
+    for 1 to size_of(x):
+        for 1 to size_of(x):
+            y = y + 1              (steps 2 to n² + 1)
+    return y</code></pre>
+<p>This function has an O(n²) runtime, because the number of steps scales quadratically with the size of the input x.</p>
+
+<h3>O(n³): cubic</h3>
+<pre><code>function foo(int x):
+    y = 1                          (step 1)
+    for 1 to size_of(x):
+        for 1 to size_of(x):
+            for 1 to size_of(x):
+                y = y + 1          (steps 2 to n³ + 1)
+    return y</code></pre>
+<p>This function has an O(n³) runtime, because the number of steps scales cubically with the size of the input x.</p>
+
+<h3>O(nᶜ): polynomial</h3>
+<pre><code>function foo(int x):
+    y = 1                          (step 1)
+    for 1 to size_of(x):
+        for 1 to size_of(x):
+            ... c nested loops ...
+                y = y + 1          (steps 2 to nᶜ + 1)
+    return y</code></pre>
+<p>This function has an O(nᶜ) runtime, because the number of steps scales with the size of the input x to the power c.</p>
+
+<h2>Complexity classes</h2>
+<h3>P</h3>
+<p>In general, algorithms with a polynomial runtime or lower are considered computationally friendly: a computer can solve them in a reasonable amount of time because they scale polynomially. The class of problems that can be solved by deterministic polynomial-time algorithms is called P. In other words, these are the polynomial-time problems that belong to the polynomial-time complexity class.</p>
+<h3>NP and NP-hard</h3>
+<p>In contrast, algorithms with an exponential runtime are very challenging for computers as they scale. Computers often cannot solve them in a reasonable amount of time, because the work grows exponentially. The problems whose best known algorithms need exponential runtimes or worse are where the NP-hard and NP-complete classes live. Here NP stands for nondeterministic polynomial time. This essentially means that if we could search all paths of the problem at one time (simultaneously), we could find a solution in polynomial time.</p>
+<h3>NP-complete</h3>
+<p>NP-complete problems are a subclass of the NP-hard problems and also a subclass of NP (note that the NP class is not the same as the NP-hard class). It is difficult to find a solution to them, because the best known algorithms take exponential time, but if a solution is given it can be verified in polynomial time by a polynomial-time algorithm. The standard NP-complete problem is SAT: it is easy to verify a solution once it is given, but hard to find one. NP-complete problems are the hardest problems in the NP class. In fact, if a polynomial-time algorithm is found for any one NP-complete problem (none has been found so far), then all NP problems can be solved using it.</p>
+<h3>NP, between P and NP-complete</h3>
+<p>The NP class sits between P and the NP-complete class. Its problems can be reduced to NP-complete problems (for example, converted to a SAT problem) by a polynomial-time algorithm.</p>
+<figure>
+<img class="article-animated" alt="P is a small region inside the larger region NP. The NP-Hard region is drawn as a dashed ellipse across the top of the picture, overlapping the top of NP; the overlap is NP-Complete. Callouts on the right say what each region means: P can be solved in polynomial time, NP problems can be turned into an NP-Complete problem in polynomial time, NP-Complete problems have no known polynomial-time algorithm but solutions can be verified in polynomial time, and NP-Hard is NP-Complete or harder." src="resources/fm-cx-classes.svg">
+<figcaption>P sits inside NP. NP-Hard overlaps NP at the top, and the overlap is exactly the NP-complete problems, the hardest ones in NP.</figcaption>
+</figure>
+
+<h3>coNP</h3>
+<p>The coNP class is the mirror of NP: rather than being easy to verify a solution, it is easy to exclude non-solutions. In other words, you can exclude non-solutions in polynomial time. The standard coNP-complete problem is UNSAT (proving that a Boolean formula is unsatisfiable).</p>
+<p>The coNP-complete problems are the hardest problems in coNP.</p>
+<figure>
+<img class="article-animated" alt="A dashed ellipse labelled NP-Hard contains two overlapping ellipses, NP on the left and coNP on the right. Their overlap is NP intersect coNP, and P is a small circle inside that overlap. The leftmost slice of NP is NP-Complete and the rightmost slice of coNP is coNP-Complete." src="resources/fm-cx-conp.svg">
+<figcaption>NP and coNP overlap, and P lies inside the overlap. NP-complete problems are at the far end of NP, and coNP-complete problems at the far end of coNP.</figcaption>
+</figure>
+
+<h2>P = NP?</h2>
+<p>Every once in a while we find an efficient polynomial-time algorithm for a problem in NP and realize that it is actually a P problem; we just never realized it. This leads to one of the biggest unsolved questions in all of computer science and mathematics:</p>
+<p class="article-math">P = NP, or P ≠ NP?</p>
+<p>If P = NP, then all of the NP-complete and coNP-complete problems (including SAT and UNSAT) are really P problems, and many of the computational challenges we have today would disappear. The general suspicion is that P ≠ NP, but no one has been able to prove it.</p>
+<figure>
+<img class="article-animated" alt="Two diagrams. In the first, if P equals NP then P, NP and NP-Complete are one region inside the dashed NP-Hard region. In the second, with coNP included, P, NP, coNP, NP-Complete and coNP-Complete are all one region inside NP-Hard." src="resources/fm-cx-collapse.svg">
+<figcaption>What would happen if P = NP: the separate regions merge into one, leaving only the NP-hard problems outside it.</figcaption>
+</figure>

@@ -1,0 +1,16 @@
+<p>The Infinite Library is a first-person exploration game inspired by Borges' infinite library. You wander procedural hexagonal galleries whose shelves hold almost entirely seeded gibberish, search for marked clue books, and follow a five-step compass quest to the Crimson Hexagon. Wandering library cats keep you company, and the sound is synthesised live with Tone.js.</p>
+
+<h2>How it works</h2>
+<p>Every room is a pure function of its hex coordinates. A world seed and the coordinates hash into a room seed, and which doors are open is a symmetric hash of each shared edge, so both sides agree. Backtrack and the same shelves hold the same books with the same text. Rooms are generated as you walk and despawned behind you, so only the current gallery and its six neighbours exist.</p>
+<p>The quest is deterministic too. From any room a hash picks the next step among its open doors, so the five-step path a clue book describes is always walkable. Walk five thresholds without error and the doors seal, and the room becomes the Crimson Hexagon. A wrong turn dissolves the path, and any clue book in your current room names a fresh one. The directions use a poetic compass: the rising dust, the burning lamp, the sleeping water, the falling ash, the silent frost, and the red wind.</p>
+<p>Each gallery is built in one of five styles drawn from its seed: oak hall, sandstone vault, marble rotunda, basalt archive, or cedar scriptorium. The void at the centre shows identical floors above and below, using mirrored geometry and fog. Cats walk, sit, and meow, and small luminous beings drift on a slow current toward open doorways. The sound, built from sine and triangle tones, includes a drone, echoes, footsteps, page turns, and cat meows. Vitest and Playwright tests cover the world, quest, and overlays.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Click the splash screen to enter, then move with <code>W</code> <code>A</code> <code>S</code> <code>D</code> (hold <code>Shift</code> to hurry) and look with the mouse.</li>
+<li>Aim at a marked volume and press <code>E</code> or click to open it, and <code>Esc</code> to close it. <code>Esc</code> while walking opens the pause menu with brightness and volume.</li>
+<li>On phones and tablets: a virtual joystick to walk, drag anywhere to look, tap a book or the READ button to open it, and a pause button.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, Three.js, Tone.js, and Vite, tested with Vitest and Playwright.</p>

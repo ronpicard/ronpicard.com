@@ -21,6 +21,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The eleven Formal Methods 101 posts are rewritten with real section headings, typeset logic and set notation, HTML truth tables, corrected notation, and new animated diagrams (Venn diagrams, relation graphs, a backtracking SAT search, the halting-problem diagonal, induction chains), each with a series header image.
+- The early research posts (N-Queens, the particle filter and model-based speed controllers, aircraft collision avoidance, the e-puck robot, the computer vision security system, and the colored Petri net studio) are now full write-ups of their papers, with animated figures of their designs and results and new header images.
+- The Ubuntu router, OpenVPN, WordPress, and chess engine tutorials are reorganised into numbered steps with copyable commands, gain animated network and architecture diagrams and a note on what has changed since they were written, and the chess post's unrelated stock images are replaced with diagrams of the engine.
+- Every web app and game post now has a written page: what it is, how it works, its controls, and what it is built with, taken from its source code.
+- Software Lessons sessions now have session notes: what each session covers and its key ideas.
+- Post summaries that stopped mid-sentence on their cards are rewritten as complete one- or two-sentence summaries.
 - Every chart and diagram in the ten refreshed machine-learning posts now animates while it is on screen: bars grow in turn, curves draw from left to right, optimizer paths step across their loss surfaces, and diagrams build up stage by stage. Each takes up to about four seconds, holds the finished chart for a second, then replays. Click, tap, or press Enter or Space on a chart to pause or resume it. Charts stop when you scroll away, and with reduced motion turned on they show only the finished chart.
 - In the momentum post, the chart of plain gradient descent against momentum now plays as a step-by-step race with a step counter while it is on screen. Each race takes about four seconds, holds the finished chart for a second, then replays. Click, tap, or press Enter or Space on it to pause or resume it. It stops when you scroll away, and with reduced motion turned on it shows only the finished chart.
 - The new header images for the machine-learning posts are now saved at 1080p (1920 × 1008), so they look sharp on high-resolution screens.

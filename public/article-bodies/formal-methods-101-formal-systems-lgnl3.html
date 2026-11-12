@@ -1,11 +1,55 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">There are some problems for which there does not exist an algorithm that can guarantee to return a correct (ex. yes or no) answer. These are called “Undecidable” problems.</p></li></ul><ul><li><p class="">The problems for which there does exist an algorithm that can guarantee to return a correct (ex. yes or no) answer are called “Decidable” problems.</p></li></ul><p class=""><strong>Halting Problem:</strong></p><ul><li><p class="">To understand this concept further we will look at a classic undecidable problem known as the Halting problem.</p></li></ul><ul><li><p class="">The Halting problem involves two computer programs:</p><ul><li><p class="">Oracle_Program</p></li><li><p class="">Recursive_Program</p></li></ul></li></ul><ul><li><p class="">The Oracle_Program is a program that predicts whether a program will halt on a given input, or loop forever. <strong>Note: this program guarantees (promises) to give us the correct answer, and never the wrong answer. (We will prove that no such program exists.)</strong> The oracle program takes in a program, returns “Halt” if the program halts and “Loops Forever” if the program loops forever.</p></li></ul><ul><li><p class="">Function Oracle_Program(Program)</p><ul><li><p class="">If(Program) = “Halt”)</p><ul><li><p class="">Return “Halt”</p></li></ul></li><li><p class="">Else</p><ul><li><p class="">Return “Loops Forever”</p></li></ul></li></ul></li></ul><ul><li><p class="">Consider the following Recursive_Program, which loops forever if a given program with a given input is predicted to halt by the Oracle_Program, and returns “Halt” if a given program loops forever.</p></li></ul><ul><li><p class="">Function Recursive_Program(Program, Input)</p><ul><li><p class="">If(Oracle_Program(Program(Input)) == “Halt”)</p><ul><li><p class="">LoopForever()</p></li></ul></li><li><p class="">Else</p><ul><li><p class="">Return “Halt”</p></li></ul></li></ul></li></ul><ul><li><p class="">Note that a contradiction is found if this Recursive_Program is then passed into itself. If the Oracle_Program predicts that the Recursive_Program will “Halt”, then the Recursive_Program will “Loop Forever”; which is a logical contradiction. If the Oracle_Program predicts that the Recursive_Program will “Loop Forever”, then the Recursive_Program will “Halt”; which is also a logical contradiction. These contradictions prove that there is not a generalizable algorithm that will always tell if a program will halt.</p></li></ul><ul><li><p class="">Function Recursive_Program(Recursive_Program, Input)</p><ul><li><p class="">If(Oracle_Program(Recursive_Program(Input)) == “Halt”)</p><ul><li><p class="">LoopForever()</p></li></ul></li><li><p class="">Else</p><ul><li><p class="">Return “Halt”</p></li></ul></li></ul></li></ul><ul><li><p class="">Decidability has large implications for formal systems. For example, it is undecidable whether a first-order logic system is formally valid (that is true under all interpretations).&nbsp;</p></li></ul><ul><li><p class="">Example: ∀B∀A( A ∧ ¬B )</p><ul><li><p class="">This is TRUE if in the ‘domain of discourse’ A = 1, B = 2</p></li><li><p class="">This is FALSE if in the ‘domain of discourse’ A = 4 = 4</p></li><li><p class="">Therefore, the FOL expression itself is not decidable. One would need additional interpretation of the domain of discourse.</p></li></ul></li></ul><ul><li><p class="">However, it turns out that it is decidable whether Zero-Order (propositional) logic formulas are valid (True). There exist algorithms for deciding this. A nice quality of SAT problems is that they are always decidable, even if they are NP-Hard.</p></li></ul><ul><li><p class="">Algorithms that make SAT decidable:</p><ul><li><p class="">Truth Table assignments</p></li><li><p class="">DPLL</p></li><li><p class="">DFS</p></li><li><p class="">Etc…</p></li></ul></li></ul></div>
+<p>This is part 9 of 11 in the Formal Methods 101 series.</p>
 
+<h2>Decidable and undecidable problems</h2>
+<p>There are some problems for which no algorithm can guarantee a correct answer (for example, yes or no). These are called undecidable problems. The problems for which such an algorithm does exist are called decidable problems.</p>
 
-  
+<h2>The halting problem</h2>
+<p>To understand this further, we look at a classic undecidable problem, the halting problem. It involves two programs: <code>Oracle_Program</code> and <code>Recursive_Program</code>.</p>
+<p><code>Oracle_Program</code> predicts whether a program will halt on a given input or loop forever. It takes in a program and its input, returns "Halt" if the program halts and "Loops Forever" if it loops forever. This program is promised to give the correct answer and never the wrong one. We will show that no such program can exist.</p>
+<pre><code>Function Oracle_Program(Program, Input)
+    If (Program(Input) halts)
+        Return "Halt"
+    Else
+        Return "Loops Forever"</code></pre>
+<p>Now consider <code>Recursive_Program</code>. It loops forever if the oracle predicts that a given program on a given input will halt, and it returns "Halt" if the oracle predicts that the program will loop forever.</p>
+<pre><code>Function Recursive_Program(Program, Input)
+    If (Oracle_Program(Program, Input) == "Halt")
+        LoopForever()
+    Else
+        Return "Halt"</code></pre>
 
+<h2>The contradiction</h2>
+<p>A contradiction appears when <code>Recursive_Program</code> is passed into itself:</p>
+<pre><code>Function Recursive_Program(Recursive_Program, Input)
+    If (Oracle_Program(Recursive_Program, Input) == "Halt")
+        LoopForever()
+    Else
+        Return "Halt"</code></pre>
+<ul>
+<li>If the oracle predicts that <code>Recursive_Program</code> will "Halt", then <code>Recursive_Program</code> will loop forever, which contradicts the prediction.</li>
+<li>If the oracle predicts that <code>Recursive_Program</code> will "Loop Forever", then <code>Recursive_Program</code> will halt, which also contradicts the prediction.</li>
+</ul>
+<p>These contradictions prove that there is no general algorithm that always tells whether a program will halt.</p>
+<figure>
+<img class="article-animated" alt="A table of illustrative Oracle verdicts, Halt or Loop, for four programs p1 to p4 and a program D, each run on every program as input. The four diagonal cells are outlined. Row D gives the opposite of each diagonal verdict, so it differs from every other row, and its own cell is a question mark." src="resources/fm-decide-diagonal.svg">
+<figcaption>The diagonal argument, with made-up verdicts for illustration. D does the opposite of the Oracle's verdict on the diagonal, so it differs from every row. In its own column no verdict can be right.</figcaption>
+</figure>
 
+<h2>Decidability and formal systems</h2>
+<p>Decidability has large implications for formal systems. For example, it is undecidable whether a first-order logic formula is valid, that is, true under all interpretations.</p>
+<p>Consider the formula below, where A and B take values from a domain of discourse, with 1 read as true and 0 as false:</p>
+<p class="article-math">A ∧ ¬B</p>
+<ul>
+<li>It is true if, in the domain of discourse, A = 1 and B = 0.</li>
+<li>It is false if A = 1 and B = 1.</li>
+</ul>
+<p>The formula alone therefore does not settle whether it is true; one needs an interpretation of the domain of discourse as well.</p>
+<p>It turns out, however, that it is decidable whether zero-order (propositional) logic formulas are valid. Algorithms exist for deciding this. A nice quality of SAT problems is that they are always decidable, even though they are NP-hard.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Algorithms that make SAT decidable</h2>
+<ul>
+<li>Truth table assignments</li>
+<li>DPLL</li>
+<li>DFS</li>
+<li>and others</li>
+</ul>

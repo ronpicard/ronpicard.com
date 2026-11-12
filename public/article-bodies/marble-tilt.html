@@ -1,0 +1,20 @@
+<p>Marble Tilt is a 3D wooden labyrinth. You tilt the board to roll a steel marble past the pits and into the cup, steering with your mouse, the arrow keys, a touch drag, or by tilting your phone. There are twelve boards. They start as walled mazes with a pit at the end of every wrong turn and open slaloms between pits, and build up to two-storey boards: ramps up to raised decks, bridges you roll under and then over, rooms joined over the top of a wall, and a keep behind a moat that you can only drop into.</p>
+<p>Beat par for three stars; your best times are saved. An autopilot drives the real physics through every board to prove it can be finished, and it also plays the demo behind the menu.</p>
+
+<h2>How it works</h2>
+<p>The marble is a circle rolling on a board with two levels, the floor and a raised level of decks and bridges. It runs on a fixed timestep, decoupled from the frame rate, so it behaves the same on a slow or fast browser. Tilt accelerates the marble and is clamped circularly, so a diagonal push never exceeds a straight one. The board eases toward the tilt you ask for, which gives it some weight and lag. Rolling drag bleeds off speed, and a speed cap stops the marble tunnelling through a wall. Each step the marble is tested against nearby wall cells, pushed out along the normal, and its velocity reflected with some loss, so hits bounce without being perfect.</p>
+<p>One set of rules in <code>src/game/board.ts</code> says which neighbouring cells the marble may enter and which are solid. A deck is a wall to a marble on the floor and open ground to one on the raised level, a bridge is open to both, and a ramp can be entered only through its ends. On a ramp gravity pulls the marble back down the slope. Rolling off a deck or bridge drops it to the floor, and pits and the cup only catch a marble that is on the floor.</p>
+<p>Every level is proven finishable before it ships. A breadth-first search over each level's grid and its two levels confirms a route from the start to the cup. An autopilot then follows that route using the same physics the player uses, reading the marble's live position and velocity, and the test suite checks that it finishes all twelve levels with no falls. The same autopilot sets each level's par time, so par reflects a real simulated run, and it drives the demo behind the menu.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Mouse: click and drag anywhere, like a finger on a phone. The farther you drag from where you pressed, the steeper the tilt, and letting go levels the board.</li>
+<li>Keyboard: arrow keys or WASD tilt the board in steps and it stays where you leave it. <code>Space</code> levels it. The keys follow the board's own rows and columns, which run diagonally across the isometric view.</li>
+<li>Touch: drag anywhere like a virtual joystick and release to flatten.</li>
+<li>Phone tilt: switch on "Tilt with your phone" in the menu. iOS asks for motion-access permission once, and a recentre button sets the current pose as flat.</li>
+<li><code>R</code> restarts the level and <code>Escape</code> returns to the menu. The clock starts on your first tilt.</li>
+</ul>
+<p>Stars compare your time with par: at or under par is three stars, within 1.5 times par is two, and any finish is one. Your best time and best stars are saved separately in your browser.</p>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, and Three.js with an isometric camera, built with Vite. Sound is synthesised with Web Audio, tests use Node's built-in test runner, and progress is kept in <code>localStorage</code> with no backend.</p>

@@ -1,11 +1,13 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Software Lessons Session 18: Programming in C++: Pass by Reference, Pointer, &amp; Value Part 1 <br><br>-Pass by Reference, Pass by Pointer, Pass by Value. <br>-Legal and illegal variants of this. <br>-The 'why' behind the logic.</p></div>
+<p>Session 18 of Software Lessons, “Programming in C++: Pass by Reference, Pointer and Value Part 1,” runs about 28 minutes.</p>
 
+<h2>What this session covers</h2>
+<ul><li>Pass by reference, pass by pointer and pass by value</li><li>Legal and illegal variants of each</li><li>The reasoning behind the rules</li></ul>
 
-  
-
-
-
-</div>
-</div></div></div></div></div>
+<h2>Key ideas</h2>
+<ul>
+<li>Pass by value gives the function its own copy, so changes inside the function do not affect the caller.</li>
+<li>Pass by reference gives the function another name for the caller’s object, so changes are visible to the caller and no copy is made.</li>
+<li>Pass by pointer passes the address of the object, and the function must dereference it; a pointer can also be null.</li>
+<li>A const reference lets a function read a large object without copying it or changing it.</li>
+<li>Some combinations are not allowed, for example binding a non-const reference to a temporary value, and the rules exist to prevent accidental changes and dangling references.</li>
+</ul>

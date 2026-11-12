@@ -1,11 +1,46 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Aircraft collision avoidance is a pervasive need in this modern age of flight. We present a 2-D automated collision avoidance flight controller for automated collision avoidance amongst 2 aircraft. This controller is designed to satisfy safety and liveness requirements, implemented using Simulink and Stateflow, and verified using safety and liveness monitors.</p></div>
+<p>Aircraft collision avoidance is a pervasive need in this modern age of flight. We present a 2-D automated collision avoidance flight controller for automated collision avoidance amongst 2 aircraft. This controller is designed to satisfy safety and liveness requirements, implemented using Simulink and Stateflow, and verified using safety and liveness monitors.</p>
+<p>This was the project for CS 6376, Hybrid and Embedded Systems, at Vanderbilt University.</p>
 
+<h2>The problem</h2>
+<p>The requirements come from the class assignment. Each aircraft flies in a 2-D plane from an integer source to an integer destination at a constant 1 km per minute, along either the X axis or the Y axis. Once a minute the controller may go straight or turn 90 degrees left or right, but it cannot turn back. At the start of each minute it can exchange messages with any aircraft in a square communication zone around it, and no aircraft may ever enter the square danger zone, 1 km on a side, around another. The airspace holds only two aircraft, both running the same controller, and the goal is for each to reach its destination as quickly as possible for any source and destination pair.</p>
+<p>The communication zone in the original assignment was 4 km on a side. I widened it to 6 km, a half-width of 3000 m, to avoid a failing edge case, which section "A forced failure" shows.</p>
 
-  
+<h2>Safety and liveness</h2>
+<p>The paper turns the natural language requirements into two formal ones. Safety says nothing bad ever happens: the other aircraft is never inside the danger zone, a 500 m half-width around each aircraft. Liveness says something good eventually happens: each aircraft reaches its destination.</p>
+<p class="article-math">Safety: ¬( |X_other − X_aircraft| ≤ 500 ∧ |Y_other − Y_aircraft| ≤ 500 ) at every step<br>Liveness: ◇( X_aircraft = X_dest ∧ Y_aircraft = Y_dest )</p>
+<p>Safety is an invariant, a Boolean statement that no reachable state may violate. Liveness is written in linear temporal logic, where ◇ means "eventually".</p>
 
+<h2>The model</h2>
+<p>The design is a hybrid system built in Simulink and Stateflow: a fixed-step synchronous controller driving a continuous-time physical model. Each simulation step is 1/1000 of a minute, and at 1 km per minute an aircraft moves exactly 1 m per step, so the controller can track position by counting. Two identical aircraft subsystems each hold a Stateflow chart with the controller logic, and a communications subsystem marks whether the other aircraft's message is inside the communication zone.</p>
 
+<h2>The controller</h2>
+<p>At the top level the controller has a Controller mode and a Final mode. Inside Controller, an Initialize mode sends the aircraft to one of four CollisionAvoidanceMonitor modes, one per orientation. Each monitor flies toward the destination along its axis and turns when the destination's coordinates call for it, which gives the shortest path the orientation constraints allow.</p>
+<figure>
+<img class="article-animated" alt="State machine for the orientation-0 controller. Traveling0 moves x by 1 per step. A message from an aircraft heading toward it leads to Turn90 or Turn270, each waiting 1000 m, then AvoidCollisionTraveling90 or 270, then a 1000 m return turn back to Traveling0. Reaching the destination leads to Final DestinationReached; a danger-zone message leads to Final ErrorDangerZoneBreached." src="resources/ac-cav-controller.svg">
+<figcaption>The avoidance logic of one monitor. The other three orientations follow the same pattern. The two Final states make the safety requirement checkable: an aircraft ends either at its destination or in the error state.</figcaption>
+</figure>
+<p>In the orientation-0 monitor the aircraft starts in Traveling0, adding 1 m to x each step. If a message arrives from an aircraft facing it, the controller enters Turn90 or Turn270. A turn takes 1000 m to complete, so the aircraft keeps flying straight for 1000 m, then switches orientation and moves along y for as long as the message is still received and the other aircraft still threatens the danger zone. When the threat is gone it starts a return turn, another 1000 m, and resumes Traveling0.</p>
+<p>The safety monitor is a transition into an ErrorDangerZoneBreached state. If a received message places the other aircraft inside the danger zone before DestinationReached, the transition fires, so the Final mode is reached in only two ways: the destination, or a breach.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>The head-on test</h2>
+<p>The worst case is two aircraft on the same axis flying straight at each other. Aircraft 1 starts at (0, 0) with orientation 0 and a destination of (4000, 0). Aircraft 2 starts at (4000, 0) with orientation 180 and a destination of (0, 0).</p>
+<p>Each aircraft receives the other's message at about x = 500 for Aircraft 1 and x = 3500 for Aircraft 2, and starts to turn. The turn takes effect at about x = 1500 and x = 2500, and the aircraft move to opposite sides along y. Because they are now moving apart, each sees that the other is no longer a threat and immediately begins a return turn. When it finishes they are only about 2000 m apart, still inside the 3000 m communication zone and facing each other again, so the whole process repeats. After the second round they are 4000 m apart and out of range, and fly on to their x destinations. At 1000 m before the destination each starts a turn that takes effect on arrival, then moves along y back to y = 0.</p>
+<figure>
+<img class="article-animated" alt="Schematic of the head-on test. Aircraft 1 starts at (0, 0) and Aircraft 2 at (4000, 0). Each receives the other's message about 500 m in, sidesteps 1000 m, finds the other still in range, sidesteps 1000 m again, ending 4000 m apart, then both fly on and return to y = 0 at their destinations." src="resources/ac-cav-encounter.svg">
+<figcaption>A schematic redrawn from the paper's description of the test, not the Simulink trace itself. The vertical axis is compressed. The sidestep sizes follow from the 1000 m turn distance.</figcaption>
+</figure>
+<p>The danger zone monitors stayed at 0, so the danger zone was never breached, and both aircraft reached their destinations, which satisfies the liveness requirement for this run.</p>
+
+<h2>A forced failure</h2>
+<p>To show what a violation looks like, I repeated the test with the communication zone cut to 2000 m. Both monitors then showed the danger zones breached about 1800 steps into the run. The reason is the closing speed. Two aircraft flying toward each other close at 2 m per step, so the 1000 m turn costs 2000 m of separation. With a 2000 m zone, the message arrives at a separation of 2000 m, the turn takes effect when they are on top of each other, and the danger zone is crossed when Aircraft 1 passes about 1750 m and Aircraft 2 drops below about 2250 m.</p>
+<figure>
+<img class="article-animated" alt="Separation between the aircraft falls by 2 m per step, from 4000 m to 0 at step 2000. With a 3000 m zone the message arrives at step 500 and the turn takes effect at step 1500 with 1000 m left, outside the 500 m danger zone. With a 2000 m zone the message arrives at step 1000 and the turn takes effect at step 2000 with 0 m left, so the danger zone is breached near step 1750." src="resources/ac-cav-failure.svg">
+<figcaption>The separation line is computed from the paper's setup (4000 m apart, 2 m closed per step). With 3000 m the turn finishes while 1000 m remains, outside the danger zone. With 2000 m it finishes only at 0 m.</figcaption>
+</figure>
+
+<h2>Conclusions</h2>
+<p>The paper shows the design, implementation, and verification of a 2-D automated collision avoidance controller. The requirements became formal safety and liveness statements and component specifications, the controller was built in Simulink and Stateflow, and safety and liveness monitors checked it in simulation.</p>
+
+<h3>A note from 2026</h3>
+<p>The paper says the simulation "proves" safety, but one simulation of one scenario only shows that scenario is safe. The requirement is for all source and destination pairs, which a proof would need to cover, for example by model checking the Stateflow chart. The forced failure also shows the controller's real constraint. A head-on pair closes 2000 m during one turn, so by this arithmetic the communication half-width has to exceed 2000 m plus the 500 m danger zone; 3000 m clears that and 2000 m does not. The paper's formal safety statement also lists the x and y conditions as two separate bullets, but a breach needs both at once, which is how I have written it above.</p>
+<p>The paper is available as a <a href="resources/b03d107cb06876.pdf">PDF</a>, and the Simulink model is in the <a href="https://github.com/ronpicard/aircraft-automated-collision-avoidance">GitHub repository</a>.</p>

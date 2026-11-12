@@ -1,0 +1,22 @@
+<p>Frequency Player is a tone and frequency generator that runs in the browser. Play any frequency from 20 Hz to 20 kHz as a sine, triangle, square or sawtooth wave, and always see the musical note it is nearest and how many cents away it sits.</p>
+<p>Drag a dial of note names to tune by ear and flick it to glide, tap any of the 88 piano keys to jump to that note, type an exact value such as 440 or 2.5k, or nudge it with buttons that step by an octave, a semitone, 1 Hz or 0.1 Hz and repeat while held. A logarithmic slider sweeps the whole audible range, presets cover test tones like 60 Hz hum and 1 kHz, and the reference pitch for A4 is adjustable. Tones start, stop and retune without clicks. It works with mouse, keyboard and touch on phones and desktops.</p>
+
+<h2>How it works</h2>
+<p>A single Web Audio oscillator feeds a gain node. Starting and stopping ramp the gain, and frequency changes glide over a few milliseconds, so the speaker never sees a step. That is what keeps tones free of clicks.</p>
+<p>Square and sawtooth waves are much louder than a sine at the same gain, so each waveform is trimmed to a similar loudness, and the volume slider follows a squared curve that feels even to the ear. Notes use twelve-tone equal temperament relative to the chosen A4, and the logarithmic slider gives every octave the same length.</p>
+<p>On the dial, every note sits 56 pixels from the next, so small drags make fine changes. With Snap dial to notes on, it settles on the nearest note when you let go. The scope under the frequency shows the current waveform and more cycles the higher the pitch.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Play and Stop start and end the tone; changes apply while it plays.</li>
+<li>Drag the dial, or turn it with the mouse wheel or arrow keys (Shift for 1-cent steps).</li>
+<li>Tap the big number and type a value such as 440, 1000 Hz or 2.5k, then press Enter.</li>
+<li>Step buttons: halve or double for an octave, plus or minus a half step for a semitone, and 1 Hz or 0.1 Hz steps, repeating while held.</li>
+<li>Piano: tap any of the 88 keys, A0 to C8, to set its exact frequency.</li>
+<li>Keyboard: Space plays and stops, Up and Down move a semitone (Shift for an octave), Left and Right move 1 Hz (Shift for 0.1 Hz).</li>
+<li>The reference pitch for A4 can be set to 415, 432, 435, 440, 442 or 444 Hz.</li>
+</ul>
+<p>Start at a low volume. High frequencies and loud tones can damage hearing and small speakers.</p>
+
+<h2>Built with</h2>
+<p>React, TypeScript, Vite and the Web Audio API, with no other runtime dependencies.</p>

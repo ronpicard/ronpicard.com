@@ -1,11 +1,52 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Colored Petri Nets are a directed graph modeling approach utilized to reason about race conditions and deadlocks within concurrent systems. We present a Design Studio approach to develop, simulate, and analyze Colored Petri Nets. Our implementation consists of a modeling environment developed within WebGME and a series of Python plugins for the simulation and analysis of Colored Petri Nets. The target audience for this paper and tool is those seeking to reason about deadlocks and race conditions within concurrent systems. </p></div>
+<p>Colored Petri Nets are a directed graph modeling approach utilized to reason about race conditions and deadlocks within concurrent systems. We present a Design Studio approach to develop, simulate, and analyze Colored Petri Nets. Our implementation consists of a modeling environment developed within WebGME and a series of Python plugins for the simulation and analysis of Colored Petri Nets. The target audience for this paper and tool is those seeking to reason about deadlocks and race conditions within concurrent systems.</p>
+<p>This post summarises the paper, written with Bernard Serbinowski for a model-integrated computing course at Vanderbilt University.</p>
 
+<h2>The problem</h2>
+<p>Concurrent systems use parallel processing to cut computation time, and they bring two classic risks. A race condition happens when process A needs process B to reach a state first, and A gets there before B. A deadlock happens when A holds one resource and needs another that B holds, while B needs what A holds. Both are hard to find by testing, because they depend on timing that can change between runs and can disappear when you attach a debugger. A model that can be analysed before the system runs is the more reliable way to look for them.</p>
 
-  
+<h2>Colored Petri nets</h2>
+<p>A Petri net is a graph of places and transitions joined by directed arcs. Places hold tokens; in a coloured net, tokens have types called colours. An arc from a place to a transition has a capacity: how many tokens of each colour that place can contribute and lose when the transition fires. An arc from a transition to a place has a weight: how many tokens of each colour are added when it fires. Each transition has a threshold, the tokens it needs in order to be enabled, and the net can only take a step when at least one transition is enabled. In a simulation one enabled transition fires per step.</p>
+<p>Formally, a coloured Petri net is a tuple, as the paper takes it from the Petri nets literature:</p>
+<p class="article-math">M = (P, T, A, S, N, E, G, I)<br>P places, T transitions, A arcs, S colour sets, N node function, E arc restrictions, G transition values, I initial state</p>
+<p>We also added one extension: a maximum number of tokens for a transition, after which it becomes disabled again.</p>
+<figure>
+<img class="article-animated" alt="A Petri net before and after firing. Before: p1 holds 2 tokens, p2 holds 2, p3 holds 0, threshold 2, so the transition is enabled. After: p1 holds 0, p2 holds 1, p3 holds 2." src="resources/cpn-firing.svg">
+<figcaption>The paper's single-colour example. The arc from p1 has capacity 2 and the arc from p2 has capacity 1, so firing takes 2 tokens and 1 token; the output arc has weight 2. With p1 empty and p2 down to one token, the transition is no longer enabled.</figcaption>
+</figure>
 
+<h2>The design studio</h2>
+<p>WebGME is a web-based meta-modelling framework. You draw a meta-model of an engineering domain, partly based on UML 2.0, and then build domain-specific models from it in the same tool. It supports plugins in JavaScript and Python, which can simulate, analyse and visualise those models or export them to other formats. A design studio is the resulting domain-specific environment. Ours has three parts: a meta-model, a domain-specific model built from it, and a set of Python plugins.</p>
 
+<h2>The meta-model</h2>
+<p>Everything inherits from the WebGME root, FCO. A Colored Petri Net contains any number of an abstract Petri Object, which is specialised into Place, Transition and Arc, and arcs split into place-to-transition and transition-to-place connections. The net itself has attributes ColorSet, InitialState, IsDeterministic, Iteration and StateSpace. ColorSet defines the available colours; the other four hold inputs or results for the plugins. Every Petri Object has a Tokens attribute whose meaning depends on its type.</p>
+<figure>
+<img class="article-animated" alt="UML-style meta-model: FCO at the root; Colored Petri Net contains zero or more Petri Objects; Petri Object has Place, Transition and Arc as children; Arc has PlaceToTransition and TransitionToPlace connection types." src="resources/cpn-metamodel.svg">
+<figcaption>The meta-model, drawn after the paper's figure. One abstract class and one attribute, Tokens, carry the whole net.</figcaption>
+</figure>
+<p>Two constraints keep models well formed. TokenSet flags a violation if an object uses a colour that is not in the net's colour set, and NoRepeats flags one if an object uses the same colour more than once.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>The domain-specific model and the plugins</h2>
+<p>Models are assembled in WebGME's composition view from instances of these classes. Visualisation uses WebGME's SVG decorator with embedded JavaScript templates, so that tokens, thresholds and weights appear as coloured text on the object they belong to. Six Python plugins do the work:</p>
+<ul>
+<li><strong>NextStep</strong> picks one enabled transition at random and fires it.</li>
+<li><strong>TotalRun</strong> repeats that until nothing is enabled or a maximum number of iterations, set in the model, is reached, and keeps the final state.</li>
+<li><strong>AllPossible</strong> fires every enabled transition from each state it finds and records all reachable states, leaving the model unchanged.</li>
+<li><strong>IsDeterministic</strong> explores like AllPossible but stops as soon as more than one transition is enabled, and records the answer in the model.</li>
+<li><strong>SetInitialState</strong> stores the current state, and <strong>Reset</strong> restores it.</li>
+</ul>
+<p>TotalRun and AllPossible can also produce a minimal HTML trace of the states, for comparing consecutive states quickly. It needs the Naked Python module; without it the plugin returns a template file instead.</p>
+
+<h2>An example: two processes, one resource</h2>
+<p>The example has two processes, A and B, that both need a shared resource. If both get to it at the same time, the net reaches a deadlock place. A starts with a blue token and B with a red one. The transition that leads to the deadlock needs one red and one blue token, so it is enabled only in the bad case.</p>
+<figure>
+<img class="article-animated" alt="A colored Petri net with places A, B, Resource and Deadlock and transitions LockA, LockB, ReleaseA, ReleaseB and one into Deadlock. A holds a blue token, B a red token. The transition into Deadlock needs one red and one blue token." src="resources/cpn-deadlock.svg">
+<figcaption>The model, redrawn from the paper's screenshot. The lock transitions feed the shared resource; the last transition leads to the deadlock place.</figcaption>
+</figure>
+<p>We ran the plugins in this order. SetInitialState stored the starting tokens. IsDeterministic returned False, since both processes could fire. NextStep fired process B, moving a red token to the resource. IsDeterministic was False again, and a second NextStep fired the resource instead, which returned the net to its initial state with no deadlock. TotalRun for 15 iterations reached the Deadlock place, showing that both processes had reached the resource in some run. IsDeterministic then returned True, since nothing is enabled in a deadlock. Finally we reset the net and ran AllPossible to list all reachable states.</p>
+
+<h2>Results</h2>
+<p>We built a design studio for coloured Petri nets on WebGME with a meta-model, a model composed from it, and plugins to simulate, analyse and visualise. The example shows the two uses: random simulation finds that a deadlock can happen, and exhaustive exploration lists every state it can reach.</p>
+
+<h3>A note from 2026</h3>
+<p>The example is small, and the paper does not report performance on larger nets or compare AllPossible to other tools. Exhaustive exploration of reachable states also grows quickly with model size, which is the standard limit of this approach. One passage of the paper's prose swaps the definitions of capacity and weight; the worked example and the meta-model section use the meaning given above.</p>
+<p>The paper is available as a <a href="resources/294c29531067fd.pdf">PDF</a>, and the code is in the <a href="https://github.com/ronpicard/colored-petri-net-design-studio">GitHub repository</a>.</p>

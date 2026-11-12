@@ -1,21 +1,71 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Introduction:</p><ul><li><p class="">A Formal System is a set of formulas (axioms, or derived from axioms) that are used to infer properties, theorems, or additional truths.</p></li></ul><ul><li><p class="">Axioms can be thought of as a set of given assumptions or rules about a formal system.</p></li></ul><ul><li><p class="">An interpretation of the axioms (and truths derived from the axioms) is known as a model. For example, in first-order logic without quantifiers and only Boolean-valued variables, a model would be one assignment of Boolean values to the predicate variables. All possible models would be all possible assignments of Boolean values to the predicate variables. For FOL expressions without quantifiers and only Boolean-valued variables (i.e. basic predicates), all possible models can be expressed by a truth table.</p><ul><li><p class="">Ex. FOL Expression (Basic Predicate): P = (A ∧¬B) | A,B ∈ {0,1}</p></li></ul></li></ul><ul><li><p class="">In order to discuss this topic we need to introduce some new symbols:</p></li></ul><ul><li><p class=""><strong>Syntactic Entailment: ⊢</strong></p><ul><li><p class="">Also known as syntactic consequence, syntactic implication, or logical implication. Functionally the same as the binary version known as material implication, but is in the ‘meta’ context of a system.</p></li><li><p class="">Given Γ, which is the set of formulas (axioms, or derived from axioms) of Formal System S, and Property ϕ, we write Γ⊢ϕ</p><ul><li><p class="">This says that property ϕ is provable (derivable) from the set of formulas (axioms or rules) Γ given by the Formal System S. (Sometimes written Γ⊦S ϕ).</p></li></ul></li></ul></li></ul><ul><li><p class=""><strong>Semantic Entailment: ⊨</strong></p><ul><li><p class="">Also known as semantic consequence or semantic implication. This relates to truths that are true within the set of formulas (axioms, or derived from axioms) Γ given by the Formal System S.</p></li><li><p class="">Given Γ, which is the set of formulas (axioms, or derived from axioms) of Formal System S, and Property ϕ, we write Γ ⊨ ϕ</p><ul><li><p class="">This says that property ϕ is true (not necessarily derivable) in all models (all possible interpretations) of a set of formulas (axioms, or derived from axioms) Γ of a Formal System S. (Sometimes written Γ ⊦S ϕ)</p></li></ul></li></ul></li></ul><ul><li><p class="">Intuition on the differences between syntactic entailment and semantic entailment.</p></li></ul><ul><li><p class=""><strong>Syntactic Entailment:</strong></p><ul><li><p class="">Given Axioms Γ = {((A ∧¬B) → C), ((C ∨D) → E)}, does ϕ = ((A ∧¬B ∨ D) →&nbsp; E) hold?</p></li></ul><ul><li><p class="">Derivation:</p><ul><li><p class="">1. (A ∧¬B) → C</p></li><li><p class="">2. (C ∨D) → E</p></li><li><p class="">3. Substitute 1 into 2 and get (A ∧¬B ∨ D) → E)</p></li></ul></li></ul></li></ul><ul><li><p class="">Because ϕ is syntactically derivable from Γ, we can write &nbsp;Γ⊢ϕ.</p></li></ul><ul><li><p class=""><strong>Semantic Entailment:</strong></p><ul><li><p class="">Given Axioms Γ = {((A ∧¬B) → C), ((C ∨ D) → E)}</p></li><li><p class="">Does ϕ = ((A ∧¬B ∨ D) →&nbsp; E) hold?</p><ul><li><p class="">If we look at the models (assignments that make the predicates true), we can see that there are no models (possible interpretations) of ϕ for which the models of axioms Γ(0), Γ(1) are contradictory to the implication of E.</p></li><li><p class="">Because ϕ is semantically valid from Γ, we can write Γ ⊨ ϕ.</p></li></ul></li></ul></li></ul></div>
+<p>This is part 10 of 11 in the Formal Methods 101 series.</p>
 
+<h2>What a formal system is</h2>
+<p>A formal system is a set of formulas (axioms, or formulas derived from axioms) that are used to infer properties, theorems, or additional truths. Axioms can be thought of as a set of given assumptions or rules about the system.</p>
 
-  
+<h2>Models</h2>
+<p>An interpretation of the axioms (and of the truths derived from them) is known as a model. For example, in first-order logic without quantifiers and with only Boolean-valued variables, a model is one assignment of Boolean values to the predicate variables. All possible models are all possible assignments. For such basic predicates, all possible models can be listed in a truth table.</p>
+<p>Example, a basic predicate:</p>
+<p class="article-math">P = (A ∧ ¬B), where A, B ∈ {0, 1}</p>
+<table>
+<thead>
+<tr><th>A</th><th>B</th><th>P = A ∧ ¬B</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td></tr>
+<tr><td>1</td><td>0</td><td>1</td></tr>
+<tr><td>1</td><td>1</td><td>0</td></tr>
+</tbody>
+</table>
 
+<h2>Two new symbols</h2>
+<h3>Syntactic entailment: ⊢</h3>
+<p>Also known as syntactic consequence, syntactic implication, or logical implication. It is functionally the same as the binary version known as material implication, but lives in the "meta" context of a system.</p>
+<p>Let Γ be the set of formulas (axioms, or formulas derived from axioms) of a formal system S, and let φ be a property. We write:</p>
+<p class="article-math">Γ ⊢ φ</p>
+<p>This says that φ is provable (derivable) from the formulas Γ of the formal system S. It is sometimes written with the system as a subscript, Γ ⊢ₛ φ.</p>
 
+<h3>Semantic entailment: ⊨</h3>
+<p>Also known as semantic consequence or semantic implication. It relates to truths that hold given the set of formulas Γ of the formal system S. We write:</p>
+<p class="article-math">Γ ⊨ φ</p>
+<p>This says that φ is true (not necessarily derivable) in all models, that is, all possible interpretations, of the formulas Γ of the formal system S. It is sometimes written Γ ⊨ₛ φ.</p>
 
-</div>
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Semantic Completeness</strong></p><ul><li><p class="">A formal system is semantically complete if all tautologies are theorems (derivable truths).</p></li><li><p class="">( ⊨ ϕ) → ( ⊦ ϕ).</p></li></ul><ul><li><p class=""><strong>Strong Completeness</strong></p><ul><li><p class="">A formal system is Strongly Complete if every semantic truth in the system can be syntactically derived (proved). (i.e. every truth is provable)<br>(Γ ⊨ ϕ) → (Γ⊦ ϕ).<br>Intuitively, strongly complete means that given Γ, it is possible to compute all semantic consequences.</p></li></ul></li><li><p class=""><strong>Refutation-Complete</strong></p><ul><li><p class="">A formal system S is Refutation-Complete if it can derive false from every set of unsatisfiable formulas.<br>(Γ ⊨ ⊥) → (Γ⊦ ⊥)</p></li><li><p class="">All Strongly Complete systems are also Refutation-Complete. Intuitively, refutation-complete means that it is possible to check if ϕ is a semantic consequence.</p></li></ul></li><li><p class=""><strong>Soundness</strong></p><ul><li><p class="">A formal system is Sound if every derivable (provable) syntactic truth in the system is a semantic truth. (i.e. no FALSE truth can be proved)</p></li><li><p class="">(Γ⊦ ϕ)→(Γ ⊨ ϕ)</p></li></ul></li></ul><p class="">Zero-order (Propositional) Logic is both Sound and Complete.</p></div>
+<h2>Syntactic and semantic entailment by example</h2>
+<p>Take these axioms and this property:</p>
+<p class="article-math">Γ = { (A ∧ ¬B) → C, (C ∨ D) → E }<br>φ = ((A ∧ ¬B) ∨ D) → E</p>
+<h3>Syntactic entailment</h3>
+<p>Does φ hold, given Γ? A derivation:</p>
+<ol>
+<li>(A ∧ ¬B) → C (axiom)</li>
+<li>(C ∨ D) → E (axiom)</li>
+<li>Substitute 1 into 2 to get ((A ∧ ¬B) ∨ D) → E</li>
+</ol>
+<figure>
+<img class="article-animated" alt="Axiom 1, (A and not B) implies C, and axiom 2, (C or D) implies E, feed a substitution step that produces phi, ((A and not B) or D) implies E. Because phi is derived from the axioms, gamma proves phi." src="resources/fm-fs-derivation.svg">
+<figcaption>The derivation as a picture. Each box is an axiom, a rule application, or a derived formula; nothing is used that is not an axiom or already derived.</figcaption>
+</figure>
+<p>Because φ is syntactically derivable from Γ, we write Γ ⊢ φ.</p>
+<h3>Semantic entailment</h3>
+<p>Does φ hold, given Γ? Here we look at the models, the assignments that make the formulas true. There is no model of Γ that makes the antecedent of φ true and E false, so there is no interpretation in which the axioms hold and φ fails. Because φ is semantically valid from Γ, we write Γ ⊨ φ.</p>
 
-
-  
-
-
-
-</div>
-</div></div></div></div></div>
+<h2>Completeness and soundness</h2>
+<h3>Semantic completeness</h3>
+<p>A formal system is semantically complete if all tautologies are theorems (derivable truths):</p>
+<p class="article-math">(⊨ φ) → (⊢ φ)</p>
+<h3>Strong completeness</h3>
+<p>A formal system is strongly complete if every semantic truth in the system can be syntactically derived (proved); that is, every truth is provable:</p>
+<p class="article-math">(Γ ⊨ φ) → (Γ ⊢ φ)</p>
+<p>Intuitively, strongly complete means that, given Γ, it is possible to compute all semantic consequences.</p>
+<h3>Refutation-completeness</h3>
+<p>A formal system S is refutation-complete if it can derive false from every set of unsatisfiable formulas:</p>
+<p class="article-math">(Γ ⊨ ⊥) → (Γ ⊢ ⊥)</p>
+<p>All strongly complete systems are also refutation-complete. Intuitively, refutation-complete means that it is possible to check whether φ is a semantic consequence.</p>
+<h3>Soundness</h3>
+<p>A formal system is sound if every derivable (provable) syntactic truth in the system is a semantic truth; that is, no false statement can be proved:</p>
+<p class="article-math">(Γ ⊢ φ) → (Γ ⊨ φ)</p>
+<figure>
+<img class="article-animated" alt="Two boxes, gamma proves phi and gamma entails phi. An arrow from provable to true is soundness; an arrow back from true to provable is strong completeness. Below, the formulas for soundness, strong completeness and refutation-completeness." src="resources/fm-fs-sound-complete.svg">
+<figcaption>Soundness carries provable to true; strong completeness carries true back to provable. When both hold, ⊢ and ⊨ agree.</figcaption>
+</figure>
+<p>Zero-order (propositional) logic is both sound and complete.</p>

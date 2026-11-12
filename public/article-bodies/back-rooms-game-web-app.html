@@ -1,0 +1,20 @@
+<p>Back Rooms is a first-person, Backrooms-style horror game that runs in the browser. You wander a dim, yellow office space full of desks and fog, with an on-screen objective to find the exit. Settings open with Esc. It is built with Three.js and hosted on GitHub Pages.</p>
+<p>The exit in the far corner is locked, and you need a key to open it. Once you pick up the key, something starts hunting you, and you lose if it catches you.</p>
+
+<h2>How it works</h2>
+<p>The level is a 5×5 grid of chunks. Each chunk is built from a deterministic seed, so the same seed always gives the same layout, furniture and key position, and you can pass your own with <code>?seed=</code> in the URL. Chunks stream in and out around the player. Each one gets a floor, ceiling, walls with door cutouts, ceiling lights, and seeded office props such as desks, chairs, monitors and phones, plus ceiling fans and wall art or mirrors. Collision uses simple boxes and circle-against-box tests.</p>
+<p>The creature that chases you is a bundled 3D model with a chase and catch state machine. It navigates around obstacles using a small RRT* path planner. Rendering goes through Three.js's <code>EffectComposer</code>: the scene, then a full-screen warp shader that gives the liminal look, then output, with light fog for depth. Mirrors are real reflectors that are culled by distance and updated on a stagger to keep them cheap.</p>
+<p>Audio is generated or triggered with Web Audio: procedural office hum and HVAC ambience, positional desk-phone rings, static near monitors, and sampled cues for the chase and for the key and door. A thought overlay shows short interior-monologue lines when you reach seeded points in the level. The layout, collision, path planning and placement logic stays free of browser APIs so it runs under Vitest.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Click the game view to lock the pointer and resume.</li>
+<li>Mouse: look.</li>
+<li>W A S D: move.</li>
+<li>Shift: sprint.</li>
+<li>Esc: settings (volume, mouse sensitivity, mute, restart). The game pauses while the menu is open.</li>
+<li>On touch devices, on-screen controls appear and a gear button opens settings.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>Three.js, TypeScript and Vite, with Vitest for unit tests. The audio samples and models have their credits in the repository. The source is on <a href="https://github.com/ronpicard/back-rooms-game-web-app">GitHub</a>.</p>

@@ -1,11 +1,46 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Model-Based Design (MBD) has been used for decades to design controllers for hybrid systems. MBD requires special considerations when modeling, designing, and analyzing hybrid systems. Hybrid systems are often modeled and simulated to tune the controller parameters before testing on target hardware. We present an approach to modeling, design, and analysis of a closed-loop RC car speed controller. We model this system with state-space equations using estimated parameters and tune a discrete PID controller so that an appropriate system response is achieved. With a successful model, we utilize Simulink’s support package for Raspberry Pi to automatically generate and run an executable model on the target hardware. We present and discuss the challenges associated with hybrid system modeling and testing. With varied experiments, we show the modeling challenges associated with hybrid systems and the gap between simulated models and executable models for controlling these systems. We show a successful PID controller in a Simulink simulation followed by unacceptable performance on target hardware caused by the high CPU usage of Simulink’s auto-generated code and the strict real-time sampling time requirements of our controller.</p></div>
+<p>Model-Based Design (MBD) has been used for decades to design controllers for hybrid systems. MBD requires special considerations when modeling, designing, and analyzing hybrid systems. Hybrid systems are often modeled and simulated to tune the controller parameters before testing on target hardware. We present an approach to modeling, design, and analysis of a closed-loop RC car speed controller.</p>
+<p>We model this system with state-space equations using estimated parameters and tune a discrete PID controller so that an appropriate system response is achieved. With a successful model, we use Simulink's support package for Raspberry Pi to generate and run an executable model on the target hardware automatically. With varied experiments, we show the modeling challenges of hybrid systems and the gap between simulated models and executable models. A PID controller works in simulation. On the hardware it fails, because of the high CPU usage of Simulink's generated code and the strict real-time sampling requirements of the controller. This work was done with Wang Yuxing, Sanchita Basak and Shreyas Ramakrishna at Vanderbilt University.</p>
 
+<h2>The problem</h2>
+<p>A hybrid system is a computing device that interacts with the world through sensors and actuators. Beyond the correctness of the software, it brings processor scheduling, execution times, sample rates and conversion between analog and digital signals. Generating code from a model hides the low-level details, which is convenient, but it can hide timing problems too. This case study follows one controller from model to hardware to see where the model stops predicting reality.</p>
 
-  
+<h2>The testbed</h2>
+<p>The testbed is DeepNNCar, built on a Traxxas Slash 2WD 1/10 scale RC car with a Titan 12T 550 motor and a steering servo. We replaced the original radio receiver with a Raspberry Pi 3B (a quad-core ARM Cortex-A53) so the Pi drives the servo and motor controller. The pigpio library generates 100 Hz PWM pulses using direct memory access, which is more precise than software interrupts. For speed control we use duty cycles from 15 to 15.8, which correspond to roughly 0 to 1 m/s under our indoor load.</p>
+<p>A slot-type infrared sensor near the rear wheel is blocked once per tire revolution, which creates an interrupt on a GPIO pin. The speed is the interrupt frequency λ times the tire circumference:</p>
+<p class="article-math">speed = λ · π · d</p>
+<p>Here d is the tire diameter. Readings outside a range set by a zero-detection timeout and the switch bounce time are discarded.</p>
 
+<h2>Modeling the motor</h2>
+<p>We model the DC motor from the differential equations relating current, voltage and angular velocity: torque proportional to current, back EMF proportional to angular velocity, a force balance and Kirchhoff's voltage law. That yields a two-state state-space model, with angular velocity and current as the states and the voltage as the input.</p>
+<p>The parameters had to be estimated. The moment of inertia comes from the car's mass (3.2 kg) and the 11.4 cm distance from the motor to the wheel centre, giving 0.0208 kg·m². The back EMF comes from the motor's Kv rating, about 0.01 volts per rad/s, taken from an RC enthusiasts' forum, along with a maximum torque of 0.072 N·m. Damping is assumed very small, and we assumed resistance and inductance match a published sample motor, since we could not find values for them. The simulation uses damping 0.01, inertia 0.01, back EMF 0.01, resistance 1 and inductance 0.5.</p>
 
+<h2>The controller</h2>
+<p>In Simulink, the reference speed of 0.2 m/s minus the sampled response speed gives an error for a discrete PID controller with P = 2.19, I = 2.181, D = 0.494 and filter coefficient N = 160.6. Its duty-cycle output goes through a PWM block and an H-bridge into the motor model, which also includes static and kinetic friction torque.</p>
+<figure>
+<img class="article-animated" alt="Simulated speed against time for a 0.2 metre per second reference. Speed first dips below zero because of the friction step, rises steeply, overshoots slightly to about 0.29, and levels out at 0.2 after about 3 seconds. The curve is traced by eye from the paper's scope plot." src="resources/hs-sim-response.svg">
+<figcaption>The simulated response, redrawn from the scope plot in the paper (approximate values read by eye). The early dip below zero comes from the friction step in the model; the speed then rises steeply, overshoots slightly and levels out at the reference in about 3 seconds.</figcaption>
+</figure>
+<p>On the target, the generated executable does not go negative. The speed simply does not increase until the simulated response would have crossed zero.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Moving to hardware</h2>
+<p>Simulink's Raspberry Pi support package builds, compiles and runs the model on the Pi from the Simulink session, and tuning can be done while it runs. Debugging was tedious: the generated blocks give no access to their source, intermediate values were hard to see, and the error messages were not specific, so we used an oscilloscope on the Pi's pins.</p>
+<p>The hardware model takes the same 0.2 m/s reference. A MATLAB function converts the sensor pulses on GPIO 21 into speed using the wheel circumference and the times of the current and previous pulses. The PID controller's output goes through a saturation block that keeps duty cycles valid and then to GPIO 18. The hardware PID gains are P = 0.013, I = 0.0001, D = 0.0002 and N = 160.6, very different from the simulation's. Either the estimated parameters are slightly off or the real motor is more complicated than the model.</p>
+<figure>
+<img class="article-animated" alt="Block diagram of the hardware loop: a 0.2 m/s reference minus the measured speed goes to a discrete PID controller with P 0.013, I 0.0001, D 0.0002 and N 160.6, then a saturation block, then PWM on GPIO 18 to the motor. An IR slot sensor on GPIO 21 feeds a MATLAB speed function that closes the loop." src="resources/hs-hardware-loop.svg">
+<figcaption>The loop on the car. The speed computed from the IR sensor is the only feedback, so missed or late sensor readings break the loop.</figcaption>
+</figure>
+
+<h2>What went wrong</h2>
+<p>A simple constant-speed model with no feedback deployed successfully and accelerated the car continuously. Adding the discrete PID controller and the saturation block did not work. The processor could not keep up with the overhead of Simulink's generated executable, so the model's execution fell behind real time and the sensor samples were delayed. The IR readings became sporadic and then vanished as the load grew, which left the controller with limited and inaccurate feedback.</p>
+<p>The sensor reads at a period of roughly 10 ms. We tried two ways of sampling it. A 1 ms Simulink sample time would never miss a reading, but it needs the most processing power and degrades execution further. A sample time of 0.1 s, reasonable for the car's speeds, was already too fast for the Pi. In both cases the CPU saturated and tasks overran, meaning a task was scheduled before its previous instance had finished, which quickly delays everything.</p>
+<figure>
+<img class="article-animated" alt="Real time and model execution time at completion for three runs on the Raspberry Pi. No PID, 0.1 s sample: 4.92 s real, 3.012 s model. PID and saturation, 0.1 s sample: 11.59 s real, 2.231 s model. PID and saturation, 0.0001 s sample: 18.87 s real, 11.883 s model." src="resources/hs-timing.svg">
+<figcaption>In every run the model's execution time at completion is well short of real time. The two PID runs include the saturation block.</figcaption>
+</figure>
+
+<h2>Conclusions</h2>
+<p>Simulink's generated code carries processing overhead that consumed all the CPU of the Raspberry Pi 3B, pushing execution slower than real time and breaking the sampling the controller relies on. A state-space simulation gave acceptable results but could not predict this scheduling anomaly. It is a reminder of why worst-case execution time matters for hybrid systems, and of the gap between a simulated model and the executable it generates. As future work we would repeat the closed-loop PID experiment on a more capable computer such as an NVIDIA Jetson, to see whether it can handle the overhead at lower sampling times.</p>
+
+<h3>A note from 2026</h3>
+<p>The paper's text says the fast sample time was 1 ms, while the timing table lists 0.0001 s; the figure uses the table. The table shows three runs, not a controlled study. The conclusion that the Pi's CPU was the limit is the paper's own, based on those timings, and it was not tested on faster hardware.</p>
+<p>The paper is available as a <a href="resources/91f8dd54e4f41a.pdf">PDF</a>, and the Simulink models are in the <a href="https://github.com/ronpicard/closed-loop-speed-controller">GitHub repository</a>.</p>

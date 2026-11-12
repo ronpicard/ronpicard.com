@@ -1,11 +1,61 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><ul><li><p class="">Zero-Order Logic (also known as propositional logic or propositional calculus) is the foundation of most formal logic systems.</p></li><li><p class="">In Zero-Order Logic there is no notion of variables, but merely TRUE or FALSE propositions (statements), represented by symbols (usually A, B, C….), with logical operators (Negations, Binary Connectives) which describe an argument flow.</p></li></ul><ul><li><p class=""><strong>Proposition:</strong></p><ul><li><p class="">A proposition is simply a TRUE or FALSE statement.</p></li><li><p class=""><strong>Ex. Proposition A: All men are mortal</strong></p><ul><li><p class="">Proposition A is TRUE</p></li></ul></li><li><p class=""><strong>Ex. Proposition B: My cat is a dog</strong></p><ul><li><p class="">Proposition B is FALSE</p></li></ul></li></ul></li></ul><ul><li><p class=""><strong>Negation (NOT): ¬</strong></p><ul><li><p class="">Ex. Predicate: ¬A</p></li><li><p class="">This negation relation means the negation (opposite) of the proposition A is TRUE. (If proposition A is TRUE, the expression ¬A is FALSE. If proposition A is FALSE, the expression ¬A is TRUE)</p></li></ul></li><li><p class=""><strong>Conjunction (AND): ∧</strong></p><ul><li><p class="">Ex. Expression (Argument): A ∧ B</p></li><li><p class="">This conjunction operator means the expression is TRUE if and only if (iff) propositions A AND B are TRUE.</p></li></ul></li><li><p class=""><strong>Disjunction (OR): ∨</strong></p><ul><li><p class="">Ex. Expression (Argument) : A ∨”B”</p></li><li><p class="">This disjunction operator means the expression is TRUE if and only if (iff) propositions A OR B are TRUE.</p></li></ul></li><li><p class=""><strong>Material Implication: →</strong></p><ul><li><p class="">Ex. Expression (Argument) : A→B</p></li><li><p class="">This statement means, if A is TRUE, then B is TRUE. (Note: it gives no information about what B is if A is not TRUE.)</p></li></ul></li><li><p class=""><strong>Material Bijection: ↔</strong></p><ul><li><p class="">Ex. Expression (Argument) : A↔B</p></li><li><p class="">This statement means if A is TRUE, then B is TRUE, and if B is TRUE, then A is TRUE, if A is FALSE, then B is FALSE, and if B is FALSE, then A is FALSE. (In other words, the Boolean value for both A and B is never different.)</p></li><li><p class="">Note: This operator is equivalent to implication both ways; in other words (A→ B) ∧ (B ← A).</p></li></ul></li></ul><p class=""><strong>Order of operations for FOL:</strong></p><ol><li><p class="">¬ is evaluated first</p></li><li><p class="">∧ is evaluated next</p></li><li><p class="">∨ is evaluated next</p></li><li><p class="">→ is evaluated last (thus so is ↔)</p></li></ol><p class=""><strong>Argument Construction:</strong></p><ul><li><p class="">A proposition is simply a TRUE or FALSE statement.</p><ul><li><p class="">Ex.</p><ul><li><p class="">Proposition A: All men are mortal.</p></li><li><p class="">Proposition B: Socrates is a man.</p></li><li><p class="">Propositional Argument written Formally: A ∧ B → C</p><ul><li><p class="">Propositional Argument: All men are mortal and Socrates is a man; therefore (implies), Socrates is mortal.</p></li></ul></li><li><p class="">New Proposition C: Socrates is mortal.</p></li></ul></li></ul></li></ul></div>
+<p>This is part 3 of 11 in the Formal Methods 101 series. Zero-order logic is the first of the logics in the series, and part 4 extends it.</p>
 
+<h2>Introduction</h2>
+<p>Zero-order logic (also known as propositional logic or propositional calculus) is the foundation of most formal logic systems.</p>
+<p>It has no notion of variables, only TRUE or FALSE propositions (statements) represented by symbols (usually A, B, C, …). Logical operators (negation and the binary connectives) describe how an argument flows from one proposition to the next.</p>
 
-  
+<h2>Propositions</h2>
+<p>A proposition is simply a TRUE or FALSE statement.</p>
+<ul>
+<li>Proposition A: All men are mortal. Proposition A is TRUE.</li>
+<li>Proposition B: My cat is a dog. Proposition B is FALSE.</li>
+</ul>
 
+<h2>Operators</h2>
+<table>
+<thead>
+<tr><th>Operator</th><th>Symbol</th><th>Example</th><th>True when</th></tr>
+</thead>
+<tbody>
+<tr><td>Negation (NOT)</td><td>¬</td><td>¬A</td><td>A is FALSE</td></tr>
+<tr><td>Conjunction (AND)</td><td>∧</td><td>A ∧ B</td><td>A and B are both TRUE</td></tr>
+<tr><td>Disjunction (OR)</td><td>∨</td><td>A ∨ B</td><td>at least one of A and B is TRUE</td></tr>
+<tr><td>Material implication</td><td>→</td><td>A → B</td><td>B is TRUE, or A is FALSE</td></tr>
+<tr><td>Material bijection (if and only if)</td><td>↔</td><td>A ↔ B</td><td>A and B have the same value</td></tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Negation</strong> gives the opposite of a proposition. If A is TRUE, ¬A is FALSE; if A is FALSE, ¬A is TRUE.</li>
+<li><strong>Conjunction</strong> makes the expression TRUE if and only if (iff) propositions A and B are both TRUE.</li>
+<li><strong>Disjunction</strong> makes the expression TRUE iff proposition A or proposition B (or both) is TRUE.</li>
+<li><strong>Material implication</strong> means that if A is TRUE, then B is TRUE. It gives no information about B when A is not TRUE.</li>
+<li><strong>Material bijection</strong> means that if A is TRUE, then B is TRUE, and if B is TRUE, then A is TRUE; if A is FALSE, then B is FALSE, and if B is FALSE, then A is FALSE. In other words, the Boolean values of A and B are never different. It is equivalent to implication both ways:</li>
+</ul>
+<p class="article-math">(A → B) ∧ (B → A)</p>
+<figure>
+<img class="article-animated" alt="A truth table with columns A, B, not A, A and B, A or B, A implies B, A if and only if B. For A and B both true: not A false, and true, or true, implies true, iff true. A true B false: false, false, true, false, false. A false B true: true, false, true, true, false. Both false: true, false, false, true, true." src="resources/fm-prop-truth.svg">
+<figcaption>All five operators over every combination of A and B. Implication is FALSE only in the second row, where A is TRUE and B is FALSE, and it is TRUE whenever A is FALSE.</figcaption>
+</figure>
 
+<h2>Order of operations</h2>
+<p>Operators are evaluated in this order:</p>
+<ol>
+<li>¬ is evaluated first.</li>
+<li>∧ is evaluated next.</li>
+<li>∨ is evaluated next.</li>
+<li>→ is evaluated last (and so is ↔).</li>
+</ol>
 
-</div>
-</div></div></div></div></div>
+<h2>Argument construction</h2>
+<p>An argument chains propositions together with the operators. Take two propositions and a conclusion:</p>
+<ul>
+<li>Proposition A: All men are mortal.</li>
+<li>Proposition B: Socrates is a man.</li>
+<li>Proposition C: Socrates is mortal.</li>
+</ul>
+<p>The argument "All men are mortal and Socrates is a man; therefore (implies) Socrates is mortal" is written formally as:</p>
+<p class="article-math">A ∧ B → C</p>
+<figure>
+<img class="article-animated" alt="Proposition A, all men are mortal, and proposition B, Socrates is a man, join through AND and imply proposition C, Socrates is mortal. Written formally: A and B implies C." src="resources/fm-prop-socrates.svg">
+<figcaption>The Socrates argument as a flow: A and B are joined by ∧, and together they imply C.</figcaption>
+</figure>

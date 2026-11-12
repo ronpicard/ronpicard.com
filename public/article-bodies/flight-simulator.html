@@ -1,0 +1,31 @@
+<p>Flight Simulator puts you in the left seat of a Cessna 172SP Skyhawk, lined up on runway 31 at New York LaGuardia with the engine running. The 3D steam-gauge cockpit has a yoke, rudder pedals, throttle, mixture, flap lever and trim wheel that all move with your inputs, and a working six-pack, tachometer, VOR, radio stack and transponder driven by a six-degree-of-freedom flight model with stalls, prop wash, left-turning tendencies, ground handling and fuel burn.</p>
+<p>Below you lie about 14,000 real building footprints from OpenStreetMap, the East River, Hudson, Verrazzano and George Washington bridges, the Statue of Liberty, Citi Field, and a LaGuardia with FAA runway markings, a control tower, PAPIs and airliners landing on runway 22. Scripted LaGuardia ATC plays through a VHF radio filter on whichever frequency COM1 is tuned to, an ATC menu lets you make your own calls, and a hint card walks you from the takeoff clearance to the straight-in back home.</p>
+
+<h2>How it works</h2>
+<p>The simulation is separate from the cockpit, the scenery, the audio and the interface. The flight model is plain JavaScript with no DOM, stepped at about 120 Hz: it takes control inputs and wind and surface information and updates the aircraft's position, orientation, engine and fuel. The gauges, the HUD and the cockpit animation all read values the simulation derives each step, such as indicated airspeed, altitude, vertical speed and heading.</p>
+<p>The gauge faces are drawn on canvases and used as textures on the 3D panel, with needle damping and gyro lag applied to the readings. The scenery is built from data files derived from OpenStreetMap, with procedural low-rise buildings filling the boroughs and landmark models for the bridges and other sights.</p>
+<p>Sound is synthesised, with engine, wind, rolling, stall-horn and flap-motor sounds following the simulation. The ATC is scripted: clips are played through a radio filter, and you hear only the station tuned on COM1, as in a real aircraft. Tower, Ground, ATIS and New York Departure each have their own traffic.</p>
+
+<h2>Controls</h2>
+<table>
+<thead>
+<tr><th>Action</th><th>Keyboard</th><th>Touch</th></tr>
+</thead>
+<tbody>
+<tr><td>Pitch and roll</td><td>W, S, A, D (hold; the yoke stays where you leave it)</td><td>Left yoke pad</td></tr>
+<tr><td>Rudder and nosewheel</td><td>Q and E</td><td>Rudder buttons</td></tr>
+<tr><td>Centre yoke and rudder</td><td>X</td><td>None</td></tr>
+<tr><td>Throttle</td><td>R and F, PageUp and PageDown, 1 to 9 and 0 for presets</td><td>Right throttle lever</td></tr>
+<tr><td>Flaps</td><td>G to extend, T to retract</td><td>Flap buttons</td></tr>
+<tr><td>Elevator trim</td><td>U and J</td><td>Trim buttons</td></tr>
+<tr><td>Brakes</td><td>Space (hold); P is the parking brake</td><td>BRAKE (hold)</td></tr>
+<tr><td>Engine start and stop</td><td>I</td><td>Engine button</td></tr>
+<tr><td>Mixture</td><td>Comma to lean, period to enrich, M for full rich or idle cut-off</td><td>Lean and Rich buttons</td></tr>
+<tr><td>Look around and zoom</td><td>Arrow keys, drag the mouse, mouse wheel; C or double-click resets</td><td>Drag and pinch; double-tap resets</td></tr>
+<tr><td>ATC menu, help, data overlay, pause</td><td>O, H, V, Esc</td><td>Top bar</td></tr>
+</tbody>
+</table>
+<p>A gamepad with standard mapping is also supported. For a first flight, press P to release the parking brake, press O and call ready for departure, then apply full throttle once you have your takeoff clearance. Rotate at 55 knots and climb at 74.</p>
+
+<h2>Built with</h2>
+<p>JavaScript and Three.js, bundled with Vite, with Vitest and ESLint for tests and linting. Map data is from OpenStreetMap contributors.</p>

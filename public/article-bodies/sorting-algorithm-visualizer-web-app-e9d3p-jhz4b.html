@@ -1,0 +1,31 @@
+<p>This is an interactive visualizer for ten AI algorithms: A* pathfinding, neural networks, decision trees, k-means, genetic algorithms, reinforcement learning, and more. Each one gets its own small demo on a canvas, so you can see how it works and change its settings.</p>
+<p>Each demo is framed around the problem the algorithm solves, such as pattern recognition, tracking a moving object, or finding the shortest route, and has three views: the live demo, an animated explanation of the algorithm, and the code.</p>
+
+<h2>How it works</h2>
+<p>The page has one panel per algorithm, and switching algorithms stops the old demo and starts the new one. Every demo is drawn on a 640 by 320 canvas. Each panel has Demo, Algorithm, and Code tabs; the Code tab lists the algorithm's code and highlights the line that matches the current stage.</p>
+<p>The ten demos are:</p>
+<ul>
+<li><strong>Neural network:</strong> signals flow forward through layers of nodes. You choose the number of hidden layers (1 to 5).</li>
+<li><strong>Bayesian net:</strong> a small network of rain, sprinkler, cloudy, wet grass, and slip. Observing a node updates beliefs in the connected nodes. The propagation here is a simple blending of neighbor beliefs, not exact inference.</li>
+<li><strong>Particle filter:</strong> a cloud of particles tracks a moving target through noisy measurements, by predicting, weighting, and resampling.</li>
+<li><strong>Genetic algorithm:</strong> evolves routes for a travelling salesman problem with selection, crossover, and mutation.</li>
+<li><strong>Reinforcement learning:</strong> an agent explores a grid and builds a Q-table with an exploration rate that decays over time.</li>
+<li><strong>K-means:</strong> alternates assigning points to the nearest centroid and moving each centroid to the mean of its points.</li>
+<li><strong>Fuzzy logic:</strong> temperature and humidity are fuzzified into membership sets, and rules combine them into one output by centroid defuzzification.</li>
+<li><strong>Decision tree:</strong> grows by choosing, at each node, the axis-aligned split with the best entropy gain.</li>
+<li><strong>A* pathfinding:</strong> searches a random obstacle grid using cost so far plus a Manhattan-distance estimate.</li>
+<li><strong>Gradient descent:</strong> a ball follows the negative gradient down a curve with several minima, so the learning rate decides whether it overshoots or crawls.</li>
+</ul>
+
+<h2>Controls</h2>
+<ul>
+<li>The buttons along the top pick one of the ten algorithms.</li>
+<li>Each panel has Demo, Algorithm, and Code tabs.</li>
+<li>Most panels have Reset or New, and Step and Auto (Stop) buttons to advance or pause a run.</li>
+<li>Sliders are specific to each demo: layers and speed (neural network), noise and particle count (particle filter), city count (genetic algorithm), speed (reinforcement learning and A*), K (k-means), temperature and humidity (fuzzy logic), and learning rate (gradient descent).</li>
+<li>In the Bayesian net, click a node to observe it.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>A single HTML page with plain JavaScript and the canvas API. There are no libraries.</p>
+<p>The source is on <a href="https://github.com/ronpicard/ai-algorithms-visualizer-web-app">GitHub</a>.</p>

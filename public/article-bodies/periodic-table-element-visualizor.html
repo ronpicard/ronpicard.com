@@ -1,0 +1,17 @@
+<p>This is an interactive periodic table with 3D Bohr-style atom models. Click any of the 118 elements to explore its protons, neutrons, electrons, shell configuration, and element facts in the browser.</p>
+
+<h2>How it works</h2>
+<p>The code is split into two features, <code>periodic-table</code> for the grid and tiles and <code>atom-viewer</code> for the 3D canvas, nucleus, shells, and element facts. Shared data and maths sit in <code>src/shared/</code>.</p>
+<p>The atom is derived from the atomic number. Electrons fill shells with capacities of 2, 8, 18, 32, 32, 18, and 8, and the neutron count is the rounded atomic mass minus the atomic number. Inside each shell, electrons are assigned to subshells (s, p, d, f) and placed on orbits with their own orbital planes. Inner shells orbit faster, roughly in proportion to 1/n². The 3D scene is rendered with React Three Fiber and Three.js, with orbit controls, a starfield, and electron trails.</p>
+<p>The inspector shows particle counts and shell populations, with discovery, isotopes, uses, and origin in the element notes.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Select an element on the table, or search by name, symbol, or atomic number and press Enter to pick an exact or first partial match.</li>
+<li>Select an element family to highlight its members, and use Previous and Next to move between neighbouring elements.</li>
+<li>Drag the model to rotate it and scroll to zoom. Pause the animation, set orbit speed to 0.5×, 1×, or 2×, toggle electron trails, or reset the view.</li>
+<li>On phones, swipe across the table to see all groups.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, Three.js with React Three Fiber, and Vite.</p>

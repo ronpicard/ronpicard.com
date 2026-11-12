@@ -1,0 +1,20 @@
+<p>Instrument Tuner is a chromatic and instrument tuner that runs in the browser. Play a note and it shows the note name with its octave, such as A4, the exact frequency it hears, and how many cents sharp or flat you are on a needle gauge that turns green inside 5 cents.</p>
+<p>Pick guitar (standard, Drop D, DADGAD, Open G or 7-string), 4- or 5-string bass, ukulele, violin, viola, cello, double bass, mandolin or banjo and it follows whichever string you play, or tap a string to hear its pitch and lock onto it. A reference tone plays any note or any typed frequency from 20 Hz to 20 kHz, and A4 can be set anywhere from 400 to 480 Hz. Audio never leaves your device, and the app works on phones and desktops.</p>
+
+<h2>How it works</h2>
+<p>Pitch detection uses the McLeod Pitch Method: a normalized square difference function over a 4096-sample window, peak picking, and parabolic interpolation for sub-sample accuracy. On synthetic test tones it reads to within a cent from 41 Hz, a bass's low E, up to 1.76 kHz, and it finds the fundamental of harmonic-rich plucked tones.</p>
+<p>A short median filter steadies the reading, and a jump of more than a fifth starts a fresh note instead of blending. The last note stays on screen briefly after the sound stops, so a decaying string remains readable.</p>
+<p>The microphone is opened with echo cancellation, noise suppression and auto gain turned off, because voice processing smears pitch. Reference tones come from a Web Audio oscillator with short gain ramps, so starting, stopping and retuning never click.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Start tuning, then allow the microphone and play one string at a time.</li>
+<li>The needle shows cents from the target note: green within 5 cents, amber within 15, red beyond.</li>
+<li>Choose an instrument from the menu, or Chromatic to tune to the nearest note.</li>
+<li>Tap a string to hear it and lock the tuner to it; tap Auto detect to go back. A string gets a check mark once it has held in tune for a moment.</li>
+<li>Reference tone: tap a note name, change the octave, or type any frequency from 20 to 20,000 Hz. Hold keeps it sounding.</li>
+<li>Reference pitch sets A4 from 400 to 480 Hz, with presets for 432, 440, 442 and 444 Hz.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React, TypeScript, Vite and the Web Audio API, with no other runtime dependencies.</p>

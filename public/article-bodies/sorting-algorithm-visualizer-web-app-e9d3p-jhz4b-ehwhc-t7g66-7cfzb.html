@@ -1,0 +1,29 @@
+<p>This is an interactive canvas sandbox where you drop black holes, suns, lightning, tornadoes, and tidal waves onto a tiny alien world. Aliens, pets, hover cars, buildings, and other objects react to what you do.</p>
+<p>You can also turn on auto-spawn to let the disasters arrive on their own, and rotate gravity to send everything sliding in a new direction.</p>
+
+<h2>How it works</h2>
+<p>The whole world lives in one game engine file that runs a fixed update-and-draw loop on a single canvas. The world holds many kinds of objects, including aliens, pets, hover cars, buildings, plants, rocks, asteroids, flying saucers, airplanes, clouds, blimps, satellites, and background particles. Each has its own update and draw logic, and a spatial grid keeps particle collisions cheap.</p>
+<p>Gravity is a direction vector that every object feels, so setting it to up, down, left, or right, or rotating it, changes how the whole world falls. The five tools each act on that world differently:</p>
+<ul>
+<li><strong>Black hole:</strong> pulls objects inward within a radius, grows in, then fades over its lifetime. The code also has a white hole that ejects objects it was given.</li>
+<li><strong>Sun:</strong> a large heat source with a corona and flares that grows and fades, and sets objects near it on fire.</li>
+<li><strong>Lightning:</strong> a branching bolt from the top of the screen to the click point that zaps objects nearby.</li>
+<li><strong>Tornado:</strong> a funnel with swirling debris that pulls objects in and wanders slightly over its lifetime.</li>
+<li><strong>Tidal wave:</strong> a wave that sweeps across the world from one side, chosen by which half of the canvas you click, and knocks objects along the ground.</li>
+</ul>
+<p>The engine also adjusts to the screen. It sizes the canvas to its container, caps the pixel count for large displays, and drops some visual effects on big or low-density screens to keep the frame rate smooth.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Click the canvas to place the selected tool.</li>
+<li>Keys <code>1</code> to <code>5</code> select black hole, sun, lightning, tornado, and tidal wave, and the tool buttons do the same.</li>
+<li><code>A</code> toggles auto-spawn.</li>
+<li>The arrow keys set gravity up, down, left, or right.</li>
+<li>Hold <code>T</code> or <code>R</code> to rotate gravity counterclockwise or clockwise. On touch screens, hold the rotate buttons.</li>
+<li>The Speed slider runs the simulation from 0.1× to 4×.</li>
+<li>Reset clears the world and starts it again.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript, and Vite for the page, with the simulation engine in JavaScript on canvas.</p>
+<p>The source is on <a href="https://github.com/ronpicard/alien-planet-chaos-sandbox-web-app">GitHub</a>.</p>

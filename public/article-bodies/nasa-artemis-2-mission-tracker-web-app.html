@@ -1,0 +1,18 @@
+<p>This is a fan-built, mission-control-style dashboard for Artemis II. It shows a 3D Earth-Moon trajectory, telemetry, a mission-time replay, and a NASA news feed. It is not affiliated with NASA, and the app itself points to NASA's official tracker for authoritative mission status.</p>
+<p>The orbital geometry and timeline are illustrative, not official ephemeris, so treat it as an educational view of the mission profile.</p>
+
+<h2>How it works</h2>
+<p>The centerpiece is a React Three Fiber scene of an illustrative free-return path. It has a textured Earth with night lights and launch and splashdown markers, the Moon, a spacecraft model with a trail, and a procedural Sun. Other planets are placed along today's Earth-to-Sun direction at approximate relative sizes. The camera auto-rotates unless the user prefers reduced motion.</p>
+<p>Telemetry comes from <code>src/lib/telemetrySource.ts</code>. The app polls an AROW-style JSON API every five seconds, and the base URL is configurable. When that is unavailable, or when you are in replay, it falls back to a modeled reference timeline: a set of keyframes for a roughly 240-hour (10-day) mission that are interpolated for distance from Earth and the Moon, speed and phase. Mission elapsed time is measured from a reference start time that can be overridden with an environment variable.</p>
+<p>The replay panel scrubs the mission clock across that timeline, and a button jumps back to following the live clock. The news panel reads NASA's public feed directly, and the briefing and transcript panels are static, educational content. Streams are links to official coverage rather than embedded players.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Drag the 3D view to orbit; scroll or pinch to zoom.</li>
+<li>Reset view restores the camera.</li>
+<li>The MET slider scrubs the replay timeline.</li>
+<li>Jump to live clock returns to following wall time.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React 19, TypeScript and Vite, with Three.js through React Three Fiber and drei. Tests use Vitest with happy-dom, and the code is linted with ESLint. The source is on <a href="https://github.com/ronpicard/nasa-atemis-2-mission-tracker-web-app">GitHub</a>.</p>

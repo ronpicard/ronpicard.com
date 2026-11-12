@@ -1,0 +1,19 @@
+<p>Blackjack Royale is a 3D blackjack table on a dim casino floor: a felt half-moon table with a padded rail, a card shoe and discard tray, and a chip tray along the dealer's edge, among slot machines, chandeliers and marquee lights, with live lounge music in the background. The cards are dealt one at a time from the shoe, and as each one lands a large copy fades into an overlay so every hand is readable at any camera distance.</p>
+<p>Bet chips from 1 to 500 credits, take insurance against a dealer ace, then hit, stand, double, or split up to four hands, with a hint that marks the basic-strategy play. The dealer stands on soft 17 and blackjack pays 3 to 2. A crowd of spectators cheers your wins under a shower of confetti and groans at your losses. Follow the hand from the seat, close over the cards, or straight down on the table, with touch controls for phones. It plays for credits only.</p>
+
+<h2>How it works</h2>
+<p>The rules live in framework-free TypeScript under <code>src/game/</code>, with no DOM, no three.js and no non-deterministic calls, so the cards, strategy, session and crowd logic are tested directly in Node. The three.js table, shoe, chips, crowd and casino room are under <code>src/render/</code>, and React draws the menu, HUD and card overlay.</p>
+<p>Six decks are shuffled together and dealt down to a cut card 78 cards from the bottom, then reshuffled. Every shuffle is deterministic: the same seed gives the same cards in the same order. The dealer peeks under an ace or a ten-value card, and a dealer blackjack ends the round at once. Insurance is offered when the dealer shows an ace, costs half the bet and pays 2 to 1.</p>
+<p>The hint and the attract mode, where the table plays itself while the menu is up, both follow basic strategy, which carries a house edge of about 0.5%. A headless script in the repository plays rounds with basic strategy through the real rules and reports the realised return.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Pick a chip with 1 to 5, add it to the betting circle with A or by clicking the circle, and use Z to undo, X to clear, R to rebet and B to double the bet.</li>
+<li>Space or Enter deals, or hits once a hand is in play. H hits, S stands, D doubles and P splits.</li>
+<li>Y takes insurance and N declines it.</li>
+<li>C changes the camera between seated, over the cards and overhead, Q toggles quick deal, M mutes, and Escape opens the menu.</li>
+<li>On phones, the same actions are on-screen buttons.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>React, TypeScript, Three.js and Vite. Sound is Web Audio, and credits and settings are kept in your browser.</p>

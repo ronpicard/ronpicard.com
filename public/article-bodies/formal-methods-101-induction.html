@@ -1,21 +1,96 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class=""><strong>Introduction:</strong></p><p class="">Induction is a mathematical technique used to prove a property of a system.</p><p class="">Intuitively, you can think of induction as a way of proving that all dominos will fall. If we know that the first domino falls, and we know that this domino causes the next domino to fall, we are assured that all dominos will fall.</p><p class=""><strong>Induction involves 4 steps:</strong></p><ol><li><p class=""><strong>Base Case: </strong>Proof that a property holds for the base case (or state).</p></li><li><p class=""><strong>Inductive Hypothesis: </strong>Assume that the property holds for a later case (or state) satisfies the assumptions of a base case (i.e. assume symbolic base case).</p></li><li><p class=""><strong>Inductive Step: </strong>Perform an inductive step (i.e. symbolic transition to the next state).</p></li><li><p class=""><strong>Proof Step:</strong> Prove that a property holds after the inductive step (i.e. after the symbolic transition.)</p></li></ol><p class=""><strong>Classic Example</strong>:</p><p class="">We will now explore a classic example. We will prove that the following formula holds out to N natural numbers; that is the sum of n natural numbers equals P(n).<br>P(n) = n(n+1)/2 = 0 + 1 + 2 + … + n</p><ul><li><p class=""><strong>Step 1 – Base Case:</strong></p><ul><li><p class="">Test the base case, n=0.</p></li><li><p class="">P(0) = n(n+1)/2 = 0(0-1)/2 = 0</p></li><li><p class="">The base case is proven true.</p></li></ul></li></ul><ul><li><p class=""><strong>Step 2 – Inductive Hypothesis:</strong></p><ul><li><p class="">Assume P(n) holds for a later case, n = k | n ∈ <strong>ℕ</strong>, which has the same properties as the base case. (i.e. symbolic base case)</p></li><li><p class="">P(k) = k(k+1)/2 = (0 + 1 + 2 + … + k)</p></li></ul></li></ul><ul><li><p class=""><strong>Step 3 – Inductive Step:</strong></p><ul><li><p class="">Perform an inductive step by testing n = k+1. (i.e. symbolic execution from k to k+1)</p></li><li><p class="">Equation for P(k+1):</p><ul><li><p class="">(k+1)((K+1)+1)/2 = (0 + 1 + 2 + … + k) + (k + 1)</p></li></ul></li><li><p class="">Left-Hand Side:</p><ul><li><p class="">(k+1)((K+1)+1)/2</p></li></ul></li><li><p class="">Right-Hand Side:</p><ul><li><p class="">(0 + 1 + 2 + … + k) + (k + 1)</p></li></ul></li></ul></li></ul><ul><li><p class=""><strong>Step 4 – Proof Step:</strong></p><ul><li><p class="">Check if the property, P(n), still holds.</p></li><li><p class="">Simplify Left-Hand Side:</p><ul><li><p class="">(k+1)((k+1)+1)/2 = ((k^2) + 2k + 2)/2</p></li></ul></li><li><p class="">Rewrite Right-Hand Side by Definition:</p><ul><li><p class="">(0 + 1 + 2 + … + k) + (k + 1) = (k(k + 1))/2 + (k + 1)</p></li></ul></li><li><p class="">Rewrite Right Hand Side:</p><ul><li><p class="">Step 1: </p><ul><li><p class="">k(k+1)/2 + (k+1) = (k(k+1) + 2(k+1))/2</p></li></ul></li><li><p class="">Step 2:</p><ul><li><p class="">(k(k+1) + 2(k+1))/2 = ((k+1)(k+2))/2</p></li></ul></li><li><p class="">Step 3:</p><ul><li><p class="">((k+1)(K-2))/2 = ((k+1)((k+1)+1))/2</p></li></ul></li></ul></li><li><p class="">Set Left Hand Side equal to Right Hand Side</p><ul><li><p class="">((k+1)((K+1)+1)/2 = ((k+1)((k+1)+1))/2</p></li></ul></li><li><p class="">Proof Complete: We have proved that for all n, P(n) holds</p></li></ul></li></ul><p class=""><strong>Types of Induction:</strong></p><ul><li><p class=""><strong>Weak Induction (or Simple Induction):</strong></p><ul><li><p class="">The classical example above was an example of weak induction; that is, we only assume a single base case (and therefore, symbolic base case) and an inductive step.</p></li><li><p class="">(Φ(0) Λ (∀n)(Φ(n) -&gt; Φ(n+1))) -&gt; (∀n)(Φ(n))</p></li><li><p class="">In natural language this is read: The property holds in the initial state and for all future states, if the property holds for some state, it holds for the next state; therefore, the property holds for all states.</p></li></ul></li></ul><ul><li><p class=""><strong>Strong Induction(or Complete Induction, or K-Induction) :</strong></p><ul><li><p class="">Complete induction is when you make the property easier to prove by inductively strengthening the base case (and therefore, symbolic base case), also known as the inductive hypothesis.</p></li><li><p class="">(Φ(0) Λ (∀n)((∀m &lt;= n)Φ(m) -&gt; (∀m &lt;= n+1)Φ(m))) -&gt; (∀n)Φ(n)</p></li><li><p class="">In natural language this is read: The property holds in the initial state and for all future states, if the property holds for some amount of states, it holds for the next state; therefore, the property holds for all states.</p></li></ul></li></ul><ul><li><p class=""><strong>K-Induction can be looked at from a different syntactic lens:</strong></p><ul><li><p class="">Consider the following set of equivalent formulas:</p></li><li><p class=""><strong>1-Induction:</strong></p><ul><li><p class="">(Φ(0) Λ (∀n)(Φ(n) -&gt; Φ(n+1))) -&gt; (∀n)(Φ(n)</p></li></ul></li><li><p class=""><strong>2-Induction:</strong></p><ul><li><p class="">(Φ(0) Λ Φ(1) Λ (∀n)((Φ(n) Λ Φ(n+1)) -&gt; Φ(n + 2))) -&gt; (∀n)Φ(n)</p></li></ul></li><li><p class=""><strong>K-Induction:</strong></p><ul><li><p class="">(Φ(0) Λ Φ(1) Λ…Λ Φ(k) Λ ∀(n)(Φ(n) Λ Φ(n+1) Λ…Λ Φ(n+k) -&gt; Φ(n+K))) -&gt; ∀(n)Φ(n)</p></li></ul></li><li><p class=""><strong>K-Induction (simplified):</strong></p><ul><li><p class="">large(Λ)[k-2][i=0] Λ (∀(n))(large(Λ)[k-2][i=0]Φ(n+i) -&gt; Φ(n+k))) -&gt; (∀n)Φ(n)</p></li></ul></li></ul></li></ul><p class=""><strong>Induction for Extended-State Machines:</strong></p><ul><li><p class="">Induction may be applied to extended-state machines to prove invariant properties about systems.</p></li></ul><ul><li><p class="">Consider the following extended-state machine. This system is made up of two states, four transitions, one variable of type int, and one variable representing the current state (i.e. S1 or S2). The system initially starts in the state S1 with variable x equal to 0. In the next transition (step), if x is less than 0, the system transitions to state S2 and increments x by one. While in state S2, the system increments x by one each transition (step) until x is greater than 9. When x is greater than 9, the system transitions back to state S1 and resets x to 0.</p></li></ul></div>
+<p>This is part 11 of 11 in the Formal Methods 101 series.</p>
 
+<h2>What induction is</h2>
+<p>Induction is a mathematical technique used to prove a property of a system. Intuitively, you can think of it as a way of proving that all dominoes will fall. If we know that the first domino falls, and we know that each domino causes the next one to fall, we are assured that all of them will fall.</p>
+<p>An induction proof has four steps:</p>
+<ol>
+<li><strong>Base case:</strong> prove that the property holds for the base case (or state).</li>
+<li><strong>Inductive hypothesis:</strong> assume that the property holds for a later case (or state) that satisfies the assumptions of the base case. This is the symbolic base case.</li>
+<li><strong>Inductive step:</strong> perform an inductive step, a symbolic transition to the next state.</li>
+<li><strong>Proof step:</strong> prove that the property holds after the inductive step, that is, after the symbolic transition.</li>
+</ol>
 
-  
+<h2>A classic example</h2>
+<p>We prove that a formula holds for all natural numbers: the sum of the first n natural numbers equals P(n).</p>
+<p class="article-math">P(n) = n(n+1)/2 = 0 + 1 + 2 + … + n</p>
+<figure>
+<img class="article-animated" alt="A row of boxes P(0) with sum 0, P(1) with sum 1, P(2) with sum 3, P(3) with sum 6, then dots, P(k) assumed and P(k+1) to show. The base case lights up first, each arrow adds the next number and lights the next box, and the last arrow is the inductive step from P(k) to P(k+1)." src="resources/fm-ind-chain.svg">
+<figcaption>The proof as a chain of cases, like the dominoes. The base case starts the chain and each arrow adds the next number. The step shows that the arrow from P(k) to P(k+1) works for any k.</figcaption>
+</figure>
+<h3>Step 1: base case</h3>
+<p>Test the base case, n = 0:</p>
+<p class="article-math">P(0) = 0(0+1)/2 = 0</p>
+<p>The base case is proven true.</p>
+<h3>Step 2: inductive hypothesis</h3>
+<p>Assume that P(n) holds for a later case, n = k with k ∈ ℕ, which has the same properties as the base case (the symbolic base case):</p>
+<p class="article-math">P(k) = k(k+1)/2 = 0 + 1 + 2 + … + k</p>
+<h3>Step 3: inductive step</h3>
+<p>Perform an inductive step by testing n = k+1, a symbolic execution from k to k+1. The equation for P(k+1) is:</p>
+<p class="article-math">(k+1)((k+1)+1)/2 = (0 + 1 + 2 + … + k) + (k+1)</p>
+<p>Call the left-hand side LHS and the right-hand side RHS.</p>
+<h3>Step 4: proof step</h3>
+<p>Check whether the property P(n) still holds. Simplify the left-hand side:</p>
+<p class="article-math">LHS = (k+1)((k+1)+1)/2 = (k² + 3k + 2)/2</p>
+<p>Rewrite the right-hand side by the inductive hypothesis, then simplify in three steps:</p>
+<p class="article-math">RHS = (0 + 1 + 2 + … + k) + (k+1) = k(k+1)/2 + (k+1)<br>= (k(k+1) + 2(k+1))/2<br>= (k+1)(k+2)/2<br>= (k+1)((k+1)+1)/2</p>
+<p>The right-hand side now equals the left-hand side:</p>
+<p class="article-math">(k+1)((k+1)+1)/2 = (k+1)((k+1)+1)/2</p>
+<p>Proof complete: we have proved that for all n, P(n) holds.</p>
 
+<h2>Types of induction</h2>
+<h3>Weak induction (simple induction)</h3>
+<p>The classic example above is weak induction: we assume a single base case (and therefore a single symbolic base case) and take an inductive step.</p>
+<p class="article-math">(Φ(0) ∧ (∀n)(Φ(n) → Φ(n+1))) → (∀n)Φ(n)</p>
+<p>In natural language: the property holds in the initial state, and for all future states, if the property holds for some state it holds for the next state; therefore the property holds for all states.</p>
+<h3>Strong induction (complete induction)</h3>
+<p>Complete induction makes the property easier to prove by strengthening the inductive hypothesis: we may assume the property for all earlier states, not just the previous one.</p>
+<p class="article-math">(Φ(0) ∧ (∀n)((∀m ≤ n)Φ(m) → (∀m ≤ n+1)Φ(m))) → (∀n)Φ(n)</p>
+<p>In natural language: the property holds in the initial state, and for all future states, if the property holds for some number of states, it holds for the next state; therefore the property holds for all states.</p>
+<h3>k-induction</h3>
+<p>k-induction can be looked at from a different syntactic angle. Consider this family of formulas:</p>
+<p><strong>1-induction:</strong></p>
+<p class="article-math">(Φ(0) ∧ (∀n)(Φ(n) → Φ(n+1))) → (∀n)Φ(n)</p>
+<p><strong>2-induction:</strong></p>
+<p class="article-math">(Φ(0) ∧ Φ(1) ∧ (∀n)((Φ(n) ∧ Φ(n+1)) → Φ(n+2))) → (∀n)Φ(n)</p>
+<p><strong>k-induction:</strong></p>
+<p class="article-math">(Φ(0) ∧ Φ(1) ∧ … ∧ Φ(k−1) ∧ (∀n)((Φ(n) ∧ Φ(n+1) ∧ … ∧ Φ(n+k−1)) → Φ(n+k))) → (∀n)Φ(n)</p>
+<p><strong>k-induction, simplified</strong> with a big conjunction ⋀ over i = 0 to k−1:</p>
+<p class="article-math">(⋀ Φ(i) ∧ (∀n)(⋀ Φ(n+i) → Φ(n+k))) → (∀n)Φ(n)</p>
 
-
-</div>
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><ul><li><p class="">Consider the following property that we wish to prove is invariant by induction:</p><ul><li><p class="">Φ = (x &lt;= 9)</p></li><li><p class="">That is, x can never be greater than 9. This is known as a static invariant; which is a property that is unchanging throughout the life of the system.</p></li><li><p class="">If the invariant can be proven by induction then we call this an inductive invariant. Note: some invariants cannot be proven by induction.</p></li></ul></li></ul><ul><li><p class="">Notice how this extended-state machine can be written as the following SMT formula:</p><ul><li><p class="">S := ((x&lt;9) -&gt; (x’ = x + 1 Λ state’ = S2)) Λ ((x &gt;= 9) -&gt; (x’ = 0 Λ state’ = S1))</p></li><li><p class="">Note: x’ &amp; state’ stand for the value of the x &amp; state variables after the next transition.</p></li></ul></li></ul><ul><li><p class="">We will now join this property to this SMT formula by an implication operator; indicating that where this system SMT formula is satisfied, the property is always satisfied.</p><ul><li><p class="">S -&gt; Φ := (((x&lt;9) -&gt; (x’ = x + 1 Λ state’ = S2)) Λ ((x &gt;= 9) -&gt; (x’ = 0 Λ state’ = S1))) -&gt; ((x &lt;= 9) Λ (x’ &lt;= 9))</p></li></ul></li></ul><p class="">We will now attempt to prove this invariant via induction.</p><ul><li><p class=""><strong>Step 1 – Base Case:</strong></p><ul><li><p class="">Test the base case (i.e. the initial value), x = 0 &amp; state = S1.</p><ul><li><p class="">S -&gt; Φ := (((0&lt;9) -&gt; (x’ = 0 + 1 Λ state’ = S2)) Λ ((0&gt;=9) -&gt; (x’ = 0 Λ state’ = S1))) -&gt; ((x&lt;9) Λ (x’ &lt;= 9))</p></li></ul></li><li><p class="">Simplify…</p></li><li><p class="">S -&gt; Φ := (((0&lt;9) -&gt; (x’ = 1 Λ state’ = S2)) Λ ((0&gt;=9) -&gt; (x’ = 0 Λ state’ = S1))) -&gt; ((0 &lt;= 9) Λ (1 =&lt; 9))</p></li><li><p class="">S -&gt; Φ := TRUE Λ TRUE -&gt; (TRUE Λ TRUE)</p></li></ul><ul><li><p class="">S -&gt; Φ := TRUE Λ TRUE </p></li><li><p class="">S -&gt; Φ := TRUE </p></li><li><p class="">The base case is proven true.</p></li></ul></li></ul><ul><li><p class=""><strong>Step 2 – Inductive Hypothesis:</strong></p><ul><li><p class="">Assume the property holds for a later case, x = k (where k &lt;= 9)</p></li><li><p class="">S -&gt; Φ := (((k &lt; 9) -&gt; (x’ = k + 1 Λ state’ = S2)) Λ ((k &gt;= 9) -&gt; (x’ = k Λ state’ = S1))) -&gt; ((k &lt;= 9) Λ (x’ &lt;= 9))</p></li><li><p class="">S -&gt; Φ := TRUE(assumed)</p></li></ul></li></ul><ul><li><p class=""><strong>Step 3 – Inductive Step:</strong></p><ul><li><p class="">Perform an inductive step by testing n = k+1. (i.e. symbolic execution from k to k+1)</p></li><li><p class="">S -&gt; Φ: = (((k+1) &lt; 9) -&gt; (x’ = (k+1) + 1 Λ state’ = S2)) Λ (((k+1) &gt;= 9) -&gt; (x’ = (k + 1) Λ state’ = S1))) -&gt; (((k+1) &lt;= 9) Λ (x’ &lt;= 9))</p></li></ul></li></ul><ul><li><p class=""><strong>Step 4 – Proof Step:</strong></p><ul><li><p class="">Check if the implication, S -&gt; Φ , still holds.</p></li><li><p class="">To do this, we must check is holds for the two cases: the case when k &lt; 9 and the case when k &gt;= 9. Note: only one of these can be true at one point in time, and one of them must always be true.</p></li><li><p class=""><strong>Case 1: ((k+1) &lt; 9)</strong></p><ul><li><p class="">x’ = k + 2</p></li><li><p class="">Φ := ((k+1) &lt;= 9) Λ ((k+2) &lt;=9)</p></li><li><p class="">Since k+1 is less than 9, the highest k could be is 7.</p></li><li><p class="">Φ := ((7+1) &lt;= 9) Λ ((7+2) &lt;=9)</p></li><li><p class="">Φ := (8 &lt;= 9) Λ (9&lt;=9)</p></li><li><p class="">Φ := TRUE</p></li></ul></li><li><p class=""><strong>Case 2:</strong></p><ul><li><p class="">x’ = 0</p></li><li><p class="">Because (k+1) &gt;= 9, and our assumption from our inductive hypothesis is that (k+1) &lt;= 9 where k is an integer, we can conclude that (k+1) = 9 . Therefore, k must equal 8.</p></li><li><p class="">Φ := ((8+1) &lt;= 9) Λ (0 &lt;= 9)</p></li><li><p class="">Φ := (9 &lt;= 9) Λ (0 &lt;= 9)</p></li><li><p class="">Φ := TRUE Λ TRUE</p></li><li><p class="">Φ := TRUE</p></li></ul></li><li><p class=""><strong>Proof Complete:</strong> We have proved that for all states the property Φ := x &lt;= 9 is held. Since we have proven Φ by induction, we call the property an inductive invariant of the system.</p></li></ul></li></ul></div>
-
-
-  
-
-
-
-</div>
-</div></div></div></div></div>
+<h2>Induction for extended-state machines</h2>
+<p>Induction may be applied to extended-state machines to prove invariant properties of systems. Consider the following machine. It has two states, four transitions, one variable x of type int, and a variable for the current state (S1 or S2). It starts in state S1 with x = 0. At each transition (step), if x &lt; 9 the system goes to state S2 and increments x by one. If x ≥ 9 the system goes to state S1 and resets x to 0.</p>
+<figure>
+<img class="article-animated" alt="Two states S1 and S2 with four transitions. When x is below 9 the machine moves to or stays in S2 and adds one to x; when x is at least 9 it moves to or stays in S1 and resets x to 0. It starts in S1 with x equal to 0." src="resources/fm-ind-machine.svg">
+<figcaption>The machine as a state diagram. Each transition is chosen by x alone: below 9 it counts up in S2, at 9 it resets and returns to S1.</figcaption>
+</figure>
+<p>We wish to prove by induction that the following property is invariant:</p>
+<p class="article-math">Φ = (x ≤ 9)</p>
+<p>That is, x can never be greater than 9. This is a static invariant, a property that does not change over the life of the system. If an invariant can be proven by induction we call it an inductive invariant. Note that some invariants cannot be proven by induction.</p>
+<p>The machine can be written as the following SMT formula, where x′ and state′ stand for the values of x and state after the next transition:</p>
+<p class="article-math">S := ((x &lt; 9) → (x′ = x + 1 ∧ state′ = S2)) ∧ ((x ≥ 9) → (x′ = 0 ∧ state′ = S1))</p>
+<p>We join the property to this formula with an implication, indicating that wherever the system formula is satisfied, the property is satisfied:</p>
+<p class="article-math">S → Φ := (((x &lt; 9) → (x′ = x + 1 ∧ state′ = S2)) ∧ ((x ≥ 9) → (x′ = 0 ∧ state′ = S1))) → ((x ≤ 9) ∧ (x′ ≤ 9))</p>
+<p>We now attempt to prove this invariant by induction.</p>
+<h3>Step 1: base case</h3>
+<p>Test the initial values, x = 0 and state = S1:</p>
+<p class="article-math">S → Φ := (((0 &lt; 9) → (x′ = 0 + 1 ∧ state′ = S2)) ∧ ((0 ≥ 9) → (x′ = 0 ∧ state′ = S1))) → ((0 ≤ 9) ∧ (x′ ≤ 9))</p>
+<p>Simplify. Here x′ = 1, so:</p>
+<p class="article-math">S → Φ := (((0 &lt; 9) → (x′ = 1 ∧ state′ = S2)) ∧ ((0 ≥ 9) → (x′ = 0 ∧ state′ = S1))) → ((0 ≤ 9) ∧ (1 ≤ 9))<br>S → Φ := (TRUE ∧ TRUE) → (TRUE ∧ TRUE)<br>S → Φ := TRUE</p>
+<p>The base case is proven true.</p>
+<h3>Step 2: inductive hypothesis</h3>
+<p>Assume the property holds for a later case, x = k, where k ≤ 9:</p>
+<p class="article-math">S → Φ := (((k &lt; 9) → (x′ = k + 1 ∧ state′ = S2)) ∧ ((k ≥ 9) → (x′ = 0 ∧ state′ = S1))) → ((k ≤ 9) ∧ (x′ ≤ 9))<br>S → Φ := TRUE (assumed)</p>
+<h3>Step 3: inductive step</h3>
+<p>Perform an inductive step by testing the next value, k+1, a symbolic execution from k to k+1:</p>
+<p class="article-math">S → Φ := ((((k+1) &lt; 9) → (x′ = (k+1) + 1 ∧ state′ = S2)) ∧ (((k+1) ≥ 9) → (x′ = 0 ∧ state′ = S1))) → (((k+1) ≤ 9) ∧ (x′ ≤ 9))</p>
+<h3>Step 4: proof step</h3>
+<p>Check whether the implication S → Φ still holds. We check the two cases, (k+1) &lt; 9 and (k+1) ≥ 9. Only one of them can be true at a time, and one of them must always be true.</p>
+<p><strong>Case 1: (k+1) &lt; 9.</strong></p>
+<p class="article-math">x′ = k + 2<br>Φ := ((k+1) ≤ 9) ∧ ((k+2) ≤ 9)</p>
+<p>Since k+1 is less than 9, the highest k could be is 7:</p>
+<p class="article-math">Φ := ((7+1) ≤ 9) ∧ ((7+2) ≤ 9)<br>Φ := (8 ≤ 9) ∧ (9 ≤ 9)<br>Φ := TRUE</p>
+<p><strong>Case 2: (k+1) ≥ 9.</strong></p>
+<p class="article-math">x′ = 0</p>
+<p>Because (k+1) ≥ 9, and the inductive hypothesis gives (k+1) ≤ 9 for integer k, we conclude that k+1 = 9, so k = 8:</p>
+<p class="article-math">Φ := ((8+1) ≤ 9) ∧ (0 ≤ 9)<br>Φ := (9 ≤ 9) ∧ (0 ≤ 9)<br>Φ := TRUE ∧ TRUE<br>Φ := TRUE</p>
+<p>Proof complete: we have proved that the property Φ := (x ≤ 9) holds in all states. Since we proved it by induction, we call it an inductive invariant of the system.</p>

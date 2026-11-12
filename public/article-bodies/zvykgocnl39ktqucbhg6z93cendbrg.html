@@ -1,0 +1,19 @@
+<p>Data Structures Visualizer is an interactive tool for seeing how core data structures behave. It covers arrays, linked lists, stacks, queues, hash maps, trees, and graph breadth-first search.</p>
+<p>Each structure has a short explanation, a note on when to use it, an animated demo, and a view of its algorithm. You can watch the automatic demos or switch to manual mode and operate the structure yourself.</p>
+
+<h2>How it works</h2>
+<p>The whole app is one HTML file with plain JavaScript and no libraries. For each structure there is a state object and a render function. Auto mode runs a scripted demo using timers, and manual mode shows buttons and fields for the real operations: push and pop on arrays, put and get on hash maps, prepend, append and remove on linked lists, push and pop on stacks, enqueue and dequeue on queues, insert and invert on binary search trees, and BFS on a graph.</p>
+<p>The hash map uses eight buckets and a simple string hash (multiply by 31, add the character code, take the remainder), with colliding keys chained in the same bucket. The tree demos insert into a binary search tree and can invert it by swapping children recursively. The graph is a small fixed network of six people, and BFS visits them level by level using a queue and a visited set.</p>
+<p>The Algorithm view shows pseudocode for the current structure and highlights the line that matches the step being animated, and an activity log narrates each action. A speed slider scales every delay from 0.25× to 4×.</p>
+
+<h2>Controls</h2>
+<ul>
+<li>Tabs select the data structure.</li>
+<li>Visual and Algorithm switch between the animation and the pseudocode.</li>
+<li>Auto and Manual switch between the scripted demo and hands-on mode.</li>
+<li>The speed slider changes animation speed.</li>
+<li>In Manual mode, each structure has its own action buttons and input fields.</li>
+</ul>
+
+<h2>Built with</h2>
+<p>Plain HTML, CSS and JavaScript in a single page, with the tree and graph drawn on canvas. The source is on <a href="https://github.com/ronpicard/data-structures-visualizer-web-app">GitHub</a>.</p>
