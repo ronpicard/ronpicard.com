@@ -1,11 +1,68 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through the design, training, and testing of convolutional neural networks (CNNs). These neural networks will be used for image classification. Classification will be performed on images of handwritten single numerical digits (0-9).</p><p class="">The data set we will be using is the MNIST data set. This is a very popular data set among the machine learning community. The data set contains 60,000 images, and each image contains a handwritten numerical digit. Each of the images has been provided with a truth label that corresponds to the handwritten digit within the image from the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.</p><p class="">To do this we will utilize Keras, which is a high-level API for TensorFlow, which is Google's machine-learning library.</p><p class="">Convolutional neural networks differ from traditional feed-forward networks in that they replace the matrix multiplication operator with a convolution operator. This provides sparse connections and a large reduction in the number of parameters that need to be trained. In CNNs, the weights that need to be trained are kernel elements.</p><p class="">We wish to explore the impact of adjustments in the CNN architecture, optimization algorithms, regularization techniques, and hyperparameters. Therefore, we will start with a base network and adjust from there.</p></div>
+<p>In this notebook, we walk through the design, training, and testing of convolutional neural networks (CNNs) for image classification. The task is to classify images of handwritten single digits (0-9) from the MNIST data set, a popular benchmark in the machine-learning community. Each image comes with a truth label from the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.</p>
+<p>We use Keras, the high-level API for Google's TensorFlow library. We start with a base network and then change one thing at a time (the architecture, the optimizer, the regularization, the batch size) to see what each change does to accuracy.</p>
 
+<h2>Why convolutions</h2>
+<p>Convolutional networks differ from traditional feed-forward networks in that they replace the matrix multiplication with a convolution. Each output value looks only at a small patch of the input, and the same small kernel is slid across the whole image. This gives sparse connections and a large reduction in the number of parameters: the weights we train are the kernel elements themselves.</p>
+<p>For a 3 by 3 kernel K, each value of the output feature map is a weighted sum over one patch of the input I:</p>
+<p class="article-math">F(i, j) = Σₐ Σᵦ K(a, b) · I(i + a, j + b)</p>
+<figure>
+<img alt="A 6 by 6 input patch, dark on the left half (0) and bright on the right (9), is convolved with a 3 by 3 vertical-edge kernel whose columns are -1, 0 and 1. The 4 by 4 feature map has 0 where the patch is flat and 27 along the boundary, so the filter responds only to the edge." src="resources/cnn-convolution.svg">
+<figcaption>One convolution worked out by hand. The kernel subtracts the pixels on its left from those on its right, so it outputs 0 over flat regions and 27 exactly where the dark-to-bright edge is.</figcaption>
+</figure>
+<p>A layer with 32 such kernels learns 32 different small detectors at once, and the next layer combines their outputs into larger shapes.</p>
 
-  
+<h2>The data</h2>
+<p>MNIST contains 60,000 training images, but to keep each run fast we use a subset: 10,000 training images and 5,000 test images, each 28 by 28 pixels in grey-scale, with labels one-hot encoded over 10 classes. Every network below trains for 20 epochs and is scored on the same 5,000 test images after each epoch.</p>
 
+<h2>The base network</h2>
+<p>The base network stacks two convolutions, a max-pooling step, and a small fully connected classifier, with dropout after the pooling layer and before the output.</p>
+<figure>
+<img alt="Flow diagram of the base convolutional network: a 28 by 28 grey-scale input; a 3 by 3 convolution with 32 filters giving 26 by 26 by 32; a 3 by 3 convolution with 64 filters giving 24 by 24 by 64; 2 by 2 max pooling to 12 by 12 by 64; dropout of 25%; flatten to 9,216 values; a dense layer of 128 ReLU units; dropout of 50%; and a 10-way softmax output." src="resources/cnn-architecture.svg">
+<figcaption>The base network, with the shape of the data after each layer. Pooling halves the width and height, and flattening turns the 12 by 12 by 64 volume into 9,216 values for the dense layer.</figcaption>
+</figure>
+<p>Dropout in Keras takes the fraction of units to drop, so the two dropout layers remove 25% and 50% of their inputs during training. The loss is categorical cross-entropy, and the final layer is a 10-way softmax:</p>
+<p class="article-math">softmax(zₖ) = eᶻᵏ / Σⱼ eᶻʲ</p>
+<pre><code>model = Sequential()
+model.add(Conv2D(32, kernel_size=(3, 3),
+                activation='relu',
+                input_shape=(28, 28, 1)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.25))
+model.add(Flatten())
+model.add(Dense(128, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(10, activation='softmax'))</code></pre>
+<p>The base run uses the Adadelta optimizer with a batch size of 256. Each epoch takes only a second or two.</p>
 
+<h2>Five experiments</h2>
+<p>Starting from the base network we ran four variations: an extra convolution, the Adam optimizer, a strong L2 penalty on the dense layer, and a smaller batch size. Final results after epoch 20:</p>
+<table>
+<thead>
+<tr><th>Run</th><th>Optimizer</th><th>Batch</th><th>Test loss</th><th>Test accuracy</th></tr>
+</thead>
+<tbody>
+<tr><td>Base network</td><td>Adadelta</td><td>256</td><td>0.0589</td><td>98.08%</td></tr>
+<tr><td>Extra Conv2D(64) + pool + dropout</td><td>Adadelta</td><td>256</td><td>0.0449</td><td>98.64%</td></tr>
+<tr><td>Base network</td><td>Adam</td><td>256</td><td>0.0529</td><td>98.44%</td></tr>
+<tr><td>L2 penalty of 0.85 on the dense layer</td><td>Adadelta</td><td>256</td><td>0.5558</td><td>93.12%</td></tr>
+<tr><td>Base network</td><td>Adadelta</td><td>64</td><td>0.0519</td><td>98.44%</td></tr>
+</tbody>
+</table>
+<figure>
+<img alt="Test accuracy per epoch for five runs over 20 epochs. The extra-convolution network finishes highest at 98.64%; Adam and the batch-64 run both finish at 98.44%; the base network at 98.08%. The run with a strong L2 penalty starts at 28% and only reaches 93.12%." src="resources/cnn-test-accuracy.svg">
+<figcaption>Test accuracy after every epoch. Four of the runs bunch together near 98% within a few epochs; the strongly regularized run starts far behind and never catches up.</figcaption>
+</figure>
 
-</div>
-</div></div></div></div></div>
+<h2>What each change did</h2>
+<p><strong>A deeper network.</strong> Adding a third convolution, with its own pooling and dropout, gave the best result, 98.64%. A deeper stack can learn more features, which fits the improvement.</p>
+<p><strong>Adam.</strong> Adam reached 98.44% against the base network's 98.08%. Adam keeps moving averages of the gradient and its square, which acts like momentum and often reaches a lower cost faster than Adadelta.</p>
+<p><strong>Strong L2 regularization.</strong> An L2 penalty adds a term to the loss that shrinks weights toward zero. At a strength of 0.85 on the 128-unit dense layer the penalty swamps the data term: the first-epoch training loss was 36.47 and test accuracy started at 28.22%. The network underfits and ends at 93.12%, which is not acceptable for this task.</p>
+<p><strong>Batch size.</strong> Dropping the batch size from 256 to 64 gave 98.44% and took a little longer per epoch. Smaller batches give noisier gradient estimates, which showed up as a much more erratic loss-per-batch curve, and the noise may help a network escape poor local minima.</p>
+<p>Each setting was run once, so the differences between the 98.08%, 98.44%, and 98.64% runs correspond to a few dozen of the 5,000 test images. They suggest a direction but should not be read as a firm ranking. The L2 failure is large enough to be real.</p>
+
+<h3>A note from 2026</h3>
+<p>The batch-64 run was written up as using Adam, but the code still uses Adadelta, so it is the base network with a smaller batch. Its 98.44% matching the Adam run is a coincidence. Also, Keras reports training loss with dropout (and, for the L2 run, the penalty) included, so training and test losses are not directly comparable.</p>
+
+<h2>Takeaway</h2>
+<p>A small two-convolution network reaches about 98% on MNIST in under a minute of training, and depth, optimizer, and batch size move the result by well under a point. Regularization strength, by contrast, can wreck it. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/ac44d6e16a8ac47593a416c8369f0ce5">on GitHub</a>.</p>

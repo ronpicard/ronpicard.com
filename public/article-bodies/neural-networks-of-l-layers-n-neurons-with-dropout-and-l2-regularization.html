@@ -1,11 +1,52 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through the design, training, and testing of neural networks with multiple hidden layers. We will train networks utilizing L2 regularization and dropout. These neural networks will be used for logistic regression, which is an archaic name for binary classification.</p><p class="">The binary classification will be performed on a simple 2-D dataset. This data will be randomly generated based on two interleaving half circles. The data points for one half circle are labeled 0 and the others are labeled 1.</p><p class="">The goal of this binary classification will be first to classify each data point according to which half circle it belongs to. We will illustrate how well our networks do this by drawing the decision boundary. This decision boundary will also reveal overfitting. We will then investigate the impact of regularization techniques on this overfitting.</p></div>
+<p>In this post we walk through the design, training, and testing of a neural network with multiple hidden layers, written by hand in NumPy, and then see how two regularisation techniques, L2 weight penalties and dropout, change what it learns. The network is used for logistic regression, an older name for binary classification.</p>
+<p>The task is deliberately small so the effects are easy to see: classify points from two interleaving half circles. We judge each network by its test accuracy and by the decision boundary it draws, because a boundary that bends around individual points is the clearest sign of overfitting.</p>
 
+<h2>The data</h2>
+<p>The data is randomly generated: points along one half circle are labeled 0 and points along the other are labeled 1. We draw 200 points for training and a second, fresh set of 200 points for testing. The data is not normalised. The generator itself lives in a helper module that is not part of the published notebook, so we do not state its noise settings here.</p>
+<p>As a baseline we fit scikit-learn's cross-validated logistic regression. Its boundary is a straight line, which cannot separate two interleaving moons, and it scores 84% on both the training and test sets. That is underfitting, and it is the reason we need a non-linear network.</p>
 
-  
+<h2>The network and its math</h2>
+<p>Every run uses the same architecture: 2 inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output that gives the probability that a point has label 1. Each layer computes a linear step followed by an activation:</p>
+<p class="article-math">Z⁽ˡ⁾ = W⁽ˡ⁾ · A⁽ˡ⁻¹⁾ + B⁽ˡ⁾<br>A⁽ˡ⁾ = max(Z⁽ˡ⁾, 0)  (hidden layers),  A⁽ⁿ⁾ = 1 / (1 + e⁻ᶻ)  (output)</p>
+<p>The loss for one point is the binary cross-entropy, and the cost is its mean over the m points:</p>
+<p class="article-math">L = −y · log(a) − (1 − y) · log(1 − a)<br>J = (1/m) · Σ L</p>
+<p>Backpropagation starts at the output with a clean result, dZ⁽ⁿ⁾ = A⁽ⁿ⁾ − Y, and moves backward through each hidden layer, multiplying by the ReLU derivative (1 where Z &gt; 0, otherwise 0). Each weight matrix then takes a gradient descent step:</p>
+<p class="article-math">W ← W − α · ∂J/∂W<br>B ← B − α · ∂J/∂B</p>
 
+<h2>Two ways to regularise</h2>
+<p><strong>L2 regularisation</strong> adds a penalty on the size of the weights to the cost, scaled by a strength λ (called epsilon in the notebook). Large weights are what let a network bend its boundary sharply around individual points, so penalising them smooths the boundary:</p>
+<p class="article-math">J = (1/m) · Σ L + (λ / 2m) · Σ W²<br>∂J/∂W ← ∂J/∂W + (λ / m) · W</p>
+<p><strong>Dropout</strong> works differently. On every training iteration we randomly switch off a fraction of the units, each kept with probability keep_prob, so no unit can rely on any particular neighbour. At test time all units are used. The notebook multiplies the activations by a random 0/1 mask and does not rescale by 1 / keep_prob, and it also masks the output layer.</p>
+<pre><code>if(Dropout == True):
+    _D = np.float64(np.where(np.random.uniform(0, 1, [len(W[layer][:]), m]) &lt; keep_prob, 1, 0))
+    D.append(_D)
+    A = np.multiply(A, _D)</code></pre>
 
+<h2>Training setup</h2>
+<p>All five runs use plain gradient descent on the full batch of 200 points, with a learning rate of 0.01 for 850,000 iterations. Weights and biases start uniform in (−0.99, 0.99), and the random seed is reset before each run, so every network starts from identical weights and the only difference between runs is the regularisation. We tried no regularisation, L2 with λ = 0.85 and 0.10, and dropout with keep probabilities of 0.85 and 0.95.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>What the networks learned</h2>
+<p>Without regularisation the network fits the training data very closely: its cost falls to 0.107 and its boundary wraps around individual points. Regularised runs trade a little training fit for a smoother boundary.</p>
+<figure>
+<img alt="Three panels of two interleaving half-moons of points with the network's decision boundary drawn as a white line. Without regularisation the boundary bends around individual points (train 93%, test 87%). With an L2 penalty (train 92%, test 88%) and with dropout (train 94%, test 88%) it is smoother. This is an illustrative re-run on similar data, not the notebook's own plot." src="resources/moons-boundaries.svg">
+<figcaption>Compare how closely each boundary follows individual points. This is an illustrative re-run on similar data, not the notebook's own plot, but it shows the same effect: the penalised and dropout networks draw smoother curves.</figcaption>
+</figure>
+<p>The learning curves look very different between methods, and the reasons matter when reading them.</p>
+<figure>
+<img alt="Training cost logged every 10,000 iterations for the five runs. Without regularisation the cost falls to 0.107; with L2 it levels at 0.188 (λ 0.10) and 0.279 (λ 0.85), because the penalty is included; the dropout runs are noisy, around 0.7 (keep 0.95) and 1.3 (keep 0.85), since each logged value comes from one randomly thinned network." src="resources/moons-learning-curves.svg">
+<figcaption>The L2 curves settle higher because the penalty is part of the cost. The dropout curves are noisy because each logged value comes from a single, randomly thinned network.</figcaption>
+</figure>
+<p>On the 200 test points, every network beats the 84% linear baseline:</p>
+<figure>
+<img alt="Horizontal bars of test accuracy. A straight-line logistic regression scores 84%. The network scores 88.5% without regularisation, 89.0% with L2 λ 0.85, 89.5% with L2 λ 0.10, 88.5% with dropout keep 0.85, and 89.0% with dropout keep 0.95." src="resources/moons-accuracy.svg">
+<figcaption>The non-linear network gains about five points over the straight-line model. The differences among the five networks are small.</figcaption>
+</figure>
+
+<h2>How much do the differences matter?</h2>
+<p>The unregularised network reaches 88.5% and the best regularised run reaches 89.5%. On 200 test points, one point of accuracy is two test points, so the spread among all five networks is at most two points. We would not name a winner from that. What the experiments do show is the direction of the effect: the regularised networks draw smoother boundaries, the training cost behaves as each method predicts, and the strength of the penalty or the keep probability changes how much smoothing we get.</p>
+
+<h3>A note from 2026</h3>
+<p>The dropout here is not the usual inverted dropout: the activations are not rescaled by 1 / keep_prob, so the scale of the signal differs between training and testing, and the mask was also applied to the output layer, which is normally left alone. The L2 code is also hard-coded to a three-layer network. With test accuracies this close, a larger test set and several random seeds would be needed to say which method is better.</p>
+
+<h2>Takeaway</h2>
+<p>A small ReLU network separates the two moons far better than logistic regression, and both L2 and dropout visibly smooth its boundary. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/0324d1bddb9f4325a53e13e42a1d5c2f">on GitHub</a>.</p>

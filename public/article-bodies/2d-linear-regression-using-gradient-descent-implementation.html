@@ -1,11 +1,53 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through how to perform linear regression using gradient descent. The goal for this example is to predict what the profit for a new food truck might be given the population of the city. The input data to our model will be the population of a city, and the output data of our model will be the predicted profit. Since this is a 2-D linear regression model, the classic equation of the line (y = m * x + b) will be our model.</p></div>
+<p>In this notebook, we will walk through how to perform linear regression using gradient descent. The goal for this example is to predict what the profit for a new food truck might be given the population of the city. The input data to our model is the population of a city, and the output is the predicted profit. Since this is a 2-D linear regression model, the classic equation of a line is our model.</p>
+<p>This is the first of two homework exercises from a deep learning course. It is written in plain NumPy, with no machine learning library, so every step of gradient descent is visible in the code.</p>
 
+<h2>The data and the model</h2>
+<p>The data file has two columns: the population of a city and the profit of a food truck there. Each row is one city. We want a function that takes a population and returns an expected profit. With a single input, the model is a line, written here with a bias term:</p>
+<p class="article-math">h(x) = θ₀ + θ₁ · x</p>
+<p>To compute every prediction at once, we add a column of ones to the inputs so that the bias becomes just another parameter. Stacking the inputs into a matrix X (one row per city, a 1 followed by the population), all predictions are a single matrix product, Xθ.</p>
+<figure>
+<img alt="Flow diagram: load population and profit for each city, normalise both columns, initialise θ to (1, 1) with learning rate 0.1, then repeat 100 times: compute the cost, compute the gradient, and update θ. Finally undo the normalisation." src="resources/lr2d-pipeline.svg">
+<figcaption>The whole notebook in one picture: normalise, run 100 rounds of cost, gradient and update, then undo the normalisation to get answers in dollars.</figcaption>
+</figure>
 
-  
+<h2>Normalising the features</h2>
+<p>Before training, we standardise both columns by subtracting the mean and dividing by the standard deviation:</p>
+<p class="article-math">x ← (x − mean) / std</p>
+<p>This matters for gradient descent. Raw populations and raw profits live on very different scales, so the cost surface is a long, narrow valley: steep in one direction, almost flat in the other. A single learning rate cannot suit both, so descent zigzags or crawls. After standardising, both axes have the same spread and the cost surface becomes a round bowl, where the downhill direction points almost straight at the minimum. The price is bookkeeping: any new population we want to predict for must be normalised with the same mean and standard deviation, and the prediction must be scaled back to profit units at the end.</p>
 
+<h2>Cost, gradient and update</h2>
+<p>We measure how wrong the line is with the squared error, averaged over the m cities (the extra 2 in the denominator cancels when we differentiate):</p>
+<p class="article-math">J(θ) = (1 / 2m) · (Xθ − y)ᵀ(Xθ − y)</p>
+<p>Differentiating with respect to θ gives a gradient that has the same shape as θ, so both parameters are updated together:</p>
+<p class="article-math">∇J = (1 / m) · Xᵀ(Xθ − y)<br>θ ← θ − α · ∇J</p>
+<p>Here α is the learning rate, the size of each step downhill.</p>
 
+<h2>Training</h2>
+<p>We start θ at (1, 1), chosen arbitrarily, with α = 0.1, and run 100 iterations of batch gradient descent, recording the cost at each step. The core loop is:</p>
+<pre><code>for i in range(interations):
+    hx = np.dot(x, theta)
+    hx_minus_y = hx - y
+    j = np.dot(1/(2*m), np.dot(np.transpose(hx_minus_y), hx_minus_y))
+    x_transpose_x = np.dot(np.transpose(x), x)
+    dj_dtheta = np.dot(1/m, np.dot(x_transpose_x, theta) - np.dot(np.transpose(x), y))
+    theta = theta - np.dot(alpha, dj_dtheta)</code></pre>
+<p>The whole run takes about 2 milliseconds.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Results</h2>
+<p>The cost starts at 0.662 at θ = (1, 1), falls to 0.157 by iteration 20, and then flattens at 0.149. That floor is the lowest cost any straight line can reach on this data, because the points are not perfectly aligned.</p>
+<figure>
+<img alt="Cost per iteration. It falls from 0.662 at the start to 0.157 by iteration 20 and flattens at 0.149, the lowest cost any straight line can reach on this data." src="resources/lr2d-learning-curve.svg">
+<figcaption>The learning curve drops quickly and is nearly flat after about 20 iterations, so 100 iterations is far more than this problem needs.</figcaption>
+</figure>
+<p>The final parameters in normalised units are θ₀ ≈ 0.00003 and θ₁ = 0.838. The intercept is essentially zero, as it must be: after standardising, the best line passes through the mean of the data. The slope of 0.838 says that a city one standard deviation above average in population is expected to have a food truck profit 0.838 standard deviations above average.</p>
+<figure>
+<img alt="Contour map of the cost over the normalised intercept θ₀ and slope θ₁. The path starts at θ = (1, 1) and moves in a straight line, with steps getting shorter, to the minimum at θ = (0, 0.838)." src="resources/lr2d-cost-surface.svg">
+<figcaption>Each point on this map is one line. Because the features are standardised, the bowl is round and the path heads almost straight for the minimum, taking shorter steps as the slope flattens.</figcaption>
+</figure>
+<p>To get a prediction in dollars, we normalise the population, apply the line, and multiply by the profit standard deviation and add back the profit mean.</p>
+
+<h3>A note from 2026</h3>
+<p>The output cell saved in the original notebook came from a different run and shows θ₁ = −0.139, which disagrees with the 0.838 reported in the text. The figures above recompute the 100 iterations from the stated settings; they reproduce the notebook's own θ₀ and the 0.838 slope, so we treat 0.838 as the correct result. The elapsed time was also labelled milliseconds but is really seconds.</p>
+
+<h2>Takeaway</h2>
+<p>With standardised features, a handful of iterations is enough to fit a line by gradient descent. The same vectorised cost, gradient and update carry over unchanged to more features, which is the subject of the next post. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/de067bb96629a75122dc9d12c2ad03af">on GitHub</a>.</p>

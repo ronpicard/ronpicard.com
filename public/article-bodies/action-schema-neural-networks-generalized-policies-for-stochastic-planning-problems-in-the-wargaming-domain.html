@@ -1,11 +1,52 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">Stochastic shortest-path problems have been of interest to the automated planning community for many years. Traditionally, policy solutions to these problems have been found by a set of admissible heuristics, such as LM-Cut, which can approximate the best actions to take in a current state to provide the highest probability of reaching a goal state in a delete relaxation of these problems. Though successful, these heuristics face scalability problems as the state spaces of these stochastic problems increase. \cite{toyer2018action} provided a solution to this problem by utilizing deep neural networks to learn a successful policy that could scale to Nth-order problems with only linear time constraints. The neural networks are coined Action Schema Networks (ASNets), since given a current state they provide an appropriate action to take. We present a case study on this technique by applying it to the fighter jet wargaming domain. We have designed a PPDDL domain and grounding files for a wide set of scenarios in which red and blue, 4th- and 5th-generation fighters engage in battle and the ASNets must decide on which attack method to use given the current scenario state to increase the probability of reaching a goal state. We present the results of 5 trial experiments and discuss the degree of success we have had in training the ASNets, intuition about the results, and suggestions for future work.</p><p class=""></p><p class=""><strong>NOTE: Months after this work, I came across an error in my understanding of the framework that I was using at the time. The LM-Cut heuristic results were encoded as a set of feature vectors that were concatenated to the standard input feature vectors to provide some directional focus to the search space. However, the heuristic that was used for computer truth tables was the optimal solution ( which was exhaustively calculated.) All results still hold; however, the comparison between LM-Cut heuristic results and Trained NN results is a little malformed. In reality, the times when the NN did better than the LM-Cut revealed that the NN learned a policy that was closer to the true optimal policy than the LM-Cut (because of its ‘delete-relaxed’ nature) heuristic policy</strong>.</p></div>
+<p>Stochastic shortest-path problems have been of interest to the automated planning community for many years. Traditionally, policy solutions to these problems have been found with admissible heuristics such as LM-Cut, which approximate the best action in the current state to give the highest probability of reaching a goal state in a delete relaxation of the problem. Though successful, these heuristics face scalability problems as the state spaces of these stochastic problems grow.</p>
+<p>Toyer et al. proposed Action Schema Networks (ASNets), deep neural networks that learn a policy for a whole problem domain: trained on small problems, they can be applied to larger ones. Given the current state, an ASNet returns an action to take. This article is a case study applying the technique to a fighter-jet wargame, with five trial experiments.</p>
 
+<h2>The planning problem</h2>
+<p>A stochastic shortest-path problem (SSP) is a tuple (S, A, T, C, G, s₀): states, actions, a transition function, action costs, goal states, and an initial state. A policy π(a | s) chooses an action in each state, and here the aim is to maximize the probability of reaching the goal. LM-Cut, run through the SSiPP planning tool, solves each problem on its own but scales poorly as problems grow. An ASNet is trained by supervised learning, with LM-Cut providing the labels (the best action in each state), and then reused on problems it has not seen.</p>
 
-  
+<h2>The wargame domain</h2>
+<p>We wrote the domain in PPDDL, the probabilistic planning language. Two teams, red and blue, each field the same number of fighters, and every fighter is randomly a 4th- or 5th-generation aircraft. Fighters queue in a line and the front two duel each round. Exactly one of the two is destroyed, the survivor stays at the front, and the next fighter in the destroyed one's team steps up.</p>
+<p>Each round blue chooses one of three actions: a short-range strike, a long-range strike, or a stealth strike. The chance blue wins the duel depends on the action and on the generations of the two fighters. Blue wins when every red fighter is destroyed with at least one blue fighter alive, which earns a reward of 1. If all blue fighters are destroyed, the problem is a dead end.</p>
+<figure>
+<img alt="Top: a blue queue and a red queue of 4th- and 5th-generation fighters facing each other; the front two duel each round. Bottom: a grid of the chance blue wins a duel for each matchup and blue action. While blue has fighters in reserve, stealth is the strongest or joint-strongest action in every matchup (70%, 70%, 90% and 30%), but once blue is down to its last fighter stealth drops to 30%, 30%, 70% and 10%, so the best action depends on the state of the battle." src="resources/asnets-wargame.svg">
+<figcaption>The game and its odds. Stealth looks like the safe choice until blue's last fighter is in front, when its odds fall sharply, so no single action is best in every state and the policy has to depend on the battle.</figcaption>
+</figure>
 
+<h2>Training setup</h2>
+<p>The ASNet has three hidden layers of 16 units with dropout of 0.25 in each. We train for 10 epochs with minibatches of 128 and a learning rate of 0.01. The framework default is a learning rate of 0.0001 and 300 epochs, and we changed both to cut convergence time. Each scenario is solved 30 times with different random seeds, so results are reported as wins out of 30.</p>
+<p>The trials differ in the problem sizes used for training and testing, counted in fighters per team:</p>
+<table>
+<thead>
+<tr><th>Trial</th><th>Training problems</th><th>Test problems</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>3 fighters (5 scenarios)</td><td>3 fighters (15 scenarios)</td></tr>
+<tr><td>2</td><td>4 fighters (5 scenarios)</td><td>4 fighters (15 scenarios)</td></tr>
+<tr><td>3</td><td>mixed 3 and 4 (6 scenarios)</td><td>3 and 4 (30 scenarios)</td></tr>
+<tr><td>4</td><td>small problems</td><td>5 fighters (15 scenarios)</td></tr>
+<tr><td>5</td><td>mixed 3 and 4 (6 scenarios)</td><td>5 to 13 fighters</td></tr>
+</tbody>
+</table>
 
+<h2>Results on unseen scenarios</h2>
+<p>On test problems of the same size as the training problems (Trials 1 to 3), the ASNet trails its LM-Cut teacher slightly, as expected of a student. In Trials 4 and 5, which test on larger battles than the network was trained on, it wins more often.</p>
+<figure>
+<img alt="Grouped bars of average wins out of 30 for each trial. ASNet: 19.25, 21, 20, 26.5, 27.55. LM-Cut: 22.69, 22.69, 21.94, 22.69, 21.34. LM-Cut wins more in trials 1 to 3; ASNet wins more in trials 4 and 5, which test on larger battles than it was trained on." src="resources/asnets-win-rates.svg">
+<figcaption>Average wins out of 30 on test scenarios. The ASNet reaches 26.50 in Trial 4 and 27.55 in Trial 5, against 22.69 and 21.34 for LM-Cut.</figcaption>
+</figure>
+<p>We offered two speculative explanations: larger battles simply give more chances, or the network exploits the order of the fighters in each queue, which LM-Cut ignores. No variance or significance tests were run, so these remain open questions for future trials.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Runtime</h2>
+<p>In Trial 5 we also timed both methods as the battles grew from 3 to 13 fighters per team.</p>
+<figure>
+<img alt="Seconds per scenario on a log scale against fighters per team from 3 to 13. Both lines climb steadily. The ASNet takes 0.040 s at 3 fighters and 20.4 s at 13; LM-Cut takes 0.00017 s at 3 and 7.87 s at 13, so LM-Cut is faster at every measured size. Training the ASNet took a further 5,573 seconds once." src="resources/asnets-runtime.svg">
+<figcaption>Seconds per scenario. Both methods slow down as battles grow, and LM-Cut is faster at every size we measured.</figcaption>
+</figure>
+<p>Measured runtime grows steeply for both methods, from 0.040 s to 20.4 s for the ASNet and from 0.00017 s to 7.87 s for LM-Cut. The ASNet also needs a one-time training cost of about 5,573 seconds. The paper's argument is a projection: if the ASNet's total time flattens while LM-Cut's keeps growing exponentially, the two would cross at about 18 fighters per team. That crossover is an extrapolation from fitted trend lines and was not measured.</p>
+
+<h2>Takeaway</h2>
+<p>In Trials 1 to 3 the ASNet learned roughly LM-Cut's behavior, with similar cost and win rate. In Trials 4 and 5 the networks trained on small battles won more often than LM-Cut on larger ones. Future work includes larger problems with more compute, a search over network architecture and regularization, and more trials to probe whether ASNets capture the order of the fighters.</p>
+
+<h3>A note from 2026</h3>
+<p>Months after this work I found an error in my understanding of the framework. The LM-Cut results were fed to the network as extra feature vectors concatenated to the standard inputs, to give the search some direction, while the training labels came from the optimal solution, which was calculated exhaustively. The results themselves still hold, but comparing the network to LM-Cut is somewhat malformed. The cases where the network did better most likely mean it learned a policy closer to the true optimum than LM-Cut's delete-relaxed one.</p>
+<p>The <a href="resources/e55c259979a696.pdf">full paper</a> has the tables and the complete PPDDL domain description.</p>

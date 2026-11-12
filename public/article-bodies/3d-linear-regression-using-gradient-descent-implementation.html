@@ -1,11 +1,53 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through how to perform linear regression using gradient descent. The goal for this example is to predict what the good market price should be for your home given previous data for the price based on size (square footage) and the number of bedrooms. The input data to our model will be the size of a home and the number of bedrooms, and the output data of our model will be a good market price. Since this is a 3-D linear regression model, the equation of the 3-D line (z = b + a * x + b * y) will be our model.</p></div>
+<p>In this notebook, we will walk through how to perform linear regression using gradient descent with two input features. The goal for this example is to predict what a good market price should be for your home, given previous data on prices, sizes (square footage) and numbers of bedrooms. The inputs to our model are the size of a home and its number of bedrooms, and the output is a market price.</p>
+<p>With two inputs and one output, the model is a plane in three dimensions rather than a line in two. This is the second of two homework exercises from a deep learning course, written in plain NumPy.</p>
 
+<h2>The data and the model</h2>
+<p>The data file has three columns: size in square feet, number of bedrooms, and price. Each row is one house, and the whole file is used for training. The model is a plane:</p>
+<p class="article-math">h(x) = θ₀ + θ₁ · size + θ₂ · bedrooms</p>
+<p>Square footage runs into the hundreds or thousands while bedroom counts are single digits, so we standardise every column, including price, by subtracting its mean and dividing by its standard deviation. As in the 2-D version, this keeps the cost surface from becoming a long narrow valley and lets one learning rate work for all three parameters.</p>
 
-  
+<h2>The vectorised form</h2>
+<p>The key idea is to avoid writing a loop over houses or over parameters. We build a matrix X with one row per house: a 1 for the bias, the normalised size, and the normalised number of bedrooms. With the parameters in a 3 by 1 vector θ, a single product gives every prediction at once:</p>
+<p class="article-math">ŷ = Xθ</p>
+<figure>
+<img alt="A matrix diagram. X has one row per house with a 1 for the bias, the size and the number of bedrooms. Multiplying X by the 3 by 1 parameter vector theta gives a column of predicted prices, one per house. Below, the gradient of the cost for all three parameters at once: one over m times X transpose times (X theta minus y)." src="resources/lr3d-matrix.svg">
+<figcaption>Each row of X times θ is one house's predicted price. The same matrices give the gradient for all three parameters in one expression.</figcaption>
+</figure>
+<p>The cost and its gradient follow directly:</p>
+<p class="article-math">J(θ) = (1 / 2m) · (Xθ − y)ᵀ(Xθ − y)<br>∇J = (1 / m) · Xᵀ(Xθ − y)<br>θ ← θ − α · ∇J</p>
+<p>Here m is the number of houses. Xᵀ(Xθ − y) adds up, for each parameter, the error on every house weighted by that parameter's feature. Because the first column of X is all ones, the first entry of the gradient is simply the average error, which is the bias update.</p>
 
+<h2>Training</h2>
+<p>We start θ at (1, 1, 1) and run 100 iterations of batch gradient descent with α = 0.1. The loop is the same as in the 2-D post; only the width of X has changed.</p>
+<pre><code>for i in range(interations):
+    hx = np.dot(x, theta) # M X 3 times 3 X 1 = M X 1
+    hx_minus_y = hx - y
+    hx_minus_y_transpose = np.transpose(hx_minus_y)
+    j = np.dot(1/(2*m), np.dot(hx_minus_y_transpose, hx_minus_y))
 
+    x_transpose_x = np.dot(np.transpose(x), x)
+    x_transpose_x_theta = np.dot(x_transpose_x, theta)
+    x_transpose_y = np.dot(np.transpose(x), y)
+    dj_dtheta = np.dot(1/m, x_transpose_x_theta - x_transpose_y)
 
-</div>
-</div></div></div></div></div>
+    theta = theta - np.dot(alpha, dj_dtheta)</code></pre>
+<p>The run takes about 2 milliseconds and ends with a cost of 0.00877 in normalised units. The notebook's learning curve shows the cost levelling off quickly, in about 20 iterations.</p>
+
+<h2>Predicting a price</h2>
+<p>To use the model, we price a 925 square foot apartment with 2 bedrooms, as if it were a house. The new listing has to go through exactly the same steps as the training data:</p>
+<ol>
+<li>Normalise the size and the bedroom count with the training means and standard deviations.</li>
+<li>Compute θ₀ + θ₁ · size + θ₂ · bedrooms. The model returns −1.296, a price about 1.3 standard deviations below the average house.</li>
+<li>Undo the price scaling: multiply by the price standard deviation and add the price mean.</li>
+</ol>
+<figure>
+<img alt="Five steps: a new 925 square foot home with 2 bedrooms is normalised with the training means and standard deviations, the model gives -1.296 in normalised units, the scaling is undone with the price standard deviation and mean, and the predicted price is $166,000." src="resources/lr3d-prediction.svg">
+<figcaption>The normalised output of −1.296 is meaningless on its own. Scaling it back with the training price statistics gives a predicted price of about $166,000.</figcaption>
+</figure>
+<p>The result is $166,000.27. The home being priced is the author's own apartment, treated as if it were a house.</p>
+
+<h3>A note from 2026</h3>
+<p>The parameter values written in the notebook's markdown do not match the ones printed by the final code cell, and only the intercept agrees. The printed values are the ones the prediction actually used, so we rely on those and do not quote either set here. The red fitted line drawn in the notebook's 3-D plots also reuses a single feature for both axes, so it should not be read as the fitted plane.</p>
+
+<h2>Takeaway</h2>
+<p>Going from one feature to two required no change to the algorithm, only a wider X. Writing the cost and gradient with matrices means the same few lines handle any number of features. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/40ebb20e2b0311ec04642441b2cf193e">on GitHub</a>.</p>

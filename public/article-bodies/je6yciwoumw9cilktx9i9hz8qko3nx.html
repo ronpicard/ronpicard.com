@@ -1,11 +1,50 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">As computational power increases, deep neural networks provide an empirically effective way to classify large data sets based on a small labeled subset. Forest-type covers are an example application of where these networks can be used. It is imperative for private and public land management agencies to have accurate records of forest type covers for the regions under their management. However, due to legal and manpower limitations, this is not always possible. Neural networks provide a mechanism by which this data may be obtained. We present an improvement on feed-forward neural network architectures used to classify forest-type covers based on cartographic features.</p></div>
+<p>As computational power increases, deep neural networks provide an empirically effective way to classify large data sets based on a small labeled subset. Forest-type covers are an example application. It is imperative for private and public land management agencies to have accurate records of forest cover for the regions under their management, but legal and manpower limitations mean this is not always possible. Neural networks provide a mechanism by which this data may be obtained.</p>
+<p>This paper presents an improvement on feed-forward neural networks used to classify forest cover types from cartographic features. We keep the data and train/test split of an earlier study by Blackard et al., whose single-hidden-layer network scored 70.58%, and ask how far deeper, wider, and better-regularized networks can go.</p>
 
+<h2>The data</h2>
+<p>The data is the UCI Covertype set: 581,012 samples, each a 30 by 30 meter cell of Roosevelt National Forest in northern Colorado, in areas with little direct human management. Each cell has 54 features: 10 numeric ones (elevation, aspect, slope, distances to water, roadways, and wildfire ignition points, and three hillshade indices), 4 binary wilderness-area flags, and 40 binary soil-type flags. The label is one of seven cover types, from Lodgepole Pine and Spruce/Fir to Aspen and Krummholz.</p>
+<p>We standardize the 10 numeric features (subtract the mean, divide by the standard deviation) and leave the 44 binary features alone. Labels are one-hot encoded over the 7 classes. Following the earlier study, the split is class-balanced: 11,340 training cells (1,620 per class), 3,780 validation cells (540 per class), and 569,672 test cells, as given in the paper's table. Training on about 2% of the data and testing on the rest makes this a hard test of generalization.</p>
 
-  
+<h2>The networks</h2>
+<p>All networks take the 54 inputs and end in a 7-way softmax. Compared with the earlier study, we use ReLU hidden units instead of sigmoid, the Adam optimizer instead of plain gradient descent with momentum, dropout of 0.25 on every hidden layer, and deeper and wider architectures, with optional L1 or L2 weight penalties. Every trial uses minibatches of 512, and Adam uses a learning rate of 0.001, momentum 0.9, and RMSProp decay 0.999.</p>
+<figure>
+<img alt="Three network shapes drawn as bars whose heights grow with layer width. Trial 1 is 54 inputs, 120 hidden units, 7 outputs. Trial 2 adds a 20-unit layer. Trials 3 to 5 use 54, 1024, 512, 216 and 7 units." src="resources/forest-networks.svg">
+<figcaption>The three architectures. Trials 1 and 2 are small, with one or two hidden layers; trials 3 to 5 share one much wider network and differ only in regularization.</figcaption>
+</figure>
+<p>The L1 and L2 strengths, 0.00001 each, were chosen because stronger values stopped the network from fitting and weaker ones did little. We expected L1 to help, since it pushes weights to zero and could sparsify the 44 binary inputs, and L2 to hurt.</p>
 
+<h2>The five trials</h2>
+<table>
+<thead>
+<tr><th>Trial</th><th>Architecture</th><th>Regularization (besides dropout 0.25)</th><th>Training accuracy</th><th>Test accuracy</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>54-120-7, 10,000 epochs</td><td>none</td><td>93.02%</td><td>74.70%</td></tr>
+<tr><td>2</td><td>54-120-20-7, 10,000 epochs</td><td>none</td><td>94.97%</td><td>74.04%</td></tr>
+<tr><td>3</td><td>54-1024-512-216-7, 2,000 epochs</td><td>none</td><td>99.08%</td><td>76.57%</td></tr>
+<tr><td>4</td><td>54-1024-512-216-7, 2,000 epochs</td><td>L1 = 0.00001</td><td>99.15%</td><td>75.47%</td></tr>
+<tr><td>5</td><td>54-1024-512-216-7, 2,000 epochs</td><td>L2 = 0.00001</td><td>93.29%</td><td>74.30%</td></tr>
+</tbody>
+</table>
 
+<h2>Results</h2>
+<p>Every trial beats the earlier 70.58%, with test accuracies from 74.04% to 76.57%. The best is Trial 3, the 54-1024-512-216-7 network with dropout alone, at 76.57%, nearly six points above the earlier result.</p>
+<figure>
+<img alt="Horizontal bars of test accuracy. The earlier single-hidden-layer network from Blackard et al. scores 70.58%. The five new networks score 74.70% (trial 1), 74.04% (trial 2), 76.57% (trial 3), 75.47% (trial 4), 74.30% (trial 5). Trial 3, the 54-1024-512-216-7 network, is best." src="resources/forest-test-accuracy.svg">
+<figcaption>Test accuracy on 569,672 held-out cells. Even the small Trial 1 network, with the same 54-120-7 shape as the earlier study, gains about four points.</figcaption>
+</figure>
+<p>Adding a second hidden layer in Trial 2 did not help (74.04% against 74.70%), so the extra capacity was not the limit for small networks. The wide network of Trial 3 did help. The regularizers did not: L1 in Trial 4 cost about a point (75.47%) and L2 in Trial 5 cost more (74.30%), with a final cost of 1.6036 against 0.0004 for Trial 3.</p>
 
-</div>
-</div></div></div></div></div>
+<h2>Overfitting</h2>
+<figure>
+<img alt="For each trial, a pair of dots joined by a line: training accuracy on the right, test accuracy on the left. The gaps are 18.3 points (trial 1), 20.9 points (trial 2), 22.5 points (trial 3), 23.7 points (trial 4), 19.0 points (trial 5), so every network fits its 11,340 training cells far better than new ones." src="resources/forest-train-vs-test.svg">
+<figcaption>Training accuracy minus test accuracy is between 18 and 24 points in every trial. The bigger the network, the better it fits and the wider the gap.</figcaption>
+</figure>
+<p>The networks fit their 11,340 training cells almost perfectly while generalizing much less well. The loss curves show the same pattern: the small networks of Trials 1 and 2 stay noisy and never settle, while the wide networks of Trials 3 to 5 drop to near zero within about 5,000 steps.</p>
+
+<h2>Conclusions</h2>
+<p>Deeper and wider networks have more capacity and fit the training data better, and all five beat the earlier single-hidden-layer network. The effect of L1 was small and L2 made things worse. Given this much overfitting, there is little more to gain with such a small training subset; the natural next steps are to use far more of the 581,012 samples for training and to tune network capacity with a hypothesis-testing approach rather than by trial and error.</p>
+
+<h3>A note from 2026</h3>
+<p>The comparison to the earlier study changes several things at once (activation, optimizer, dropout, depth), so the gain is not attributed to any one of them. Each trial was run once, and the shallow networks trained for 10,000 epochs against 2,000 for the deep ones, so that comparison is imperfect. The paper's text also gives Trial 3 the figures of Trial 4 in its conclusion; the table above is the correct record.</p>
+<p>The paper is available as a <a href="resources/d68e191b7efe36.pdf">PDF</a>, and the code is in the <a href="https://github.com/ronpicard/neural-network-cartographic-classification-improvements">GitHub repository</a>.</p>

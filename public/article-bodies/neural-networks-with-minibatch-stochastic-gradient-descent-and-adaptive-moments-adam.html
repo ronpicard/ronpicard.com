@@ -1,11 +1,49 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through the design, training, and testing of neural networks with multiple hidden layers using minibatch stochastic gradient descent with adaptive moments (ADAM). These neural networks will be used for logistic regression, which is an archaic name for binary classification.</p><p class="">The binary classification will be performed on images of handwritten numerical digits. More specifically, the last numerical digit of my student ID. This digit happens to be 9. Therefore, the goal of our neural networks will be to output a value of 1 when the handwritten numerical digit image input is a 9, and 0 in all other cases.</p><p class="">The data set we will be using is the MNIST data set. This is a very popular data set among the machine learning community. The data set contains 60,000 images, and each image contains a handwritten numerical digit. Each of the images has been provided with a truth label that corresponds to the handwritten digit within the image from the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.</p><p class="">In our case, we only care about when the image is 9. Therefore we will need to re-label the truth labels so that all truth labels with the value of 9 are given the value of 1, and all other truth labels are given the value of 0.</p></div>
+<p>In this post we train the same multi-layer network as in the momentum post, again as logistic regression, but with minibatch stochastic gradient descent and Adaptive Moments, usually written Adam. The question is whether Adam, which adapts the step size of every weight, beats momentum on the same problem.</p>
 
+<h2>The task and network</h2>
+<p>The task is the same: classify MNIST digits as 9 (label 1) or not 9 (label 0). Images are flattened to 784 values and scaled by 1/255, and we train on the first 50,000 images and test on the next 10,000, reshuffling every epoch. The network is the 784, 20, 10, 1 network from the momentum post: two ReLU hidden layers and a sigmoid output.</p>
+<figure>
+<img alt="A fully connected network drawn as columns of circles: 784 pixel inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output giving the probability the image is a 9." src="resources/mnist9-network.svg">
+<figcaption>The same network as in the momentum post, so the optimisers are the only thing that changes.</figcaption>
+</figure>
 
-  
+<h2>What Adam adds</h2>
+<p>The momentum post gave every weight the same learning rate and added a velocity. Adam keeps two running averages for each weight: a moving average of the gradient (the first moment, which is momentum) and a moving average of the squared gradient (the second moment, which is the idea behind RMSProp). It then divides one by the square root of the other, so a weight with consistently large gradients takes smaller steps and a weight with small gradients takes relatively larger ones. With g the gradient and t the step count:</p>
+<p class="article-math">m ← β₁ · m + (1 − β₁) · g<br>v ← β₂ · v + (1 − β₂) · g²<br>m̂ = m / (1 − β₁ᵗ),  v̂ = v / (1 − β₂ᵗ)<br>w ← w − α · m̂ / (√v̂ + ε)</p>
+<p>The corrections 1 / (1 − βᵗ) matter early on, when the averages start at zero and are biased toward zero. In the notebook ε is 1e-6.</p>
+<figure>
+<img alt="Contour map of a long, narrow valley. Over 60 steps from the same start, plain gradient descent zig-zags and ends 1.42 from the goal, momentum ends 0.07 away, and Adam, which scales each weight's step by its own gradient history, heads almost straight for the goal and ends 0.23 away. This is an illustrative cost surface, not the MNIST network's." src="resources/adam-paths.svg">
+<figcaption>An illustrative cost surface, not the MNIST network's. Adam heads almost straight for the goal because each direction gets its own step size, though after 60 steps it ends 0.23 away, behind momentum's 0.07.</figcaption>
+</figure>
 
+<h2>Training setup</h2>
+<p>We use a batch of 50 images and a learning rate of 0.01 for about 500 epochs, and we vary the two coefficients. Each weight matrix has a first-moment and a second-moment array of the same shape, all starting at zero.</p>
+<pre><code>V_dW[layer] = np.multiply(momentum_coef, V_dW[layer]) + np.multiply(1-momentum_coef, _dW)
+R_dW[layer] = np.multiply(RMSProp_coef, R_dW[layer]) + np.multiply(1-RMSProp_coef, np.multiply(_dW, _dW))
 
+t = t + 1
+V_dW[layer] = np.multiply(V_dW[layer], 1/(1-np.power(momentum_coef, t)))
+R_dW[layer] = np.multiply(R_dW[layer], 1/(1-np.power(RMSProp_coef, t)))
 
-</div>
-</div></div></div></div></div>
+val1 = 1/(np.sqrt(R_dW[layer])+ epsilon)
+W[layer] = W[layer] - np.multiply(alpha, np.multiply(V_dW[layer], val1 ))</code></pre>
+
+<h2>Results</h2>
+<p>We ran three settings of (β₁, β₂) on the 50,000 images, and measured accuracy on the 10,000 test images.</p>
+<figure>
+<img alt="Horizontal bars of test accuracy for three Adam settings with batch 50 and learning rate 0.01. β₁ 0.9 and β₂ 0.9: 98.36%. β₁ 0.5 and β₂ 0.9: 98.94%, the best. β₁ 0.9 and β₂ 0.5: 90.39%, exactly what a model that always answers &quot;not a 9&quot; would score." src="resources/adam-results.svg">
+<figcaption>Two settings reach 98.36% and 98.94%. The third, 90.39%, is not a worse model so much as no model: it is the score of always answering &quot;not a 9&quot;.</figcaption>
+</figure>
+<ul>
+<li>β₁ = 0.9, β₂ = 0.9: 98.36% in about 1,264 s.</li>
+<li>β₁ = 0.5, β₂ = 0.9: 98.94% in about 1,049 s, the best of the three.</li>
+<li>β₁ = 0.9, β₂ = 0.5: 90.39% in about 1,449 s.</li>
+</ul>
+<p>The first two runs show that a lighter momentum term (β₁ = 0.5) did a little better here, with the caveat that each setting ran once, and identical settings took noticeably different times, so the times are only roughly comparable.</p>
+<p>The third run deserves a closer look. The original write-up read it as overfitting, but 90.39% is exactly 100% minus the 9.61% of test images that are nines, which is the score of a network that answers &quot;not a 9&quot; every time. Its cost also sat on a plateau near 0.23 throughout. Rather than overfitting, the network collapsed to a single constant answer, probably because a small β₂ makes the second-moment estimate jumpy and the steps unstable.</p>
+
+<h3>A note from 2026</h3>
+<p>Looking back, our Adam code departs from the standard algorithm in two ways. The bias-corrected moments were written back into the stored arrays, so the correction compounds on every step instead of being applied only to the update, and the step counter t was increased once per layer, three times per update, rather than once per update. That is a likely reason these results, at best 98.94%, trail the roughly 99.2% that momentum reached in the previous post. The reported zero costs are also partly an artefact of saturated outputs inside the log, so we would not read them as perfect fits.</p>
+
+<h2>Takeaway</h2>
+<p>Adam trained this network to about 98.4% to 98.9% accuracy, but in this implementation it did not beat momentum, and a poor choice of β₂ made it collapse to the majority answer. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/5935a6477c06e408c605c1b8ceb78b68">on GitHub</a>.</p>

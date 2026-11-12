@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { playAnimatedFigures } from '../lib/animatedFigures'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import { fetchArticleBodyHtml } from '../lib/fetchArticleBody'
 import { primedArticleBody } from '../lib/primedArticleBodies'
@@ -20,6 +21,13 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
   const [phase, setPhase] = useState<'loading' | 'error' | 'ready'>(() =>
     html ? 'ready' : 'loading',
   )
+  const proseRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const prose = proseRef.current
+    if (phase !== 'ready' || !prose) return
+    return playAnimatedFigures(prose)
+  }, [phase, html])
 
   useEffect(() => {
     const primed = primedSafeHtml(bodyPath)
@@ -77,6 +85,7 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
 
   return (
     <div
+      ref={proseRef}
       className="article-prose"
       data-body-path={bodyPath}
       dangerouslySetInnerHTML={{ __html: html }}

@@ -1,11 +1,59 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In this notebook, we will walk through the design, training, and testing of a neural network with one neuron. This neural network will be used for logistic regression, which is an archaic name for binary classification.</p><p class="">The binary classification will be performed on images of handwritten numerical digits. More specifically, the last numerical digit of my student ID. This digit happens to be 9. Therefore, the goal of our neural network will be to output a value of 1 when the handwritten numerical digit image input is a 9, and 0 in all other cases.</p><p class="">The data set we will be using is the MNIST data set. This is a very popular data set among the machine learning community. The data set contains 60,000 images, and each image contains a handwritten numerical digit. Each of the images has been provided with a truth label that corresponds to the handwritten digit within the image from the set {0, 1, 2, 3, 4, 5, 6, 7, 8, 9}.</p><p class="">In our case, we only care about when the image is 9. Therefore we will need to re-label the truth labels so that all truth labels with the value of 9 are given the value of 1, and all other truth labels are given the value of 0.</p></div>
+<p>In this notebook, we will walk through the design, training, and testing of a neural network with one neuron. This network performs logistic regression, an older name for binary classification.</p>
+<p>The classification is performed on images of handwritten digits, specifically the last digit of my student ID, which happens to be 9. The goal of our network is to output 1 when the image shows a 9, and 0 in all other cases.</p>
 
+<h2>The data</h2>
+<p>We use the MNIST dataset, a long-standing benchmark in machine learning. Its training file holds 60,000 images, each 28 by 28 pixels, with a label from 0 to 9. Since we only care about nines, we relabel: every image labelled 9 becomes 1, and every other image becomes 0. Each image is flattened into a vector of 784 pixel values and scaled to the range 0 to 1 by dividing by 255. The images are taken in file order, with no shuffling.</p>
+<p>We use three splits. A small validation run uses 500 training and 100 test images to check that the code works. The main run uses 50,000 training images and 10,000 test images. A data-size experiment trains on 10,000 images and tests on the same 10,000 test images.</p>
 
-  
+<h2>One neuron</h2>
+<p>The model multiplies each of the 784 pixels by its own weight, adds them up with a bias b, and passes the total through the sigmoid function so the output is a probability between 0 and 1:</p>
+<p class="article-math">z = wᵀx + b<br>a = σ(z) = 1 / (1 + e⁻ᶻ)</p>
+<p>We predict 1 (the image is a 9) when a ≥ 0.5, and 0 otherwise.</p>
+<figure>
+<img alt="A 28 by 28 pixel handwritten 9 is flattened into 784 inputs, x1 to x784. Each is multiplied by a weight and summed with a bias b to give z, which the sigmoid function squashes into the probability that the image is a 9." src="resources/neuron-diagram.svg">
+<figcaption>The entire network: 784 weights, one bias, and a sigmoid. That is 785 parameters in total.</figcaption>
+</figure>
 
+<h2>The loss</h2>
+<p>For a probability a and a true label y, we use the cross-entropy loss:</p>
+<p class="article-math">L(a, y) = −y · log(a) − (1 − y) · log(1 − a)</p>
+<p>When the image is a 9 (y = 1) only the first term is active, and the loss grows without bound as a approaches 0. When it is any other digit, only the second term is active, and the loss grows as a approaches 1. Confident wrong answers are punished hardest.</p>
+<figure>
+<img alt="Left: the sigmoid curve rises from 0 to 1 as z goes from -8 to 8, crossing 0.5 at z = 0. Right: the loss for a 9 rises steeply as the predicted probability falls toward 0, and the loss for any other digit rises steeply as the probability approaches 1." src="resources/neuron-sigmoid-loss.svg">
+<figcaption>The sigmoid turns any score into a probability, and the loss curves show why a confidently wrong prediction costs far more than an uncertain one.</figcaption>
+</figure>
+<p>To train the weights we need the gradient of the loss. Applying the chain rule, dL/da · da/dz simplifies neatly to a − y, so for one image the gradients are dz = a − y, dw = x · dz and db = dz. Over all images at once this is vectorised as:</p>
+<p class="article-math">dZ = A − Y<br>dW = (1 / m) · X dZᵀ<br>db = (1 / m) · Σ dZ<br>w ← w − α · dW,  b ← b − α · db</p>
+<p>Training is plain batch gradient descent, with no momentum and no minibatches.</p>
 
+<h2>Training</h2>
+<p>For the main run, all weights and the bias start at 0.1, the learning rate is α = 0.01, and we take 300 steps over all 50,000 training images. Each step does a forward pass, a backward pass and an update:</p>
+<pre><code>    Z = np.dot(np.transpose(W), X) + b
+    A = 1/(1 + np.exp(-Z))
+    term1 = np.multiply(-Y, np.log(A))
+    term2 = np.multiply((1 - Y), np.log(1 - A))
+    L = term1 - term2
+    cost = np.multiply(1/m, np.sum(L))
 
-</div>
-</div></div></div></div></div>
+    dZ = A - Y
+    dW = np.multiply(1/m, np.dot(X, np.transpose(dZ)))
+    db = np.multiply(1/m, np.sum(dZ))
+
+    W = W - np.multiply(alpha, dW)
+    b = b - np.multiply(alpha, db)</code></pre>
+<p>After every step we also measure accuracy on the 10,000 test images, which produces the accuracy curve.</p>
+
+<h2>Results</h2>
+<p>A quick validation run on 500 images checked the code before we moved on to the full set. With 50,000 training images, α = 0.01 and 300 steps, the network classifies 96.40% of the 10,000 test images correctly. The notebook also shows one example each of a true positive, a true negative, a false positive and a false negative. Reducing the training set to 10,000 images, with 100 steps, gives 92.72%, so more data helped.</p>
+<p>The last experiment keeps 50,000 images but drops the learning rate to α = 0.00001. After 100 steps the cost is still 481.39 and accuracy is 9.61%. The steps are simply too small for the weights to move away from their starting values.</p>
+<figure>
+<img alt="Horizontal bars of test accuracy. Training on 50,000 images at learning rate 0.01 for 300 steps scores 96.40%. 10,000 images for 100 steps scores 92.72%. A learning rate of 0.00001 scores 9.61%, the share of nines in the test set, because it answers &quot;9&quot; every time. Always answering &quot;not a 9&quot; would score 90.39%." src="resources/neuron-results.svg">
+<figcaption>Test accuracy for the three runs. The grey bar matters: a classifier that always says "not a 9" already scores 90.39%.</figcaption>
+</figure>
+<p>That baseline changes how the numbers should be read. About 9.61% of the test images are nines, so 9.61% is exactly what a network scores if it answers "9" every time, which is what the tiny-learning-rate run does, since its starting weights push every score positive. Always answering "not a 9" would score 90.39%. Judged against that, the 92.72% run is only slightly better than doing nothing, while the 96.40% run cuts the error rate from 9.61% to 3.60%, almost two-thirds fewer mistakes.</p>
+
+<h3>A note from 2026</h3>
+<p>In the notebook's code, the cost and gradients are divided by 784, the number of pixels, rather than by the number of images. This rescales the effective learning rate and is why the reported cost values, such as 7.37 for the main run, look large for a classifier that is 96% accurate. The accuracy figures are unaffected. The test set was also used to monitor accuracy during training, rather than a separate validation set.</p>
+
+<h2>Takeaway</h2>
+<p>A single neuron with a sigmoid is enough to pick out nines with a useful degree of skill, provided the learning rate is sensible and there is enough data. It also shows why a classification score always needs a baseline for comparison. The full notebook, with every cell and plot, is <a href="https://gist.github.com/ronpicard/ecbbd196f032c1aba9463c2b2e2e7902">on GitHub</a>.</p>
