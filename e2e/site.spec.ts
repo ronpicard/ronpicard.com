@@ -112,6 +112,8 @@ test.describe('home', () => {
   test('leads the BotLegger post with its site link and shows the tour video', async ({ page }) => {
     await page.goto('/')
     const card = page.locator('.project-card').filter({ hasText: 'BotLegger: Your Own Team of AI Bots' })
+    await expect(page.locator('.project-list__item').first()).toHaveClass(/project-list__item--pinned/)
+    await expect(card).toHaveClass(/project-card--featured/)
     await expect(card.locator('.project-card__actions a').first()).toHaveText('BotLegger')
     await card.locator('.project-card__overlay-link').click()
     const actions = page.locator('.article-actions--primary a')

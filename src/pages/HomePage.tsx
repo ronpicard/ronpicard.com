@@ -30,8 +30,11 @@ export default function HomePage() {
     const matching = new Set(
       articles.filter((a) => articleMatchesSearch(query, a.title, a.summary)).map((a) => a.slug),
     )
-    return list.filter((item) => matching.has(item.slug))
-  }, [query])
+    const matches = list.filter((item) => matching.has(item.slug))
+    // Pinned posts lead the unfiltered grid; search results keep site order.
+    if (filtering) return matches
+    return [...matches.filter((item) => item.pinned), ...matches.filter((item) => !item.pinned)]
+  }, [query, filtering])
 
   function showAll() {
     setSearchParams(
@@ -80,11 +83,17 @@ export default function HomePage() {
           </p>
         ) : null}
         <ul className="project-list" role="list">
-          {shown.map((item, index) => (
-            <li key={item.slug} className="project-list__item">
-              <ProjectCard item={item} priority={index < PRIORITY_CARD_COUNT} />
-            </li>
-          ))}
+          {shown.map((item, index) => {
+            const featured = !filtering && item.pinned === true
+            return (
+              <li
+                key={item.slug}
+                className={featured ? 'project-list__item project-list__item--pinned' : 'project-list__item'}
+              >
+                <ProjectCard item={item} priority={index < PRIORITY_CARD_COUNT} featured={featured} />
+              </li>
+            )
+          })}
         </ul>
       </main>
 

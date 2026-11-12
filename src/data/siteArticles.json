@@ -31,7 +31,8 @@
       "src": "https://botlegger.com/video/hero_dark.mp4",
       "poster": "resources/botlegger-tour-2026-11-12.webp",
       "label": "A tour of BotLegger: a team of bots working together, a bot browsing the web with permission, an email waiting for approval, scheduled tasks, teaching a task, plugins, a cloud computer, and adding an API key."
-    }
+    },
+    "pinned": true
   },
   {
     "slug": "pitch-tracker",

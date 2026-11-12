@@ -37,6 +37,8 @@ export type SiteArticleRow = {
   series?: SiteArticleSeries
   /** A video shown at the top of the article in place of its picture. */
   video?: SiteArticleVideo
+  /** Featured: shown first on the home page as a large, full-width card. */
+  pinned?: boolean
 }
 
 export type SiteArticleVideo = {
@@ -170,6 +172,9 @@ export function parseSiteArticleRows(
     if ('noindex' in row && typeof row.noindex !== 'boolean') {
       throw new Error(`${path}.noindex must be a boolean`)
     }
+    if ('pinned' in row && typeof row.pinned !== 'boolean') {
+      throw new Error(`${path}.pinned must be a boolean`)
+    }
     if (seoTitle != null && !seoTitle.trim()) {
       throw new Error(`${path}.seoTitle must not be blank`)
     }
@@ -198,6 +203,7 @@ export function parseSiteArticleRows(
       ...(row.noindex === true ? { noindex: true } : {}),
       ...(series ? { series } : {}),
       ...(video ? { video } : {}),
+      ...(row.pinned === true ? { pinned: true } : {}),
     }
   })
 }

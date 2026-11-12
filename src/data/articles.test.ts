@@ -333,15 +333,13 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     expect(list[0]?.slug).toBe(articles[0]?.slug)
   })
 
-  it('gives cards plain-text summaries capped at 160 characters', () => {
-    const summaries = getArticleTitleList()
-      .map((item) => item.summary)
-      .filter((s): s is string => s !== null)
-    expect(summaries.length).toBeGreaterThan(0)
-    for (const s of summaries) {
-      expect(s).not.toMatch(/<[^>]+>/)
-      expect(s).not.toContain('&amp;')
-      expect(s.length).toBeLessThanOrEqual(160)
+  it('gives cards plain-text summaries capped at 160 characters, 400 for pinned cards', () => {
+    const items = getArticleTitleList().filter((item) => item.summary !== null)
+    expect(items.length).toBeGreaterThan(0)
+    for (const item of items) {
+      expect(item.summary).not.toMatch(/<[^>]+>/)
+      expect(item.summary).not.toContain('&amp;')
+      expect(item.summary!.length).toBeLessThanOrEqual(item.pinned ? 400 : 160)
     }
   })
 })

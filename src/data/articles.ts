@@ -279,6 +279,9 @@ export function articleExtraLinks(a: Article): ArticleExtraLink[] {
     })
 }
 
+const CARD_SUMMARY_MAX = 160
+const PINNED_SUMMARY_MAX = 400
+
 export function getArticleTitleList(list: Article[] = articles) {
   return list.map((a) => ({
     slug: a.slug,
@@ -286,7 +289,10 @@ export function getArticleTitleList(list: Article[] = articles) {
     date: a.date,
     kind: a.kind,
     topic: a.topic,
-    summary: a.summary ? truncateMetaDescription(stripTagsForMeta(a.summary), 160) : null,
+    // A pinned post's large card has room for its whole summary.
+    summary: a.summary
+      ? truncateMetaDescription(stripTagsForMeta(a.summary), a.pinned ? PINNED_SUMMARY_MAX : CARD_SUMMARY_MAX)
+      : null,
     imageUrl: a.imageUrl,
     showDemo: showDemoButton(a),
     showCode: showCodeButton(a),
@@ -295,5 +301,6 @@ export function getArticleTitleList(list: Article[] = articles) {
     releasesUrl: showReleasesButton(a) ? a.releasesUrl : null,
     videoUrl: youtubeWatchUrl(a.youtubeId),
     extraLinks: articleExtraLinks(a),
+    pinned: a.pinned === true,
   }))
 }

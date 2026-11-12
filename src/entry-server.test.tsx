@@ -7,8 +7,12 @@ describe('entry-server render', () => {
     const { appHtml } = await render('/')
     expect(appHtml).toContain('Projects in AI, software &amp; aviation')
     // Every article card is present in the prerendered markup.
-    const cardCount = (appHtml.match(/class="project-card"/g) || []).length
+    const cardCount = (appHtml.match(/class="project-card( project-card--featured)?"/g) || []).length
     expect(cardCount).toBe(getArticleTitleList().length)
+    // Pinned posts are prerendered as large featured cards.
+    expect(appHtml.match(/project-card--featured/g)).toHaveLength(
+      getArticleTitleList().filter((item) => item.pinned).length,
+    )
     // Above-the-fold images load eagerly; the rest stay lazy.
     expect(appHtml).toContain('loading="eager"')
     expect(appHtml).toContain('loading="lazy"')

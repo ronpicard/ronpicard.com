@@ -41,7 +41,7 @@ function item(overrides: Partial<ProjectListItem> = {}): ProjectListItem {
   }
 }
 
-function renderCard(props: { item: ProjectListItem; priority?: boolean }) {
+function renderCard(props: { item: ProjectListItem; priority?: boolean; featured?: boolean }) {
   act(() => {
     root.render(
       <MemoryRouter>
@@ -58,6 +58,14 @@ describe('ProjectCard image loading', () => {
     expect(img?.getAttribute('src')).toMatch(/\/resources\/thumbs\/card\.webp$/)
     expect(img?.getAttribute('loading')).toBe('lazy')
     expect(img?.getAttribute('fetchpriority')).toBeNull()
+  })
+
+  it('shows the full-size image and the featured layout on a pinned card', () => {
+    const img = renderCard({ item: item(), featured: true })
+    expect(img?.getAttribute('src')).toMatch(/\/resources\/card\.png$/)
+    expect(container.querySelector('article')?.className).toBe('project-card project-card--featured')
+    renderCard({ item: item() })
+    expect(container.querySelector('article')?.className).toBe('project-card')
   })
 
   it('loads priority cards eagerly with high fetch priority', () => {

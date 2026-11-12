@@ -68,6 +68,12 @@ describe('parseSiteArticleRows', () => {
     expect(parsed?.noindex).toBe(true)
   })
 
+  it('keeps pinned only when true and rejects non-booleans', () => {
+    expect(parseSiteArticleRows([{ ...validRow(), pinned: true }])[0]?.pinned).toBe(true)
+    expect(parseSiteArticleRows([{ ...validRow(), pinned: false }])[0]).not.toHaveProperty('pinned')
+    expect(() => parseSiteArticleRows([{ ...validRow(), pinned: 'yes' }])).toThrow('site article data[0].pinned')
+  })
+
   it('keeps a valid video and rejects malformed ones', () => {
     const video = {
       src: 'https://botlegger.com/video/hero_dark.mp4',

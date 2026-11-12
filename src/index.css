@@ -767,6 +767,65 @@ body {
   background: #030508;
 }
 
+/* A pinned post: the full grid width, image beside a larger title and summary. */
+.project-list__item--pinned {
+  grid-column: 1 / -1;
+}
+
+.project-card--featured {
+  border-color: rgba(0, 255, 200, 0.28);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 42px -18px rgba(0, 255, 200, 0.45);
+}
+
+.project-card--featured .project-card__title {
+  font-size: clamp(1.4rem, 1.1rem + 1.2vw, 2rem);
+}
+
+.project-card--featured .project-card__summary {
+  font-size: 0.98rem;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+/* The image keeps the 1080p (16:9) frame at every width. */
+.project-card--featured .project-card__media {
+  aspect-ratio: 16 / 9;
+}
+
+/* Stacked, the card stays a readable size instead of filling a wide grid. */
+@media (max-width: 83.99rem) {
+  .project-list__item--pinned {
+    justify-self: center;
+    width: 100%;
+    max-width: 48rem;
+  }
+}
+
+/* Side by side only where the text column fits beside a 16:9 image; narrower screens stack. */
+@media (min-width: 84rem) {
+  .project-card--featured {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .project-card--featured .project-card__media {
+    width: 62%;
+    align-self: flex-start;
+  }
+
+  .project-card--featured .project-card__body {
+    width: 38%;
+    align-self: stretch;
+    justify-content: center;
+    padding: clamp(1.25rem, 2.2vw, 2.25rem);
+  }
+
+  .project-card--featured .project-card__title,
+  .project-card--featured .project-card__summary {
+    flex: 0 0 auto;
+  }
+}
+
 .project-card__media--empty {
   background:
     linear-gradient(145deg, rgba(0, 40, 35, 0.35) 0%, #000 50%, rgba(30, 0, 28, 0.25) 100%);

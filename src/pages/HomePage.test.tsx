@@ -66,6 +66,28 @@ const cardCount = () => container.querySelectorAll('.project-list__item').length
 const status = () => container.querySelector('.post-filter__status')?.textContent ?? ''
 const search = () => container.querySelector('[data-testid="search"]')?.textContent ?? ''
 
+describe('HomePage pinned posts', () => {
+  const pinned = articles.filter((a) => a.pinned)
+
+  it('leads the grid with each pinned post as a large featured card with a longer summary', () => {
+    expect(pinned.map((a) => a.sourceSlug)).toEqual(['botlegger'])
+    renderHome()
+    const first = container.querySelector('.project-list__item')
+    expect(first?.classList.contains('project-list__item--pinned')).toBe(true)
+    expect(first?.querySelector('.project-card--featured')).not.toBeNull()
+    expect(first?.textContent).toContain('BotLegger')
+    expect(first?.querySelector('.project-card__summary')?.textContent).toBe(pinned[0]!.summary)
+    expect(container.querySelectorAll('.project-list__item--pinned')).toHaveLength(1)
+  })
+
+  it('shows search results as a uniform grid, pinned posts included', () => {
+    renderHome('/?q=botlegger')
+    expect(container.querySelector('.project-list__item')?.textContent).toContain('BotLegger')
+    expect(container.querySelector('.project-list__item--pinned')).toBeNull()
+    expect(container.querySelector('.project-card--featured')).toBeNull()
+  })
+})
+
 describe('HomePage live search', () => {
   it('shows every post, no count, and no big filter box before anything is typed', () => {
     renderHome()

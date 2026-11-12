@@ -35,6 +35,8 @@ export type ProjectListItem = {
   videoUrl: string | null
   /** Extra link buttons, the same ones the article page shows. */
   extraLinks: ArticleExtraLink[]
+  /** Featured on the home page as a large card. */
+  pinned?: boolean
 }
 
 function renderExtraLink(link: ArticleExtraLink) {
@@ -62,12 +64,15 @@ type Props = {
   item: ProjectListItem
   /** Above the fold: load eagerly at high priority instead of lazily. */
   priority?: boolean
+  /** Large, full-width layout for a pinned post, using the full-size image. */
+  featured?: boolean
 }
 
-export function ProjectCard({ item, priority = false }: Props) {
+export function ProjectCard({ item, priority = false, featured = false }: Props) {
   const fullSrc = resolveAssetUrl(item.imageUrl)
   const [thumbFailed, setThumbFailed] = useState(false)
-  const generatedThumb = thumbFailed ? null : resolveThumbAssetUrl(item.imageUrl)
+  // The big featured card shows the full-size image; small cards use the generated thumbnail.
+  const generatedThumb = thumbFailed || featured ? null : resolveThumbAssetUrl(item.imageUrl)
   const thumbSrc = generatedThumb ?? fullSrc
   if (priority && thumbSrc) {
     preload(thumbSrc, { as: 'image', fetchPriority: 'high' })
@@ -79,7 +84,10 @@ export function ProjectCard({ item, priority = false }: Props) {
   const to = articlePath(item.slug)
 
   return (
-    <article className="project-card" data-project={item.slug}>
+    <article
+      className={featured ? 'project-card project-card--featured' : 'project-card'}
+      data-project={item.slug}
+    >
       <Link className="project-card__overlay-link" to={to} aria-label={`Open ${item.title}`} />
       <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
         {thumbSrc ? (
