@@ -145,11 +145,17 @@ test.describe('seo head', () => {
 })
 
 test.describe('search', () => {
-  test('filters articles, supports arrow selection, and closes on Escape', async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('button', { name: 'Search posts' }).click()
+  test('lists matches in a dropdown off the home page, with arrow selection and Enter', async ({
+    page,
+  }) => {
+    await page.goto('/topics/software-and-tools/')
     const input = page.getByRole('combobox', { name: 'Search articles' })
+    // Phones show the box only after tapping the search icon.
+    const toggle = page.getByRole('button', { name: 'Search posts' })
+    if (await toggle.isVisible()) await toggle.click()
+    else await input.click()
     await expect(input).toBeFocused()
+    await expect(input).toHaveAttribute('placeholder', 'Search')
     // Under 16px, iOS Safari zooms the page when the input gains focus.
     const fontSize = await input.evaluate((element) => {
       return Number.parseFloat(window.getComputedStyle(element).fontSize)
@@ -162,10 +168,30 @@ test.describe('search', () => {
     await expect(option).toHaveAttribute('aria-selected', 'true')
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(/\/blog\/clamav-control\/?$/)
+    await expect(page.getByRole('listbox', { name: 'Matching posts' })).toHaveCount(0)
+  })
 
-    await page.getByRole('button', { name: 'Search posts' }).click()
+  test('on the home page, the header box filters the post grid live', async ({ page }) => {
+    await page.goto('/')
+    const cards = page.locator('.project-list__item')
+    const total = await cards.count()
+    const input = page.getByRole('searchbox', { name: 'Search posts' })
+    const toggle = page.getByRole('button', { name: 'Search posts' })
+    if (await toggle.isVisible()) await toggle.click()
+    else await input.click()
+    await expect(input).toBeFocused()
+    await page.keyboard.type('ClamAV')
+    await expect(cards).toHaveCount(1)
+    await expect(page.getByRole('status')).toHaveText(`1 of ${total} posts match “ClamAV”`)
+    await expect(page).toHaveURL(/\?q=ClamAV$/)
+    await expect(page.getByRole('listbox')).toHaveCount(0)
+    // The phone layout must still fit without sideways scrolling.
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > window.innerWidth,
+    )
+    expect(overflow).toBe(false)
     await page.keyboard.press('Escape')
-    await expect(page.getByRole('combobox', { name: 'Search articles' })).toHaveCount(0)
+    await expect(cards).toHaveCount(total)
   })
 })
 

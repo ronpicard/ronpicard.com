@@ -98,6 +98,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - The Pool Rooms demo iframe MUST allow its form-based Start Exploring action; `allow-forms` MUST be limited to the exact approved `https://ronpicard.github.io/pool-rooms-game-web-app/` demo URL.
 - Blog `:slug` route params MUST pass `isSafePublicSlug()` before loading an article.
 - Search input MUST be bounded (`SEARCH_QUERY_MAX_LEN`) and match titles and summaries after the same case and whitespace normalization.
+- Search MUST be a compact header box with a “Search” placeholder beside the header icons on wide screens; at 56rem and narrower it MUST collapse to the search icon, which opens the box over the header icons and focuses it within the same tap (so iOS raises the keyboard). On the home page, the box MUST narrow the post grid to matching posts on every keystroke (matching full summaries), with no dropdown, showing a live “N of M posts match” count, a way to show all posts when nothing matches, clearing on Escape, and keeping the query in the `?q=` URL parameter (replacing, not pushing, history entries) so it survives back navigation. On other pages it MUST list matches in a dropdown, and Enter with no highlighted match MUST open the home page filtered by the query.
 - Production HTML MUST include a Content-Security-Policy that allows only required third-party hosts (YouTube nocookie embeds, `ronpicard.github.io` frames, GitHub raw/API for README fetch). Because the CSP is delivered in a `<meta>` tag, it MUST NOT include header-only directives such as `frame-ancestors`, which browsers ignore there.
 - Web fonts MUST be self-hosted from `public/fonts/`; the CSP MUST NOT allow third-party font or stylesheet hosts.
 - YouTube embeds MUST use validated video IDs and the nocookie embed host where applicable.
@@ -107,7 +108,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 - Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content. Article pages MUST wrap the post's header and content in an `<article>` inside `<main>`.
 - Article body images MUST have descriptive `alt` text unless purely decorative.
 - Charts and diagrams made for an article SHOULD be SVG files in `public/resources/` placed with `<img>` (the sanitizer strips inline `<svg>`), each inside a `<figure>` with a `<figcaption>`; their `alt` text MUST describe what the figure shows, not just name it. Equations SHOULD be set in a `<p class="article-math">` block.
-- Search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape.
+- Away from the home page, search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape; on the home page the box MUST be a plain search field whose result count is announced through a status region.
 - Cards MUST NOT nest interactive elements inside a card-level link role; all interactive controls MUST have visible keyboard focus.
 - Narrow viewports (phone-width) MUST avoid horizontal page overflow on home and article routes.
 - GitHub Pages demo embeds MUST use a tall viewport-relative frame on narrow screens and MUST offer a full-view control that expands the embed to nearly the viewport (dismissible via the control or Escape).

@@ -55,10 +55,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (332 tests) |
+| `npm test` | Run Vitest unit tests once (346 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (19 tests × desktop and mobile projects; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (20 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + thumbnails + share cards + Vite + SSR bundle + prerender (use before deploy) |
@@ -93,6 +93,7 @@ Unit tests use [Vitest](https://vitest.dev/) (`vitest.config.ts`, `@vitest/cover
 | `shared/articleTopics.test.ts`, `src/components/RelatedPosts.test.tsx` | Topic hubs, kind defaults, and related-post links |
 | `src/lib/githubReadme.test.ts`, `src/lib/fetchGithubReadme.test.ts`, `src/lib/fetchArticleBody.test.ts` | Dynamic content rendering + fetch limits |
 | `src/lib/siteSearchQuery.test.ts` | Search normalize/match bounds |
+| `src/components/SiteSearch.test.tsx`, `src/pages/HomePage.test.tsx` | Header search box: phone toggle, dropdown keyboard navigation, live home-grid filtering (including fast typing), empty state, Escape, and the `?q=` URL parameter |
 | `src/lib/articleDisplay.test.ts`, `src/lib/assetUrl.test.ts` | Display helpers and asset path resolution |
 | `src/components/DynamicArticleBody.test.tsx` | Article loading, prerendered bodies, sanitization, and fallback UI |
 | `src/components/Seo.test.tsx` | One set of head tags, swapped on client navigation |

@@ -25,10 +25,11 @@ afterEach(() => {
 
 function LocationProbe() {
   const location = useLocation()
-  return <output data-testid="path">{location.pathname}</output>
+  return <output data-testid="path">{location.pathname + location.search}</output>
 }
 
-function renderSearch(initialPath = '/') {
+/** Renders the search on a non-home page unless told otherwise. */
+function renderSearch(initialPath = '/blog/some-post/') {
   act(() => {
     root.render(
       <MemoryRouter initialEntries={[initialPath]}>
@@ -41,20 +42,19 @@ function renderSearch(initialPath = '/') {
   })
 }
 
-function toggle() {
-  return container.querySelector<HTMLButtonElement>('.site-search__toggle')!
-}
+const path = () => container.querySelector('[data-testid="path"]')?.textContent
+const root$ = () => container.querySelector<HTMLDivElement>('.site-search')!
+const toggle = () => container.querySelector<HTMLButtonElement>('.site-search__toggle')!
+const input = () => container.querySelector<HTMLInputElement>('.site-search__input')!
+const options = () => container.querySelectorAll<HTMLAnchorElement>('.site-search__link')
+const activeId = () => container.querySelector('[aria-selected="true"]')?.id
 
-function input() {
-  return container.querySelector<HTMLInputElement>('.site-search__input')
-}
-
-function openPanel() {
-  act(() => toggle().click())
+function focusInput() {
+  act(() => input().focus())
 }
 
 function type(text: string) {
-  const el = input()!
+  const el = input()
   act(() => {
     const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
     setter.call(el, text)
@@ -64,120 +64,176 @@ function type(text: string) {
 
 function pressKey(key: string) {
   act(() => {
-    input()!.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
+    input().dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }))
   })
 }
 
 describe('SiteSearch', () => {
-  it('opens with the full result list capped at 24 and closes from the toggle', async () => {
+  it('is a small always-present box with a "Search" placeholder', () => {
     renderSearch()
-    expect(input()).toBeNull()
+    expect(input().placeholder).toBe('Search')
+    expect(input().type).toBe('search')
+    expect(container.querySelector('.site-search__results')).toBeNull()
+  })
 
-    openPanel()
-    expect(input()).not.toBeNull()
-    // An empty query matches everything; the list is capped at 24 entries.
-    expect(container.querySelectorAll('.site-search__link').length).toBe(24)
-
-    // The deferred autofocus lands on the input.
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 5))
-    })
+  it('opens the box from the phone toggle and focuses it within the tap', () => {
+    renderSearch()
+    expect(root$().dataset.expanded).toBeUndefined()
+    expect(toggle().getAttribute('aria-expanded')).toBe('false')
+    act(() => toggle().click())
+    expect(root$().dataset.expanded).toBe('true')
     expect(document.activeElement).toBe(input())
 
+    // Leaving it empty collapses it again; leaving text keeps it open.
+    act(() => input().blur())
+    expect(root$().dataset.expanded).toBeUndefined()
     act(() => toggle().click())
-    expect(input()).toBeNull()
+    type('chess')
+    act(() => input().blur())
+    expect(root$().dataset.expanded).toBe('true')
   })
 
-  it('lists matching articles for a query and reports no matches otherwise', () => {
-    renderSearch()
-    openPanel()
+  describe('away from the home page', () => {
+    it('lists matching posts in a dropdown and reports no matches otherwise', () => {
+      renderSearch()
+      focusInput()
+      expect(input().getAttribute('role')).toBe('combobox')
+      const known = getArticleTitleList()[0]!
+      type(known.title.slice(0, 12))
+      const titles = [...container.querySelectorAll('.site-search__link-title')].map(
+        (el) => el.textContent,
+      )
+      expect(titles).toContain(known.title)
+      expect(input().getAttribute('aria-expanded')).toBe('true')
 
-    const known = getArticleTitleList()[0]!
-    type(known.title.slice(0, 12))
-    const titles = Array.from(container.querySelectorAll('.site-search__link-title')).map(
-      (el) => el.textContent,
-    )
-    expect(titles).toContain(known.title)
-
-    type('zzzz-no-such-article-zzzz')
-    expect(container.querySelector('.site-search__empty')?.textContent).toBe('No matches.')
-  })
-
-  it('supports arrow-key navigation with wrap-around and Enter to open the active result', () => {
-    renderSearch()
-    openPanel()
-    type('a')
-    const options = container.querySelectorAll('.site-search__link')
-    expect(options.length).toBeGreaterThan(1)
-
-    pressKey('ArrowDown')
-    expect(container.querySelector('[aria-selected="true"]')?.id).toMatch(/option-0$/)
-    pressKey('ArrowUp')
-    expect(container.querySelector('[aria-selected="true"]')?.id).toMatch(
-      new RegExp(`option-${options.length - 1}$`),
-    )
-    pressKey('ArrowDown')
-    expect(container.querySelector('[aria-selected="true"]')?.id).toMatch(/option-0$/)
-
-    const activeSlug = container
-      .querySelector<HTMLAnchorElement>('[aria-selected="true"]')!
-      .getAttribute('href')
-    pressKey('Enter')
-    expect(container.querySelector<HTMLOutputElement>('[data-testid="path"]')?.textContent).toBe(
-      activeSlug,
-    )
-    // Navigation closes the panel.
-    expect(input()).toBeNull()
-  })
-
-  it('ignores arrow keys with no results and Enter with no active option', () => {
-    renderSearch()
-    openPanel()
-    type('zzzz-no-such-article-zzzz')
-    pressKey('ArrowDown')
-    pressKey('Enter')
-    expect(input()).not.toBeNull()
-    expect(container.querySelector<HTMLOutputElement>('[data-testid="path"]')?.textContent).toBe('/')
-  })
-
-  it('marks the hovered option active', () => {
-    renderSearch()
-    openPanel()
-    type('a')
-    const second = container.querySelectorAll<HTMLAnchorElement>('.site-search__link')[1]!
-    act(() => {
-      // React drives onMouseEnter from delegated mouseover events.
-      second.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+      type('zzzz-no-such-article-zzzz')
+      expect(container.querySelector('.site-search__empty')?.textContent).toBe('No matches.')
     })
-    expect(container.querySelector('[aria-selected="true"]')?.id).toMatch(/option-1$/)
+
+    it('caps the dropdown at 24 results', () => {
+      renderSearch()
+      focusInput()
+      type('a')
+      expect(options().length).toBe(24)
+    })
+
+    it('supports arrow keys with wrap-around and Enter to open the active result', () => {
+      renderSearch()
+      focusInput()
+      type('a')
+      const count = options().length
+      pressKey('ArrowDown')
+      expect(activeId()).toMatch(/option-0$/)
+      pressKey('ArrowUp')
+      expect(activeId()).toMatch(new RegExp(`option-${count - 1}$`))
+      pressKey('ArrowDown')
+      expect(activeId()).toMatch(/option-0$/)
+
+      const href = container.querySelector<HTMLAnchorElement>('[aria-selected="true"]')!
+        .getAttribute('href')
+      pressKey('Enter')
+      expect(path()).toBe(href)
+      // Moving to another page empties and closes the box.
+      expect(input().value).toBe('')
+      expect(container.querySelector('.site-search__results')).toBeNull()
+    })
+
+    it('sends Enter with no highlighted result to the filtered home page', () => {
+      renderSearch()
+      focusInput()
+      type('  formal methods ')
+      pressKey('Enter')
+      expect(path()).toBe('/?q=formal+methods')
+    })
+
+    it('ignores arrow keys with no results and Enter on an empty box', () => {
+      renderSearch()
+      focusInput()
+      type('zzzz-no-such-article-zzzz')
+      pressKey('ArrowDown')
+      expect(activeId()).toBeUndefined()
+      type('')
+      pressKey('Enter')
+      expect(path()).toBe('/blog/some-post/')
+    })
+
+    it('marks the hovered option active', () => {
+      renderSearch()
+      focusInput()
+      type('a')
+      act(() => {
+        // React drives onMouseEnter from delegated mouseover events.
+        options()[1]!.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+      })
+      expect(activeId()).toMatch(/option-1$/)
+    })
+
+    it('clears on Escape, then collapses on a second Escape', () => {
+      renderSearch()
+      act(() => toggle().click())
+      type('chess')
+      pressKey('Escape')
+      expect(input().value).toBe('')
+      expect(container.querySelector('.site-search__results')).toBeNull()
+      expect(root$().dataset.expanded).toBe('true')
+      pressKey('Escape')
+      expect(root$().dataset.expanded).toBeUndefined()
+    })
+
+    it('closes the dropdown on clicks outside it but not inside', () => {
+      renderSearch()
+      focusInput()
+      type('chess')
+      act(() => {
+        input().dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+      })
+      expect(container.querySelector('.site-search__results')).not.toBeNull()
+      act(() => {
+        document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+      })
+      expect(container.querySelector('.site-search__results')).toBeNull()
+      expect(input().value).toBe('chess')
+    })
   })
 
-  it('closes on Escape and on clicks outside the panel', () => {
-    renderSearch()
-    openPanel()
-    act(() => {
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+  describe('on the home page', () => {
+    it('writes the query to ?q= instead of opening a dropdown', () => {
+      renderSearch('/')
+      focusInput()
+      expect(input().getAttribute('role')).toBeNull()
+      type('chess')
+      expect(path()).toBe('/?q=chess')
+      expect(container.querySelector('.site-search__results')).toBeNull()
+      pressKey('ArrowDown')
+      pressKey('Enter')
+      expect(path()).toBe('/?q=chess')
+      type('')
+      expect(path()).toBe('/')
     })
-    expect(input()).toBeNull()
 
-    openPanel()
-    act(() => {
-      document.body.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    it('starts from the ?q= in the URL and shows the box open', () => {
+      renderSearch('/?q=solo')
+      expect(input().value).toBe('solo')
+      expect(root$().dataset.expanded).toBe('true')
     })
-    expect(input()).toBeNull()
 
-    // A click inside the panel keeps it open.
-    openPanel()
-    act(() => {
-      input()!.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }))
+    it('keeps every keystroke when typing faster than the URL updates', () => {
+      renderSearch('/')
+      act(() => {
+        const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!
+        for (const text of ['c', 'cl', 'cla', 'clam', 'clama', 'clamav']) {
+          setter.call(input(), text)
+          input().dispatchEvent(new Event('input', { bubbles: true }))
+        }
+      })
+      expect(input().value).toBe('clamav')
+      expect(path()).toBe('/?q=clamav')
     })
-    expect(input()).not.toBeNull()
   })
 
   it('caps the query length', () => {
     renderSearch()
-    openPanel()
     type('x'.repeat(500))
-    expect(input()!.value.length).toBeLessThan(500)
+    expect(input().value.length).toBeLessThan(500)
   })
 })

@@ -1,7 +1,15 @@
+import { useMemo } from 'react'
 import { Seo } from '../components/Seo'
 import { SiteTopBar } from '../components/SiteTopBar'
-import { Link } from 'react-router-dom'
-import { getArticlesByTopic, getArticleTitleList, ProjectCard } from '../features/articles'
+import { SEARCH_PARAM } from '../components/SiteSearch'
+import { Link, useSearchParams } from 'react-router-dom'
+import {
+  articles,
+  getArticlesByTopic,
+  getArticleTitleList,
+  ProjectCard,
+} from '../features/articles'
+import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
 import { ARTICLE_TOPICS, topicPath } from '../../shared/articleTopics'
 import { homeSeoInput } from '../../shared/seoHead'
 
@@ -12,6 +20,30 @@ const topics = ARTICLE_TOPICS.map((t) => ({ ...t, count: getArticlesByTopic(t.sl
 const PRIORITY_CARD_COUNT = 4
 
 export default function HomePage() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  // The header search box writes the query; the grid follows it.
+  const query = searchParams.get(SEARCH_PARAM) ?? ''
+  const filtering = normalizeSearchQuery(query) !== ''
+
+  // Match against the full summaries, as the header search does; the card list truncates them.
+  const shown = useMemo(() => {
+    const matching = new Set(
+      articles.filter((a) => articleMatchesSearch(query, a.title, a.summary)).map((a) => a.slug),
+    )
+    return list.filter((item) => matching.has(item.slug))
+  }, [query])
+
+  function showAll() {
+    setSearchParams(
+      (params) => {
+        const updated = new URLSearchParams(params)
+        updated.delete(SEARCH_PARAM)
+        return updated
+      },
+      { replace: true, preventScrollReset: true },
+    )
+  }
+
   return (
     <div className="page page--home">
       <Seo input={homeSeoInput()} />
@@ -36,8 +68,19 @@ export default function HomePage() {
       </nav>
 
       <main id="main-content" className="main" tabIndex={-1}>
+        <p className="post-filter__status" role="status">
+          {filtering ? `${shown.length} of ${list.length} posts match “${query.trim()}”` : ''}
+        </p>
+        {shown.length === 0 ? (
+          <p className="post-filter__empty">
+            No posts match that.{' '}
+            <button type="button" className="post-filter__clear" onClick={showAll}>
+              Show all posts
+            </button>
+          </p>
+        ) : null}
         <ul className="project-list" role="list">
-          {list.map((item, index) => (
+          {shown.map((item, index) => (
             <li key={item.slug} className="project-list__item">
               <ProjectCard item={item} priority={index < PRIORITY_CARD_COUNT} />
             </li>

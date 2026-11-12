@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Searching on the home page narrows the posts live as you type, matching titles and summaries, with a count of how many posts match. Escape or Show all posts clears it, and the search is kept in the address (`?q=`), so it's still there when you come back from an article.
 - Three music tools join the portfolio as the latest projects, each with a screenshot thumbnail, an embedded demo, source code and demo links, and an introduction: Instrument Tuner, a chromatic and per-string tuner with a cents needle; Frequency Player, a 20 Hz–20 kHz tone generator with a note dial and piano keys; and Pitch Tracker, which draws your singing pitch on a live piano roll. The embedded Tuner and Pitch Tracker demos can't use the microphone inside the page, so they offer a link to open in their own tab.
 - A BotLegger icon in the header, after Wyvern Systems, links to botlegger.com.
 - A second GitHub icon in the header, between Wyvern Systems and BotLegger, opens the Wyvern Systems organization on GitHub. On narrow phones the header icons sit a little closer so the name still fits on one line.
@@ -17,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Search is now a small box with "Search" in it, next to the header icons, instead of a large pop-up panel. On phones, tap the search icon to open the box. On other pages it lists matching posts under the box, and pressing Enter shows every match on the home page.
 - Linear Regression Using Gradient Descent has been refreshed as a pilot for the older posts: a new header image, also used for its link preview, that shows the data and fitted line beside the loss surface, three new charts drawn from a real run of the algorithm (the line fitting itself to the data, the path gradient descent takes across the loss surface, and the loss per iteration), section headings, properly typeset equations, a short Python implementation, a corrected loss function, and a full summary on its card and in search results instead of a cut-off sentence. Figure captions across all articles are now styled beneath their images.
 - Instrument Tuner, Frequency Player, and Pitch Tracker show their new desktop layouts and brighter colours in their blog thumbnails and link previews, captured November 7, 2026.
 - The LinkedIn and GitHub icons are now each company's own white logo files, unaltered, and they no longer glow on hover.

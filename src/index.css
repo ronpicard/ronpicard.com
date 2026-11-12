@@ -331,63 +331,127 @@ body {
 
 .site-search {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.site-search__toggle {
+.site-top-bar__icon.site-search__toggle {
+  display: none;
   cursor: pointer;
 }
 
-.site-search__panel {
-  position: absolute;
-  top: calc(100% + 0.45rem);
-  right: 0;
-  width: min(100vw - 2rem, 20rem);
-  max-height: min(70dvh, 22rem);
+.site-search__box {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  padding: 0.65rem;
+  align-items: center;
+}
+
+.site-search__glyph {
+  position: absolute;
+  left: 0.6rem;
+  display: flex;
+  color: var(--accent-blue);
+  pointer-events: none;
+}
+
+.site-search__glyph svg {
+  width: 18px;
+  height: 18px;
+}
+
+.site-search__input {
+  width: 11rem;
+  height: 2.35rem;
+  padding: 0 0.75rem 0 2.1rem;
+  font-family: var(--font-sans);
+  /* Must stay >= 16px or iOS Safari zooms the page when the input is focused. */
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  outline: none;
+  transition:
+    width 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.site-search__input::placeholder {
+  color: rgba(160, 200, 195, 0.6);
+}
+
+.site-search__input:focus {
+  border-color: rgba(0, 255, 200, 0.45);
+  box-shadow: 0 0 0 2px rgba(0, 255, 200, 0.12);
+}
+
+@media (min-width: 68rem) {
+  .site-search__input:focus {
+    width: 14rem;
+  }
+}
+
+/* Phones and narrow tablets: no room beside the name, so the box hides behind
+   the icon and opens over the header icons when tapped. */
+@media (max-width: 56rem) {
+  .site-top-bar__social {
+    position: relative;
+  }
+
+  .site-search {
+    position: static;
+  }
+
+  .site-top-bar__icon.site-search__toggle {
+    display: flex;
+  }
+
+  .site-search[data-expanded] .site-top-bar__icon.site-search__toggle {
+    visibility: hidden;
+  }
+
+  .site-search__box {
+    display: none;
+  }
+
+  .site-search[data-expanded] .site-search__box {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    z-index: 60;
+    width: min(100vw - 2rem, 17rem);
+    transform: translateY(-50%);
+  }
+
+  .site-search[data-expanded] .site-search__input {
+    width: 100%;
+    background: rgba(4, 8, 10, 0.98);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.7);
+  }
+}
+
+.site-search__results {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 50;
+  width: min(100vw - 2rem, 20rem);
+  max-height: min(60dvh, 20rem);
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0.4rem;
   border-radius: var(--radius);
-  background: rgba(4, 8, 10, 0.96);
+  background: rgba(4, 8, 10, 0.97);
   border: 1px solid var(--border);
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.5),
     0 12px 40px rgba(0, 0, 0, 0.75),
     0 0 24px rgba(0, 255, 200, 0.06);
   backdrop-filter: blur(12px);
-  z-index: 50;
-}
-
-.site-search__input {
-  width: 100%;
-  margin: 0 0 0.5rem;
-  padding: 0.5rem 0.65rem;
-  font-family: var(--font-sans);
-  /* Must stay >= 16px or iOS Safari zooms the page when the input is focused. */
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text);
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  outline: none;
-}
-
-.site-search__input::placeholder {
-  color: rgba(160, 200, 195, 0.5);
-}
-
-.site-search__input:focus {
-  border-color: rgba(0, 255, 200, 0.4);
-  box-shadow: 0 0 0 1px rgba(0, 255, 200, 0.12);
-}
-
-.site-search__results {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
 }
 
 .site-search__empty {
@@ -582,6 +646,39 @@ body {
 
 .main {
   flex: 1;
+}
+
+.post-filter__status {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.post-filter__status:empty {
+  margin: 0;
+}
+
+.post-filter__empty {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+}
+
+.post-filter__clear {
+  padding: 0;
+  font: inherit;
+  color: var(--accent-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.post-filter__clear:hover {
+  text-decoration: underline;
+}
+
+.post-filter__clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .project-list {
@@ -1702,14 +1799,13 @@ body {
     overflow-x: hidden;
   }
 
-  .site-search__panel {
+  .site-search__results {
     position: fixed;
     z-index: 100;
     top: calc(env(safe-area-inset-top, 0px) + 4.5rem);
     left: max(0.65rem, env(safe-area-inset-left, 0px));
     right: max(0.65rem, env(safe-area-inset-right, 0px));
     width: auto;
-    max-width: none;
     max-height: min(58dvh, 21rem);
     box-sizing: border-box;
   }
