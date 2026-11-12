@@ -8,7 +8,7 @@
 <p class="article-math">ŷ = m·x + b</p>
 <p>Here m is the slope of the line, b is the y-intercept, and ŷ (“y-hat”) is the value the line predicts for a given x. The goal of linear regression is to find the values of m and b that make the line fit the scattered data as closely as possible.</p>
 <figure>
-<img alt="Forty scattered points rising from left to right. Dashed lines show the model after 0, 1, 2 and 50 iterations, starting flat at zero and swinging up toward the data. The solid final line after 1500 iterations is y = 2.28x + 4.32." src="resources/lr-gd-fit.svg">
+<img class="article-animated" alt="Forty scattered points rising from left to right. Dashed lines show the model after 0, 1, 2 and 50 iterations, starting flat at zero and swinging up toward the data. The solid final line after 1500 iterations is y = 2.28x + 4.32." src="resources/lr-gd-fit.svg">
 <figcaption>Gradient descent starts with a flat line (m = 0, b = 0) and adjusts it a little on every iteration until it settles on the best fit, y = 2.28x + 4.32.</figcaption>
 </figure>
 
@@ -30,7 +30,7 @@
 <p>L is the <strong>learning rate</strong>, a small constant that sets the step size. It controls how fast and how accurately the algorithm converges: too small and it crawls, too large and it overshoots and diverges. Taking the partial derivatives of our loss function gives:</p>
 <p class="article-math">∂E/∂m = −(2/n) · Σᵢ xᵢ · (yᵢ − (m·xᵢ + b))<br>∂E/∂b = −(2/n) · Σᵢ (yᵢ − (m·xᵢ + b))</p>
 <figure>
-<img alt="Contour map of mean squared error over slope m and intercept b, darkest where the error is lowest. The descent path starts at m = 0, b = 0, jumps almost straight to the right slope within a few steps, then creeps along a long shallow valley in the b direction until it reaches the minimum near m = 2.28, b = 4.32." src="resources/lr-gd-loss-surface.svg">
+<img class="article-animated" alt="Contour map of mean squared error over slope m and intercept b, darkest where the error is lowest. The descent path starts at m = 0, b = 0, jumps almost straight to the right slope within a few steps, then creeps along a long shallow valley in the b direction until it reaches the minimum near m = 2.28, b = 4.32." src="resources/lr-gd-loss-surface.svg">
 <figcaption>Each point on this map is one possible line. The path shows where gradient descent goes: the loss is steep in the m direction, so the slope gets close within two steps, but shallow in the b direction, so the intercept takes hundreds of steps to settle.</figcaption>
 </figure>
 
@@ -57,7 +57,7 @@
 <h2>What the loss looks like</h2>
 <p>Note that the loss will not reach zero unless every point lies exactly on a line. Real data has noise, so the loss levels off at the smallest error any straight line can achieve. On our dataset, the loss drops from 279 to under 10 in the first five iterations, then slowly approaches its floor of 4.64.</p>
 <figure>
-<img alt="Mean squared error per iteration on a log scale. It drops from 279 to under 10 within the first few iterations, then slowly approaches the best possible value of 4.64, which is set by the noise in the data and can never reach zero." src="resources/lr-gd-loss-curve.svg">
+<img class="article-animated" alt="Mean squared error per iteration on a log scale. It drops from 279 to under 10 within the first few iterations, then slowly approaches the best possible value of 4.64, which is set by the noise in the data and can never reach zero." src="resources/lr-gd-loss-curve.svg">
 <figcaption>Loss per iteration. Most of the improvement happens almost immediately; the rest is the slow crawl along the valley shown in the loss surface.</figcaption>
 </figure>
 <p>After 1500 iterations, gradient descent finds m = 2.28 and b = 4.32, matching the exact least-squares solution to two decimal places. For a simple line, that solution can also be computed directly, but gradient descent is worth learning because the same idea of following the slope of a loss function downhill is what trains neural networks, where no direct solution exists.</p>

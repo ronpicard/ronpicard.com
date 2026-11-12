@@ -28,17 +28,17 @@
 <h2>What the networks learned</h2>
 <p>Without regularisation the network fits the training data very closely: its cost falls to 0.107 and its boundary wraps around individual points. Regularised runs trade a little training fit for a smoother boundary.</p>
 <figure>
-<img alt="Three panels of two interleaving half-moons of points with the network's decision boundary drawn as a white line. Without regularisation the boundary bends around individual points (train 93%, test 87%). With an L2 penalty (train 92%, test 88%) and with dropout (train 94%, test 88%) it is smoother. This is an illustrative re-run on similar data, not the notebook's own plot." src="resources/moons-boundaries.svg">
+<img class="article-animated" alt="Three panels of two interleaving half-moons of points with the network's decision boundary drawn as a white line. Without regularisation the boundary bends around individual points (train 93%, test 87%). With an L2 penalty (train 92%, test 88%) and with dropout (train 94%, test 88%) it is smoother. This is an illustrative re-run on similar data, not the notebook's own plot." src="resources/moons-boundaries.svg">
 <figcaption>Compare how closely each boundary follows individual points. This is an illustrative re-run on similar data, not the notebook's own plot, but it shows the same effect: the penalised and dropout networks draw smoother curves.</figcaption>
 </figure>
 <p>The learning curves look very different between methods, and the reasons matter when reading them.</p>
 <figure>
-<img alt="Training cost logged every 10,000 iterations for the five runs. Without regularisation the cost falls to 0.107; with L2 it levels at 0.188 (λ 0.10) and 0.279 (λ 0.85), because the penalty is included; the dropout runs are noisy, around 0.7 (keep 0.95) and 1.3 (keep 0.85), since each logged value comes from one randomly thinned network." src="resources/moons-learning-curves.svg">
+<img class="article-animated" alt="Training cost logged every 10,000 iterations for the five runs. Without regularisation the cost falls to 0.107; with L2 it levels at 0.188 (λ 0.10) and 0.279 (λ 0.85), because the penalty is included; the dropout runs are noisy, around 0.7 (keep 0.95) and 1.3 (keep 0.85), since each logged value comes from one randomly thinned network." src="resources/moons-learning-curves.svg">
 <figcaption>The L2 curves settle higher because the penalty is part of the cost. The dropout curves are noisy because each logged value comes from a single, randomly thinned network.</figcaption>
 </figure>
 <p>On the 200 test points, every network beats the 84% linear baseline:</p>
 <figure>
-<img alt="Horizontal bars of test accuracy. A straight-line logistic regression scores 84%. The network scores 88.5% without regularisation, 89.0% with L2 λ 0.85, 89.5% with L2 λ 0.10, 88.5% with dropout keep 0.85, and 89.0% with dropout keep 0.95." src="resources/moons-accuracy.svg">
+<img class="article-animated" alt="Horizontal bars of test accuracy. A straight-line logistic regression scores 84%. The network scores 88.5% without regularisation, 89.0% with L2 λ 0.85, 89.5% with L2 λ 0.10, 88.5% with dropout keep 0.85, and 89.0% with dropout keep 0.95." src="resources/moons-accuracy.svg">
 <figcaption>The non-linear network gains about five points over the straight-line model. The differences among the five networks are small.</figcaption>
 </figure>
 

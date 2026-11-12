@@ -6,7 +6,7 @@
 <p>For a 3 by 3 kernel K, each value of the output feature map is a weighted sum over one patch of the input I:</p>
 <p class="article-math">F(i, j) = Σₐ Σᵦ K(a, b) · I(i + a, j + b)</p>
 <figure>
-<img alt="A 6 by 6 input patch, dark on the left half (0) and bright on the right (9), is convolved with a 3 by 3 vertical-edge kernel whose columns are -1, 0 and 1. The 4 by 4 feature map has 0 where the patch is flat and 27 along the boundary, so the filter responds only to the edge." src="resources/cnn-convolution.svg">
+<img class="article-animated" alt="A 6 by 6 input patch, dark on the left half (0) and bright on the right (9), is convolved with a 3 by 3 vertical-edge kernel whose columns are -1, 0 and 1. The 4 by 4 feature map has 0 where the patch is flat and 27 along the boundary, so the filter responds only to the edge." src="resources/cnn-convolution.svg">
 <figcaption>One convolution worked out by hand. The kernel subtracts the pixels on its left from those on its right, so it outputs 0 over flat regions and 27 exactly where the dark-to-bright edge is.</figcaption>
 </figure>
 <p>A layer with 32 such kernels learns 32 different small detectors at once, and the next layer combines their outputs into larger shapes.</p>
@@ -17,7 +17,7 @@
 <h2>The base network</h2>
 <p>The base network stacks two convolutions, a max-pooling step, and a small fully connected classifier, with dropout after the pooling layer and before the output.</p>
 <figure>
-<img alt="Flow diagram of the base convolutional network: a 28 by 28 grey-scale input; a 3 by 3 convolution with 32 filters giving 26 by 26 by 32; a 3 by 3 convolution with 64 filters giving 24 by 24 by 64; 2 by 2 max pooling to 12 by 12 by 64; dropout of 25%; flatten to 9,216 values; a dense layer of 128 ReLU units; dropout of 50%; and a 10-way softmax output." src="resources/cnn-architecture.svg">
+<img class="article-animated" alt="Flow diagram of the base convolutional network: a 28 by 28 grey-scale input; a 3 by 3 convolution with 32 filters giving 26 by 26 by 32; a 3 by 3 convolution with 64 filters giving 24 by 24 by 64; 2 by 2 max pooling to 12 by 12 by 64; dropout of 25%; flatten to 9,216 values; a dense layer of 128 ReLU units; dropout of 50%; and a 10-way softmax output." src="resources/cnn-architecture.svg">
 <figcaption>The base network, with the shape of the data after each layer. Pooling halves the width and height, and flattening turns the 12 by 12 by 64 volume into 9,216 values for the dense layer.</figcaption>
 </figure>
 <p>Dropout in Keras takes the fraction of units to drop, so the two dropout layers remove 25% and 50% of their inputs during training. The loss is categorical cross-entropy, and the final layer is a 10-way softmax:</p>
@@ -50,7 +50,7 @@ model.add(Dense(10, activation='softmax'))</code></pre>
 </tbody>
 </table>
 <figure>
-<img alt="Test accuracy per epoch for five runs over 20 epochs. The extra-convolution network finishes highest at 98.64%; Adam and the batch-64 run both finish at 98.44%; the base network at 98.08%. The run with a strong L2 penalty starts at 28% and only reaches 93.12%." src="resources/cnn-test-accuracy.svg">
+<img class="article-animated" alt="Test accuracy per epoch for five runs over 20 epochs. The extra-convolution network finishes highest at 98.64%; Adam and the batch-64 run both finish at 98.44%; the base network at 98.08%. The run with a strong L2 penalty starts at 28% and only reaches 93.12%." src="resources/cnn-test-accuracy.svg">
 <figcaption>Test accuracy after every epoch. Four of the runs bunch together near 98% within a few epochs; the strongly regularized run starts far behind and never catches up.</figcaption>
 </figure>
 

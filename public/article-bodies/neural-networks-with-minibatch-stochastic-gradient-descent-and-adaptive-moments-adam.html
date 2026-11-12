@@ -3,7 +3,7 @@
 <h2>The task and network</h2>
 <p>The task is the same: classify MNIST digits as 9 (label 1) or not 9 (label 0). Images are flattened to 784 values and scaled by 1/255, and we train on the first 50,000 images and test on the next 10,000, reshuffling every epoch. The network is the 784, 20, 10, 1 network from the momentum post: two ReLU hidden layers and a sigmoid output.</p>
 <figure>
-<img alt="A fully connected network drawn as columns of circles: 784 pixel inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output giving the probability the image is a 9." src="resources/mnist9-network.svg">
+<img class="article-animated" alt="A fully connected network drawn as columns of circles: 784 pixel inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output giving the probability the image is a 9." src="resources/mnist9-network.svg">
 <figcaption>The same network as in the momentum post, so the optimisers are the only thing that changes.</figcaption>
 </figure>
 
@@ -12,7 +12,7 @@
 <p class="article-math">m ← β₁ · m + (1 − β₁) · g<br>v ← β₂ · v + (1 − β₂) · g²<br>m̂ = m / (1 − β₁ᵗ),  v̂ = v / (1 − β₂ᵗ)<br>w ← w − α · m̂ / (√v̂ + ε)</p>
 <p>The corrections 1 / (1 − βᵗ) matter early on, when the averages start at zero and are biased toward zero. In the notebook ε is 1e-6.</p>
 <figure>
-<img alt="Contour map of a long, narrow valley. Over 60 steps from the same start, plain gradient descent zig-zags and ends 1.42 from the goal, momentum ends 0.07 away, and Adam, which scales each weight's step by its own gradient history, heads almost straight for the goal and ends 0.23 away. This is an illustrative cost surface, not the MNIST network's." src="resources/adam-paths.svg">
+<img class="article-animated" alt="Contour map of a long, narrow valley. Over 60 steps from the same start, plain gradient descent zig-zags and ends 1.42 from the goal, momentum ends 0.07 away, and Adam, which scales each weight's step by its own gradient history, heads almost straight for the goal and ends 0.23 away. This is an illustrative cost surface, not the MNIST network's." src="resources/adam-paths.svg">
 <figcaption>An illustrative cost surface, not the MNIST network's. Adam heads almost straight for the goal because each direction gets its own step size, though after 60 steps it ends 0.23 away, behind momentum's 0.07.</figcaption>
 </figure>
 
@@ -31,7 +31,7 @@ W[layer] = W[layer] - np.multiply(alpha, np.multiply(V_dW[layer], val1 ))</code>
 <h2>Results</h2>
 <p>We ran three settings of (β₁, β₂) on the 50,000 images, and measured accuracy on the 10,000 test images.</p>
 <figure>
-<img alt="Horizontal bars of test accuracy for three Adam settings with batch 50 and learning rate 0.01. β₁ 0.9 and β₂ 0.9: 98.36%. β₁ 0.5 and β₂ 0.9: 98.94%, the best. β₁ 0.9 and β₂ 0.5: 90.39%, exactly what a model that always answers &quot;not a 9&quot; would score." src="resources/adam-results.svg">
+<img class="article-animated" alt="Horizontal bars of test accuracy for three Adam settings with batch 50 and learning rate 0.01. β₁ 0.9 and β₂ 0.9: 98.36%. β₁ 0.5 and β₂ 0.9: 98.94%, the best. β₁ 0.9 and β₂ 0.5: 90.39%, exactly what a model that always answers &quot;not a 9&quot; would score." src="resources/adam-results.svg">
 <figcaption>Two settings reach 98.36% and 98.94%. The third, 90.39%, is not a worse model so much as no model: it is the score of always answering &quot;not a 9&quot;.</figcaption>
 </figure>
 <ul>

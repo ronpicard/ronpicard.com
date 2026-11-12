@@ -8,7 +8,7 @@
 <p>We wrote the domain in PPDDL, the probabilistic planning language. Two teams, red and blue, each field the same number of fighters, and every fighter is randomly a 4th- or 5th-generation aircraft. Fighters queue in a line and the front two duel each round. Exactly one of the two is destroyed, the survivor stays at the front, and the next fighter in the destroyed one's team steps up.</p>
 <p>Each round blue chooses one of three actions: a short-range strike, a long-range strike, or a stealth strike. The chance blue wins the duel depends on the action and on the generations of the two fighters. Blue wins when every red fighter is destroyed with at least one blue fighter alive, which earns a reward of 1. If all blue fighters are destroyed, the problem is a dead end.</p>
 <figure>
-<img alt="Top: a blue queue and a red queue of 4th- and 5th-generation fighters facing each other; the front two duel each round. Bottom: a grid of the chance blue wins a duel for each matchup and blue action. While blue has fighters in reserve, stealth is the strongest or joint-strongest action in every matchup (70%, 70%, 90% and 30%), but once blue is down to its last fighter stealth drops to 30%, 30%, 70% and 10%, so the best action depends on the state of the battle." src="resources/asnets-wargame.svg">
+<img class="article-animated" alt="Top: a blue queue and a red queue of 4th- and 5th-generation fighters facing each other; the front two duel each round. Bottom: a grid of the chance blue wins a duel for each matchup and blue action. While blue has fighters in reserve, stealth is the strongest or joint-strongest action in every matchup (70%, 70%, 90% and 30%), but once blue is down to its last fighter stealth drops to 30%, 30%, 70% and 10%, so the best action depends on the state of the battle." src="resources/asnets-wargame.svg">
 <figcaption>The game and its odds. Stealth looks like the safe choice until blue's last fighter is in front, when its odds fall sharply, so no single action is best in every state and the policy has to depend on the battle.</figcaption>
 </figure>
 
@@ -31,7 +31,7 @@
 <h2>Results on unseen scenarios</h2>
 <p>On test problems of the same size as the training problems (Trials 1 to 3), the ASNet trails its LM-Cut teacher slightly, as expected of a student. In Trials 4 and 5, which test on larger battles than the network was trained on, it wins more often.</p>
 <figure>
-<img alt="Grouped bars of average wins out of 30 for each trial. ASNet: 19.25, 21, 20, 26.5, 27.55. LM-Cut: 22.69, 22.69, 21.94, 22.69, 21.34. LM-Cut wins more in trials 1 to 3; ASNet wins more in trials 4 and 5, which test on larger battles than it was trained on." src="resources/asnets-win-rates.svg">
+<img class="article-animated" alt="Grouped bars of average wins out of 30 for each trial. ASNet: 19.25, 21, 20, 26.5, 27.55. LM-Cut: 22.69, 22.69, 21.94, 22.69, 21.34. LM-Cut wins more in trials 1 to 3; ASNet wins more in trials 4 and 5, which test on larger battles than it was trained on." src="resources/asnets-win-rates.svg">
 <figcaption>Average wins out of 30 on test scenarios. The ASNet reaches 26.50 in Trial 4 and 27.55 in Trial 5, against 22.69 and 21.34 for LM-Cut.</figcaption>
 </figure>
 <p>We offered two speculative explanations: larger battles simply give more chances, or the network exploits the order of the fighters in each queue, which LM-Cut ignores. No variance or significance tests were run, so these remain open questions for future trials.</p>
@@ -39,7 +39,7 @@
 <h2>Runtime</h2>
 <p>In Trial 5 we also timed both methods as the battles grew from 3 to 13 fighters per team.</p>
 <figure>
-<img alt="Seconds per scenario on a log scale against fighters per team from 3 to 13. Both lines climb steadily. The ASNet takes 0.040 s at 3 fighters and 20.4 s at 13; LM-Cut takes 0.00017 s at 3 and 7.87 s at 13, so LM-Cut is faster at every measured size. Training the ASNet took a further 5,573 seconds once." src="resources/asnets-runtime.svg">
+<img class="article-animated" alt="Seconds per scenario on a log scale against fighters per team from 3 to 13. Both lines climb steadily. The ASNet takes 0.040 s at 3 fighters and 20.4 s at 13; LM-Cut takes 0.00017 s at 3 and 7.87 s at 13, so LM-Cut is faster at every measured size. Training the ASNet took a further 5,573 seconds once." src="resources/asnets-runtime.svg">
 <figcaption>Seconds per scenario. Both methods slow down as battles grow, and LM-Cut is faster at every size we measured.</figcaption>
 </figure>
 <p>Measured runtime grows steeply for both methods, from 0.040 s to 20.4 s for the ASNet and from 0.00017 s to 7.87 s for LM-Cut. The ASNet also needs a one-time training cost of about 5,573 seconds. The paper's argument is a projection: if the ASNet's total time flattens while LM-Cut's keeps growing exponentially, the two would cross at about 18 fighters per team. That crossover is an extrapolation from fitted trend lines and was not measured.</p>

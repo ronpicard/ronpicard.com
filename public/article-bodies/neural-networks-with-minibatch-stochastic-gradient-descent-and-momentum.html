@@ -6,7 +6,7 @@
 
 <h2>The network</h2>
 <figure>
-<img alt="A fully connected network drawn as columns of circles: 784 pixel inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output giving the probability the image is a 9." src="resources/mnist9-network.svg">
+<img class="article-animated" alt="A fully connected network drawn as columns of circles: 784 pixel inputs, a hidden layer of 20 ReLU units, a hidden layer of 10 ReLU units, and one sigmoid output giving the probability the image is a 9." src="resources/mnist9-network.svg">
 <figcaption>Every run uses the same architecture, 784 inputs, then 20 ReLU units, then 10 ReLU units, then one sigmoid output.</figcaption>
 </figure>
 <p>Each layer applies a linear map and an activation; the hidden layers use ReLU and the output uses the sigmoid so it reads as a probability:</p>
@@ -33,7 +33,7 @@
 <h2>Results</h2>
 <p>We trained four configurations on the 50,000 training images and measured wall-clock time and accuracy on the 10,000 test images. The learning rate was 0.01 in every run.</p>
 <figure>
-<img alt="Horizontal bars of training time. Batch 500 without momentum: 2,118 s for 99.15% test accuracy. Batch 27 without momentum: 745 s for 99.18%. Batch 27 with momentum 0.1: 262 s for 99.16%. Batch 27 with momentum 0.9: 230 s for 99.22%, the fastest and most accurate." src="resources/momentum-training-time.svg">
+<img class="article-animated" alt="Horizontal bars of training time. Batch 500 without momentum: 2,118 s for 99.15% test accuracy. Batch 27 without momentum: 745 s for 99.18%. Batch 27 with momentum 0.1: 262 s for 99.16%. Batch 27 with momentum 0.9: 230 s for 99.22%, the fastest and most accurate." src="resources/momentum-training-time.svg">
 <figcaption>Accuracy barely changes, all four runs land near 99.2%, but training time drops from 2,118 s to 230 s.</figcaption>
 </figure>
 <ul>

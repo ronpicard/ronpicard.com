@@ -6,7 +6,7 @@
 <p class="article-math">h(x) = θ₀ + θ₁ · x</p>
 <p>To compute every prediction at once, we add a column of ones to the inputs so that the bias becomes just another parameter. Stacking the inputs into a matrix X (one row per city, a 1 followed by the population), all predictions are a single matrix product, Xθ.</p>
 <figure>
-<img alt="Flow diagram: load population and profit for each city, normalise both columns, initialise θ to (1, 1) with learning rate 0.1, then repeat 100 times: compute the cost, compute the gradient, and update θ. Finally undo the normalisation." src="resources/lr2d-pipeline.svg">
+<img class="article-animated" alt="Flow diagram: load population and profit for each city, normalise both columns, initialise θ to (1, 1) with learning rate 0.1, then repeat 100 times: compute the cost, compute the gradient, and update θ. Finally undo the normalisation." src="resources/lr2d-pipeline.svg">
 <figcaption>The whole notebook in one picture: normalise, run 100 rounds of cost, gradient and update, then undo the normalisation to get answers in dollars.</figcaption>
 </figure>
 
@@ -36,12 +36,12 @@
 <h2>Results</h2>
 <p>The cost starts at 0.662 at θ = (1, 1), falls to 0.157 by iteration 20, and then flattens at 0.149. That floor is the lowest cost any straight line can reach on this data, because the points are not perfectly aligned.</p>
 <figure>
-<img alt="Cost per iteration. It falls from 0.662 at the start to 0.157 by iteration 20 and flattens at 0.149, the lowest cost any straight line can reach on this data." src="resources/lr2d-learning-curve.svg">
+<img class="article-animated" alt="Cost per iteration. It falls from 0.662 at the start to 0.157 by iteration 20 and flattens at 0.149, the lowest cost any straight line can reach on this data." src="resources/lr2d-learning-curve.svg">
 <figcaption>The learning curve drops quickly and is nearly flat after about 20 iterations, so 100 iterations is far more than this problem needs.</figcaption>
 </figure>
 <p>The final parameters in normalised units are θ₀ ≈ 0.00003 and θ₁ = 0.838. The intercept is essentially zero, as it must be: after standardising, the best line passes through the mean of the data. The slope of 0.838 says that a city one standard deviation above average in population is expected to have a food truck profit 0.838 standard deviations above average.</p>
 <figure>
-<img alt="Contour map of the cost over the normalised intercept θ₀ and slope θ₁. The path starts at θ = (1, 1) and moves in a straight line, with steps getting shorter, to the minimum at θ = (0, 0.838)." src="resources/lr2d-cost-surface.svg">
+<img class="article-animated" alt="Contour map of the cost over the normalised intercept θ₀ and slope θ₁. The path starts at θ = (1, 1) and moves in a straight line, with steps getting shorter, to the minimum at θ = (0, 0.838)." src="resources/lr2d-cost-surface.svg">
 <figcaption>Each point on this map is one line. Because the features are standardised, the bowl is round and the path heads almost straight for the minimum, taking shorter steps as the slope flattens.</figcaption>
 </figure>
 <p>To get a prediction in dollars, we normalise the population, apply the line, and multiply by the profit standard deviation and add back the profit mean.</p>

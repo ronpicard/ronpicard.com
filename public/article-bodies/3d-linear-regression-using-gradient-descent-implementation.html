@@ -10,7 +10,7 @@
 <p>The key idea is to avoid writing a loop over houses or over parameters. We build a matrix X with one row per house: a 1 for the bias, the normalised size, and the normalised number of bedrooms. With the parameters in a 3 by 1 vector θ, a single product gives every prediction at once:</p>
 <p class="article-math">ŷ = Xθ</p>
 <figure>
-<img alt="A matrix diagram. X has one row per house with a 1 for the bias, the size and the number of bedrooms. Multiplying X by the 3 by 1 parameter vector theta gives a column of predicted prices, one per house. Below, the gradient of the cost for all three parameters at once: one over m times X transpose times (X theta minus y)." src="resources/lr3d-matrix.svg">
+<img class="article-animated" alt="A matrix diagram. X has one row per house with a 1 for the bias, the size and the number of bedrooms. Multiplying X by the 3 by 1 parameter vector theta gives a column of predicted prices, one per house. Below, the gradient of the cost for all three parameters at once: one over m times X transpose times (X theta minus y)." src="resources/lr3d-matrix.svg">
 <figcaption>Each row of X times θ is one house's predicted price. The same matrices give the gradient for all three parameters in one expression.</figcaption>
 </figure>
 <p>The cost and its gradient follow directly:</p>
@@ -41,7 +41,7 @@
 <li>Undo the price scaling: multiply by the price standard deviation and add the price mean.</li>
 </ol>
 <figure>
-<img alt="Five steps: a new 925 square foot home with 2 bedrooms is normalised with the training means and standard deviations, the model gives -1.296 in normalised units, the scaling is undone with the price standard deviation and mean, and the predicted price is $166,000." src="resources/lr3d-prediction.svg">
+<img class="article-animated" alt="Five steps: a new 925 square foot home with 2 bedrooms is normalised with the training means and standard deviations, the model gives -1.296 in normalised units, the scaling is undone with the price standard deviation and mean, and the predicted price is $166,000." src="resources/lr3d-prediction.svg">
 <figcaption>The normalised output of −1.296 is meaningless on its own. Scaling it back with the training price statistics gives a predicted price of about $166,000.</figcaption>
 </figure>
 <p>The result is $166,000.27. The home being priced is the author's own apartment, treated as if it were a house.</p>

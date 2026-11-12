@@ -8,7 +8,7 @@
 <h2>The networks</h2>
 <p>All networks take the 54 inputs and end in a 7-way softmax. Compared with the earlier study, we use ReLU hidden units instead of sigmoid, the Adam optimizer instead of plain gradient descent with momentum, dropout of 0.25 on every hidden layer, and deeper and wider architectures, with optional L1 or L2 weight penalties. Every trial uses minibatches of 512, and Adam uses a learning rate of 0.001, momentum 0.9, and RMSProp decay 0.999.</p>
 <figure>
-<img alt="Three network shapes drawn as bars whose heights grow with layer width. Trial 1 is 54 inputs, 120 hidden units, 7 outputs. Trial 2 adds a 20-unit layer. Trials 3 to 5 use 54, 1024, 512, 216 and 7 units." src="resources/forest-networks.svg">
+<img class="article-animated" alt="Three network shapes drawn as bars whose heights grow with layer width. Trial 1 is 54 inputs, 120 hidden units, 7 outputs. Trial 2 adds a 20-unit layer. Trials 3 to 5 use 54, 1024, 512, 216 and 7 units." src="resources/forest-networks.svg">
 <figcaption>The three architectures. Trials 1 and 2 are small, with one or two hidden layers; trials 3 to 5 share one much wider network and differ only in regularization.</figcaption>
 </figure>
 <p>The L1 and L2 strengths, 0.00001 each, were chosen because stronger values stopped the network from fitting and weaker ones did little. We expected L1 to help, since it pushes weights to zero and could sparsify the 44 binary inputs, and L2 to hurt.</p>
@@ -30,14 +30,14 @@
 <h2>Results</h2>
 <p>Every trial beats the earlier 70.58%, with test accuracies from 74.04% to 76.57%. The best is Trial 3, the 54-1024-512-216-7 network with dropout alone, at 76.57%, nearly six points above the earlier result.</p>
 <figure>
-<img alt="Horizontal bars of test accuracy. The earlier single-hidden-layer network from Blackard et al. scores 70.58%. The five new networks score 74.70% (trial 1), 74.04% (trial 2), 76.57% (trial 3), 75.47% (trial 4), 74.30% (trial 5). Trial 3, the 54-1024-512-216-7 network, is best." src="resources/forest-test-accuracy.svg">
+<img class="article-animated" alt="Horizontal bars of test accuracy. The earlier single-hidden-layer network from Blackard et al. scores 70.58%. The five new networks score 74.70% (trial 1), 74.04% (trial 2), 76.57% (trial 3), 75.47% (trial 4), 74.30% (trial 5). Trial 3, the 54-1024-512-216-7 network, is best." src="resources/forest-test-accuracy.svg">
 <figcaption>Test accuracy on 569,672 held-out cells. Even the small Trial 1 network, with the same 54-120-7 shape as the earlier study, gains about four points.</figcaption>
 </figure>
 <p>Adding a second hidden layer in Trial 2 did not help (74.04% against 74.70%), so the extra capacity was not the limit for small networks. The wide network of Trial 3 did help. The regularizers did not: L1 in Trial 4 cost about a point (75.47%) and L2 in Trial 5 cost more (74.30%), with a final cost of 1.6036 against 0.0004 for Trial 3.</p>
 
 <h2>Overfitting</h2>
 <figure>
-<img alt="For each trial, a pair of dots joined by a line: training accuracy on the right, test accuracy on the left. The gaps are 18.3 points (trial 1), 20.9 points (trial 2), 22.5 points (trial 3), 23.7 points (trial 4), 19.0 points (trial 5), so every network fits its 11,340 training cells far better than new ones." src="resources/forest-train-vs-test.svg">
+<img class="article-animated" alt="For each trial, a pair of dots joined by a line: training accuracy on the right, test accuracy on the left. The gaps are 18.3 points (trial 1), 20.9 points (trial 2), 22.5 points (trial 3), 23.7 points (trial 4), 19.0 points (trial 5), so every network fits its 11,340 training cells far better than new ones." src="resources/forest-train-vs-test.svg">
 <figcaption>Training accuracy minus test accuracy is between 18 and 24 points in every trial. The bigger the network, the better it fits and the wider the gap.</figcaption>
 </figure>
 <p>The networks fit their 11,340 training cells almost perfectly while generalizing much less well. The loss curves show the same pattern: the small networks of Trials 1 and 2 stay noisy and never settle, while the wide networks of Trials 3 to 5 drop to near zero within about 5,000 steps.</p>

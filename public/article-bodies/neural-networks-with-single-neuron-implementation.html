@@ -10,7 +10,7 @@
 <p class="article-math">z = wᵀx + b<br>a = σ(z) = 1 / (1 + e⁻ᶻ)</p>
 <p>We predict 1 (the image is a 9) when a ≥ 0.5, and 0 otherwise.</p>
 <figure>
-<img alt="A 28 by 28 pixel handwritten 9 is flattened into 784 inputs, x1 to x784. Each is multiplied by a weight and summed with a bias b to give z, which the sigmoid function squashes into the probability that the image is a 9." src="resources/neuron-diagram.svg">
+<img class="article-animated" alt="A 28 by 28 pixel handwritten 9 is flattened into 784 inputs, x1 to x784. Each is multiplied by a weight and summed with a bias b to give z, which the sigmoid function squashes into the probability that the image is a 9." src="resources/neuron-diagram.svg">
 <figcaption>The entire network: 784 weights, one bias, and a sigmoid. That is 785 parameters in total.</figcaption>
 </figure>
 
@@ -19,7 +19,7 @@
 <p class="article-math">L(a, y) = −y · log(a) − (1 − y) · log(1 − a)</p>
 <p>When the image is a 9 (y = 1) only the first term is active, and the loss grows without bound as a approaches 0. When it is any other digit, only the second term is active, and the loss grows as a approaches 1. Confident wrong answers are punished hardest.</p>
 <figure>
-<img alt="Left: the sigmoid curve rises from 0 to 1 as z goes from -8 to 8, crossing 0.5 at z = 0. Right: the loss for a 9 rises steeply as the predicted probability falls toward 0, and the loss for any other digit rises steeply as the probability approaches 1." src="resources/neuron-sigmoid-loss.svg">
+<img class="article-animated" alt="Left: the sigmoid curve rises from 0 to 1 as z goes from -8 to 8, crossing 0.5 at z = 0. Right: the loss for a 9 rises steeply as the predicted probability falls toward 0, and the loss for any other digit rises steeply as the probability approaches 1." src="resources/neuron-sigmoid-loss.svg">
 <figcaption>The sigmoid turns any score into a probability, and the loss curves show why a confidently wrong prediction costs far more than an uncertain one.</figcaption>
 </figure>
 <p>To train the weights we need the gradient of the loss. Applying the chain rule, dL/da · da/dz simplifies neatly to a − y, so for one image the gradients are dz = a − y, dw = x · dz and db = dz. Over all images at once this is vectorised as:</p>
@@ -47,7 +47,7 @@
 <p>A quick validation run on 500 images checked the code before we moved on to the full set. With 50,000 training images, α = 0.01 and 300 steps, the network classifies 96.40% of the 10,000 test images correctly. The notebook also shows one example each of a true positive, a true negative, a false positive and a false negative. Reducing the training set to 10,000 images, with 100 steps, gives 92.72%, so more data helped.</p>
 <p>The last experiment keeps 50,000 images but drops the learning rate to α = 0.00001. After 100 steps the cost is still 481.39 and accuracy is 9.61%. The steps are simply too small for the weights to move away from their starting values.</p>
 <figure>
-<img alt="Horizontal bars of test accuracy. Training on 50,000 images at learning rate 0.01 for 300 steps scores 96.40%. 10,000 images for 100 steps scores 92.72%. A learning rate of 0.00001 scores 9.61%, the share of nines in the test set, because it answers &quot;9&quot; every time. Always answering &quot;not a 9&quot; would score 90.39%." src="resources/neuron-results.svg">
+<img class="article-animated" alt="Horizontal bars of test accuracy. Training on 50,000 images at learning rate 0.01 for 300 steps scores 96.40%. 10,000 images for 100 steps scores 92.72%. A learning rate of 0.00001 scores 9.61%, the share of nines in the test set, because it answers &quot;9&quot; every time. Always answering &quot;not a 9&quot; would score 90.39%." src="resources/neuron-results.svg">
 <figcaption>Test accuracy for the three runs. The grey bar matters: a classifier that always says "not a 9" already scores 90.39%.</figcaption>
 </figure>
 <p>That baseline changes how the numbers should be read. About 9.61% of the test images are nines, so 9.61% is exactly what a network scores if it answers "9" every time, which is what the tiny-learning-rate run does, since its starting weights push every score positive. Always answering "not a 9" would score 90.39%. Judged against that, the 92.72% run is only slightly better than doing nothing, while the 96.40% run cuts the error rate from 9.61% to 3.60%, almost two-thirds fewer mistakes.</p>
