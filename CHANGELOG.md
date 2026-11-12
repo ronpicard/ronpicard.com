@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Linear Regression Using Gradient Descent has been refreshed as a pilot for the older posts: a new header image, also used for its link preview, that shows the data and fitted line beside the loss surface, three new charts drawn from a real run of the algorithm (the line fitting itself to the data, the path gradient descent takes across the loss surface, and the loss per iteration), section headings, properly typeset equations, a short Python implementation, a corrected loss function, and a full summary on its card and in search results instead of a cut-off sentence. Figure captions across all articles are now styled beneath their images.
 - Instrument Tuner, Frequency Player, and Pitch Tracker show their new desktop layouts and brighter colours in their blog thumbnails and link previews, captured November 7, 2026.
 - The LinkedIn and GitHub icons are now each company's own white logo files, unaltered, and they no longer glow on hover.
 - New logo: a rounded "rp" monogram now sits before the name in the header and is the browser-tab icon, and the name is set in the rounder Outfit typeface to match it. On page load the name types out letter by letter behind a mint block cursor, which then keeps blinking.

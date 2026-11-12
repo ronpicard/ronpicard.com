@@ -106,6 +106,7 @@ Functional and security constraints for **ronpicard.com**. Update this file when
 
 - Each route MUST expose one visible `<h1>` and a keyboard-accessible skip link to its main content. Article pages MUST wrap the post's header and content in an `<article>` inside `<main>`.
 - Article body images MUST have descriptive `alt` text unless purely decorative.
+- Charts and diagrams made for an article SHOULD be SVG files in `public/resources/` placed with `<img>` (the sanitizer strips inline `<svg>`), each inside a `<figure>` with a `<figcaption>`; their `alt` text MUST describe what the figure shows, not just name it. Equations SHOULD be set in a `<p class="article-math">` block.
 - Search MUST expose the ARIA combobox/listbox pattern and support Arrow Up/Down, Enter, and Escape.
 - Cards MUST NOT nest interactive elements inside a card-level link role; all interactive controls MUST have visible keyboard focus.
 - Narrow viewports (phone-width) MUST avoid horizontal page overflow on home and article routes.

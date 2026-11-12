@@ -1,135 +1,63 @@
-<div class="sqs-layout sqs-grid-12 columns-12"><div class="row sqs-row"><div class="col sqs-col-12 span-12"><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">When it comes to machine learning a popular starting place tends to be linear regression using gradient descent. The reasoning is that it is a simple optimization problem, that is easy to understand and helps to gradually introduce a common topic in machine learning.</p><p class="">Many of you are probably familiar with linear regression; the process of making a line correlating scattered data (see figure below). Linear regression is useful to so many applications. Whether you are trying to predict the inflationary price increases at the supermarket, or you are trying to predict how high a person can jump based on their height, the usefulness of linear regression spans seemingly endless domains. </p><p class="">As a gradual introduction to machine learning, we will discuss how to perform a linear regression (line fitting approximation) on a set of 2-D data (X &amp; Y) utilizing a gradient descent algorithm.</p></div>
-
-
-  
-
-
-
-</div>
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">For us to make use of this technique, we must understand two fundamental things. First, what is linear regression? Second, what is gradient descent? Most of you are probably familiar with the former, so I will speed through that portion and focus on the lesser-known gradient descent portion.</p><p class="">First, we discuss linear regression. Simply put, linear regression is a line-fitting technique to fit a line onto scattered data. The goal is to create a line-based model that can be used to predict a value based on one or more other values. </p><p class="">Linear regression (in the 2-D case) involves the classic equation for a line as shown below.</p><p class=""></p><p class="">y=m * x + b</p><p class=""></p><p class="">Where m represents the slope of the line, and b represents the y-intercept.</p><p class="">The goal of linear regression is to find values for m &amp; b that allow the line to best fit (model) the scattered data (if the scattered data were to be a line). The figure above provides an illustration of an approximate line fit (linear regression) for the scattered data in the plot.</p><p class="">Second, we discuss gradient descent. Gradient descent is a recursive optimization algorithm that is utilized to find the minimum of a function. To illustrate this conceptually, let's imagine a hiker walking down the slope of a hill, to reach the bottom. When the hiker starts, he will take large steps; however, as he approaches his goal, he will begin to take smaller and smaller steps to prevent passing his goal.</p></div>
-
-
-  
-
-
-
-</div>
-</div></div><div class="sqs-block image-block sqs-block-image"><div class="sqs-block-content">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-    
-  
-    <div class="image-block-outer-wrapper
-          layout-caption-below
-          design-layout-inline
-          combination-animation-site-default
-          individual-animation-site-default
-          individual-text-animation-site-default">
-
-      
-
-      
-        <figure class="sqs-block-image-figure
-              intrinsic">
-          
-        
-        
-
-        
-          
-            
-          <div class="image-block-wrapper">
-            <div class="sqs-image-shape-container-element
-              
-          
-        
-              has-aspect-ratio">
-                
-                
-                
-                
-                
-                
-                
-                <img alt="Hand-drawn stick figures stepping down a curved slope toward a goal at the bottom, like gradient descent" src="resources/1001a2ee1ad4aa.png">
-
-            </div>
-          </div>
-        
-          
-        
-
-        
-          
-          <figcaption class="image-caption-wrapper">
-            <div class="image-caption"><p class="">Example of a line produced by linear regression.</p></div>
-          </figcaption>
-        
-      
-        </figure>
-      
-
-    </div>
-  
-
-
-  
-
-
-</div></div><div class="sqs-block website-component-block sqs-block-website-component sqs-block-html html-block"><div class="sqs-block-content"><div class="sqs-text-block-container">
-  
-  <div class="sqs-html-content"><p class="">In the case of the hiker, the value he is trying to minimize is the distance between himself and the bottom of the hill. In the case of linear regression, the value we are trying to minimize is the error between each of the y-values in the scatter plot. This can be expressed in terms of an equation called a Loss Function.</p><p class=""><br>E = 1/n * <strong>summation[i=0][n-1]{(yi - mean(yi))^2}</strong></p><p class=""><strong><br>Since we know the mean will be on our line, we can derive the following.</strong></p><p class=""><strong><br>E = 1/n * summation[i=0][n-1]{(yi - (m * xi + b))^2}</strong></p><p class=""><strong><br>Now that we know what we are minimizing, we can introduce our iterative approach to doing so. Since our error function has two independent variables (m and b) we need to adjust the values to minimize our error. To adjust these values with our gradient descent algorithm, we need to use the following formulas.</strong></p><p class=""><strong><br>m = m - Lm<br></strong>b = b - Lb</p><p class=""><br>In these formulas, L is an arbitrary learning rate constant and is the result of the partial derivatives of our loss function. The learning rate can be thought of as a negative gain factor that controls the convergence speed and accuracy of the algorithm. As you probably guessed, we are going to derive the formulas for the partial derivatives of our loss function concerning these two independent variables. The partial derivatives are shown below.</p><p class=""></p><p class="">Dm = -2/n * summation[i=0][n-1](yi - (m * xi + b))(xi)<br>Db = -2/n * summation[i=0][n-1](yi - (m * xi + b))<br><br><br>Now that we have derived all of our equations we can utilize them to perform a gradient descent linear regression with the following steps:</p><ol><li><p class="">Initially set m and b to be 0, and set our learning rate to a constant 0.0001. Having a small learning rate like this will allow for greater accuracy. Since our algorithm is small, this will have minimal impact on the speed with which our implemented program will converge.</p></li><li><p class="">Next, we calculate the partial derivative values.</p></li><li><p class="">Next, we calculate our new m and b values.</p></li><li><p class="">Finally, we calculate the loss function error. We will terminate our algorithm when our loss function reaches an error of zero or some very small value. Upon termination, the values of m and b will provide us with our linear regression line equation.</p></li></ol><p class=""></p></div>
-
-
-  
-
-
-
-</div>
-</div></div></div></div></div>
+<p>When it comes to machine learning, a popular starting place is linear regression using gradient descent. It is a simple optimization problem that is easy to understand, and it gradually introduces ideas that show up everywhere in machine learning.</p>
+<p>Many of you are probably familiar with linear regression: the process of fitting a line to scattered data. It is useful in a huge range of applications. Whether you are trying to predict price increases at the supermarket, or how high a person can jump based on their height, the usefulness of linear regression spans seemingly endless domains.</p>
+<p>As a gradual introduction to machine learning, we will discuss how to perform a linear regression (a line-fitting approximation) on a set of 2-D data (X &amp; Y) using a gradient descent algorithm. To make every step concrete, the figures in this post come from actually running the algorithm on a small dataset of 40 points.</p>
+
+<h2>What is linear regression?</h2>
+<p>For us to make use of this technique, we must understand two fundamental things. First, what is linear regression? Second, what is gradient descent? Most of you are probably familiar with the former, so I will speed through that portion and focus on the lesser-known gradient descent portion.</p>
+<p>Simply put, linear regression is a technique for fitting a line onto scattered data. The goal is to create a line-based model that can be used to predict one value from one or more other values. In the 2-D case, it uses the classic equation for a line:</p>
+<p class="article-math">ŷ = m·x + b</p>
+<p>Here m is the slope of the line, b is the y-intercept, and ŷ (“y-hat”) is the value the line predicts for a given x. The goal of linear regression is to find the values of m and b that make the line fit the scattered data as closely as possible.</p>
+<figure>
+<img alt="Forty scattered points rising from left to right. Dashed lines show the model after 0, 1, 2 and 50 iterations, starting flat at zero and swinging up toward the data. The solid final line after 1500 iterations is y = 2.28x + 4.32." src="resources/lr-gd-fit.svg">
+<figcaption>Gradient descent starts with a flat line (m = 0, b = 0) and adjusts it a little on every iteration until it settles on the best fit, y = 2.28x + 4.32.</figcaption>
+</figure>
+
+<h2>What is gradient descent?</h2>
+<p>Gradient descent is an iterative optimization algorithm used to find the minimum of a function. To picture it, imagine a hiker walking down a hill to reach the bottom. At first the hiker takes large steps; as they get close to the goal, they take smaller and smaller steps so they don't overshoot it.</p>
+<figure>
+<img alt="Hand-drawn stick figures stepping down a curved slope toward a goal at the bottom, like gradient descent" src="resources/1001a2ee1ad4aa.png">
+<figcaption>Gradient descent as a hiker heading downhill: big steps where the slope is steep, smaller steps near the bottom.</figcaption>
+</figure>
+
+<h2>The loss function</h2>
+<p>For the hiker, the value being minimized is the distance to the bottom of the hill. For linear regression, the value we minimize is the error between each data point’s actual y-value and the y-value our line predicts. We measure it with a <strong>loss function</strong>, here the mean squared error over all n points:</p>
+<p class="article-math">E(m, b) = (1/n) · Σᵢ (yᵢ − (m·xᵢ + b))²</p>
+<p>Squaring each error makes every term positive and penalizes large misses more than small ones. Because E depends on both m and b, it forms a surface, and the best line sits at the lowest point of that surface.</p>
+
+<h2>Walking downhill: the update rules</h2>
+<p>Now that we know what we are minimizing, we can introduce our iterative approach. Since the loss has two variables (m and b), we adjust both on every step, moving each one against its own slope (its partial derivative):</p>
+<p class="article-math">m ← m − L · ∂E/∂m<br>b ← b − L · ∂E/∂b</p>
+<p>L is the <strong>learning rate</strong>, a small constant that sets the step size. It controls how fast and how accurately the algorithm converges: too small and it crawls, too large and it overshoots and diverges. Taking the partial derivatives of our loss function gives:</p>
+<p class="article-math">∂E/∂m = −(2/n) · Σᵢ xᵢ · (yᵢ − (m·xᵢ + b))<br>∂E/∂b = −(2/n) · Σᵢ (yᵢ − (m·xᵢ + b))</p>
+<figure>
+<img alt="Contour map of mean squared error over slope m and intercept b, darkest where the error is lowest. The descent path starts at m = 0, b = 0, jumps almost straight to the right slope within a few steps, then creeps along a long shallow valley in the b direction until it reaches the minimum near m = 2.28, b = 4.32." src="resources/lr-gd-loss-surface.svg">
+<figcaption>Each point on this map is one possible line. The path shows where gradient descent goes: the loss is steep in the m direction, so the slope gets close within two steps, but shallow in the b direction, so the intercept takes hundreds of steps to settle.</figcaption>
+</figure>
+
+<h2>The algorithm, step by step</h2>
+<p>Now that we have derived all of our equations, we can perform a gradient descent linear regression with the following steps:</p>
+<ol>
+<li>Set m and b to 0 and choose a small learning rate. For the 40-point dataset above, 0.01 works well; the right value depends on the scale of your data, so if the loss grows instead of shrinking, make it smaller.</li>
+<li>Calculate the partial derivatives ∂E/∂m and ∂E/∂b.</li>
+<li>Update m and b with the update rules.</li>
+<li>Calculate the loss. Repeat steps 2–4 until the loss stops changing (or changes by less than some tiny amount). The final values of m and b give you the equation of your regression line.</li>
+</ol>
+<p>The whole thing fits in a few lines of Python:</p>
+<pre><code>def fit_line(xs, ys, learning_rate=0.01, iterations=1500):
+    m, b = 0.0, 0.0
+    n = len(xs)
+    for _ in range(iterations):
+        errors = [y - (m * x + b) for x, y in zip(xs, ys)]
+        dm = -2 / n * sum(x * e for x, e in zip(xs, errors))
+        db = -2 / n * sum(errors)
+        m -= learning_rate * dm
+        b -= learning_rate * db
+    return m, b</code></pre>
+
+<h2>What the loss looks like</h2>
+<p>Note that the loss will not reach zero unless every point lies exactly on a line. Real data has noise, so the loss levels off at the smallest error any straight line can achieve. On our dataset, the loss drops from 279 to under 10 in the first five iterations, then slowly approaches its floor of 4.64.</p>
+<figure>
+<img alt="Mean squared error per iteration on a log scale. It drops from 279 to under 10 within the first few iterations, then slowly approaches the best possible value of 4.64, which is set by the noise in the data and can never reach zero." src="resources/lr-gd-loss-curve.svg">
+<figcaption>Loss per iteration. Most of the improvement happens almost immediately; the rest is the slow crawl along the valley shown in the loss surface.</figcaption>
+</figure>
+<p>After 1500 iterations, gradient descent finds m = 2.28 and b = 4.32, matching the exact least-squares solution to two decimal places. For a simple line, that solution can also be computed directly, but gradient descent is worth learning because the same idea of following the slope of a loss function downhill is what trains neural networks, where no direct solution exists.</p>
