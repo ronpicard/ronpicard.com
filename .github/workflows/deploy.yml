@@ -53,9 +53,9 @@ jobs:
       - name: Run Playwright
         run: npm run test:e2e
 
+  # Builds alongside the test jobs to save time; deploy still waits for all three.
   build:
     name: Production build
-    needs: [test, e2e]
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     name: Deploy to GitHub Pages
-    needs: build
+    needs: [test, e2e, build]
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:

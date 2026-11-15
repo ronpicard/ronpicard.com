@@ -18,7 +18,7 @@ This site is a static React app built with Vite and published to [GitHub Pages](
 
 The **Test and deploy** workflow starts on:
 
-- **Push to `main`** — runs tests, builds, and deploys to GitHub Pages.
+- **Push to `main`** — runs tests and the build in parallel, then deploys to GitHub Pages once all pass.
 - **Pull request to `main`** — runs unit and browser tests only; no deploy.
 - **Manual dispatch** — run from the Actions tab (`workflow_dispatch`) to redeploy without a new commit.
 
@@ -29,21 +29,22 @@ Concurrency is grouped under `pages` with `cancel-in-progress: false`, so an in-
 ```text
 push to main
     │
-    ├─► test (unit)          ─┐
-    │     npm run test:coverage
-    │
-    └─► e2e (browser)        ─┤  both must pass
-          npm run test:e2e    ─┘
-                │
-                ▼
-          build (production)
-            npm run build:full
-            upload dist/ artifact
+    ├─► test (unit)              ─┐
+    │     npm run test:coverage   │
+    │                             │
+    ├─► e2e (browser)            ─┤  all three must pass
+    │     npm run test:e2e        │
+    │                             │
+    └─► build (production)       ─┘
+          npm run build:full
+          upload dist/ artifact
                 │
                 ▼
           deploy
             actions/deploy-pages → github-pages environment
 ```
+
+The build runs alongside the tests rather than after them because it does not depend on their output; the `deploy` job's `needs: [test, e2e, build]` is the gate, so a failing test still blocks publishing. This takes the build's ~40 s off the critical path.
 
 ### 1. Unit tests (`test`)
 
@@ -60,7 +61,7 @@ push to main
 ### 3. Production build (`build`)
 
 - Runs only when the event is **not** a pull request.
-- Waits for both `test` and `e2e` to succeed.
+- Runs in parallel with `test` and `e2e`; `deploy` waits for all three.
 - Runs `npm run build:full`, which:
   1. Typechecks with `tsc --noEmit`
   2. Mirrors remote assets and article HTML (`scripts/mirror-resources.mjs`)
