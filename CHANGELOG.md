@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Search now looks inside article text as well as titles and summaries, so a word like "iptables" finds the router tutorial. Posts that match by title or summary come first, then posts that only mention the word.
+- Code in articles is colour-coded (commands, comments, strings, keywords, numbers), and each code block has a Copy button. In a terminal session it copies just the commands, without the `$` or `mysql>` prompts or their output.
+- Article figures have an Enlarge button that opens them full-window with their caption; still figures also open with a click. Close with Escape, the × button, or a click outside.
+- Three machine-learning posts have interactive figures with sliders: the learning rate in gradient descent (watch it crawl, converge, or diverge), momentum against plain gradient descent in a narrow valley, and the weight and bias of a single sigmoid neuron with its decision boundary. Without JavaScript a short explanation shows instead.
+- Article pictures and photos load as smaller WebP copies sized to the screen (about 78% fewer bytes at 1280 px wide), falling back to the original when a copy is missing.
+- Search engines get richer page data: tutorials and research write-ups are marked as technical articles, series parts name their series and part number, the BotLegger tour video is described as a video, BotLegger as a free macOS app, and each web app as a free browser app.
 - BotLegger, my company's free desktop app for running your own team of AI bots, joins the portfolio as the latest project, pinned to the top of the home page as a large 16:9 featured card under the heading "Download BotLegger™: free AI agents that work for you 24/7", with a written introduction, the tour video from botlegger.com playing at the top of the post, and a BotLegger button (with its logo) first, then its releases and Wyvern Systems.
 - Formal Methods 101 and Software Lessons posts now show which part of the series they are ("Part 4 of 11") under the title, and link to the previous and next parts at the end.
 - Long articles open with an "On this page" list of their sections and a reading time; each entry jumps to its section.
