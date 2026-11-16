@@ -23,3 +23,26 @@ export function articleMatchesSearch(
   if (!q) return true
   return normalizeSearchText(`${title} ${summary ?? ''}`).includes(q)
 }
+
+type Searchable = { title: string; summary: string | null; bodyPath?: string | null }
+
+/**
+ * Posts matching `query`: title and summary matches first, then posts that
+ * mention it only in their body (when the full-text `bodies` index, keyed by
+ * body path, has loaded). Each group keeps the input order.
+ */
+export function searchArticles<T extends Searchable>(
+  query: string,
+  items: readonly T[],
+  bodies: ReadonlyMap<string, string> | null,
+): T[] {
+  const q = normalizeSearchQuery(query)
+  if (!q) return [...items]
+  const head: T[] = []
+  const inBody: T[] = []
+  for (const item of items) {
+    if (articleMatchesSearch(q, item.title, item.summary)) head.push(item)
+    else if (item.bodyPath && bodies?.get(item.bodyPath)?.includes(q)) inBody.push(item)
+  }
+  return [...head, ...inBody]
+}

@@ -3,6 +3,8 @@
  * that has already been sanitized: the sanitizer strips every `id`, so the
  * only ids in the result are the `section-…` ones added here from heading text.
  */
+import { decodeHtmlEntities as decodeEntities } from '../../shared/htmlEscape'
+
 export type TocEntry = { id: string; text: string }
 
 export type ArticleOutline = {
@@ -17,18 +19,6 @@ export const WORDS_PER_MINUTE = 230
 /** A body needs at least this many sections and words before it gets a table of contents. */
 export const TOC_MIN_HEADINGS = 4
 export const TOC_MIN_WORDS = 1500
-
-const ENTITIES: Record<string, string> = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
-
-function decodeEntities(text: string): string {
-  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, code: string) => {
-    if (code[0] === '#') {
-      const n = code[1] === 'x' || code[1] === 'X' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10)
-      return Number.isFinite(n) && n > 0 && n <= 0x10ffff ? String.fromCodePoint(n) : match
-    }
-    return ENTITIES[code.toLowerCase()] ?? match
-  })
-}
 
 function plainText(html: string): string {
   return decodeEntities(html.replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim()

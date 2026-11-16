@@ -4,7 +4,8 @@ import { SiteTopBar } from '../components/SiteTopBar'
 import { SEARCH_PARAM } from '../components/SiteSearch'
 import { useSearchParams } from 'react-router-dom'
 import { articles, getArticleTitleList, ProjectCard } from '../features/articles'
-import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
+import { useSearchIndex } from '../lib/searchIndex'
+import { normalizeSearchQuery, searchArticles } from '../lib/siteSearchQuery'
 import { homeSeoInput } from '../../shared/seoHead'
 
 const list = getArticleTitleList()
@@ -19,15 +20,14 @@ export default function HomePage() {
   const filtering = normalizeSearchQuery(query) !== ''
 
   // Match against the full summaries, as the header search does; the card list truncates them.
+  const bodies = useSearchIndex(filtering)
   const shown = useMemo(() => {
-    const matching = new Set(
-      articles.filter((a) => articleMatchesSearch(query, a.title, a.summary)).map((a) => a.slug),
-    )
-    const matches = list.filter((item) => matching.has(item.slug))
-    // Pinned posts lead the unfiltered grid; search results keep site order.
-    if (filtering) return matches
-    return [...matches.filter((item) => item.pinned), ...matches.filter((item) => !item.pinned)]
-  }, [query, filtering])
+    // Pinned posts lead the unfiltered grid.
+    if (!filtering) return [...list.filter((item) => item.pinned), ...list.filter((item) => !item.pinned)]
+    // Search results put title and summary matches before posts that only mention the query.
+    const bySlug = new Map(list.map((item) => [item.slug, item]))
+    return searchArticles(query, articles, bodies).flatMap((a) => bySlug.get(a.slug) ?? [])
+  }, [query, filtering, bodies])
 
   function showAll() {
     setSearchParams(

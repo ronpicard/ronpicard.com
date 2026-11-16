@@ -3,7 +3,8 @@ import { flushSync } from 'react-dom'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { SEARCH_QUERY_MAX_LEN } from '../config/security'
 import { articleKindShortLabel, articles } from '../features/articles'
-import { articleMatchesSearch, normalizeSearchQuery } from '../lib/siteSearchQuery'
+import { useSearchIndex } from '../lib/searchIndex'
+import { normalizeSearchQuery, searchArticles } from '../lib/siteSearchQuery'
 import { articlePath } from '../../shared/siteArticlesRouting'
 
 /** URL query parameter the home page filters its post grid by. */
@@ -108,12 +109,12 @@ export function SiteSearch() {
   const hasQuery = normalizeSearchQuery(query) !== ''
   const showList = !onHome && listOpen && hasQuery
 
+  // The full-text index loads on the first real query, here or on the home page.
+  const bodies = useSearchIndex(hasQuery)
   const results = useMemo(() => {
     if (!showList) return []
-    return articles
-      .filter((a) => articleMatchesSearch(query, a.title, a.summary))
-      .slice(0, MAX_RESULTS)
-  }, [showList, query])
+    return searchArticles(query, articles, bodies).slice(0, MAX_RESULTS)
+  }, [showList, query, bodies])
 
   useEffect(() => {
     if (query) setExpanded(true)

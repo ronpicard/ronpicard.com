@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite'
+import { readdirSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 import react from '@vitejs/plugin-react'
+import type { Plugin } from 'vite'
+import { buildSearchIndex, SEARCH_INDEX_FILE } from './shared/searchIndex.ts'
 import { escapeHtmlAttr } from './shared/htmlEscape.ts'
 import { buildProductionCsp, PRODUCTION_SECURITY_METAS } from './src/config/security.ts'
 
@@ -19,6 +23,30 @@ function productionSecurityMetaTags(): string {
   return `${csp}\n    ${rest}`
 }
 
+/** Serves (dev) or emits (build) the full-text search index built from public/article-bodies/. */
+function searchIndexPlugin(): Plugin {
+  const bodiesDir = path.resolve(import.meta.dirname, 'public/article-bodies')
+  const build = () => {
+    const bodies: Record<string, string> = {}
+    for (const name of readdirSync(bodiesDir)) {
+      if (name.endsWith('.html')) bodies[`article-bodies/${name}`] = readFileSync(path.join(bodiesDir, name), 'utf8')
+    }
+    return buildSearchIndex(bodies)
+  }
+  return {
+    name: 'article-search-index',
+    configureServer(server) {
+      server.middlewares.use(`/${SEARCH_INDEX_FILE}`, (_req, res) => {
+        res.setHeader('Content-Type', 'application/json')
+        res.end(build())
+      })
+    },
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: SEARCH_INDEX_FILE, source: build() })
+    },
+  }
+}
+
 export default defineConfig(({ command, isSsrBuild }) => {
   const base = command === 'serve' ? '/' : prodBase
 
@@ -30,6 +58,7 @@ export default defineConfig(({ command, isSsrBuild }) => {
     },
     plugins: [
       react(),
+      ...(isSsrBuild ? [] : [searchIndexPlugin()]),
       {
         name: 'prod-security-headers',
         transformIndexHtml(html, ctx) {
