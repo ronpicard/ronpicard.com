@@ -29,6 +29,10 @@
 <p class="article-math">m ← m − L · ∂E/∂m<br>b ← b − L · ∂E/∂b</p>
 <p>L is the <strong>learning rate</strong>, a small constant that sets the step size. It controls how fast and how accurately the algorithm converges: too small and it crawls, too large and it overshoots and diverges. Taking the partial derivatives of our loss function gives:</p>
 <p class="article-math">∂E/∂m = −(2/n) · Σᵢ xᵢ · (yᵢ − (m·xᵢ + b))<br>∂E/∂b = −(2/n) · Σᵢ (yᵢ − (m·xᵢ + b))</p>
+<p>To get a feel for the learning rate, drag the slider below. It runs gradient descent on a simpler one-variable loss, f(w) = (w − 3)², starting at w = −2; the slider calls the learning rate η rather than L.</p>
+<div class="article-interactive article-interactive--gd-learning-rate">
+<p>With the update w ← w − η · f′(w), each step shrinks the distance to the minimum by a factor of |1 − 2η|, so it converges for η below 1 and diverges for η above 1.</p>
+</div>
 <figure>
 <img class="article-animated" alt="Contour map of mean squared error over slope m and intercept b, darkest where the error is lowest. The descent path starts at m = 0, b = 0, jumps almost straight to the right slope within a few steps, then creeps along a long shallow valley in the b direction until it reaches the minimum near m = 2.28, b = 4.32." src="resources/lr-gd-loss-surface.svg">
 <figcaption>Each point on this map is one possible line. The path shows where gradient descent goes: the loss is steep in the m direction, so the slope gets close within two steps, but shallow in the b direction, so the intercept takes hundreds of steps to settle.</figcaption>

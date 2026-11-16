@@ -22,6 +22,10 @@
 <img class="article-animated" alt="Left: the sigmoid curve rises from 0 to 1 as z goes from -8 to 8, crossing 0.5 at z = 0. Right: the loss for a 9 rises steeply as the predicted probability falls toward 0, and the loss for any other digit rises steeply as the probability approaches 1." src="resources/neuron-sigmoid-loss.svg">
 <figcaption>The sigmoid turns any score into a probability, and the loss curves show why a confidently wrong prediction costs far more than an uncertain one.</figcaption>
 </figure>
+<p>Drag the sliders to change the weight w and bias b of a one-input neuron and watch the decision boundary move.</p>
+<div class="article-interactive article-interactive--sigmoid-neuron">
+<p>The neuron outputs σ(w · x + b), which crosses 0.5 where w · x + b = 0, so its decision boundary sits at x = −b / w.</p>
+</div>
 <p>To train the weights we need the gradient of the loss. Applying the chain rule, dL/da · da/dz simplifies neatly to a − y, so for one image the gradients are dz = a − y, dw = x · dz and db = dz. Over all images at once this is vectorised as:</p>
 <p class="article-math">dZ = A − Y<br>dW = (1 / m) · X dZᵀ<br>db = (1 / m) · Σ dZ<br>w ← w − α · dW,  b ← b − α · db</p>
 <p>Training is plain batch gradient descent, with no momentum and no minibatches.</p>

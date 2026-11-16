@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react'
 import { playAnimatedFigures } from '../lib/animatedFigures'
+import { addCodeCopyButtons, highlightCodeBlocks } from '../lib/codeBlocks'
+import { addFigureZoom } from '../lib/figureZoom'
+import { mountInteractiveFigures } from '../lib/interactiveFigures'
+import { addResponsiveImageAttrs, enhanceBodyImages } from '../lib/responsiveImages'
 import { outlineArticleHtml, showsTableOfContents, type ArticleOutline } from '../lib/articleToc'
 import { resolveAssetUrl } from '../lib/assetUrl'
 import { fetchArticleBodyHtml } from '../lib/fetchArticleBody'
@@ -52,12 +56,22 @@ export function DynamicArticleBody({ bodyPath, fallbackSummary }: Props) {
     html ? 'ready' : 'loading',
   )
   const proseRef = useRef<HTMLDivElement>(null)
-  const outline = useMemo(() => (html ? outlineArticleHtml(html) : null), [html])
+  const outline = useMemo(() => (html ? outlineArticleHtml(addResponsiveImageAttrs(highlightCodeBlocks(html))) : null), [html])
 
+  // Enhancements of the rendered body, undone in reverse before it changes.
   useEffect(() => {
     const prose = proseRef.current
     if (phase !== 'ready' || !prose) return
-    return playAnimatedFigures(prose)
+    const cleanups = [
+      mountInteractiveFigures(prose),
+      enhanceBodyImages(prose),
+      playAnimatedFigures(prose),
+      addFigureZoom(prose),
+      addCodeCopyButtons(prose),
+    ]
+    return () => {
+      for (const cleanup of cleanups.reverse()) cleanup()
+    }
   }, [phase, html])
 
   useEffect(() => {

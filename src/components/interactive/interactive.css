@@ -1,0 +1,122 @@
+.article-interactive__fallback[hidden] {
+  display: none;
+}
+
+.interactive-figure {
+  margin: 1.5rem 0;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-body);
+  overflow: hidden;
+}
+
+.interactive-figure svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.interactive-figure__plot {
+  fill: rgba(0, 0, 0, 0.35);
+  stroke: var(--border);
+}
+
+.interactive-figure__ref {
+  stroke: var(--text-muted);
+  stroke-width: 1;
+  stroke-dasharray: 5 4;
+  opacity: 0.6;
+}
+
+.interactive-figure__boundary {
+  stroke: var(--accent-magenta);
+  stroke-width: 1.5;
+}
+
+.interactive-figure__curve {
+  fill: none;
+  stroke: var(--accent-blue);
+  stroke-width: 2.5;
+}
+
+.interactive-figure__contour {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1.5;
+}
+
+.interactive-figure__path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.interactive-figure__path--plain {
+  stroke: var(--accent-magenta);
+  stroke-dasharray: 7 5;
+}
+
+.interactive-figure__path--momentum {
+  stroke: var(--accent);
+}
+
+.interactive-figure__dot {
+  fill: var(--accent);
+}
+
+.interactive-figure__dot--start {
+  fill: var(--text);
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.interactive-figure__goal {
+  fill: var(--accent-blue);
+}
+
+.interactive-figure__legend-box {
+  fill: rgba(0, 0, 0, 0.6);
+  stroke: var(--border);
+}
+
+.interactive-figure__tick {
+  fill: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+
+.interactive-figure__control {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+}
+
+.interactive-figure__control label {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.interactive-figure__control output {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+.interactive-figure__control input[type='range'] {
+  width: 100%;
+  min-height: 2rem;
+  accent-color: var(--accent);
+}
+
+.interactive-figure__readout {
+  margin: 0.75rem 0 0;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.interactive-figure__note {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
