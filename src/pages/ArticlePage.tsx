@@ -15,7 +15,7 @@ import {
   showReleasesButton,
   youtubeWatchUrl,
 } from '../data/articles'
-import { resolveAssetUrl, resolveReadmeSnapshotUrl } from '../lib/assetUrl'
+import { resolveAssetUrl, resolveReadmeSnapshotUrl, resolveSizedSrcSet } from '../lib/assetUrl'
 import { githubBlobViewerUrlFromRawUrl } from '../../shared/githubRawContentUrls'
 import { postShareImage } from '../../shared/resourceOgImages'
 import { getArticleTopic, topicPath } from '../../shared/articleTopics'
@@ -213,7 +213,19 @@ export default function ArticlePage() {
       ) : null}
 
       {pictureSrc ? (
-        <img className="article-picture" src={pictureSrc} alt={article.title} decoding="async" />
+        <img
+          className="article-picture"
+          src={pictureSrc}
+          srcSet={resolveSizedSrcSet(shareImage) ?? undefined}
+          sizes="(min-width: 48rem) 45rem, 100vw"
+          alt={article.title}
+          decoding="async"
+          onError={(e) => {
+            // Variants are build-time output; without them fall back to the original src.
+            e.currentTarget.removeAttribute('srcset')
+            e.currentTarget.removeAttribute('sizes')
+          }}
+        />
       ) : null}
 
       {iframeSrc ? (

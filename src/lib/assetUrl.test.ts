@@ -5,6 +5,7 @@ import {
   resolveAssetUrl,
   resolveReadmeSnapshotUrl,
   resolveResourcePathsInHtml,
+  resolveSizedSrcSet,
   resolveThumbAssetUrl,
 } from './assetUrl'
 
@@ -54,6 +55,22 @@ describe('resolveThumbAssetUrl', () => {
     expect(resolveThumbAssetUrl('resources/paper.pdf')).toBeNull()
     expect(resolveThumbAssetUrl(null)).toBeNull()
     expect(resolveThumbAssetUrl('')).toBeNull()
+  })
+})
+
+describe('resolveSizedSrcSet', () => {
+  it('builds a base-prefixed srcset for mirrored raster images', () => {
+    const base = getViteBasePath()
+    expect(resolveSizedSrcSet('resources/card.png')).toBe(
+      [768, 1280, 1920].map((w) => `${base}/resources/sized/card-${w}.webp ${w}w`).join(', '),
+    )
+  })
+
+  it('returns null for svg, gif, external, and empty input', () => {
+    expect(resolveSizedSrcSet('resources/a.svg')).toBeNull()
+    expect(resolveSizedSrcSet('resources/a.gif')).toBeNull()
+    expect(resolveSizedSrcSet('https://example.com/a.png')).toBeNull()
+    expect(resolveSizedSrcSet(null)).toBeNull()
   })
 })
 
