@@ -37,6 +37,8 @@ export type SiteArticleRow = {
   series?: SiteArticleSeries
   /** A video shown at the top of the article in place of its picture. */
   video?: SiteArticleVideo
+  /** Installable software the post is about, described as a SoftwareApplication for search engines. */
+  software?: SiteArticleSoftware
   /** Featured: shown first on the home page as a large, full-width card. */
   pinned?: boolean
   /** Headline shown above a pinned post's card, e.g. "Download BotLegger: …". */
@@ -50,6 +52,22 @@ export type SiteArticleVideo = {
   poster: string
   /** What the video shows, for screen readers. */
   label: string
+}
+
+/** Google's software categories for SoftwareApplication structured data. */
+export const SOFTWARE_CATEGORIES = [
+  'BusinessApplication',
+  'DeveloperApplication',
+  'EducationalApplication',
+  'GameApplication',
+  'MultimediaApplication',
+  'UtilitiesApplication',
+] as const
+
+export type SiteArticleSoftware = {
+  category: (typeof SOFTWARE_CATEGORIES)[number]
+  /** As the vendor states it, e.g. "macOS 14 or later". */
+  operatingSystem: string
 }
 
 export type SiteArticleSeries = {
@@ -71,6 +89,21 @@ function parseVideo(value: unknown, path: string): SiteArticleVideo {
   if (!VIDEO_POSTER_RE.test(poster)) throw new Error(`${path}.poster must be a local resources image`)
   if (!label) throw new Error(`${path}.label must not be blank`)
   return { src, poster, label }
+}
+
+const OPERATING_SYSTEM_MAX = 80
+
+function parseSoftware(value: unknown, path: string): SiteArticleSoftware {
+  const software = recordAt(value, path)
+  const category = software.category
+  if (!SOFTWARE_CATEGORIES.includes(category as SiteArticleSoftware['category'])) {
+    throw new Error(`${path}.category must be one of ${SOFTWARE_CATEGORIES.join(', ')}`)
+  }
+  const operatingSystem = requiredString(software, 'operatingSystem', path).trim()
+  if (!operatingSystem || operatingSystem.length > OPERATING_SYSTEM_MAX) {
+    throw new Error(`${path}.operatingSystem must be non-blank and at most ${OPERATING_SYSTEM_MAX} characters`)
+  }
+  return { category: category as SiteArticleSoftware['category'], operatingSystem }
 }
 
 function parseSeries(value: unknown, path: string): SiteArticleSeries {
@@ -187,6 +220,7 @@ export function parseSiteArticleRows(
     }
     const series = row.series == null ? undefined : parseSeries(row.series, `${path}.series`)
     const video = row.video == null ? undefined : parseVideo(row.video, `${path}.video`)
+    const software = row.software == null ? undefined : parseSoftware(row.software, `${path}.software`)
 
     return {
       slug,
@@ -210,6 +244,7 @@ export function parseSiteArticleRows(
       ...(row.noindex === true ? { noindex: true } : {}),
       ...(series ? { series } : {}),
       ...(video ? { video } : {}),
+      ...(software ? { software } : {}),
       ...(row.pinned === true ? { pinned: true } : {}),
       ...(pinnedTitle ? { pinnedTitle: pinnedTitle.trim() } : {}),
     }

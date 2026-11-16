@@ -45,6 +45,43 @@ export function homeJsonLd() {
   }
 }
 
+type SoftwareInput =
+  | { kind: 'installable'; name: string; category: string; operatingSystem: string; downloadUrl?: string | null }
+  | { kind: 'web'; name: string; url: string }
+
+/**
+ * Free software a post presents; `@id` ties it to the post. Web apps are the
+ * site owner's own; installable apps may come from a company, so they name no author.
+ */
+function softwareJsonLd(software: SoftwareInput, postUrl: string, description: string, image?: string | null) {
+  const free = { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+  const common = {
+    '@id': `${postUrl}#software`,
+    name: software.name,
+    description,
+    ...(image ? { image } : {}),
+    offers: free,
+  }
+  if (software.kind === 'web') {
+    return {
+      '@type': 'WebApplication',
+      ...common,
+      author: { '@id': PERSON_ID },
+      url: software.url,
+      operatingSystem: 'Any (runs in a web browser)',
+      browserRequirements: 'Requires JavaScript',
+    }
+  }
+  return {
+    '@type': 'SoftwareApplication',
+    ...common,
+    url: postUrl,
+    applicationCategory: software.category,
+    operatingSystem: software.operatingSystem,
+    ...(software.downloadUrl ? { downloadUrl: software.downloadUrl } : {}),
+  }
+}
+
 export function articleJsonLd(input: {
   title: string
   date: string
@@ -55,6 +92,14 @@ export function articleJsonLd(input: {
   repoUrl?: string | null
   /** The post's topic hub, as the middle breadcrumb. */
   topic?: { name: string; path: string } | null
+  /** A how-to or technical post: typed TechArticle instead of BlogPosting. */
+  technical?: boolean
+  /** Numbered series the post belongs to. */
+  series?: { name: string; part: number } | null
+  /** A self-hosted video shown on the post (https MP4) with its absolute poster URL. */
+  hostedVideo?: { contentUrl: string; thumbnailUrl: string | null; description: string } | null
+  /** The software the post presents: an installable app, or a web app that runs in the browser. */
+  software?: SoftwareInput | null
 }) {
   const url = canonicalUrl(input.path)
   const description = truncateMetaDescription(input.description)
@@ -63,8 +108,12 @@ export function articleJsonLd(input: {
   const videoId = youtubeId && YOUTUBE_ID_RE.test(youtubeId) ? youtubeId : null
   const repoUrl = parseGithubRepoUrl(input.repoUrl)?.url ?? null
 
+  const hostedVideo = !videoId && input.hostedVideo ? input.hostedVideo : null
+  const series = input.series
+    ? { '@type': 'CreativeWorkSeries', name: input.series.name }
+    : null
   const posting = {
-    '@type': 'BlogPosting',
+    '@type': input.technical ? 'TechArticle' : 'BlogPosting',
     '@id': `${url}#article`,
     headline: input.title,
     description,
@@ -75,8 +124,10 @@ export function articleJsonLd(input: {
     ...(input.imageAbs ? { image: input.imageAbs } : {}),
     author: personRef(),
     publisher: personRef(),
-    isPartOf: { '@id': WEBSITE_ID },
-    ...(videoId ? { video: { '@id': `${url}#video` } } : {}),
+    isPartOf: series ? [{ '@id': WEBSITE_ID }, series] : { '@id': WEBSITE_ID },
+    ...(input.series ? { position: input.series.part } : {}),
+    ...(videoId || hostedVideo ? { video: { '@id': `${url}#video` } } : {}),
+    ...(input.software ? { about: { '@id': `${url}#software` } } : {}),
   }
   const crumbs = [
     { name: 'Home', item: canonicalUrl('/') },
@@ -100,6 +151,18 @@ export function articleJsonLd(input: {
         url: `https://www.youtube.com/watch?v=${videoId}`,
       }
     : null
+  const selfHosted = hostedVideo
+    ? {
+        '@type': 'VideoObject',
+        '@id': `${url}#video`,
+        name: input.title,
+        description: hostedVideo.description,
+        ...(hostedVideo.thumbnailUrl ? { thumbnailUrl: [hostedVideo.thumbnailUrl] } : {}),
+        uploadDate: datePublished,
+        contentUrl: hostedVideo.contentUrl,
+      }
+    : null
+  const software = input.software ? softwareJsonLd(input.software, url, description, input.imageAbs) : null
   const code = repoUrl
     ? {
         '@type': 'SoftwareSourceCode',
@@ -113,7 +176,15 @@ export function articleJsonLd(input: {
 
   return {
     '@context': 'https://schema.org',
-    '@graph': [posting, breadcrumbs, personJsonLd(), ...(video ? [video] : []), ...(code ? [code] : [])],
+    '@graph': [
+      posting,
+      breadcrumbs,
+      personJsonLd(),
+      ...(video ? [video] : []),
+      ...(selfHosted ? [selfHosted] : []),
+      ...(software ? [software] : []),
+      ...(code ? [code] : []),
+    ],
   }
 }
 

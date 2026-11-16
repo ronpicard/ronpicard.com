@@ -32,6 +32,10 @@
       "poster": "resources/botlegger-tour-2026-11-12.webp",
       "label": "A tour of BotLegger: a team of bots working together, a bot browsing the web with permission, an email waiting for approval, scheduled tasks, teaching a task, plugins, a cloud computer, and adding an API key."
     },
+    "software": {
+      "category": "BusinessApplication",
+      "operatingSystem": "macOS 14 or later"
+    },
     "pinned": true,
     "pinnedTitle": "Download BotLegger™: free AI agents that work for you 24/7"
   },

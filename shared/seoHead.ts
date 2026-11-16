@@ -145,6 +145,44 @@ export type ArticleSeoSource = {
   /** Thin post: noindex, follow. */
   noindex?: boolean
   topic?: string | null
+  series?: { name: string; part: number } | null
+  video?: { src: string; poster: string; label: string } | null
+  software?: { category: string; operatingSystem: string } | null
+  /** Embedded web app the post presents. */
+  githubEmbed?: string | null
+  releasesUrl?: string | null
+}
+
+/** "BotLegger™: Your Own Team of AI Bots" → "BotLegger™": the product name before a subtitle. */
+function softwareName(title: string): string {
+  return title.split(/:\s| [—–] /)[0]?.trim() || title
+}
+
+/** Topics whose posts are how-tos, tutorials, and technical write-ups. */
+const TECHNICAL_TOPICS = new Set(['software-and-tools', 'formal-methods-and-research'])
+
+function httpsUrl(raw: string | null | undefined): string | null {
+  try {
+    const url = new URL(raw ?? '')
+    return url.protocol === 'https:' && !url.username && !url.password ? url.href : null
+  } catch {
+    return null
+  }
+}
+
+/** The software a post presents, for its structured data, or null. */
+function articleSoftware(article: ArticleSeoSource, name: string) {
+  if (article.software) {
+    return {
+      kind: 'installable' as const,
+      name,
+      category: article.software.category,
+      operatingSystem: article.software.operatingSystem,
+      downloadUrl: httpsUrl(article.releasesUrl),
+    }
+  }
+  const appUrl = httpsUrl(article.githubEmbed)
+  return appUrl ? { kind: 'web' as const, name, url: appUrl } : null
 }
 
 const LOCAL_SHARE_IMAGE_RE = /^resources\/(?:og\/)?[a-z0-9][a-z0-9._-]*\.(?:png|jpe?g|webp|gif|avif)$/i
@@ -205,6 +243,17 @@ export function articleSeoInput(
       youtubeId: article.youtubeId,
       repoUrl: article.repoUrl,
       topic: topic ? { name: topic.label, path: topicPath(topic.slug) } : null,
+      technical: !!topic && TECHNICAL_TOPICS.has(topic.slug),
+      series: article.series ? { name: article.series.name, part: article.series.part } : null,
+      hostedVideo:
+        article.video && httpsUrl(article.video.src)
+          ? {
+              contentUrl: article.video.src,
+              thumbnailUrl: absoluteAssetUrl(safeShareImage(article.video.poster)) ?? null,
+              description: article.video.label,
+            }
+          : null,
+      software: articleSoftware(article, softwareName(article.title)),
     }),
   }
 }

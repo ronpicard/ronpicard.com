@@ -82,6 +82,24 @@ describe('parseSiteArticleRows', () => {
     }
   })
 
+  it('keeps a valid software description and rejects malformed ones', () => {
+    const software = { category: 'BusinessApplication', operatingSystem: '  macOS 14 or later ' }
+    expect(parseSiteArticleRows([{ ...validRow(), software }])[0]?.software).toEqual({
+      category: 'BusinessApplication',
+      operatingSystem: 'macOS 14 or later',
+    })
+    expect(parseSiteArticleRows([validRow()])[0]).not.toHaveProperty('software')
+    for (const bad of [
+      'macOS',
+      { ...software, category: 'Spreadsheet' },
+      { ...software, operatingSystem: '  ' },
+      { ...software, operatingSystem: 'x'.repeat(81) },
+      { category: software.category },
+    ]) {
+      expect(() => parseSiteArticleRows([{ ...validRow(), software: bad }])).toThrow('site article data[0].software')
+    }
+  })
+
   it('keeps a valid video and rejects malformed ones', () => {
     const video = {
       src: 'https://botlegger.com/video/hero_dark.mp4',

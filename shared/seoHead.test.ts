@@ -98,6 +98,75 @@ describe('article SEO input: search title, noindex, topic', () => {
   })
 })
 
+describe('article SEO input: richer structured data', () => {
+  const node = (input: { jsonLd?: object | null }, type: string) => graph(input).find((n) => n['@type'] === type)
+
+  it('types tutorials as TechArticle and keeps other posts as BlogPosting', () => {
+    expect(node(articleSeoInput({ ...article, topic: 'software-and-tools' }), 'TechArticle')).toBeDefined()
+    expect(node(articleSeoInput({ ...article, topic: 'formal-methods-and-research' }), 'TechArticle')).toBeDefined()
+    expect(node(articleSeoInput({ ...article, topic: 'aviation' }), 'BlogPosting')).toBeDefined()
+  })
+
+  it('places a series part in its series', () => {
+    const post = node(articleSeoInput({ ...article, series: { name: 'Formal Methods 101', part: 4 } }), 'BlogPosting')!
+    expect(post.position).toBe(4)
+    expect(post.isPartOf).toEqual([
+      { '@id': 'https://ronpicard.com/#website' },
+      { '@type': 'CreativeWorkSeries', name: 'Formal Methods 101' },
+    ])
+  })
+
+  it('describes a self-hosted video with its poster', () => {
+    const input = articleSeoInput({
+      ...article,
+      video: { src: 'https://botlegger.com/video/hero_dark.mp4', poster: 'resources/tour.webp', label: 'A tour' },
+    })
+    expect(node(input, 'VideoObject')).toMatchObject({
+      '@id': 'https://ronpicard.com/blog/example-post/#video',
+      contentUrl: 'https://botlegger.com/video/hero_dark.mp4',
+      thumbnailUrl: ['https://ronpicard.com/resources/tour.webp'],
+      description: 'A tour',
+      uploadDate: '2026-08-22T12:00:00.000Z',
+    })
+    expect(node(input, 'BlogPosting')!.video).toEqual({ '@id': 'https://ronpicard.com/blog/example-post/#video' })
+    const insecure = articleSeoInput({ ...article, video: { src: 'http://x.com/v.mp4', poster: 'p', label: 'l' } })
+    expect(node(insecure, 'VideoObject')).toBeUndefined()
+  })
+
+  it('describes installable software by its product name, free, with its OS and download', () => {
+    const input = articleSeoInput({
+      ...article,
+      title: 'BotLegger™: Your Own Team of AI Bots',
+      software: { category: 'BusinessApplication', operatingSystem: 'macOS 14 or later' },
+      releasesUrl: 'https://github.com/o/r/releases/latest',
+    })
+    expect(node(input, 'SoftwareApplication')).toMatchObject({
+      name: 'BotLegger™',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'macOS 14 or later',
+      downloadUrl: 'https://github.com/o/r/releases/latest',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      url: 'https://ronpicard.com/blog/example-post/',
+    })
+    expect(node(input, 'SoftwareApplication')).not.toHaveProperty('author')
+    expect(node(input, 'BlogPosting')!.about).toEqual({ '@id': 'https://ronpicard.com/blog/example-post/#software' })
+  })
+
+  it('describes an embedded web app and ignores a non-https one', () => {
+    const app = node(
+      articleSeoInput({ ...article, title: 'Pitch Tracker — Home', githubEmbed: 'https://ronpicard.github.io/pitch-tracker/' }),
+      'WebApplication',
+    )
+    expect(app).toMatchObject({
+      name: 'Pitch Tracker',
+      url: 'https://ronpicard.github.io/pitch-tracker/',
+      author: { '@id': 'https://ronpicard.com/#person' },
+    })
+    expect(node(articleSeoInput({ ...article, githubEmbed: 'javascript:alert(1)' }), 'WebApplication')).toBeUndefined()
+    expect(node(articleSeoInput(article), 'SoftwareApplication')).toBeUndefined()
+  })
+})
+
 describe('topic SEO input', () => {
   it('builds a website-type hub with a CollectionPage listing absolute post URLs', () => {
     const topic = getArticleTopic('aviation')!
