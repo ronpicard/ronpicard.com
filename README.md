@@ -57,10 +57,10 @@ In `src/data/siteArticles.json`, leave `bodyPath` null and provide a validated r
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Local dev server |
-| `npm test` | Run Vitest unit tests once (448 tests) |
+| `npm test` | Run Vitest unit tests once (457 tests) |
 | `npm run test:watch` | Vitest in watch mode |
 | `npm run test:coverage` | Vitest with V8 coverage report and enforced thresholds |
-| `npm run test:e2e` | Playwright browser smoke tests (21 tests × desktop and mobile projects; starts Vite dev server) |
+| `npm run test:e2e` | Playwright browser smoke tests (22 tests × desktop and mobile projects; starts Vite dev server) |
 | `npm run test:e2e:ui` | Playwright UI mode |
 | `npm run build` | Typecheck + Vite → `dist/` (committed JSON + `public/`) |
 | `npm run build:full` | Typecheck + mirror assets + snapshot READMEs + thumbnails + sized images + share cards + Vite + SSR bundle + prerender (use before deploy) |
@@ -123,9 +123,9 @@ npm run test:coverage   # terminal summary + optional HTML under coverage/
 
 | Metric | Coverage |
 |--------|----------|
-| Statements | ~96% |
-| Branches | ~92% |
-| Functions | ~97% |
+| Statements | ~97% |
+| Branches | ~93% |
+| Functions | ~98% |
 | Lines | ~98% |
 
 Coverage thresholds prevent regressions below 92% statements, 84% branches, 94% functions, or 95% lines.

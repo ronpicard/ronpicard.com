@@ -8,10 +8,12 @@ import {
   formatArticleDate,
 } from '../lib/articleDisplay'
 import { resolveAssetUrl, resolveThumbAssetUrl } from '../lib/assetUrl'
+import { BackgroundVideo } from './BackgroundVideo'
 import { GitHubIcon, LinkBrandIcon, YouTubeIcon } from './BrandIcons'
 import { articlePath } from '../../shared/siteArticlesRouting'
 import {
   safeArticleLinkHref,
+  safeArticleVideoUrl,
   safeDemoUrl,
   safeGithubReleasesUrl,
   safeGithubRepoUrl,
@@ -33,6 +35,8 @@ export type ProjectListItem = {
   /** Latest GitHub release page, for repos that publish releases. */
   releasesUrl: string | null
   videoUrl: string | null
+  /** The post's own video (`video` in its row), played muted behind the card instead of its picture. */
+  backgroundVideo?: { src: string; poster: string; label: string } | null
   /** Extra link buttons, the same ones the article page shows. */
   extraLinks: ArticleExtraLink[]
   /** Featured on the home page as a large card. */
@@ -83,6 +87,7 @@ export function ProjectCard({ item, priority = false, featured = false }: Props)
   const repoHref = item.showCode && item.repoUrl ? safeGithubRepoUrl(item.repoUrl) : null
   const releasesHref = safeGithubReleasesUrl(item.releasesUrl)
   const videoHref = item.videoUrl ? safeHttpUrl(item.videoUrl) : null
+  const backgroundSrc = safeArticleVideoUrl(item.backgroundVideo?.src)
   const to = articlePath(item.slug)
 
   return (
@@ -91,8 +96,14 @@ export function ProjectCard({ item, priority = false, featured = false }: Props)
       data-project={item.slug}
     >
       <Link className="project-card__overlay-link" to={to} aria-label={`Open ${item.title}`} />
-      <div className={thumbSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
-        {thumbSrc ? (
+      <div className={thumbSrc || backgroundSrc ? 'project-card__media' : 'project-card__media project-card__media--empty'}>
+        {backgroundSrc && item.backgroundVideo ? (
+          <BackgroundVideo
+            src={backgroundSrc}
+            poster={resolveAssetUrl(item.backgroundVideo.poster) ?? thumbSrc}
+            label={item.backgroundVideo.label}
+          />
+        ) : thumbSrc ? (
           <img
             src={thumbSrc}
             alt={item.title}

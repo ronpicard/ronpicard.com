@@ -1717,19 +1717,105 @@ body {
   box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
 }
 
-.article-video {
-  margin: 0 0 1.5rem;
+/*
+ * A post's tour video playing behind its card and its article header
+ * (BackgroundVideo). The video fills its positioned parent; the toggle sits
+ * above the card's overlay link so it can pause the loop.
+ */
+.background-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  background: #000;
 }
 
-.article-video video {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1920 / 1204;
-  border-radius: var(--radius);
+.background-video__toggle {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
   border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(1, 4, 6, 0.72);
+  color: var(--text);
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+}
+
+.background-video__toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.background-video__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The header of a post with a video: the video behind the title, under a fade that keeps the text readable. */
+.article-header--video {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(17rem, 40vw, 34rem);
+  padding: clamp(1rem, 3vw, 2.25rem);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   background: #000;
   box-shadow: 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+}
+
+.article-header__media {
+  position: absolute;
+  inset: 0;
+}
+
+.article-header__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(1, 4, 6, 0.75) 0%, rgba(1, 4, 6, 0) 22%),
+    linear-gradient(to top, rgba(1, 4, 6, 0.96) 0%, rgba(1, 4, 6, 0.82) 38%, rgba(1, 4, 6, 0.1) 78%);
+}
+
+.article-header--video > :not(.article-header__media) {
+  position: relative;
+  z-index: 1;
+}
+
+.article-header--video .article-back {
+  align-self: flex-start;
+  margin-bottom: auto;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(1, 4, 6, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.article-header--video .article-header__title {
+  max-width: 52rem;
+  margin-top: 1rem;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.8);
+}
+
+.article-header--video .article-header__meta time {
+  color: var(--text);
 }
 
 .embed-frame {

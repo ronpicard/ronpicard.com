@@ -27,7 +27,7 @@ function setPlaying(img: HTMLImageElement, playing: boolean): void {
   if (img.getAttribute('src') !== next) img.setAttribute('src', next)
 }
 
-function prefersReducedMotion(): boolean {
+export function prefersReducedMotion(): boolean {
   return typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
 

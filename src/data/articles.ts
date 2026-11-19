@@ -300,6 +300,7 @@ export function getArticleTitleList(list: Article[] = articles) {
     repoUrl: a.repoUrl,
     releasesUrl: showReleasesButton(a) ? a.releasesUrl : null,
     videoUrl: youtubeWatchUrl(a.youtubeId),
+    backgroundVideo: a.video ?? null,
     extraLinks: articleExtraLinks(a),
     pinned: a.pinned === true,
     pinnedTitle: a.pinned ? (a.pinnedTitle ?? null) : null,

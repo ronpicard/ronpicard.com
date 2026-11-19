@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The BotLegger post plays the re-recorded BotLegger tour (November 19, 2026) muted behind its home-page card and behind its title when opened, under a dark fade that keeps the text readable. The video loads only once on screen, plays only while visible, has a pause button, and shows a still frame for visitors who prefer reduced motion. Its picture and link preview use the new tour's first frame, and the post now describes version 0.13.0 for Mac, Windows, and Linux.
 - Pushes to `main` reach the live site sooner: the production build now runs alongside the unit and browser tests, and the deploy still waits for all of them to pass.
 - The eleven Formal Methods 101 posts are rewritten with real section headings, typeset logic and set notation, HTML truth tables, corrected notation, and new animated diagrams (Venn diagrams, relation graphs, a backtracking SAT search, the halting-problem diagonal, induction chains), each with a series header image.
 - The early research posts (N-Queens, the particle filter and model-based speed controllers, aircraft collision avoidance, the e-puck robot, the computer vision security system, and the colored Petri net studio) are now full write-ups of their papers, with animated figures of their designs and results and new header images.

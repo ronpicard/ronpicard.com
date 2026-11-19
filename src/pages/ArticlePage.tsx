@@ -7,6 +7,7 @@ import { Seo } from '../components/Seo'
 import { DynamicGithubReadme } from '../components/DynamicGithubReadme'
 import { DynamicArticleBody } from '../components/DynamicArticleBody'
 import { SiteTopBar } from '../components/SiteTopBar'
+import { BackgroundVideo } from '../components/BackgroundVideo'
 import {
   articleExtraLinks,
   getArticle,
@@ -196,22 +197,6 @@ export default function ArticlePage() {
         </div>
       )}
 
-      {videoSrc ? (
-        <figure className="article-video">
-          <video
-            controls
-            muted
-            loop
-            playsInline
-            preload="none"
-            poster={videoPoster ?? undefined}
-            aria-label={article.video?.label}
-          >
-            <source src={videoSrc} type="video/mp4" />
-          </video>
-        </figure>
-      ) : null}
-
       {pictureSrc ? (
         <img
           className="article-picture"
@@ -270,7 +255,12 @@ export default function ArticlePage() {
 
       <main id="main-content" className="article-main" tabIndex={-1}>
         <article>
-          <header className="article-header">
+          <header className={videoSrc ? 'article-header article-header--video' : 'article-header'}>
+            {videoSrc ? (
+              <div className="article-header__media">
+                <BackgroundVideo src={videoSrc} poster={videoPoster} label={article.video?.label ?? article.title} />
+              </div>
+            ) : null}
             <Link className="article-back" to="/">
               ← Home
             </Link>

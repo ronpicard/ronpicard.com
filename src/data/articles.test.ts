@@ -132,6 +132,8 @@ describe('BotLegger article', () => {
     expect(links.filter((l) => l.lead)).toHaveLength(1)
     expect(botlegger.video?.src).toBe('https://botlegger.com/video/hero_dark.mp4')
     expect(botlegger.video?.poster).toBe(botlegger.imageUrl)
+    const card = getArticleTitleList().find((item) => item.slug === botlegger.slug)
+    expect(card?.backgroundVideo).toEqual(botlegger.video)
   })
 })
 

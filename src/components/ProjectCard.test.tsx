@@ -231,3 +231,22 @@ describe('ProjectCard link', () => {
     expect(link?.getAttribute('href')).toBe('/blog/demo/')
   })
 })
+
+describe('ProjectCard background video', () => {
+  const tour = { src: 'https://botlegger.com/video/hero_dark.mp4', poster: 'resources/tour.webp', label: 'A tour' }
+
+  it('plays the post video behind the card in place of its picture', () => {
+    const img = renderCard({ item: item({ backgroundVideo: tour }), featured: true })
+    expect(img).toBeNull()
+    const video = container.querySelector('.project-card__media video')
+    expect(video?.getAttribute('poster')).toMatch(/\/resources\/tour\.webp$/)
+    expect(video?.getAttribute('aria-label')).toBe('A tour')
+    expect(video?.querySelector('source')?.getAttribute('src')).toBe(tour.src)
+  })
+
+  it('falls back to the picture when the video URL is not allowed', () => {
+    const img = renderCard({ item: item({ backgroundVideo: { ...tour, src: 'https://evil.example/x.mp4' } }) })
+    expect(container.querySelector('video')).toBeNull()
+    expect(img?.getAttribute('src')).toMatch(/card\.webp$/)
+  })
+})
