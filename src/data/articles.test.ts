@@ -123,12 +123,12 @@ describe('articles catalog', () => {
   })
 })
 
-describe('BotLegger article', () => {
-  it('leads with a BotLegger site link and plays the tour video from botlegger.com', () => {
+describe('Bot Legger article', () => {
+  it('leads with a Bot Legger site link and plays the tour video from botlegger.com', () => {
     const botlegger = articles.find((a) => a.sourceSlug === 'botlegger')!
     expect(articles[0]).toBe(botlegger)
     const links = articleExtraLinks(botlegger)
-    expect(links[0]).toMatchObject({ label: 'BotLegger', href: 'https://botlegger.com/', lead: true })
+    expect(links[0]).toMatchObject({ label: 'Bot Legger', href: 'https://botlegger.com/', lead: true })
     expect(links.filter((l) => l.lead)).toHaveLength(1)
     expect(botlegger.video?.src).toBe('https://botlegger.com/video/hero_dark.mp4')
     expect(botlegger.video?.poster).toBe(botlegger.imageUrl)
@@ -303,7 +303,7 @@ describe('showDemoButton / showCodeButton / getArticleTitleList', () => {
     expect(card?.releasesUrl).toBe('https://github.com/ronpicard/clamav-antivirus-ui/releases/latest')
     const withReleases = articles.filter((a) => a.releasesUrl).map((a) => a.slug)
     expect(list.filter((item) => item.releasesUrl).map((item) => item.slug)).toEqual(withReleases)
-    // ClamAV, Auto-Color, AI Rulebook, and BotLegger ship releases.
+    // ClamAV, Auto-Color, AI Rulebook, and Bot Legger ship releases.
     expect(withReleases).toHaveLength(4)
   })
 

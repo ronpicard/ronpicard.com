@@ -41,7 +41,7 @@ export type SiteArticleRow = {
   software?: SiteArticleSoftware
   /** Featured: shown first on the home page as a large, full-width card. */
   pinned?: boolean
-  /** Headline shown above a pinned post's card, e.g. "Download BotLegger: …". */
+  /** Headline shown above a pinned post's card, e.g. "Download Bot Legger: …". */
   pinnedTitle?: string
 }
 

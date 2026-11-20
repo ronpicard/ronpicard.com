@@ -136,12 +136,12 @@ describe('article SEO input: richer structured data', () => {
   it('describes installable software by its product name, free, with its OS and download', () => {
     const input = articleSeoInput({
       ...article,
-      title: 'BotLegger™: Your Own Team of AI Bots',
+      title: 'Bot Legger™: Your Own Team of AI Bots',
       software: { category: 'BusinessApplication', operatingSystem: 'macOS 14 or later' },
       releasesUrl: 'https://github.com/o/r/releases/latest',
     })
     expect(node(input, 'SoftwareApplication')).toMatchObject({
-      name: 'BotLegger™',
+      name: 'Bot Legger™',
       applicationCategory: 'BusinessApplication',
       operatingSystem: 'macOS 14 or later',
       downloadUrl: 'https://github.com/o/r/releases/latest',

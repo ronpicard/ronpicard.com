@@ -75,7 +75,7 @@ describe('HomePage pinned posts', () => {
     const first = container.querySelector('.project-list__item')
     expect(first?.classList.contains('project-list__item--pinned')).toBe(true)
     expect(first?.querySelector('.project-card--featured')).not.toBeNull()
-    expect(first?.textContent).toContain('BotLegger')
+    expect(first?.textContent).toContain('Bot Legger')
     expect(first?.querySelector('.project-card__summary')?.textContent).toBe(pinned[0]!.summary)
     expect(container.querySelectorAll('.project-list__item--pinned')).toHaveLength(1)
   })
@@ -90,7 +90,7 @@ describe('HomePage pinned posts', () => {
 
   it('shows search results as a uniform grid, pinned posts included', () => {
     renderHome('/?q=botlegger')
-    expect(container.querySelector('.project-list__item')?.textContent).toContain('BotLegger')
+    expect(container.querySelector('.project-list__item')?.textContent).toContain('Bot Legger')
     expect(container.querySelector('.project-list__item--pinned')).toBeNull()
     expect(container.querySelector('.project-card--featured')).toBeNull()
     expect(container.querySelector('.pinned-feature__head')).toBeNull()

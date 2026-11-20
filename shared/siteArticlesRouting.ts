@@ -101,6 +101,7 @@ const PREVIOUS_TITLES: Readonly<Record<string, string>> = {
   'linear-regression-using-gradient-decent': 'Linear Regression Using Gradient Decent',
   'formal-methods-101-formal-systems-lgnl3-2fbet-xx62b':
     'Formal Methods 101: Satisfiable Modulo Theories (SMT)',
+  botlegger: 'BotLegger™: Your Own Team of AI Bots',
 }
 
 /**

@@ -111,26 +111,26 @@ test.describe('home', () => {
     await expect(actions.getByRole('link', { name: 'Releases' })).toHaveAttribute('href', releases)
   })
 
-  test('leads the BotLegger post with its site link and shows the tour video', async ({ page }) => {
+  test('leads the Bot Legger post with its site link and shows the tour video', async ({ page }) => {
     await page.goto('/')
-    const card = page.locator('.project-card').filter({ hasText: 'BotLegger™: Your Own Team of AI Bots' })
+    const card = page.locator('.project-card').filter({ hasText: 'Bot Legger™: Your Own Team of AI Bots' })
     await expect(page.locator('.project-list__item').first()).toHaveClass(/project-list__item--pinned/)
-    await expect(page.locator('.pinned-feature__title')).toHaveText('Download BotLegger™: free AI agents that work for you 24/7')
+    await expect(page.locator('.pinned-feature__title')).toHaveText('Download Bot Legger™: free AI agents that work for you 24/7')
     const box = await card.boundingBox()
     if (box && (page.viewportSize()?.width ?? 0) >= 960) expect(box.width / box.height).toBeCloseTo(16 / 9, 1)
     await expect(card).toHaveClass(/project-card--featured/)
-    await expect(card.locator('.project-card__actions a').first()).toHaveText('BotLegger')
+    await expect(card.locator('.project-card__actions a').first()).toHaveText('Bot Legger')
     // The card plays the tour video behind its text instead of showing its picture.
     await expect(card.locator('video.background-video source')).toHaveAttribute('src', 'https://botlegger.com/video/hero_dark.mp4')
     await expect(card.locator('.project-card__media img')).toHaveCount(0)
     await expect(card.getByRole('button', { name: 'Pause the background video' })).toBeVisible()
     await card.locator('.project-card__overlay-link').click()
     const actions = page.locator('.article-actions--primary a')
-    await expect(actions.first()).toHaveText('BotLegger')
+    await expect(actions.first()).toHaveText('Bot Legger')
     await expect(actions.first()).toHaveAttribute('href', 'https://botlegger.com/')
     await expect(actions.nth(1)).toHaveText('Releases')
     const header = page.locator('.article-header--video')
-    await expect(header.locator('.article-header__title')).toContainText('BotLegger™: Your Own Team of AI Bots')
+    await expect(header.locator('.article-header__title')).toContainText('Bot Legger™: Your Own Team of AI Bots')
     const video = header.locator('video.background-video')
     await expect(video).toHaveAttribute('poster', /botlegger-tour-2026-11-20\.webp$/)
     await expect(video.locator('source')).toHaveAttribute('src', 'https://botlegger.com/video/hero_dark.mp4')
@@ -140,7 +140,7 @@ test.describe('home', () => {
     await expect(header.getByRole('button', { name: 'Play the background video' })).toHaveAttribute('aria-pressed', 'true')
   })
 
-  test('shows only the tour poster behind the BotLegger header under reduced motion', async ({ page }) => {
+  test('shows only the tour poster behind the Bot Legger header under reduced motion', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
     await page.goto('/blog/botlegger/')
     const header = page.locator('.article-header--video')

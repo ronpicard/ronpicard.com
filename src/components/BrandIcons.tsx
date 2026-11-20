@@ -107,7 +107,7 @@ export function WyvernIcon({ size = 22, className }: IconProps) {
   )
 }
 
-/** BotLegger's robot-head mark, shipped as a transparent PNG. */
+/** Bot Legger's robot-head mark, shipped as a transparent PNG. */
 export function BotleggerIcon({ size = 22, className }: IconProps) {
   return (
     <img

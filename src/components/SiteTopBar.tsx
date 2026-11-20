@@ -97,7 +97,7 @@ export function SiteTopBar() {
           href={SOCIAL.botlegger}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="BotLegger"
+          aria-label="Bot Legger"
         >
           <BotleggerIcon className="site-top-bar__logo site-top-bar__botlegger" size={28} />
         </a>

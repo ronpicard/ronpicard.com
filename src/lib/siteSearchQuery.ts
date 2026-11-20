@@ -24,11 +24,11 @@ export function articleMatchesSearch(
   return normalizeSearchText(`${title} ${summary ?? ''}`).includes(q)
 }
 
-type Searchable = { title: string; summary: string | null; bodyPath?: string | null }
+type Searchable = { title: string; summary: string | null; bodyPath?: string | null; sourceSlug?: string }
 
 /**
- * Posts matching `query`: title and summary matches first, then posts that
- * mention it only in their body (when the full-text `bodies` index, keyed by
+ * Posts matching `query`: title, summary, and post id (`sourceSlug`) matches
+ * first, so "botlegger" still finds "Bot Legger", then posts that mention it only in their body (when the full-text `bodies` index, keyed by
  * body path, has loaded). Each group keeps the input order.
  */
 export function searchArticles<T extends Searchable>(
@@ -41,7 +41,7 @@ export function searchArticles<T extends Searchable>(
   const head: T[] = []
   const inBody: T[] = []
   for (const item of items) {
-    if (articleMatchesSearch(q, item.title, item.summary)) head.push(item)
+    if (articleMatchesSearch(q, item.title, item.summary) || item.sourceSlug?.includes(q)) head.push(item)
     else if (item.bodyPath && bodies?.get(item.bodyPath)?.includes(q)) inBody.push(item)
   }
   return [...head, ...inBody]

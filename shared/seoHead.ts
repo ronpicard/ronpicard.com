@@ -153,7 +153,7 @@ export type ArticleSeoSource = {
   releasesUrl?: string | null
 }
 
-/** "BotLegger™: Your Own Team of AI Bots" → "BotLegger™": the product name before a subtitle. */
+/** "Bot Legger™: Your Own Team of AI Bots" → "Bot Legger™": the product name before a subtitle. */
 function softwareName(title: string): string {
   return title.split(/:\s| [—–] /)[0]?.trim() || title
 }

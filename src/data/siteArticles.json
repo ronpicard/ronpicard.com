@@ -1,9 +1,9 @@
 [
   {
     "slug": "botlegger",
-    "title": "BotLegger™: Your Own Team of AI Bots &mdash; Home",
+    "title": "Bot Legger™: Your Own Team of AI Bots &mdash; Home",
     "date": "2026-11-12",
-    "summary": "BotLegger™ is a free desktop app from Wyvern Systems for running your own team of AI bots that chat, research, write, and use your apps, with any AI model and your data kept on your own devices. Version 0.13.0 runs on Mac, Windows, and Linux.",
+    "summary": "Bot Legger™ is a free desktop app from Wyvern Systems for running your own team of AI bots that chat, research, write, and use your apps, with any AI model and your data kept on your own devices. Version 0.13.0 runs on Mac, Windows, and Linux.",
     "imageUrl": "resources/botlegger-tour-2026-11-20.webp",
     "articleHeroUrl": null,
     "githubEmbed": null,
@@ -13,7 +13,7 @@
     "otherEmbed": null,
     "extraLinks": [
       {
-        "label": "BotLegger",
+        "label": "Bot Legger",
         "href": "https://botlegger.com/",
         "lead": true
       },
@@ -26,18 +26,18 @@
     "releasesUrl": "https://github.com/wyvernsystems/botlegger-releases/releases/latest",
     "bodyPath": "article-bodies/botlegger.html",
     "topic": "ai-and-machine-learning",
-    "seoTitle": "BotLegger™: A Free App for Your Own Team of AI Bots",
+    "seoTitle": "Bot Legger™: A Free App for Your Own Team of AI Bots",
     "video": {
       "src": "https://botlegger.com/video/hero_dark.mp4",
       "poster": "resources/botlegger-tour-2026-11-20.webp",
-      "label": "A tour of BotLegger: a team of bots working together, a bot browsing the web with permission, an email waiting for approval, scheduled tasks, teaching a task, plugins, a cloud computer, and adding an API key."
+      "label": "A tour of Bot Legger: a team of bots working together, a bot browsing the web with permission, an email waiting for approval, scheduled tasks, teaching a task, plugins, a cloud computer, and adding an API key."
     },
     "software": {
       "category": "BusinessApplication",
       "operatingSystem": "macOS 14+, Windows 11, Linux"
     },
     "pinned": true,
-    "pinnedTitle": "Download BotLegger™: free AI agents that work for you 24/7"
+    "pinnedTitle": "Download Bot Legger™: free AI agents that work for you 24/7"
   },
   {
     "slug": "pitch-tracker",

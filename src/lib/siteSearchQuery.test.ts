@@ -58,4 +58,12 @@ describe('searchArticles', () => {
     expect(searchArticles('iptables', items, null).map((i) => i.title)).toEqual(['Iptables notes'])
     expect(searchArticles('  ', items, null)).toEqual(items)
   })
+
+  it('finds a post by its id, so a one-word search finds a two-word title', () => {
+    const posts = [
+      { title: 'Bot Legger: your own team of AI bots', summary: null, sourceSlug: 'botlegger' },
+      { title: 'Router', summary: null, sourceSlug: 'router' },
+    ]
+    expect(searchArticles('BotLegger', posts, null).map((i) => i.sourceSlug)).toEqual(['botlegger'])
+  })
 })
